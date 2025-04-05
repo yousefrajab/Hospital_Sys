@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Message extends Model
+{
+    use HasFactory;
+    protected $guarded=[];
+// app/Models/Message.php
+public function getFormattedCreatedAtAttribute()
+{
+    return $this->created_at->shortAbsoluteDiffForHumans(); // أو أي تنسيق تريده
+}
+
+}

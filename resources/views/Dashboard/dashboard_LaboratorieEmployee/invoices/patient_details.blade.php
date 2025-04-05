@@ -1,0 +1,59 @@
+@extends('Dashboard.layouts.master')
+ @section('title')
+     الكشوفات
+ @stop
+ @section('css')
+ 
+ @endsection
+ @section('page-header')
+     <!-- breadcrumb -->
+     <div class="breadcrumb-header justify-content-between">
+         <div class="my-auto">
+             <div class="d-flex">
+                 <h4 class="content-title mb-0 my-auto">صور التحاليل</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{$laboratorie->Patient->name}}</span>
+             </div>
+         </div>
+     </div>
+     <!-- breadcrumb -->
+ @endsection
+ @section('content')
+
+     <div class="form-group">
+         <label for="exampleFormControlTextarea1">ملاحظات دكتور المحتبر</label>
+         <textarea readonly class="form-control" id="exampleFormControlTextarea1" rows="3">{{$laboratorie->description_employee}}</textarea>
+     </div>
+
+     <!-- Gallery -->
+     <div class="demo-gallery">
+        <ul id="lightgallery" class="list-unstyled row row-sm pr-0">
+            @foreach($laboratorie->images as $image)
+                <li class="col-sm-6 col-lg-4">
+                    <a href="javascript:void(0);" onclick="openImage('{{ URL::asset('Dashboard/img/laboratories/'.$image->filename) }}')">
+                        <img width="100%" height="350px" class="img-responsive" src="{{ URL::asset('Dashboard/img/laboratories/'.$image->filename) }}" alt="NoImg">
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+
+    <script>
+        function openImage(imageUrl) {
+            // فتح نافذة جديدة بمقاس معين
+            window.open(imageUrl, '_blank', 'width=800,height=600,top=100,left=200,scrollbars=yes,resizable=yes');
+        }
+    </script>
+
+
+     <!-- row closed -->
+     </div>
+     <!-- Container closed -->
+     </div>
+     <!-- main-content closed -->
+
+ @endsection
+ @section('js')
+
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery-js/1.4.0/css/lightgallery.min.css">
+    </script> --}}
+
+ @endsection
