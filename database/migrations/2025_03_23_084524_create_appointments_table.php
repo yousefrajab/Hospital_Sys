@@ -15,7 +15,23 @@ class CreateAppointmentsTable extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('doctor_id')->constrained('doctors')->onDelete('cascade');
+            $table->foreignId('section_id')->constrained('sections')->onDelete('cascade');
+
+            // عرف user_id هنا مباشرة بالترتيب الذي تريده
+            $table->foreignId('patient_id')
+                ->nullable() // السماح بقيم فارغة
+                ->constrained('patients') // <-- الربط مع جدول patients
+                ->onDelete('cascade'); // أو set null
+
+            // باقي الأعمدة بالترتيب
+            $table->string('name');
+            $table->string('email');
+            $table->string('phone');
+            $table->enum('type', ['غير مؤكد', 'مؤكد', 'منتهي', 'ملغي'])->default('غير مؤكد');
+            $table->dateTime('appointment')->nullable();
+            $table->text('notes')->nullable();
+            $table->timestamps(); // created_at و updated_at
         });
     }
 

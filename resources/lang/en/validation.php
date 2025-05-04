@@ -134,10 +134,16 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'email' => [
+            'required' => 'البريد الإلكتروني مطلوب.',
+            'email' => 'يرجى إدخال بريد إلكتروني صالح.',
+        ],
+        'password' => [
+            'required' => 'كلمة المرور مطلوبة.',
+            'min' => 'يجب أن تكون كلمة المرور على الأقل :min حروف.',
         ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -150,6 +156,22 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'name',
+        'email' => 'email',
+        'password' => 'password',
+        'password_confirmation' => 'password_confirmation',
+        'current_password' => 'current_password',
+        'phone' =>'phone',
+        'national_id' => 'national_id',
+        'Date_Birth' => 'Date_Birth',
+        'Blood_Group' => 'Blood_Group',
+        'Address' => 'Address',
+        'Gender' => 'Gender',
+        'section_id' => 'section_id',
+        'appointments' => 'appointments',
+        'number_of_statements' => 'number_of_statements',
+        'photo' => 'photo',
+    ],
 
 ];

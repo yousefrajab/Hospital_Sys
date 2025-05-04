@@ -8,12 +8,23 @@
 @section('page-header')
     <!-- breadcrumb -->
     <div class="breadcrumb-header justify-content-between">
+
+        {{-- الجزء الأيمن: يحتوي على عنوان الصفحة ونص الترحيب --}}
         <div class="left-content">
             <div>
                 <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">لوحة تحكم المريض</h2><br>
                 <p class="mg-b-0">مرحبا بعودتك مرة اخري {{ auth()->user()->name }}</p>
             </div>
         </div>
+
+        {{-- الجزء الأيسر: يحتوي على الزر الجديد --}}
+        <div class="right-content"> {{-- يمكنك تسمية الكلاس بأي اسم أو حتى تركه بدون كلاس إذا لم تحتج لتنسيق إضافي خاص --}}
+            <a href="{{ url('/') }}" class="btn btn-primary" target="_blank"> {{-- استخدمت btn-primary كمثال، يمكنك تغييره --}}
+                <i class="fas fa-home"></i> {{-- أيقونة منزل كمثال --}}
+                الذهاب للموقع الرئيسي
+            </a>
+        </div>
+
     </div>
     <!-- /breadcrumb -->
 @endsection

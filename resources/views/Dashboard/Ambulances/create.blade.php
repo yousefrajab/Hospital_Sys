@@ -1,7 +1,9 @@
 @extends('Dashboard.layouts.master')
 @section('css')
     <!--Internal   Notify -->
-    <link href="{{URL::asset('dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
+    <link href="{{ URL::asset('Admin/assets/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('path/to/notifIt.css') }}">
+    @include('Style.Style')
 @endsection
 @section('title')
    اضافة سيارة جديدة
@@ -24,7 +26,7 @@
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <form action="{{route('Ambulance.store')}}" method="post" autocomplete="off">
+                <form action="{{route('admin.Ambulance.store')}}" method="post" autocomplete="off">
                     @csrf
                     <div class="row">
                         <div class="col">

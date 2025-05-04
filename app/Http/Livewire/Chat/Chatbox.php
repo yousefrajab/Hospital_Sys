@@ -69,22 +69,12 @@ public function getListeners()
          $broadcastMessage->read = 1;
          $this->pushMessage($broadcastMessage->id);
      }
-
-
-
-
-
-
-
     public function pushMessage($messageId){
 
         $newMessage = Message::find($messageId);
         $this->messages->push($newMessage);
 
     }
-
-
-
     public function load_conversationDoctor(Conversation $conversation, Doctor $receiver ){
 
         $this->selected_conversation = $conversation;
@@ -102,10 +92,6 @@ public function getListeners()
         ->orderBy('created_at', 'asc')
         ->get();
     }
-
-
-
-
     public function render()
     {
         return view('livewire.chat.chatbox');

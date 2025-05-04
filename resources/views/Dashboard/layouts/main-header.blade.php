@@ -5,12 +5,14 @@
             <div class="responsive-logo">
                 <a href="{{ url('/' . ($page = 'index')) }}"><img src="{{ URL::asset('Dashboard/img/brand/logo.png') }}"
                         class="logo-1" alt="logo"></a>
-                <a href="{{ url('/' . ($page = 'index')) }}"><img src="{{ URL::asset('Dashboard/img/brand/logo-white.png') }}"
-                        class="dark-logo-1" alt="logo"></a>
-                <a href="{{ url('/' . ($page = 'index')) }}"><img src="{{ URL::asset('Dashboard/img/brand/favicon.png') }}"
-                        class="logo-2" alt="logo"></a>
-                <a href="{{ url('/' . ($page = 'index')) }}"><img src="{{ URL::asset('Dashboard/img/brand/favicon.png') }}"
-                        class="dark-logo-2" alt="logo"></a>
+                <a href="{{ url('/' . ($page = 'index')) }}"><img
+                        src="{{ URL::asset('Dashboard/img/brand/logo-white.png') }}" class="dark-logo-1"
+                        alt="logo"></a>
+                <a href="{{ url('/' . ($page = 'index')) }}"><img
+                        src="{{ URL::asset('Dashboard/img/brand/favicon.png') }}" class="logo-2" alt="logo"></a>
+                <a href="{{ url('/' . ($page = 'index')) }}"><img
+                        src="{{ URL::asset('Dashboard/img/brand/favicon.png') }}" class="dark-logo-2"
+                        alt="logo"></a>
             </div>
             <div class="app-sidebar__toggle" data-toggle="sidebar">
                 <a class="open-toggle" href="#"><i class="header-icon fe fe-align-left"></i></a>
@@ -247,14 +249,41 @@
                         <div class="main-header-profile bg-primary p-3">
                             <div class="d-flex wd-100p">
                                 <div class="main-img-user"><img alt=""
-                                        src="{{ Auth::user()->image ? asset('Dashboard/img/doctors/' . Auth::user()->image->filename) : asset('Dashboard/img/faces/doctor_default.png') }}" class=""></div>
+                                        src="{{ Auth::user()->image ? asset('Dashboard/img/doctors/' . Auth::user()->image->filename) : asset('Dashboard/img/faces/doctor_default.png') }}"
+                                        class=""></div>
                                 <div class="mr-3 my-auto">
                                     <h6>{{ auth()->user()->name }}</h6><span>{{ auth()->user()->email }}</span>
                                 </div>
                             </div>
                         </div>
-                        <a class="dropdown-item" href=""><i class="bx bx-user-circle"></i>الملف الشخصي</a>
-                        <a class="dropdown-item" href=""><i class="bx bx-cog"></i>تعديل الملف الشخصي</a>
+                        @php
+                            $profileShowRoute = '#'; // قيمة افتراضية
+
+                            if (Auth::guard('admin')->check()) {
+                                $profileShowRoute = route('admin.profile.show'); // مسار الأدمن (ستحتاج لإنشائه لاحقاً)
+                            } elseif (Auth::guard('doctor')->check()) {
+                                $profileShowRoute = route('doctor.profile.show'); // <-- استخدام المسار الذي أنشأناه
+                            // } elseif (Auth::guard('patient')->check()) {
+                            //     $profileShowRoute = route('patient.profile.show'); // مسار المريض (ستحتاج لإنشائه لاحقاً)
+                            }
+                        @endphp
+
+
+                        <a class="dropdown-item" href="{{ $profileShowRoute }}"><i
+                                class="bx bx-user-circle"></i>الملف الشخصي</a>
+
+                                @php
+                            $profileShowRoutee = '#'; // قيمة افتراضية
+
+                            if (Auth::guard('admin')->check()) {
+                                $profileShowRoutee = route('admin.profile.edit'); // مسار الأدمن (ستحتاج لإنشائه لاحقاً)
+                            } elseif (Auth::guard('doctor')->check()) {
+                                $profileShowRoutee = route('doctor.profile.edit'); // <-- استخدام المسار الذي أنشأناه
+                            // } elseif (Auth::guard('patient')->check()) {
+                            //     $profileShowRoutee = route('patient.profile.edit'); // مسار المريض (ستحتاج لإنشائه لاحقاً)
+                            }
+                        @endphp
+                        <a class="dropdown-item" href="{{ $profileShowRoutee }}"><i class="bx bx-cog"></i>تعديل الملف الشخصي</a>
                         @if (auth('web')->check())
                             <form method="POST" action="{{ route('logout.user') }}">
                             @elseif(auth('admin')->check())

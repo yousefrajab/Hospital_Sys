@@ -15,6 +15,7 @@ class CreateRayEmployeesTable extends Migration
     {
         Schema::create('ray_employees', function (Blueprint $table) {
             $table->id();
+            $table->string('national_id', 9)->unique();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

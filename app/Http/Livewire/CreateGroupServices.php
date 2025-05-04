@@ -82,7 +82,7 @@ class CreateGroupServices extends Component
     public function saveService($index)
     {
         $this->resetErrorBag();
-        $product = $this->allServices->find($this->GroupsItems[$index]['service_id']);
+        $product = $this->allServices()->find($this->GroupsItems[$index]['service_id']);
         $this->GroupsItems[$index]['service_name'] = $product->name;
         $this->GroupsItems[$index]['service_price'] = $product->price;
         $this->GroupsItems[$index]['is_saved'] = true;
@@ -173,9 +173,7 @@ class CreateGroupServices extends Component
             $this->ServiceSaved = true;
 
         }
-
-
-
+        return redirect()->to('admin/Add_GroupServices')->with('تم التحديث ');
     }
 
     public function show_form_add(){
@@ -210,7 +208,7 @@ class CreateGroupServices extends Component
 
     public function delete($id){
         Group::destroy($id);
-        return redirect()->to('/Add_GroupServices');
+        return redirect()->to('admin/Add_GroupServices');
     }
 
 }

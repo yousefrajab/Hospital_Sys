@@ -9,10 +9,9 @@ class Message extends Model
 {
     use HasFactory;
     protected $guarded=[];
-// app/Models/Message.php
 public function getFormattedCreatedAtAttribute()
 {
-    return $this->created_at->shortAbsoluteDiffForHumans(); // أو أي تنسيق تريده
+    return $this->created_at->shortAbsoluteDiffForHumans();
 }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Events\CreateInvoice;
+use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\FundAccount;
 use App\Models\Invoice;
@@ -83,6 +84,7 @@ class SingleInvoices extends Component
 
         $this->show_table = false;
         $this->updateMode = true;
+
         $single_invoice = Invoice::findorfail($id);
         $this->single_invoice_id = $single_invoice->id;
         $this->patient_id = $single_invoice->patient_id;
@@ -167,6 +169,15 @@ class SingleInvoices extends Component
                     $fund_accounts->save();
                     $this->InvoiceSaved =true;
                     $this->show_table =true;
+                    // chek appointment
+                    $patient = Patient::find($this->patient_id);
+                    $appointment_info = Appointment::where('doctor_id', $this->doctor_id)->where('email', $patient->email)->where('type','مؤكد')->first();
+                    if ($appointment_info) {
+                        $appointment = Appointment::find($appointment_info->id);
+                        $appointment->update([
+                            'type' => 'منتهي'
+                        ]);
+                    }
 
                     $notifications = new Notification();
                     $notifications->user_id = $this->doctor_id;
@@ -265,6 +276,15 @@ class SingleInvoices extends Component
                     $patient_accounts->save();
                     $this->InvoiceSaved =true;
                     $this->show_table =true;
+                    // chek appointment
+                    $patient = Patient::find($this->patient_id);
+                    $appointment_info = Appointment::where('doctor_id', $this->doctor_id)->where('email', $patient->email)->where('type','مؤكد')->first();
+                    if ($appointment_info) {
+                        $appointment = Appointment::find($appointment_info->id);
+                        $appointment->update([
+                            'type' => 'منتهي'
+                        ]);
+                    }
                 }
 
                 DB::commit();
@@ -284,12 +304,16 @@ class SingleInvoices extends Component
     public function delete($id){
 
      $this->single_invoice_id = $id;
+     session()->flash('delete');
+    return redirect()->to('/single_invoices')->with('success', 'تم حذف الخدمة بنجاح');
 
     }
 
     public function destroy(){
         Invoice::destroy($this->single_invoice_id);
-        return redirect()->to('/single_invoices');
+        // return redirect()->to('/single_invoices');
+        session()->flash('delete');
+    return redirect()->to('/single_invoices')->with('success', 'تم حذف الخدمة بنجاح');
     }
 
 

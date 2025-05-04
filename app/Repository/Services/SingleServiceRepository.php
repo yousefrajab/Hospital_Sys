@@ -29,7 +29,7 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
             $SingleService->save();
 
             session()->flash('add');
-            return redirect()->route('Service.index');
+            return redirect()->route('admin.Service.index');
 
         }
         catch (\Exception $e) {
@@ -52,7 +52,7 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
             $SingleService->save();
 
             session()->flash('edit');
-            return redirect()->route('Service.index');
+            return redirect()->route('admin.Service.index');
 
         }
         catch (\Exception $e) {
@@ -64,6 +64,6 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
     {
         Service::destroy($request->id);
         session()->flash('delete');
-        return redirect()->route('Service.index');
+        return redirect()->route('admin.Service.index');
     }
 }

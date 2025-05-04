@@ -31,10 +31,6 @@ class SendMessage extends Component
             $this->sender = Auth::guard('doctor')->user();
         }
     }
-
-
-
-
     public function updateMessage(Conversation $conversation, Doctor $receiver)
     {
         $this->selected_conversation = $conversation;
@@ -90,8 +86,6 @@ class SendMessage extends Component
             ));
         }
     }
-
-
     function render()
     {
         return view('livewire.chat.send-message');

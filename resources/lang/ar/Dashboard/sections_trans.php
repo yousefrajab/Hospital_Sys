@@ -11,5 +11,7 @@ return [
    'submit'=>'تاكيد',
    'Close'=>'اغلاق',
    'Warning'=>'هل انت متاكد من عملية الحذف ؟',
+   'update_service_details'=>'تعديل تفاصيل الخدمة',
+   'add_new_service'=>'اضافة خدمة جديدة',
 
 ];

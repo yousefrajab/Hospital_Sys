@@ -21,6 +21,7 @@ class RayEmployeeRepository implements RayEmployeeRepositoryInterface
         try {
 
             $ray_employee = new RayEmployee();
+            $ray_employee->national_id = $request->national_id;
             $ray_employee->name = $request->name;
             $ray_employee->email = $request->email;
             $ray_employee->password = Hash::make($request->password);

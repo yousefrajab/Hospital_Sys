@@ -1,8 +1,25 @@
 <?php
 
 return array(
+    'Select Section' => 'Select Section',
+    'cancel' => 'Cancel',
+
+    'Hospital Management System' => 'Hospital Management System',
+
+    'Leave it' => 'Leave it empty if you dont want to change',
+    'edit_doctor_data' => 'Edit Data',
+    'edit_doctor' => 'Edit Doctor',
+    'doctor_image' => 'Doctor Image',
+    'leave_empty' => 'Leave empty if you don\'t want to change',
+    'select_appointments' => 'Select Appointments',
+    'update_success' => 'Updated Successfully',
+    'Add new Doctor' => 'Add new Doctor',
+    'The Doctors' => 'The Doctors',
+    'Return to Doctors List' => 'Return to Doctors List',
+    'Enter the password ' => 'Enter the password',
     'Choose' => 'Choose',
     'Enabled' => 'Enabled',
+    'national_id' => 'national_id',
     'Not_enabled' => 'Not_enabled',
     'Processes' => 'Processes',
     'Status' => 'Status',
@@ -20,12 +37,44 @@ return array(
     'new_password' => 'New Password',
     'password' => 'password',
     'phone' => 'phone',
+    'national_id' => 'National Id ',
+    'modify data' => 'Edit data',
+
     'price' => 'price',
     'section' => 'Section',
     'submit' => 'submit',
     'update_password' => 'Update Password',
     'Reports' => 'Reports',
     'List of Reports' => 'List of Reports',
-    'Log out' => 'Log out'
-    
+    'number_of_statements' => 'number_of_statements',
+    'List of Doctors' => 'List of Doctors',
+
+    'Log out' => 'Log out',
+    'AM' => 'AM',
+    'PM' => 'PM',
+    'select' => 'Select',
+    'delete_doctor_warning' => 'You are about to delete this Doctor!',
+
+    'Doctor_id' => 'Doctor id',
+
+
+
+    'delete_select_review' => 'Make sure to review all items before confirming.',
+
+
+
+    'working_days' => 'Working days',
+    'Saturday' => 'Saturday',
+    'Sunday' => 'Sunday',
+    'Monday' => 'Monday',
+    'Tuesday' => 'Tuesday',
+    'Wednesday' => 'Wednesday',
+    'Thursday' => 'Thursday',
+    'Friday' => 'Friday',
+    'from' => 'From',
+    'to' => 'To',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'not_working' => 'Not Available',
+    'working_hours_required' => 'Working hours required',
 );

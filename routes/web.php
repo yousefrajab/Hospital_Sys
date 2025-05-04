@@ -1,6 +1,7 @@
 <?php
 
-
+use App\Models\Doctor;
+use App\Models\Section;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(),
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'auth']
+    ],
+    function () {
+
+        Route::get('/', function () {
+            // $sections = Section::with('doctors')->get();
+            return view('welcome');
+        });
+    }
+
+
+);

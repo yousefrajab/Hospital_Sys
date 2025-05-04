@@ -23,13 +23,14 @@ class DoctorFactory extends Factory
     public function definition()
     {
         return [
-
+            'national_id' => $this->faker->unique()->numerify('#########'),
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'phone' => $this->faker->phoneNumber,
+            'phone' => preg_replace('/\D/', '', $this->faker->phoneNumber),
             'section_id' => Section::all()->random()->id,
+            'number_of_statements' => 3,
         ];
     }
 }

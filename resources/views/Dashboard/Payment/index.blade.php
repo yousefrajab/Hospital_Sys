@@ -36,7 +36,7 @@
                             <div class="card">
                                 <div class="card-header pb-0">
                                     <div class="d-flex justify-content-between">
-                                        <a href="{{route('Payment.create')}}" class="btn btn-primary" role="button"
+                                        <a href="{{route('admin.Payment.create')}}" class="btn btn-primary" role="button"
                                            aria-pressed="true">اضافة سند جديد</a>
                                     </div>
                                 </div>
@@ -62,9 +62,9 @@
                                                    <td>{{ \Str::limit($payment->description, 50) }}</td>
                                                    <td>{{ $payment->created_at->diffForHumans() }}</td>
                                                    <td>
-                                                       <a href="{{route('Payment.edit',$payment->id)}}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
+                                                       <a href="{{route('admin.Payment.edit',$payment->id)}}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
                                                        <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"  data-toggle="modal" href="#delete{{$payment->id}}"><i class="las la-trash"></i></a>
-                                                       <a href="{{route('Payment.show',$payment->id)}}" class="btn btn-primary btn-sm" target="_blank" title="طباعه سند صرف"><i class="fas fa-print"></i></a>
+                                                       <a href="{{route('admin.Payment.show',$payment->id)}}" class="btn btn-primary btn-sm" target="_blank" title="طباعه سند صرف"><i class="fas fa-print"></i></a>
                                                    </td>
                                                </tr>
                                            @include('Dashboard.Payment.delete')

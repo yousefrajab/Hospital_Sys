@@ -24,19 +24,23 @@ class StorePatientRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => 'required',
-            "email" => 'required|email|unique:patients,email,'.$this->id,
-            "password" => 'required|sometimes',
-            "Phone" => 'required|numeric|unique:patients,Phone,'.$this->id,
-            'Date_Birth' => 'required|date|date_format:Y-m-d',
-            "Gender" => 'required|integer|in:1,2',
-            "Blood_Group" => 'required',
+            'name' => 'required|string|max:255',
+            'national_id' => 'required|digits:9|unique:patients,national_id',
+            'email' => 'required|email|unique:patients,email',
+            'password' => 'required|confirmed|min:8',
+            'Phone' => 'required|numeric|unique:patients,Phone',
+            'Date_Birth' => 'required|date|before:today',
+            'Gender' => 'required|integer|in:1,2',
+            'Blood_Group' => 'required|string|in:O-,O+,A+,A-,B+,B-,AB+,AB-',
+            'Address' => 'nullable|string|max:500'
         ];
     }
-
     public function messages()
     {
         return [
+            'national_id.required' => trans('validation.required'),
+            'national_id.digits' => trans('validation.digits', ['digits' => 9]),
+            'national_id.unique' => trans('validation.unique'),
             'email.required' => trans('validation.required'),
             'email.unique' => trans('validation.unique'),
             'password.required' => trans('validation.required'),

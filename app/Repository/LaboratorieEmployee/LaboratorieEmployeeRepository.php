@@ -21,6 +21,7 @@
          try {
 
              $laboratorie_employee = new LaboratorieEmployee();
+             $laboratorie_employee->national_id = $request->national_id;
              $laboratorie_employee->name = $request->name;
              $laboratorie_employee->email = $request->email;
              $laboratorie_employee->password = Hash::make($request->password);

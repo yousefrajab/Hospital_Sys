@@ -15,6 +15,7 @@ class CreateLaboratorieEmployeesTable extends Migration
     {
         Schema::create('laboratorie_employees', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('national_id')->unique();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

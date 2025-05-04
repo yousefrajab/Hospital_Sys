@@ -9,7 +9,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('Receipt.destroy', 'test') }}" method="post">
+            <form action="{{ route('admin.Receipt.destroy', 'test') }}" method="post">
                 {{ method_field('delete') }}
                 {{ csrf_field() }}
             <div class="modal-body">

@@ -18,7 +18,9 @@
         "mcamara/laravel-localization": "^2.0",
         "paragonie/random_compat": "9.99.100",
         "paragonie/sodium_compat": "1.17.1",
-        "pusher/pusher-php-server": "*"
+        "pusher/pusher-php-server": "*",
+        "stichoza/google-translate-php": "^5.2",
+        "twilio/sdk": "^8.5"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

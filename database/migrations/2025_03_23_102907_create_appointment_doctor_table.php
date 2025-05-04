@@ -14,10 +14,13 @@ class CreateAppointmentDoctorTable extends Migration
     public function up()
     {
         Schema::create('appointment_doctor', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
-            $table->foreignId('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
-            $table->timestamps();
+            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
+            $table->foreignId('appointment_id')->constrained()->onDelete('cascade');
+            $table->primary(['doctor_id', 'appointment_id']); // مفتاح مركب
+
+            // إضافة حقول إضافية إذا لزم الأمر
+            // $table->boolean('is_available')->default(true);
+            $table->timestamps(); // اختياري
         });
     }
 

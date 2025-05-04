@@ -24,7 +24,7 @@
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <form action="{{route('Ambulance.update','test')}}" method="post">
+                <form action="{{route('admin.Ambulance.update','test')}}" method="post">
                     @method('PUT')
                     @csrf
                     <div class="row">

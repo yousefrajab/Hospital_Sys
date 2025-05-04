@@ -15,15 +15,14 @@ class CreateSectionTranslationsTable extends Migration
     {
         Schema::create('section_translations', function (Blueprint $table) {
             $table->id();
-            $table->string('locale')->index();
-            $table->longText('description');
-            // Foreign key to the main model
-            $table->unique(['section_id', 'locale']);
-            $table->foreignId('section_id')->references('id')->on('sections')->onDelete('cascade');
-
-            // fields you want to translate
+            $table->foreignId('section_id')->constrained()->cascadeOnDelete();
+            $table->string('locale')->index(); // ar, en
             $table->string('name');
+            $table->text('description')->nullable();
+            $table->unique(['section_id', 'locale']);
 
+            // إضافة index للبحث
+            $table->index('name');
         });
     }
 

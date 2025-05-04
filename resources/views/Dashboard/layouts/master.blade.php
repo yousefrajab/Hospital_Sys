@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>برنامج ادارة المستشفيات</title>
+<title>{{ trans('doctors.Hospital Management System') }}</title>
 
 <head>
     <meta charset="UTF-8">
@@ -31,7 +31,7 @@
             @include('Dashboard.layouts.models')
             @include('Dashboard.layouts.footer')
             @include('Dashboard.layouts.footer-scripts')
-            
+
 
 
 </body>

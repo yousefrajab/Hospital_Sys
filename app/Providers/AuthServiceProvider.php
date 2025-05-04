@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Models\Doctor;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // *** تعريف الـ Gate هنا ***
+        Gate::define('manage-appointment', function (Doctor $doctor, Appointment $appointment) {
+            // يتحقق إذا كان معرّف الطبيب الحالي يطابق معرّف الطبيب في الموعد
+            return $doctor->id === $appointment->doctor_id;
+        });
     }
 }

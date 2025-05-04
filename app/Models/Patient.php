@@ -11,7 +11,7 @@ class Patient extends Authenticatable
     use Translatable;
     use HasFactory;
     public $translatedAttributes = ['name', 'Address'];
-    public $fillable = ['email', 'Password', 'Date_Birth', 'Phone', 'Gender', 'Blood_Group'];
+    public $fillable = ['national_id', 'email', 'password', 'Date_Birth', 'Phone', 'Gender', 'Blood_Group'];
 
     public function doctor()
     {
@@ -22,15 +22,4 @@ class Patient extends Authenticatable
     {
         return $this->belongsTo(Invoice::class, 'Service_id');
     }
-
-    // public function image()
-    // {
-    //     return $this->hasOne(Image::class); // أو MorphOne إذا كنت تستخدم Polymorphic
-    // }
-
-    // أضف accessor لتحويل المصفوفات تلقائياً
-    // public function getNameAttribute($value)
-    // {
-    //     return is_array($value) ? $value[0] : $value;
-    // }
 }

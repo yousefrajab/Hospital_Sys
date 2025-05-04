@@ -71,7 +71,7 @@ class AmbulanceRepository implements AmbulanceRepositoryInterface
         $ambulance->save();
 
         session()->flash('edit');
-        return redirect()->route('Ambulance.index');
+        return redirect()->route('admin.Ambulance.index');
     }
 
     public function destroy($request)

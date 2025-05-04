@@ -64,7 +64,7 @@ class ReceiptRepository implements ReceiptRepositoryInterface
 
             DB::commit();
             session()->flash('add');
-            return redirect()->route('Receipt.create');
+            return redirect()->route('admin.Receipt.create');
         }
 
         catch (\Exception $e) {
@@ -113,7 +113,7 @@ class ReceiptRepository implements ReceiptRepositoryInterface
 
             DB::commit();
             session()->flash('edit');
-            return redirect()->route('Receipt.index');
+            return redirect()->route('admin.Receipt.index');
         }
 
         catch (\Exception $e) {

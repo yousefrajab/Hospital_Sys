@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Section;
+use App\Http\Controllers\PatientProfileController;
+
  use App\Http\Controllers\Dashboard_Doctor\DiagnosticController;
  use App\Http\Controllers\Dashboard_Doctor\LaboratorieController;
  use App\Http\Controllers\Dashboard_Doctor\RayController;
@@ -31,12 +34,21 @@
 
      //################################ dashboard patient ########################################
 
+     Route::get('/home', function () {
+         $sections = Section::with('doctors')->get();
+         return view('welcome',compact('sections'));
+     })->middleware(['auth:patient'])->name('dashboard.patient.home');
+
      Route::get('/dashboard/patient', function () {
          return view('Dashboard.dashboard_patient.dashboard');
      })->middleware(['auth:patient'])->name('dashboard.patient');
      //################################ end dashboard patient #####################################
 
      Route::middleware(['auth:patient'])->group(function () {
+
+        Route::get('/profile', [PatientProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile/edit', [PatientProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [PatientProfileController::class, 'update'])->name('profile.update');
 
         //############################# patients route ##########################################
         Route::get('invoices', [PatientController::class,'invoices'])->name('invoices.patient');

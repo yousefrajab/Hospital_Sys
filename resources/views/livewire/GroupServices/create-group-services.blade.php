@@ -1,13 +1,5 @@
 
 <div>
-
-    {{--    @if ($catchError)--}}
- {{--        <div class="alert alert-danger" id="success-danger">--}}
- {{--            <button type="button" class="close" data-dismiss="alert">x</button>--}}
- {{--            {{ $catchError }}--}}
- {{--        </div>--}}
- {{--    @endif--}}
-
     @if ($ServiceSaved)
         <div class="alert alert-info">{{ trans('Services.Data has been saved successfully.') }}</div>
     @endif
@@ -34,8 +26,8 @@
             <div class="card mt-4">
                 <div class="card-header">
                     <div class="col-md-12">
-                        <button class="btn btn-outline-primary"
-                                wire:click.prevent="addService">{{ trans('Services.Add sub-service') }}
+                        <button class="btn btn-outline-primary" style="color: white"
+                                wire:click.prevent="addService">{{ trans('Services.Add sub-service' ) }}
                         </button>
                     </div>
                 </div>

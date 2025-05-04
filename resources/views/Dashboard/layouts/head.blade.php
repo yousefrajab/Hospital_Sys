@@ -1,6 +1,5 @@
-<!-- Title -->
 <title>@yield('title')</title>
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @yield('css')
 @livewireStyles
 
@@ -9,7 +8,7 @@
 <link href="{{ URL::asset('Dashboard/plugins/datatable/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
 <link href="{{ URL::asset('Dashboard/plugins/datatable/css/jquery.dataTables.min.css') }}" rel="stylesheet">
 <link href="{{ URL::asset('Dashboard/plugins/datatable/css/responsive.dataTables.min.css') }}" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 
 @if (App::getLocale() == 'ar')

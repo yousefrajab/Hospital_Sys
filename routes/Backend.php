@@ -5,6 +5,7 @@ use App\Events\MyEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminController;
+use App\Http\Controllers\Dashboard\AdminProfileController;
 use App\Http\Controllers\Dashboard\DoctorController;
 use App\Http\Controllers\Dashboard\PatientController;
 use App\Http\Controllers\Dashboard\SectionController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Dashboard\PaymentAccountController;
 use App\Http\Controllers\Dashboard\ReceiptAccountController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Dashboard\LaboratorieEmployeeController;
+use App\Http\Controllers\Dashboard\appointments\AppointmentController;
 
 
 /*
@@ -30,44 +32,31 @@ use App\Http\Controllers\Dashboard\LaboratorieEmployeeController;
 |
 */
 
-
-// Route::get('/fire-event', [AdminController::class, 'fireEvent']);
-Route::get('/Dashboard_Admin', [DashboardController::class, 'index']);
-
-
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
     ],
     function () {
-
-
-        //################################ dashboard user ##########################################
-        Route::get('/dashboard/user', function () {
-            return view('Dashboard.User.dashboard');
-        })->middleware(['auth'])->name('dashboard.user');
-        //################################ end dashboard user #####################################
-
-
-
         //################################ dashboard admin ########################################
         Route::get('/dashboard/admin', function () {
             return view('Dashboard.Admin.dashboard');
         })->middleware(['auth:admin'])->name('dashboard.admin');
 
-        //################################ end dashboard admin #####################################
+        //################################ end dashboard admin ####################################
+        Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
 
 
+            Route::get('/profile', [AdminProfileController::class, 'show'])->name('profile.show');
+            Route::get('/profile/edit', [AdminProfileController::class, 'edit'])->name('profile.edit'); // للتعديل
+            Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update'); // لحفظ التعديل
 
-        //---------------------------------------------------------------------------------------------------------------
 
-
-        Route::middleware(['auth:admin'])->group(function () {
 
             //############################# sections route ##########################################
 
             Route::resource('Sections', SectionController::class);
+            // Route::post('update_status', [SectionController::class, 'update_status'])->name('update_status');
 
             //############################# end sections route ######################################
 
@@ -77,7 +66,11 @@ Route::group(
             Route::resource('Doctors', DoctorController::class);
             Route::post('update_password', [DoctorController::class, 'update_password'])->name('update_password');
             Route::post('update_status', [DoctorController::class, 'update_status'])->name('update_status');
+            // 1. مسار GET لعرض صفحة تعديل جدول العمل
+            Route::get('/doctors/{id}/edit-schedule', [DoctorController::class, 'editSchedule'])->name('doctors.schedule.edit');
 
+            // 2. مسار PUT (أو POST) لمعالجة تحديث جدول العمل
+            Route::put('/doctors/schedule/{id}', [DoctorController::class, 'updateSchedule'])->name('doctors.schedule.update');
             //############################# end Doctors route ######################################
 
 
@@ -157,9 +150,24 @@ Route::group(
             //############################# end single_invoices route ######################################
 
 
+            Route::get('appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+            Route::put('appointments/approval/{id}', [AppointmentController::class, 'approval'])->name('appointments.approval');
+            Route::get('appointments/approval', [AppointmentController::class, 'index2'])->name('appointments.index2');
+            Route::delete('appointments/destroy/{id}', [AppointmentController::class, 'destroy'])->name('appointments.destroy');
+            // *** المسارات الجديدة ***
+            Route::get('/completed', [AppointmentController::class, 'indexCompleted'])->name('completed'); // منتهية
+            Route::get('/cancelled', [AppointmentController::class, 'indexCancelled'])->name('cancelled'); // ملغاة
+            Route::patch('/admin-cancel/{appointment}', [AppointmentController::class, 'adminCancelAppointment'])->name('admin_cancel');
+            // استخدمنا {appointment} للاستفادة من Route Model Binding
+
+            // (اختياري) مسار الحذف النهائي (قد يكون موجوداً ضمن destroy في Route::resource)
+            // Route::delete('/delete/{appointment}', [AppointmentController::class, 'destroy'])->name('destroy');
+
+
+
+
+
         });
-
-
         require __DIR__ . '/auth.php';
     }
 );

@@ -66,7 +66,7 @@ class PaymentRepository implements PaymentRepositoryInterface
 
             DB::commit();
             session()->flash('add');
-            return redirect()->route('Payment.create');
+            return redirect()->route('admin.Payment.create');
 
         }
         catch (\Exception $e) {
@@ -118,7 +118,7 @@ class PaymentRepository implements PaymentRepositoryInterface
 
             DB::commit();
             session()->flash('edit');
-            return redirect()->route('Payment.index');
+            return redirect()->route('admin.Payment.index');
 
         }
         catch (\Exception $e) {

@@ -12,10 +12,11 @@ class PatientTableSeeder extends Seeder
     public function run()
     {
         $Patients = new Patient();
-        $Patients->email = 'patient@yahoo.com';
+        $Patients->national_id = '000000000';
+        $Patients->email = 'Y@gmail.com';
         $Patients->password = Hash::make('12345678');
         $Patients->Date_Birth = '1988-12-01';
-        $Patients->Phone = '123456789';
+        $Patients->Phone = '0592611537';
         $Patients->Gender = 1;
         $Patients->Blood_Group = 'A+';
         $Patients->save();

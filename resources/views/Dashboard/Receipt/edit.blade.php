@@ -27,7 +27,7 @@
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-body">
-                        <form action="{{ route('Receipt.update', 'test') }}" method="post" autocomplete="off">
+                        <form action="{{ route('admin.Receipt.update', 'test') }}" method="post" autocomplete="off">
                             {{ method_field('patch') }}
                             {{ csrf_field() }}
                         <div class="pd-30 pd-sm-40 bg-gray-200">

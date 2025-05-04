@@ -27,7 +27,7 @@
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('Receipt.store') }}" method="post" autocomplete="off" enctype="multipart/form-data">
+                    <form action="{{ route('admin.Receipt.store') }}" method="post" autocomplete="off" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <div class="pd-30 pd-sm-40 bg-gray-200">
 

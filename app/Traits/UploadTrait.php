@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Image;
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -49,8 +50,15 @@ trait UploadTrait{
 
     public function Delete_attachment($disk,$path,$id){
 
+       // حذف الصورة من المجلد
+    if (Storage::disk($disk)->exists($path)) {
         Storage::disk($disk)->delete($path);
-        image::where('imageable_id',$id)->delete();
+    }
+
+    // حذف سجل الصورة من قاعدة البيانات (مع تحديد النوع للتأكد)
+    Image::where('imageable_id', $id)
+         ->where('imageable_type', Doctor::class)
+         ->delete();
 
     }
 
