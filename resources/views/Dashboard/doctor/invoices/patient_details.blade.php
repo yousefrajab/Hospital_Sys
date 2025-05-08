@@ -104,7 +104,7 @@
                                                                 {{--                                                        <td>{{$patient_ray->employee_id !==null ? $patient_ray->employee->name:'NOEmployee'}}</td> --}}
                                                                 {{--                                                         <td>{{$patient_ray->employee->name ?? 'noEmployee'}}</td> --}}
                                                                 <td>{{ $patient_ray->employee->name }}</td>
-
+                                                                {{-- {{ dd($patient_ray->employee->name); }} --}}
 
                                                                 @if ($patient_ray->case == 0)
                                                                     <td class="text-danger">غير مكتملة</td>
@@ -130,7 +130,7 @@
                                                                     @else
                                                                         <td>
                                                                             <a class="modal-effect btn btn-sm btn-warning"
-                                                                                href="{{ route('invoices.show', $patient_ray->id) }}"><i
+                                                                                href="{{ route('doctor.invoices.show', $patient_ray->id) }}"><i
                                                                                     class="fas fa-binoculars"></i></a>
                                                                         </td>
                                                                     @endif
@@ -158,6 +158,8 @@
                                                             <th>#</th>
                                                             <th>اسم الخدمه</th>
                                                             <th>اسم الدكتور</th>
+                                                            {{-- <th> موظف مختبر</th> --}}
+
                                                             <th>العمليات</th>
                                                         </tr>
                                                     </thead>
@@ -182,13 +184,17 @@
                                                                                     class="las la-trash"></i></a>
                                                                         </td>
                                                                     @else
+
+
                                                                         <td>
                                                                             <a class="modal-effect btn btn-sm btn-warning"
-                                                                                href="{{ route('show.laboratorie', $patient_Laboratorie->id) }}"><i
+                                                                                href="{{ route('doctor.show.laboratorie', $patient_Laboratorie->id) }}"><i
                                                                                     class="fas fa-binoculars"></i></a>
                                                                         </td>
                                                                     @endif
                                                                 @endif
+                                                                {{-- <td>{{ $patient_ray->lab_employee->name }}</td> --}}
+
                                                             </tr>
                                                             @include('Dashboard.doctor.invoices.edit_laboratorie_conversion')
                                                             @include('Dashboard.doctor.invoices.deleted_laboratorie')

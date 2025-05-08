@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('rays.destroy', $patient_ray->id) }}" method="post">
+                <form action="{{ route('doctor.rays.destroy', $patient_ray->id) }}" method="post">
                     @method('DELETE')
                     @csrf
                     <div class="row">

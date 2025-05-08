@@ -65,6 +65,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -124,9 +125,11 @@
             0% {
                 transform: scale(1);
             }
+
             50% {
                 transform: scale(1.05);
             }
+
             100% {
                 transform: scale(1);
             }
@@ -261,6 +264,48 @@
         .form-control.is-invalid {
             border-color: var(--error-color);
             background-image: none;
+        }
+
+        .avatar-upload {
+            position: relative;
+            width: 100px;
+            height: 180px;
+            margin: 0 auto;
+        }
+
+        .avatar-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            /* border: 3px solid white; */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-upload label {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 40px;
+            height: 40px;
+            background:black;
+            border-radius: 50%;
+            display: flex;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 5 10px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* .avatar-upload label i {
+            color: white;
+            font-size: 100px;
+        } */
+
+        .avatar-upload input[type="file"] {
+            /* color: white; */
+            display: none;
         }
 
         .form-control.is-valid {
@@ -434,6 +479,7 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -441,13 +487,19 @@
 
         /* تأثيرات الاهتزاز للخطأ */
         @keyframes shake {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateX(0);
             }
-            20%, 60% {
+
+            20%,
+            60% {
                 transform: translateX(-5px);
             }
-            40%, 80% {
+
+            40%,
+            80% {
                 transform: translateX(5px);
             }
         }
@@ -462,7 +514,7 @@
             padding: 15px;
             border-radius: 10px;
             margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .breadcrumb-header .btn-primary {
@@ -479,7 +531,7 @@
             box-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
         }
     </style>
-    @include('Style.Style')
+    {{-- @include('Style.Style')     --}}
 @endsection
 
 @section('title')
@@ -508,6 +560,7 @@
     @include('Dashboard.messages_alert')
 
     <div class="row">
+
         <div class="col-lg-12">
             <div class="patient-form">
                 <div class="form-header">
@@ -517,21 +570,35 @@
                 </div>
 
                 <div class="form-section">
-                    <form action="{{ route('admin.Patients.store') }}" method="post" autocomplete="off" id="patientForm" enctype="multipart/form-data">
+                    <form action="{{ route('admin.Patients.store') }}" method="post" autocomplete="off" id="patientForm"
+                        enctype="multipart/form-data">
                         @csrf
 
                         <!-- رسائل التنبيه -->
-                        <div id="successAlert" class="alert-message alert-success animate__animated animate__fadeIn" style="display: none;">
+                        <div id="successAlert" class="alert-message alert-success animate__animated animate__fadeIn"
+                            style="display: none;">
                             <i class="fas fa-check-circle"></i> تم تسجيل المريض بنجاح في قاعدة البيانات!
                         </div>
 
-                        <div id="errorAlert" class="alert-message alert-error animate__animated animate__fadeIn" style="display: none;">
+                        <div id="errorAlert" class="alert-message alert-error animate__animated animate__fadeIn"
+                            style="display: none;">
                             <i class="fas fa-exclamation-circle"></i> حدث خطأ أثناء التسجيل، يرجى مراجعة البيانات المطلوبة.
                         </div>
 
                         <div class="paired-fields">
                             <!-- الصف 1: الاسم والبريد -->
                             <div class="field-row">
+                                <div class="col-md-4">
+                                    <div class="avatar-upload mb-4"   >
+                                        <img id="output" src="{{ URL::asset('Dashboard/img/doctorr_default.png') }}"
+                                            alt="{{ trans('doctors.img') }}">
+                                        <label for="avatar-upload">
+                                            <i class="fas fa-camera"></i>
+                                        </label>
+                                        <input id="avatar-upload" type="file" accept="image/*" name="photo"
+                                            onchange="loadFile(event)">
+                                    </div>
+                                </div>
                                 <div class="field-group">
                                     <label for="name" class="form-label required">الاسم الكامل للمريض</label>
                                     <input type="text" id="name" name="name" value="{{ old('name') }}"
@@ -561,8 +628,8 @@
                                 <div class="field-group">
                                     <label for="Date_Birth" class="form-label required">تاريخ الميلاد</label>
                                     <div class="datepicker-input">
-                                        <input class="form-control" id="Date_Birth" name="Date_Birth" placeholder="يوم/شهر/سنة"
-                                            type="text" autocomplete="off" required>
+                                        <input class="form-control" id="Date_Birth" name="Date_Birth"
+                                            placeholder="يوم/شهر/سنة" type="text" autocomplete="off" required>
                                         <i class="fas fa-calendar-alt"></i>
                                     </div>
                                     @error('Date_Birth')
@@ -573,8 +640,8 @@
                                 <div class="field-group">
                                     <label for="Phone" class="form-label required">رقم الجوال</label>
                                     <input type="tel" id="Phone" name="Phone" value="{{ old('Phone') }}"
-                                        class="form-control @error('Phone') is-invalid @enderror" placeholder="+9705XXXXXXXX"
-                                        maxlength="13" required pattern="^\+9705\d{8}$"
+                                        class="form-control @error('Phone') is-invalid @enderror"
+                                        placeholder="+9705XXXXXXXX" maxlength="13" required pattern="^\+9705\d{8}$"
                                         title="يجب أن يبدأ رقم الجوال بـ +9705 ويتكون من 13 خانة (مثال: +9705XXXXXXXX)">
                                     <small class="form-text text-muted">
                                         أدخل رقم الجوال بالتنسيق التالي: <strong>+9705XXXXXXXX</strong>
@@ -607,7 +674,8 @@
                                 </div>
 
                                 <div class="field-group">
-                                    <label for="password_confirmation" class="form-label required">تأكيد كلمة المرور</label>
+                                    <label for="password_confirmation" class="form-label required">تأكيد كلمة
+                                        المرور</label>
                                     <div class="input-group password-toggle-group">
                                         <input type="password" id="password_confirmation" name="password_confirmation"
                                             class="form-control" placeholder="أعد إدخال كلمة المرور" required>
@@ -641,7 +709,8 @@
 
                                     <div class="field-group">
                                         <label for="Blood_Group" class="form-label required">فصيلة الدم</label>
-                                        <select class="form-control select2" id="Blood_Group" name="Blood_Group" required>
+                                        <select class="form-control select2" id="Blood_Group" name="Blood_Group"
+                                            required>
                                             <option value="" selected disabled>-- اختر فصيلة الدم --</option>
                                             <option value="O-">O-</option>
                                             <option value="O+">O+</option>
@@ -662,7 +731,8 @@
                                 <div class="field-row">
                                     <div class="field-group">
                                         <label for="Gender" class="form-label required">الجنس</label>
-                                        <select class="form-control select2-gender" id="Gender" name="Gender" required>
+                                        <select class="form-control select2-gender" id="Gender" name="Gender"
+                                            required>
                                             <option value="" selected disabled>-- اختر الجنس --</option>
                                             <option value="1" data-icon="♂️">ذكر</option>
                                             <option value="2" data-icon="♀️">أنثى</option>
@@ -688,7 +758,8 @@
 
                         <!-- زر الإرسال -->
                         <div class="text-center mt-4">
-                            <button type="submit" class="btn-submit animate__animated animate__pulse animate__infinite animate__slower">
+                            <button type="submit"
+                                class="btn-submit animate__animated animate__pulse animate__infinite animate__slower">
                                 <i class="fas fa-save"></i> حفظ البيانات
                             </button>
                         </div>
@@ -839,14 +910,24 @@
             });
 
             // عرض رسائل الخطأ من لارافيل
-            @if($errors->any())
+            @if ($errors->any())
                 $('#errorAlert').fadeIn().addClass('animate__headShake');
             @endif
 
             // عرض رسالة النجاح إذا كانت موجودة في الجلسة
-            @if(session('success'))
-                $('#successAlert').html('<i class="fas fa-check-circle"></i> {{ session('success') }}').fadeIn().addClass('animate__tada');
+            @if (session('success'))
+                $('#successAlert').html('<i class="fas fa-check-circle"></i> {{ session('success') }}').fadeIn()
+                    .addClass('animate__tada');
             @endif
         });
+
+
+        var loadFile = function(event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src);
+            }
+        };
     </script>
 @endsection

@@ -20,6 +20,7 @@ class Admin extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
     ];
 
     /**
@@ -40,4 +41,10 @@ class Admin extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // علاقة الصورة MorphOne
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 }

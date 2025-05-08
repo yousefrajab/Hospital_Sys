@@ -99,6 +99,47 @@
                 padding: 0 15px 20px;
             }
         }
+
+
+        .avatar-upload {
+            position: relative;
+            width: 100px;
+            height: 180px;
+            /* margin: 0 auto; */
+        }
+
+        .avatar-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-upload label {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            background: var(--secondary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-upload label i {
+            color: white;
+            font-size: 18px;
+        }
+
+        .avatar-upload input[type="file"] {
+            display: none;
+        }
     </style>
 @endsection
 
@@ -134,15 +175,32 @@
                     <h3><i class="fas fa-user-edit"></i> تعديل بيانات المريض</h3>
                     <p class="mb-0">قم بتحديث بيانات المريض {{ $Patient->name }} في النظام</p>
                 </div>
-
                 <div class="form-section">
-                    <form action="{{ route('admin.Patients.update', 'test') }}" method="post" autocomplete="off" id="patientForm">
+                    <form action="{{ route('admin.Patients.update', 'test') }}" method="post" autocomplete="off"
+                        id="patientForm" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
                         <input type="hidden" name="id" value="{{ $Patient->id }}">
-
+                        <div class="col-md-3">
+                            <div class="avatar-upload mb-4">
+                                @if ($Patient->image)
+                                    <img id="output"
+                                        src="{{ URL::asset('Dashboard/img/patients/' . $Patient->image->filename) }}"
+                                        alt="{{ trans('patients.img') }}">
+                                @else
+                                    <img id="output" src="{{ URL::asset('Dashboard/img/doctor_default.png') }}"
+                                        alt="صورة الطبيب">
+                                @endif
+                                <label for="avatar-upload">
+                                    <i class="fas fa-camera"></i>
+                                </label>
+                                <input id="avatar-upload" type="file" accept="image/*" name="photo"
+                                    onchange="loadFile(event)">
+                            </div>
+                        </div>
                         <div class="row">
                             <!-- المعلومات الشخصية -->
+
                             <div class="col-md-6">
                                 <h5 class="section-title mb-4"><i class="fas fa-id-card"></i> المعلومات الشخصية</h5>
 
@@ -173,6 +231,39 @@
                                         class="form-control @error('Phone') is-invalid @enderror" placeholder="05XXXXXXXX"
                                         required>
                                 </div>
+
+
+                                <div class="field-group">
+                                    <label for="password" class="form-label required">كلمة المرور</label>
+                                    <div class="input-group password-toggle-group">
+                                        <input type="password" id="password" name="password"
+                                            class="form-control @error('password') is-invalid @enderror"
+                                            placeholder="اتركه فارغا اذا لم ترد التغيير " minlength="8"
+                                            pattern="^(?=.*[A-Za-z])(?=.*\d).{8,}$" title="يجب أن تحتوي على حروف وأرقام">
+                                        <button class="btn toggle-password" type="button" tabindex="-1">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="valid-feedback"><i class="fas fa-check"></i> قوي</div>
+                                    <div class="medical-text">لأمان أفضل، استخدم مزيجًا من الحروف والأرقام</div>
+                                </div>
+                                {{-- <div class="field-group">
+                                    <label for="password_confirmation" class="form-label required">تأكيد كلمة
+                                        المرور</label>
+                                    <div class="input-group password-toggle-group">
+                                        <input type="password" id="password_confirmation" name="password_confirmation"
+
+                                            class="form-control" placeholder="أعد إدخال كلمة المرور" >
+                                        <button class="btn toggle-password" type="button" tabindex="-1">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="invalid-feedback">كلمة المرور غير متطابقة</div>
+                                    <div class="valid-feedback"><i class="fas fa-check"></i> متطابق</div>
+                                </div> --}}
                             </div>
 
                             <!-- المعلومات الطبية -->
@@ -294,6 +385,56 @@
                 }
                 this.classList.add('was-validated');
             });
+        });
+    </script>
+
+    <script>
+        var loadFile = function(event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src);
+            }
+        };
+
+
+        // إظهار/إخفاء كلمة المرور
+        $('.toggle-password').click(function() {
+            const input = $(this).siblings('input');
+            const icon = $(this).find('i');
+            const type = input.attr('type') === 'password' ? 'text' : 'password';
+            input.attr('type', type);
+            icon.toggleClass('fa-eye fa-eye-slash');
+        });
+
+        function validatePasswordMatch() {
+            const password = $('#password').val();
+        //     const confirm = $('#password_confirmation').val();
+
+        //     if (confirm !== password) {
+        //         $('#password_confirmation')[0].setCustomValidity('كلمة المرور غير متطابقة');
+        //     } else {
+        //         $('#password_confirmation')[0].setCustomValidity('');
+        //     }
+        // }
+
+        // // عند الكتابة في حقل التأكيد أو حقل كلمة المرور الأصلية
+        // $('#password, #password_confirmation').on('input', validatePasswordMatch);
+
+        // تحقق من قوة كلمة المرور
+        $('#password').on('input', function() {
+            const password = $(this).val();
+            const strengthText = $(this).nextAll('.valid-feedback');
+
+            if (password.length === 0) {
+                strengthText.html('<i class="fas fa-check"></i> صحيح');
+            } else if (password.length < 8) {
+                strengthText.html('<i class="fas fa-exclamation-triangle"></i> ضعيفة');
+            } else if (!/\d/.test(password) || !/[a-zA-Z]/.test(password)) {
+                strengthText.html('<i class="fas fa-check"></i> متوسطة');
+            } else {
+                strengthText.html('<i class="fas fa-check"></i> قوية');
+            }
         });
     </script>
 @endsection

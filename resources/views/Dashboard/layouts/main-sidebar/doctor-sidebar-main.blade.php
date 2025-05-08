@@ -17,8 +17,10 @@
                 <div class="user-avatar-wrapper">
                     <img alt="user-img" class="avatar avatar-lg rounded-circle user-avatar"
                         src="{{ Auth::guard('doctor')->user()->image ? asset('Dashboard/img/doctors/' . Auth::guard('doctor')->user()->image->filename) : asset('Dashboard/img/doctor_default.png') }}">
-                    <span
-                        class="avatar-status-indicator {{ Auth::guard('doctor')->user()->status ? 'online' : 'offline' }}"></span>
+                    <span class="avatar-status-indicator {{ Auth::guard('doctor')->user()->status ? 'online' : 'offline' }}"></span>
+
+                        {{-- <span class="avatar-status profile-status bg-green"></span> --}}
+
                 </div>
                 <div class="user-info">
                     <h6 class="font-weight-semibold user-name mb-1">{{ Auth::guard('doctor')->user()->name }}</h6>

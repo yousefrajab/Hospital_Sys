@@ -333,7 +333,7 @@
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
-            <a href="{{ route('Doctors.index') }}" class="btn btn-primary">
+            <a href="{{ route('admin.Doctors.index') }}" class="btn btn-primary">
                 <i class="fas fa-arrow-left"></i> {{ trans('doctors.Return to Doctors List') }}
             </a>
         </div>
@@ -365,7 +365,7 @@
                     <i class="fas fa-exclamation-circle"></i> حدث خطأ أثناء التسجيل، يرجى مراجعة البيانات المطلوبة.
                 </div>
 
-                <form action="{{ route('Doctors.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off"
+                <form action="{{ route('admin.Doctors.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off"
                     id="doctorForm">
                     @csrf
 
@@ -494,7 +494,7 @@
 
                     <div class="d-flex justify-content-end mt-6 gap-4">
                         <!-- زر الإلغاء -->
-                        <a href="{{ route('Doctors.index') }}" class="btn-custom btn-cancel">
+                        <a href="{{ route('admin.Doctors.index') }}" class="btn-custom btn-cancel">
                             <span class="btn-content">
                                 <i class="fas fa-times me-2"></i>
                                 <span>{{ trans('doctors.cancel') }}</span>
@@ -603,7 +603,7 @@
                         contentType: false,
                         success: function(response) {
                             // نجاح - إعادة توجيه أو عرض رسالة
-                            window.location.href = "{{ route('Doctors.index') }}";
+                            window.location.href = "{{ route('admin.Doctors.index') }}";
                         },
                         error: function(xhr) {
                             // عرض أخطاء الخادم

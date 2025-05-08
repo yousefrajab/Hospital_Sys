@@ -188,7 +188,7 @@
                         <hr class="mg-b-40">
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('admin.payments.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('admin.Payment.index') }}" class="btn btn-secondary">
                                 <i class="fa fa-arrow-circle-left"></i> رجوع
                             </a>
                             <button class="btn btn-danger" id="print_Button" onclick="printDiv()">

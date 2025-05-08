@@ -47,7 +47,7 @@
              }
          }
          session()->flash('edit');
-         return redirect()->route('invoices_ray_employee.index');
+         return redirect()->route('laboratorie_employee.invoices_laboratorie_employee.index');
 
      }
 

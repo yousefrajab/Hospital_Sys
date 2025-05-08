@@ -2,20 +2,21 @@
 
 namespace App\Http\Livewire;
 
-use App\Events\CreateInvoice;
-use App\Models\Appointment;
 use App\Models\Doctor;
-use App\Models\FundAccount;
 use App\Models\Invoice;
-use App\Models\Notification;
 use App\Models\Patient;
-use App\Models\PatientAccount;
 use App\Models\Service;
-use App\Models\single_invoice;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
+use App\Models\Appointment;
+use App\Models\FundAccount;
+use App\Models\Notification;
+use App\Events\CreateInvoice;
+use App\Models\PatientAccount;
+use App\Models\single_invoice;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redirect;
 
 class SingleInvoices extends Component
 {
@@ -31,8 +32,6 @@ class SingleInvoices extends Component
 
         $this->username = auth()->user()->name;
      }
-
-
 
     public function render()
     {
@@ -53,7 +52,7 @@ class SingleInvoices extends Component
     public function print($id)
     {
         $single_invoice = Invoice::findorfail($id);
-        return Redirect::route('Print_single_invoices',[
+        return Redirect::route('admin.Print_single_invoices',[
             'invoice_date' => $single_invoice->invoice_date,
             'doctor_id' => $single_invoice->Doctor->name,
             'section_id' => $single_invoice->Section->name,
@@ -305,15 +304,25 @@ class SingleInvoices extends Component
 
      $this->single_invoice_id = $id;
      session()->flash('delete');
-    return redirect()->to('/single_invoices')->with('success', 'تم حذف الخدمة بنجاح');
+    return redirect()->to('admin/single_invoices')->with('success', 'تم حذف الخدمة بنجاح');
 
     }
+
+
+    public function prepareForDelete($id)
+    {
+        $this->single_invoice_id = $id;
+        Log::info('Preparing to delete invoice ID: ' . $id); // اختياري
+        // يمكنك إضافة $this->dispatchBrowserEvent('show-delete-modal'); إذا أردت فتح المودال عبر JS
+        // ولكن data-toggle="modal" عادة ما يكون كافيًا
+    }
+
 
     public function destroy(){
         Invoice::destroy($this->single_invoice_id);
         // return redirect()->to('/single_invoices');
         session()->flash('delete');
-    return redirect()->to('/single_invoices')->with('success', 'تم حذف الخدمة بنجاح');
+    return redirect()->to('admin/single_invoices')->with('success', 'تم حذف الخدمة بنجاح');
     }
 
 

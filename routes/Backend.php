@@ -5,7 +5,6 @@ use App\Events\MyEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminController;
-use App\Http\Controllers\Dashboard\AdminProfileController;
 use App\Http\Controllers\Dashboard\DoctorController;
 use App\Http\Controllers\Dashboard\PatientController;
 use App\Http\Controllers\Dashboard\SectionController;
@@ -13,7 +12,9 @@ use App\Http\Controllers\Dashboard\AmbulanceController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\InsuranceController;
 use App\Http\Controllers\Dashboard\RayEmployeeController;
+use App\Http\Controllers\Dashboard\AdminProfileController;
 use App\Http\Controllers\Dashboard\SingleServiceController;
+use App\Http\Controllers\Dashboard\Admin\UserRoleController;
 use App\Http\Controllers\Dashboard\PaymentAccountController;
 use App\Http\Controllers\Dashboard\ReceiptAccountController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -49,7 +50,7 @@ Route::group(
 
             Route::get('/profile', [AdminProfileController::class, 'show'])->name('profile.show');
             Route::get('/profile/edit', [AdminProfileController::class, 'edit'])->name('profile.edit'); // للتعديل
-            Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update'); // لحفظ التعديل
+            Route::patch('/profile', [AdminProfileController::class, 'update'])->name('profile.update'); // لحفظ التعديل
 
 
 
@@ -131,12 +132,16 @@ Route::group(
             //############################# RayEmployee route ##########################################
 
             Route::resource('ray_employee', RayEmployeeController::class);
+            Route::get('/ray_employee/{id}/edit', [RayEmployeeController::class, 'edit'])->name('ray_employee.edit');
 
             //############################# end RayEmployee route ######################################
 
             //############################# laboratorie_employee route ##########################################
 
             Route::resource('laboratorie_employee', LaboratorieEmployeeController::class);
+
+            Route::get('/laboratorie_employee/{id}/edit', [LaboratorieEmployeeController::class, 'edit'])->name('laboratorie_employee.edit');
+
 
             //############################# end laboratorie_employee route ######################################
 
@@ -163,10 +168,12 @@ Route::group(
             // (اختياري) مسار الحذف النهائي (قد يكون موجوداً ضمن destroy في Route::resource)
             // Route::delete('/delete/{appointment}', [AppointmentController::class, 'destroy'])->name('destroy');
 
+            // مسار عرض المستخدمين وأدوارهم
+            Route::get('/users-roles', [UserRoleController::class, 'index'])->name('users.roles.index');
 
-
-
-
+            Route::get('/users-roles/{role_key}/{id}/edit', [UserRoleController::class, 'editUser'])->name('users.roles.edit');
+            // Route لتحديث بيانات المستخدم
+            Route::match(['put', 'patch'], '/users-roles/{role_key}/{id}', [UserRoleController::class, 'updateUser'])->name('users.roles.update');
         });
         require __DIR__ . '/auth.php';
     }

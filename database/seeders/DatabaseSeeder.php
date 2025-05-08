@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Laboratorie;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +21,7 @@ class DatabaseSeeder extends Seeder
             SectionTableSeeder::class,
             DoctorTableSeeder::class,
             ImageTableSeeder::class,
+            LaboratorieEmployeeTableSeeder::class,
             PatientTableSeeder::class,
             RayEmployeeTableSeeder::class,
             ServiceTableSeeder::class,

@@ -254,7 +254,7 @@
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
-            <a href="{{ route('Doctors.index') }}" class="btn btn-primary">
+            <a href="{{ route('admin.Doctors.index') }}" class="btn btn-primary">
                 <i class="fas fa-arrow-left"></i> {{ trans('doctors.Return to Doctors List') }}
             </a>
         </div>
@@ -277,7 +277,7 @@
                     </div>
                 </div>
 
-                <form action="{{ route('Doctors.update', $doctor->id) }}" method="POST" enctype="multipart/form-data"
+                <form action="{{ route('admin.Doctors.update', $doctor->id) }}" method="POST" enctype="multipart/form-data"
                     autocomplete="off">
                     @method('patch')
                     @csrf
@@ -449,7 +449,7 @@
 
                     <div class="d-flex justify-content-end mt-6 gap-4">
                         <!-- زر الإلغاء -->
-                        <a href="{{ route('Doctors.index') }}" class="btn-custom btn-cancel">
+                        <a href="{{ route('admin.Doctors.index') }}" class="btn-custom btn-cancel">
                             <span class="btn-content">
                                 <i class="fas fa-times me-2"></i>
                                 <span>{{ trans('doctors.cancel') }}</span>

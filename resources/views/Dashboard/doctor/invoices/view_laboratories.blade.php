@@ -22,7 +22,7 @@
          <textarea readonly class="form-control" id="exampleFormControlTextarea1" rows="3">{{$laboratories->description_employee}}</textarea>
      </div>
 
-{{-- 
+{{--
      <div class="demo-gallery">
         <ul id="lightgallery" class="gallery-grid">
             @foreach($laboratories->images as $image)
@@ -38,6 +38,7 @@
     <!-- Gallery -->
     <div class="demo-gallery">
         <ul id="lightgallery" class="list-unstyled row row-sm pr-0">
+            
             @foreach($laboratories->images as $image)
                 <li class="col-sm-6 col-lg-4">
                     <a href="javascript:void(0);" onclick="openImage('{{ URL::asset('Dashboard/img/laboratories/'.$image->filename) }}')">

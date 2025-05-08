@@ -109,10 +109,10 @@ class DoctorController extends Controller
         return $this->Doctors->getScheduleForEdit($id);
         if ($success) {
             // إعادة التوجيه لصفحة *عرض* الجدول بعد الحفظ
-            return redirect()->route('doctor.schedule.show')->with('success', 'تم تحديث جدول العمل بنجاح.'); // <--- تعديل اسم المسار
+            return redirect()->route('admin.doctor.schedule.show')->with('success', 'تم تحديث جدول العمل بنجاح.'); // <--- تعديل اسم المسار
         } else {
             // العودة لصفحة *تعديل* الجدول مع الأخطاء
-            return redirect()->route('doctors.schedule.edit', $id)->withInput()->withErrors(['schedule_error' => session('error', 'فشل تحديث الجدول.')]); // <--- تعديل اسم المسار وتمرير الخطأ// سننشئ هذه الدالة
+            return redirect()->route('admin.doctors.schedule.edit', $id)->withInput()->withErrors(['schedule_error' => session('error', 'فشل تحديث الجدول.')]); // <--- تعديل اسم المسار وتمرير الخطأ// سننشئ هذه الدالة
         }
     }
 
@@ -260,7 +260,7 @@ class DoctorController extends Controller
 
             DB::commit();
             Log::info("--- Schedule update committed successfully for Doctor ID: {$doctor->id} ---");
-            return redirect()->route('doctor.schedule.show')->with('success', 'تم تحديث ساعات العمل بنجاح.');
+            return redirect()->route('admin.doctor.schedule.show')->with('success', 'تم تحديث ساعات العمل بنجاح.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             Log::warning("--- Validation Exception during schedule update for Doctor ID: {$doctor->id} ---", ['errors' => $e->errors()]);
@@ -345,7 +345,7 @@ class DoctorController extends Controller
 
         if ($success) {
             // رسالة النجاح تم وضعها في الـ Repository
-            return redirect()->route('doctors.schedule.edit', $id);
+            return redirect()->route('admin.doctors.schedule.edit', $id);
         } else {
             // رسالة الخطأ تم وضعها في الـ Repository
             // العودة للصفحة السابقة مع الأخطاء والبيانات القديمة
@@ -360,7 +360,7 @@ class DoctorController extends Controller
         }
 
         // إعادة التوجيه إلى صفحة *عرض* جدول العمل مرة أخرى (أو قائمة الأطباء)
-        return redirect()->route('doctors.schedule.edit', $id)->with('success', 'تم تحديث جدول العمل بنجاح.');
+        return redirect()->route('admin.doctors.schedule.edit', $id)->with('success', 'تم تحديث جدول العمل بنجاح.');
         // أو
         // return redirect()->route('Doctors.index')->with('success', 'تم تحديث جدول عمل الطبيب ' . $doctor->name);
     }

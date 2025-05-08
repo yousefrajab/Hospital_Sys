@@ -40,7 +40,7 @@
                     <div class="pb-0 mt-0">
                         <div class="d-flex">
                             <div class="">
-                                <h4 class="tx-20 font-weight-bold mb-1 text-white">{{ App\Models\Ray::count() }}</h4>
+                                <h4 class="tx-20 font-weight-bold mb-1 text-white">{{ App\Models\Invoice::count() }}</h4>
                             </div>
                         </div>
                     </div>

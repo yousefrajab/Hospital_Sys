@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePatientRequest;
+use App\Http\Requests\UpdatePatientRequest;
 use App\Interfaces\Patients\PatientRepositoryInterface;
-use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
@@ -47,7 +48,7 @@ class PatientController extends Controller
     }
 
 
-    public function update(StorePatientRequest $request)
+    public function update(UpdatePatientRequest $request)
     {
         return $this->Patient->update($request);
     }

@@ -50,7 +50,7 @@
           }
 
         session()->flash('edit');
-        return redirect()->route('invoices_ray_employee.index');
+        return redirect()->route('ray_employee.invoices_ray_employee.index');
 
     }
 

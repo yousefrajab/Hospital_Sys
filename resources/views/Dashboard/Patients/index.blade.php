@@ -128,6 +128,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>اسم المريض</th>
+                                <th>صورة المريض</th>
                                 <th>رقم الهوية</th>
                                 <th>البريد الإلكتروني</th>
                                 <th>تاريخ الميلاد</th>
@@ -146,6 +147,16 @@
                                     <a href="{{route('admin.Patients.show',$Patient->id)}}" class="patient-link">
                                         {{$Patient->name}}
                                     </a>
+                                </td>
+                                <td>
+                                    {{-- عرض الصورة كما هو --}}
+                                    @if ($Patient->image)
+                                        <img src="{{ Url::asset('Dashboard/img/patients/' . $Patient->image->filename) }}"
+                                            class="doctor-avatar" alt="{{ trans('patients.img') }}">
+                                    @else
+                                        <img src="{{ Url::asset('Dashboard/img/doctor_default.png') }}"
+                                            class="doctor-avatar" alt="صورة افتراضية">
+                                    @endif
                                 </td>
                                 <td>{{$Patient->national_id}}</td>
                                 <td>{{$Patient->email}}</td>

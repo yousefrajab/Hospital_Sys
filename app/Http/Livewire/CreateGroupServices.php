@@ -82,7 +82,7 @@ class CreateGroupServices extends Component
     public function saveService($index)
     {
         $this->resetErrorBag();
-        $product = $this->allServices()->find($this->GroupsItems[$index]['service_id']);
+        $product = $this->allServices->find($this->GroupsItems[$index]['service_id']);
         $this->GroupsItems[$index]['service_name'] = $product->name;
         $this->GroupsItems[$index]['service_price'] = $product->price;
         $this->GroupsItems[$index]['is_saved'] = true;

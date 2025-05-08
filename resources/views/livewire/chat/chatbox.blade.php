@@ -3,8 +3,25 @@
         <div class="chat-header">
             <div class="user-info">
                 <div class="avatar">
-                    <img src="{{ $receviverUser->image ? asset('Dashboard/img/doctors/' . $receviverUser->image->filename) : asset('Dashboard/img/faces/doctor_default.png') }}"
-                         alt="صورة المستخدم">
+
+
+                    @php
+                        $otherUser = null;
+                        $imagePath = null;
+                        $defaultImage = URL::asset('Dashboard/img/faces/user_default.png'); // صورة افتراضية عامة
+                        if ($otherUser->image && $otherUser->image->filename) {
+                            if ($otherUserType === 'doctor') {
+                                $imagePath = URL::asset('Dashboard/img/doctors/' . $otherUser->image->filename);
+
+                                $defaultImage = URL::asset('Dashboard/img/faces/user_default.png');
+                            } elseif ($otherUserType === 'patient') {
+                                $imagePath = URL::asset('Dashboard/img/patients/' . $otherUser->image->filename);
+                                $defaultImage = URL::asset('Dashboard/img/faces/user_default.png');
+                            }
+                        }
+                    @endphp
+                    <img src="{{ $imagePath ?? $defaultImage }}" width="50" height="50" style="margin: 10px"
+                        class="user-avatar rounded-circle" alt="صورة {{ $otherUser->name ?? '' }}">
                 </div>
                 <div class="user-details">
                     <h6>{{ $receviverUser->name }}</h6>
@@ -22,18 +39,25 @@
         <div class="messages-container" id="messagesContainer">
             @foreach ($messages as $message)
                 <div class="message-wrapper {{ $auth_email == $message->sender_email ? 'sent' : 'received' }}"
-                     wire:key="message-{{ $message->id }}">
+                    wire:key="message-{{ $message->id }}">
                     <div class="message-bubble">
                         <div class="message-content">
                             {{ $message->body }}
                         </div>
                         <div class="message-meta">
                             <span class="message-time">
-                                {{ $message->created_at->locale('ar')->translatedFormat('h:i A') }}
+                                {{-- استخدام الـ Accessor الذي أضفناه أو التنسيق المباشر --}}
+                                {{-- $message->formatted_created_at ?? $message->created_at->locale('ar')->translatedFormat('h:i A') --}}
+                                {{ optional($message->created_at)->locale('ar')->translatedFormat('h:i A') }}
                             </span>
-                            @if($auth_email == $message->sender_email)
-                                <span class="message-status">
-                                    <i class="fas fa-check-double {{ $message->read_at ? 'text-primary' : 'text-muted' }}"></i>
+                            {{-- عرض حالة القراءة فقط للرسائل المرسلة --}}
+                            @if ($auth_email == $message->sender_email)
+                                <span class="message-status ms-1"> {{-- استخدام ms-1 للمسافة --}}
+                                    {{-- <<< تعديل هنا: الاعتماد على read وليس read_at >>> --}}
+                                    <i
+                                        class="fas fa-check-double {{ $message->read ? 'text-primary' : 'text-muted' }}"></i>
+                                    {{-- أو باستخدام الـ accessor: --}}
+                                    {{-- <i class="fas fa-check-double {{ $message->is_read ? 'text-primary' : 'text-muted' }}"></i> --}}
                                 </span>
                             @endif
                         </div>
@@ -137,7 +161,7 @@
     .message.received .message-content {
         background: white;
         border-top-left-radius: 0;
-        box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     }
 
     .message-time {
@@ -149,7 +173,7 @@
 
     .message.sent .message-time {
         text-align: left;
-        color: rgba(255,255,255,0.8);
+        color: rgba(255, 255, 255, 0.8);
     }
 
     .message.received .message-time {
@@ -225,7 +249,7 @@
 
     .message-wrapper.sent .message-meta {
         justify-content: flex-end;
-        color: rgba(255,255,255,0.7);
+        color: rgba(255, 255, 255, 0.7);
     }
 
     .message-wrapper.received .message-meta {
@@ -263,7 +287,7 @@
 @push('scripts')
 <script>
     document.addEventListener('livewire:load', function() {
-        @if(auth()->check())
+        @if (auth()->check())
             const channelName = @json(auth()->guard('patient')->check() ? 'chat2' : 'chat');
             const userId = @json(auth()->id());
 

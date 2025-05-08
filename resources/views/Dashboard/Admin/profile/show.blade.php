@@ -2,7 +2,7 @@
 @extends('Dashboard.layouts.master')
 
 @section('title')
-    الملف الشخصي للمدير | {{ $admin->name }}
+    الملف الشخصي | {{ $admin->name }}
 @endsection
 
 {{-- ========================== CSS Section ========================== --}}
@@ -12,67 +12,61 @@
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    {{-- NotifIt إذا كانت ستستخدم للإشعارات --}}
-    <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
 
     <style>
         /* --- تصميم عصري 2025 --- */
         :root {
             --admin-bg: #f8f9fc;
-            /* خلفية الصفحة الرئيسية */
             --admin-card-bg: #ffffff;
-            /* خلفية البطاقات */
             --admin-text-primary: #1e293b;
-            /* لون النص الأساسي */
             --admin-text-secondary: #64748b;
-            /* لون النص الثانوي */
             --admin-primary: #4f46e5;
-            /* لون أساسي (بنفسجي) */
             --admin-primary-hover: #4338ca;
             --admin-secondary: #10b981;
-            /* لون ثانوي (أخضر زمردي) */
             --admin-border-color: #e5e7eb;
-            /* لون الحدود */
             --admin-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --admin-radius-lg: 1rem;
-            /* 16px */
-            --admin-radius-md: 0.5rem;
-            /* 8px */
+            --admin-radius-lg: 1rem; /* 16px */
+            --admin-radius-md: 0.5rem; /* 8px */
             --admin-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* === Dark Mode Styles === */
         @media (prefers-color-scheme: dark) {
             :root {
                 --admin-bg: #111827;
-                /* خلفية داكنة */
                 --admin-card-bg: #1f2937;
-                /* خلفية بطاقة داكنة */
                 --admin-text-primary: #f3f4f6;
-                /* نص فاتح */
                 --admin-text-secondary: #9ca3af;
-                /* نص ثانوي أفتح */
                 --admin-border-color: #374151;
-                /* حدود أغمق */
                 --admin-primary: #6366f1;
-                /* لون أساسي أفتح قليلاً */
                 --admin-primary-hover: #4f46e5;
                 --admin-secondary: #34d399;
-                /* لون ثانوي أفتح قليلاً */
                 --admin-shadow: 0 4px 6px -1px rgb(255 255 255 / 0.05), 0 2px 4px -2px rgb(255 255 255 / 0.05);
             }
         }
 
         /* يمكنك أيضًا استخدام كلاس .dark على body لتفعيل الوضع الداكن */
-        .dark {
-            /* نفس متغيرات @media (prefers-color-scheme: dark) */
+        .dark body { /* Apply dark theme variables if body has .dark class */
+            --admin-bg: #111827;
+            --admin-card-bg: #1f2937;
+            --admin-text-primary: #f3f4f6;
+            --admin-text-secondary: #9ca3af;
+            --admin-border-color: #374151;
+            --admin-primary: #6366f1;
+            --admin-primary-hover: #4f46e5;
+            --admin-secondary: #34d399;
+            --admin-shadow: 0 4px 6px -1px rgb(255 255 255 / 0.05), 0 2px 4px -2px rgb(255 255 255 / 0.05);
         }
+        .dark .profile-header-card::before {
+             background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent 70%);
+        }
+        /* ... (أضف أي تجاوزات أخرى للوضع الداكن هنا إذا لزم الأمر) ... */
 
-        /* === Layout === */
+
         body {
             background-color: var(--admin-bg);
             color: var(--admin-text-primary);
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Tajawal', sans-serif; /* تأكد من تحميل هذا الخط إذا لم يكن موجودًا */
         }
 
         .admin-profile-container {
@@ -81,7 +75,6 @@
             margin: auto;
         }
 
-        /* === Profile Header Card === */
         .profile-header-card {
             background: var(--admin-card-bg);
             border-radius: var(--admin-radius-lg);
@@ -98,7 +91,6 @@
             animation: fadeInUp 0.5s ease-out;
         }
 
-        /* تأثير زخرفي بسيط في الخلفية */
         .profile-header-card::before {
             content: '';
             position: absolute;
@@ -113,12 +105,6 @@
             transition: var(--admin-transition);
         }
 
-        @media (prefers-color-scheme: dark) {
-            .profile-header-card::before {
-                background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent 70%);
-            }
-        }
-
         .profile-avatar-wrapper {
             flex-shrink: 0;
             position: relative;
@@ -131,7 +117,6 @@
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid var(--admin-card-bg);
-            /* فصل عن الخلفية */
             box-shadow: 0 0 0 4px var(--admin-primary), 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
@@ -173,47 +158,22 @@
             font-size: 0.9em;
         }
 
-        .profile-edit-action {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
+        .profile-action-buttons { /* لتجميع أزرار الإجراءات في الهيدر */
+            margin-left: auto; /* لدفع الأزرار إلى اليمين في LTR */
+            display: flex;
+            gap: 0.5rem;
             z-index: 2;
         }
-
-        .edit-profile-btn {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            /* تأثير زجاجي */
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--admin-text-primary);
-            padding: 0.5rem 0.8rem;
-            border-radius: var(--admin-radius-md);
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            transition: var(--admin-transition);
-        }
-
-        .edit-profile-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--admin-primary);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .edit-profile-btn {
-                background: rgba(0, 0, 0, 0.1);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                color: var(--admin-text-primary);
-            }
-
-            .edit-profile-btn:hover {
-                background: rgba(0, 0, 0, 0.2);
-                color: var(--admin-primary);
+        @media (max-width: 768px) { /* في الشاشات الصغيرة، الأزرار تحت التفاصيل */
+            .profile-action-buttons {
+                width: 100%;
+                justify-content: center;
+                margin-top: 1rem;
+                margin-left: 0;
             }
         }
 
-        /* === Sections (Info & Actions) === */
+
         .section-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -231,18 +191,17 @@
         }
 
         .section-title::after {
-            /* خط سفلي مميز */
             content: '';
             position: absolute;
             bottom: 0;
-            right: 0;
+            right: 0; /* للغة العربية */
+            /* left: 0; للغة الإنجليزية */
             width: 40px;
             height: 3px;
             background: var(--admin-primary);
             border-radius: 2px;
         }
 
-        /* === Info Card === */
         .info-card-2025 {
             background: var(--admin-card-bg);
             border-radius: var(--admin-radius-md);
@@ -290,7 +249,6 @@
             word-break: break-word;
         }
 
-        /* === Action Card === */
         .action-card {
             background: var(--admin-card-bg);
             border-radius: var(--admin-radius-md);
@@ -302,7 +260,6 @@
             display: block;
             color: var(--admin-text-primary);
             text-decoration: none !important;
-            /* إزالة أي خط تحت الرابط */
         }
 
         .action-card:hover {
@@ -337,92 +294,86 @@
             line-height: 1.4;
         }
 
-        /* === Responsive === */
+        .btn-profile-action { /* زر التعديل وغيره */
+            background-color: var(--admin-primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: var(--admin-radius-md);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--admin-transition);
+            text-decoration: none !important;
+        }
+        .btn-profile-action:hover {
+            background-color: var(--admin-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-profile-action i {
+            font-size: 0.9em;
+        }
+
+
         @media (max-width: 768px) {
             .admin-profile-container {
                 padding: 1rem;
             }
-
             .profile-header-card {
                 padding: 1.5rem;
                 flex-direction: column;
                 text-align: center;
             }
-
             .profile-avatar {
                 width: 70px;
                 height: 70px;
             }
-
             .profile-details h2 {
                 font-size: 1.5rem;
             }
-
-            .profile-edit-action {
-                top: 0.5rem;
-                right: 0.5rem;
-            }
-
-            .edit-profile-btn {
-                padding: 0.4rem 0.6rem;
-                font-size: 0.75rem;
-            }
-
             .section-grid {
                 grid-template-columns: 1fr;
-                /* عمود واحد */
             }
         }
 
-        /* === Animations === */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate__fadeInUp {
-            animation-name: fadeInUp;
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 @endsection
 
 @section('page-header')
-    <!-- breadcrumb -->
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">لوحة التحكم</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ الملف الشخصي</span>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-user-shield mr-2" style="color: var(--admin-primary);"></i>الملف الشخصي</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ عرض البيانات</span>
             </div>
         </div>
-        <div class="d-flex my-xl-auto right-content">
-            {{-- أزرار للانتقال بين قوائم المواعيد --}}
-
-            <a href="{{ route('admin.profile.edit') }}" class="btn btn-outline-success btn-sm mr-2"><i
-                    class="fas fa-check me-1"></i>تعديل البيانات</a>
-
+         {{-- زر التعديل في الهيدر العلوي لسهولة الوصول --}}
+        <div class="d-flex my-xl-auto right-content align-items-center">
+             <a href="{{ route('admin.profile.edit') }}" class="btn-profile-action">
+                <i class="fas fa-edit"></i> تعديل الملف الشخصي
+            </a>
         </div>
-        
     </div>
-    <!-- breadcrumb -->
 @endsection
+
 @section('content')
-    @include('Dashboard.messages_alert')
+    @include('Dashboard.messages_alert') {{-- لعرض رسائل النجاح أو الخطأ بعد التحديث --}}
 
     <div class="admin-profile-container">
 
         {{-- 1. بطاقة رأس الملف الشخصي --}}
         <div class="profile-header-card animate__animated animate__fadeInUp">
             <div class="profile-avatar-wrapper">
+                {{-- تعديل مسار الصورة ليعكس صور الأدمن --}}
                 <img class="profile-avatar" alt="{{ $admin->name }}"
-                    src="{{ Auth::user()->image ? asset('Dashboard/img/doctors/' . Auth::user()->image->filename) : asset('Dashboard/img/faces/doctor_default.png') }}">
+                    src="{{ $admin->image ? asset('Dashboard/img/admin_photos/' . $admin->image->filename) : asset('Dashboard/img/default_avatar.png') }}">
             </div>
             <div class="profile-details">
                 <h2>{{ $admin->name }}</h2>
@@ -434,14 +385,16 @@
                     </p>
                 @endif
             </div>
+            {{-- تم نقل زر التعديل إلى الهيدر الرئيسي للصفحة ليكون أوضح وأكثر سهولة في الوصول إليه --}}
             <div class="profile-edit-action">
-                <a href="#" class="edit-profile-btn">
+                <a href="{{ route('admin.profile.edit') }}" class="edit-profile-btn">
+                    <i class="fas fa-pencil-alt"></i> تعديل
                 </a>
             </div>
         </div>
 
         {{-- 2. قسم المعلومات الأساسية --}}
-        <div class="mb-5">
+        <div class="mb-5 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
             <h4 class="section-title">المعلومات الأساسية</h4>
             <div class="section-grid">
                 {{-- بطاقة البريد الإلكتروني --}}
@@ -452,94 +405,97 @@
                         <p>{{ $admin->email }}</p>
                     </div>
                 </div>
+
+                {{-- بطاقة رقم الهاتف --}}
+                @if($admin->phone)
+                <div class="info-card-2025">
+                    <div class="info-icon" style="background: linear-gradient(135deg, var(--admin-secondary), #0d9488);"><i class="fas fa-phone-alt"></i></div> {{-- لون مختلف قليلاً --}}
+                    <div class="info-content">
+                        <label>رقم الهاتف</label>
+                        <p>{{ $admin->phone }}</p>
+                    </div>
+                </div>
+                @endif
+
                 {{-- بطاقة تاريخ الانضمام --}}
                 <div class="info-card-2025">
                     <div class="info-icon"><i class="fas fa-calendar-check"></i></div>
                     <div class="info-content">
                         <label>تاريخ الانضمام</label>
-                        <p>{{ $admin->created_at ? $admin->created_at->translatedFormat('d M Y') : '-' }}</p>
+                        <p>{{ $admin->created_at ? $admin->created_at->translatedFormat('d M Y, H:i A') : ' ' }}</p>
                     </div>
                 </div>
-                {{-- (اختياري) بطاقة حالة الحساب --}}
-                {{-- <div class="info-card-2025">
-                     <div class="info-icon" style="background: var(--admin-secondary);"><i class="fas fa-check-circle"></i></div>
-                     <div class="info-content">
-                         <label>حالة الحساب</label>
-                         <p style="color: var(--admin-secondary);">نشط</p>
-                     </div>
-                 </div> --}}
             </div>
         </div>
 
-        {{-- 3. قسم الإجراءات السريعة (الأهم للأدمن) --}}
-        <div class="mb-4">
+        {{-- 3. قسم الإجراءات السريعة (يمكنك تخصيصه حسب الحاجة) --}}
+        <div class="mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
             <h4 class="section-title">إجراءات سريعة</h4>
             <div class="section-grid">
-                {{-- مثال: بطاقة إدارة الأطباء --}}
-                <a href="{{ route('admin.Doctors.index') }}" class="action-card"> {{-- تأكد من اسم الراوت --}}
+                @if(Route::has('admin.Doctors.index')) {{-- تحقق من وجود الراوت قبل عرضه --}}
+                <a href="{{ route('admin.Doctors.index') }}" class="action-card">
                     <span class="action-icon"><i class="fas fa-user-md"></i></span>
                     <h5>إدارة الأطباء</h5>
                     <p>عرض، إضافة، تعديل، أو حذف بيانات الأطباء.</p>
                 </a>
-                {{-- مثال: بطاقة إدارة المرضى --}}
-                <a href="{{ route('admin.Patients.index') }}" class="action-card"> {{-- تأكد من اسم الراوت --}}
+                @endif
+
+                @if(Route::has('admin.Patients.index'))
+                <a href="{{ route('admin.Patients.index') }}" class="action-card">
                     <span class="action-icon"><i class="fas fa-users"></i></span>
                     <h5>إدارة المرضى</h5>
                     <p>الوصول إلى سجلات المرضى وإدارتها.</p>
                 </a>
-                {{-- مثال: بطاقة إدارة الأقسام --}}
-                <a href="{{ route('admin.Sections.index') }}" class="action-card"> {{-- تأكد من اسم الراوت --}}
-                    <span class="action-icon"><i class="fas fa-building"></i></span>
+                @endif
+
+                @if(Route::has('admin.Sections.index'))
+                <a href="{{ route('admin.Sections.index') }}" class="action-card">
+                    <span class="action-icon"><i class="fas fa-hospital-symbol"></i></span> {{-- أيقونة مختلفة للأقسام --}}
                     <h5>إدارة الأقسام</h5>
-                    <p>إدارة أقسام المستشفى المختلفة.</p>
+                    <p>إدارة أقسام العيادات والخدمات.</p>
                 </a>
-                {{-- مثال: بطاقة إدارة المواعيد --}}
-                <a href="{{ route('admin.appointments.index') }}" class="action-card"> {{-- تأكد من اسم الراوت --}}
+                @endif
+
+                @if(Route::has('admin.appointments.index'))
+                <a href="{{ route('admin.appointments.index') }}" class="action-card">
                     <span class="action-icon"><i class="fas fa-calendar-alt"></i></span>
                     <h5>إدارة المواعيد</h5>
                     <p>عرض وإدارة جميع المواعيد المحجوزة.</p>
                 </a>
-                {{-- مثال: بطاقة الإعدادات (عامة) --}}
-                {{-- <a href="#" class="action-card">
-                     <span class="action-icon"><i class="fas fa-cogs"></i></span>
-                     <h5>إعدادات النظام</h5>
-                     <p>الوصول إلى إعدادات التطبيق العامة.</p>
-                 </a> --}}
+                @endif
             </div>
         </div>
 
     </div> {{-- نهاية .admin-profile-container --}}
 @endsection
 
-{{-- ====================== JavaScript Section ===================== --}}
 @section('js')
-    @parent {{-- استيراد JS الأساسي --}}
-    {{-- NotifIt إذا كانت ستستخدم للإشعارات --}}
+    @parent
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script> {{-- تأكد من وجود هذا الملف أو إزالته إذا كان Notifit يعمل بدونه --}}
 
     <script>
-        console.log("Modern Admin profile page loaded for: {{ $admin->name }}");
+        console.log("Admin profile page loaded for: {{ $admin->name }} (ID: {{ $admin->id }})");
 
-        // (اختياري) تفعيل Tooltips إذا استخدمت عناصر تحتاجها
-        // var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        // var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        //   return new bootstrap.Tooltip(tooltipTriggerEl)
-        // })
+        // عرض رسالة النجاح عند وجودها في الجلسة
+        @if (session('success'))
+            notif({
+                msg: "{{ session('success') }}",
+                type: "success",
+                position: "center", // أو "bottom" أو "top"
+                timeout: 5000 // 5 ثواني
+            });
+        @endif
+        @if (session('error')) // لعرض رسائل الخطأ أيضًا إذا استخدمتها
+             notif({
+                msg: "{{ session('error') }}",
+                type: "error",
+                position: "center",
+                timeout: 7000
+            });
+        @endif
 
-        // (اختياري) أي تفاعلات JS أخرى
-        // مثال: زر التحرير يعرض رسالة "قريباً" باستخدام NotifIt
-        document.querySelector('.edit-profile-btn')?.addEventListener('click', function(e) {
-            e.preventDefault(); // منع الانتقال إذا كان رابطاً
-            if (typeof notif !== 'undefined') {
-                notif({
-                    msg: "ميزة تعديل الملف الشخصي ستتوفر قريباً!",
-                    type: "info",
-                    position: "center",
-                    timeout: 3000
-                });
-            } else {
-                alert('ميزة تعديل الملف الشخصي ستتوفر قريباً!');
-            }
-        });
+        // يمكنك إضافة كلاس .dark إلى body هنا إذا أردت تفعيل الوضع الداكن يدويًا
+        // document.body.classList.add('dark');
     </script>
 @endsection

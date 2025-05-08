@@ -2,6 +2,7 @@
 
 use App\Models\Section;
 use App\Http\Controllers\PatientProfileController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
  use App\Http\Controllers\Dashboard_Doctor\DiagnosticController;
  use App\Http\Controllers\Dashboard_Doctor\LaboratorieController;

@@ -43,7 +43,7 @@
                                  <tr>
                                      <td>{{ $loop->iteration}}</td>
                                      <td>{{ $invoice->created_at }}</td>
-                                     <td><a href="{{route('view_laboratories',$invoice->id)}}">{{ $invoice->Patient->name }}</a></td>
+                                     <td><a href="{{route('laboratorie_employee.view_laboratories',$invoice->id)}}">{{ $invoice->Patient->name }}</a></td>
                                      <td>{{ $invoice->doctor->name }}</td>
                                      <td>{{ $invoice->description }}</td>
                                      <td>

@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('Laboratories.destroy', $patient_Laboratorie->id) }}" method="post">
+                <form action="{{ route('doctor.Laboratories.destroy', $patient_Laboratorie->id) }}" method="post">
                     @method('DELETE')
                     @csrf
                     <div class="row">

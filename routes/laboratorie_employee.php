@@ -30,7 +30,7 @@
      })->middleware(['auth:laboratorie_employee'])->name('dashboard.laboratorie_employee');
      //################################ end dashboard doctor #####################################
 
-     Route::middleware(['auth:laboratorie_employee'])->group(function () {
+     Route::middleware(['auth:laboratorie_employee'])->name('laboratorie_employee.')->group(function () {
 
      //############################# invoices route ##########################################
       Route::resource('invoices_laboratorie_employee', InvoiceController::class);

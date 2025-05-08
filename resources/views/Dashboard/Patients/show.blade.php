@@ -2,6 +2,8 @@
 
 @section('css')
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+
     <style>
         :root {
             --primary-color: #4361ee;
@@ -31,19 +33,37 @@
             box-shadow: 0 15px 35px rgba(67, 97, 238, 0.3);
         }
 
-        .patient-avatar {
+        /* .patient-avatar {
             width: 100px;
             height: 100px;
             object-fit: cover;
             border: 3px solid white;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
+        } */
 
         .patient-stats {
             background: white;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
+
+        .doctor-avatar {
+            position: relative;
+            width: 100px;
+            height: 180px;
+            margin: 0 auto;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* .doctor-avatar img {
+            width: 100%;
+            height: 100%;
+
+        } */
+
 
         .stat-card {
             border-left: 3px solid var(--primary-color);
@@ -186,7 +206,7 @@
 @endsection
 
 @section('title')
-    <i class="fas fa-user-injured"></i> ملف المريض - {{$Patient->name}}
+    <i class="fas fa-user-injured"></i> ملف المريض - {{ $Patient->name }}
 @endsection
 
 @section('page-header')
@@ -200,7 +220,7 @@
         <div class="d-flex my-xl-auto right-content">
             <div class="pr-1 mb-3 mb-xl-0">
                 <a href="{{ route('admin.Patients.index') }}" class="btn btn-primary">
-                    <i class="fas fa-arrow-left"></i>  قائمة المرضى
+                    <i class="fas fa-arrow-left"></i> قائمة المرضى
                 </a>
             </div>
         </div>
@@ -208,342 +228,350 @@
 @endsection
 
 @section('content')
-@include('Dashboard.messages_alert')
+    @include('Dashboard.messages_alert')
 
-<div class="row" data-aos="fade-in">
-    <div class="col-lg-4 col-md-12">
-        <div class="patient-profile p-4 mb-4">
-            <div class="d-flex align-items-center">
-                <div class="mr-3">
-                    <img src="{{ asset('Dashboard/assets/img/patients/patient-profile.png') }}" alt="صورة المريض" class="patient-avatar rounded-circle">
-                </div>
-                <div>
-                    <h3 class="mb-1">{{$Patient->name}}</h3>
-                    <p class="mb-2">
-                        <i class="fas fa-id-card mr-1"></i>
-                        ID: {{$Patient->id}}
-                    </p>
-                    <span class="badge badge-pill {{$Patient->Gender == 1 ? 'bg-primary' : 'bg-pink'}}">
-                        <i class="fas {{$Patient->Gender == 1 ? 'fa-mars' : 'fa-venus'}}"></i>
-                        {{$Patient->Gender == 1 ? 'ذكر' : 'أنثى'}}
-                    </span>
-                </div>
-            </div>
-        </div>
+    <div class="row" data-aos="fade-in">
 
-        <div class="patient-stats p-3 mb-4">
-            <div class="row text-center">
-                <div class="col-6 mb-3">
-                    <div class="stat-card p-2">
-                        <h5 class="mb-1 text-primary">{{ number_format($invoices->sum('total_with_tax'), 2) }}</h5>
-                        <small class="text-muted">إجمالي الفواتير</small>
-                    </div>
-                </div>
-                <div class="col-6 mb-3">
-                    <div class="stat-card p-2">
-                        <h5 class="mb-1 text-success">{{ number_format($receipt_accounts->sum('amount'), 2) }}</h5>
-                        <small class="text-muted">إجمالي المدفوعات</small>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="stat-card p-2">
-                        <h5 class="mb-1 text-info">{{ $invoices->count() }}</h5>
-                        <small class="text-muted">عدد الفواتير</small>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="stat-card p-2">
-                        @php
-                            $balance = $invoices->sum('total_with_tax') - $receipt_accounts->sum('amount');
-                        @endphp
-                        <h5 class="mb-1 {{ $balance > 0 ? 'text-danger' : 'text-success' }}">
-                            {{ number_format(abs($balance), 2) }}
-                        </h5>
-                        <small class="text-muted">{{ $balance > 0 ? 'مدين' : 'دائن' }}</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header bg-white">
-                <h5 class="mb-0"><i class="fas fa-info-circle mr-2"></i> المعلومات الأساسية</h5>
-            </div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span><i class="fas fa-id-card mr-2 text-primary"></i> رقم الهوية</span>
-                        <span class="font-weight-bold">{{$Patient->national_id}}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span><i class="fas fa-phone mr-2 text-primary"></i> الهاتف</span>
-                        <span class="font-weight-bold">{{$Patient->Phone}}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span><i class="fas fa-envelope mr-2 text-primary"></i> البريد</span>
-                        <span class="font-weight-bold">{{$Patient->email}}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span><i class="fas fa-birthday-cake mr-2 text-primary"></i> تاريخ الميلاد</span>
-                        <span class="font-weight-bold">{{$Patient->Date_Birth}}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span><i class="fas fa-tint mr-2 text-primary"></i> فصيلة الدم</span>
-                        <span class="badge badge-pill bg-danger">{{$Patient->Blood_Group}}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        <span><i class="fas fa-calendar-alt mr-2 text-primary"></i> تاريخ التسجيل</span>
-                        <span class="font-weight-bold">{{$Patient->created_at->format('Y-m-d')}}</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-8 col-md-12">
-        <div class="card">
-            <div class="card-header bg-white p-0">
-                <ul class="nav modern-tabs" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#invoices-tab">
-                            <i class="fas fa-file-invoice-dollar mr-1"></i> الفواتير
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#payments-tab">
-                            <i class="fas fa-money-bill-wave mr-1"></i> المدفوعات
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#account-tab">
-                            <i class="fas fa-calculator mr-1"></i> كشف حساب
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#radiology-tab">
-                            <i class="fas fa-x-ray mr-1"></i> الأشعة
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#lab-tab">
-                            <i class="fas fa-flask mr-1"></i> المختبر
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="card-body tab-content p-0">
-                <!-- الفواتير -->
-                <div class="tab-pane fade show active p-3" id="invoices-tab">
-                    @if($invoices->count() > 0)
-                    <div class="table-responsive">
-                        <table class="table data-table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>الخدمة</th>
-                                    <th>التاريخ</th>
-                                    <th>المبلغ</th>
-                                    <th>الحالة</th>
-                                    <th>خيارات</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($invoices as $invoice)
-                                <tr>
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$invoice->Service->name ?? $invoice->Group->name}}</td>
-                                    <td>{{$invoice->invoice_date}}</td>
-                                    <td>{{number_format($invoice->total_with_tax, 2)}}</td>
-                                    <td>
-                                        <span class="badge badge-pill {{$invoice->type == 1 ? 'invoice-badge' : 'payment-badge'}}">
-                                            {{$invoice->type == 1 ? 'نقدي' : 'آجل'}}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                            <tfoot>
-                                <tr class="bg-light">
-                                    <th colspan="3">الإجمالي</th>
-                                    <th colspan="3">{{ number_format($invoices->sum('total_with_tax'), 2)}}</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+        <div class="col-lg-4 col-md-12">
+            <div class="patient-profile p-4 mb-4">
+                <div class="d-flex align-items-center">
+                    @if ($Patient->image)
+                        <img src="{{ Url::asset('Dashboard/img/patients/' . $Patient->image->filename) }}"
+                            class="doctor-avatar" alt="{{ trans('patients.img') }}">
                     @else
-                    <div class="empty-state">
-                        <div class="empty-state-icon">
-                            <i class="fas fa-file-invoice-dollar"></i>
-                        </div>
-                        <h4>لا توجد فواتير مسجلة</h4>
-                        <p class="text-muted">لم يتم تسجيل أي فواتير لهذا المريض حتى الآن</p>
-                        {{-- <button class="btn btn-primary">
-                            <i class="fas fa-plus"></i> إضافة فاتورة جديدة
-                        </button> --}}
-                    </div>
+                        <img src="{{ Url::asset('Dashboard/img/doctor_default.png') }}" class="doctor-avatar"
+                            alt="صورة افتراضية">
                     @endif
-                </div>
-
-                <!-- المدفوعات -->
-                <div class="tab-pane fade p-3" id="payments-tab">
-                    @if($receipt_accounts->count() > 0)
-                    <div class="table-responsive">
-                        <table class="table data-table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>التاريخ</th>
-                                    <th>المبلغ</th>
-                                    <th>البيان</th>
-                                    <th>خيارات</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($receipt_accounts as $receipt_account)
-                                <tr>
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$receipt_account->date}}</td>
-                                    <td>{{number_format($receipt_account->amount, 2)}}</td>
-                                    <td>{{$receipt_account->description}}</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-success">
-                                            <i class="fas fa-receipt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                            <tfoot>
-                                <tr class="bg-light">
-                                    <th colspan="2">الإجمالي</th>
-                                    <th colspan="3">{{ number_format($receipt_accounts->sum('amount'), 2)}}</th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                    <div>
+                        <h3 class="mb-1">{{ $Patient->name }}</h3>
+                        <p class="mb-2">
+                            <i class="fas fa-id-card mr-1"></i>
+                            ID: {{ $Patient->id }}
+                        </p>
+                        <span class="badge badge-pill {{ $Patient->Gender == 1 ? 'bg-primary' : 'bg-pink' }}">
+                            <i class="fas {{ $Patient->Gender == 1 ? 'fa-mars' : 'fa-venus' }}"></i>
+                            {{ $Patient->Gender == 1 ? 'ذكر' : 'أنثى' }}
+                        </span>
                     </div>
-                    @else
-                    <div class="empty-state">
-                        <div class="empty-state-icon">
-                            <i class="fas fa-money-bill-wave"></i>
+                </div>
+            </div>
+
+            <div class="patient-stats p-3 mb-4">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <div class="stat-card p-2">
+                            <h5 class="mb-1 text-primary">{{ number_format($invoices->sum('total_with_tax'), 2) }}</h5>
+                            <small class="text-muted">إجمالي الفواتير</small>
                         </div>
-                        <h4>لا توجد مدفوعات مسجلة</h4>
-                        <p class="text-muted">لم يتم تسجيل أي مدفوعات لهذا المريض حتى الآن</p>
                     </div>
-                    @endif
-                </div>
-
-                <!-- كشف الحساب -->
-                <div class="tab-pane fade p-3" id="account-tab">
-                    @if($Patient_accounts->count() > 0)
-                    <div class="table-responsive">
-                        <table class="table data-table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>التاريخ</th>
-                                    <th>الوصف</th>
-                                    <th>مدين</th>
-                                    <th>دائن</th>
-                                    <th>الرصيد</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $runningBalance = 0;
-                                @endphp
-                                @foreach($Patient_accounts as $Patient_account)
-                                @php
-                                    $runningBalance += ($Patient_account->Debit - $Patient_account->credit);
-                                @endphp
-                                <tr>
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$Patient_account->date}}</td>
-                                    <td>
-                                        @if($Patient_account->invoice_id == true)
-                                            {{$Patient_account->invoice->Service->name ?? $Patient_account->invoice->Group->name }}
-                                        @elseif($Patient_account->receipt_id == true)
-                                            {{$Patient_account->ReceiptAccount->description}}
-                                        @elseif($Patient_account->Payment_id == true)
-                                            {{$Patient_account->PaymentAccount->description}}
-                                        @endif
-                                    </td>
-                                    <td>{{ number_format($Patient_account->Debit, 2) }}</td>
-                                    <td>{{ number_format($Patient_account->credit, 2) }}</td>
-                                    <td class="{{ $runningBalance > 0 ? 'text-danger' : 'text-success' }}">
-                                        {{ number_format(abs($runningBalance), 2) }}
-                                        ({{ $runningBalance > 0 ? 'مدين' : 'دائن' }})
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <div class="col-6 mb-3">
+                        <div class="stat-card p-2">
+                            <h5 class="mb-1 text-success">{{ number_format($receipt_accounts->sum('amount'), 2) }}</h5>
+                            <small class="text-muted">إجمالي المدفوعات</small>
+                        </div>
                     </div>
-
-                    <div class="balance-card p-3 mt-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">الرصيد الحالي:</h5>
+                    <div class="col-6">
+                        <div class="stat-card p-2">
+                            <h5 class="mb-1 text-info">{{ $invoices->count() }}</h5>
+                            <small class="text-muted">عدد الفواتير</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-card p-2">
                             @php
                                 $balance = $invoices->sum('total_with_tax') - $receipt_accounts->sum('amount');
                             @endphp
-                            <h3 class="mb-0 {{ $balance > 0 ? 'text-danger' : 'text-success' }}">
+                            <h5 class="mb-1 {{ $balance > 0 ? 'text-danger' : 'text-success' }}">
                                 {{ number_format(abs($balance), 2) }}
-                                <small class="text-muted">({{ $balance > 0 ? 'مدين' : 'دائن' }})</small>
-                            </h3>
+                            </h5>
+                            <small class="text-muted">{{ $balance > 0 ? 'مدين' : 'دائن' }}</small>
                         </div>
-                    </div>
-                    @else
-                    <div class="empty-state">
-                        <div class="empty-state-icon">
-                            <i class="fas fa-calculator"></i>
-                        </div>
-                        <h4>لا توجد حركات مالية</h4>
-                        <p class="text-muted">لم يتم تسجيل أي حركات مالية لهذا المريض حتى الآن</p>
-                    </div>
-                    @endif
-                </div>
-
-                <!-- الأشعة -->
-                <div class="tab-pane fade p-3" id="radiology-tab">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">
-                            <i class="fas fa-x-ray"></i>
-                        </div>
-                        <h4>قسم الأشعة قيد التطوير</h4>
-                        <p class="text-muted">سيتم إضافة وظائف الأشعة قريبًا في تحديثات النظام القادمة</p>
-                        <button class="btn btn-primary disabled">
-                            <i class="fas fa-clock"></i> قريبًا
-                        </button>
                     </div>
                 </div>
+            </div>
 
-                <!-- المختبر -->
-                <div class="tab-pane fade p-3" id="lab-tab">
-                    <div class="empty-state">
-                        <div class="empty-state-icon">
-                            <i class="fas fa-flask"></i>
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle mr-2"></i> المعلومات الأساسية</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-id-card mr-2 text-primary"></i> رقم الهوية</span>
+                            <span class="font-weight-bold">{{ $Patient->national_id }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-phone mr-2 text-primary"></i> الهاتف</span>
+                            <span class="font-weight-bold">{{ $Patient->Phone }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-envelope mr-2 text-primary"></i> البريد</span>
+                            <span class="font-weight-bold">{{ $Patient->email }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-birthday-cake mr-2 text-primary"></i> تاريخ الميلاد</span>
+                            <span class="font-weight-bold">{{ $Patient->Date_Birth }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-tint mr-2 text-primary"></i> فصيلة الدم</span>
+                            <span class="badge badge-pill bg-danger">{{ $Patient->Blood_Group }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            <span><i class="fas fa-calendar-alt mr-2 text-primary"></i> تاريخ التسجيل</span>
+                            <span class="font-weight-bold">{{ $Patient->created_at->format('Y-m-d') }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-md-12">
+            <div class="card">
+                <div class="card-header bg-white p-0">
+                    <ul class="nav modern-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#invoices-tab">
+                                <i class="fas fa-file-invoice-dollar mr-1"></i>
+                            </a>الفواتير
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#payments-tab">
+                                <i class="fas fa-money-bill-wave mr-1"></i> المدفوعات
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#account-tab">
+                                <i class="fas fa-calculator mr-1"></i> كشف حساب
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#radiology-tab">
+                                <i class="fas fa-x-ray mr-1"></i> الأشعة
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#lab-tab">
+                                <i class="fas fa-flask mr-1"></i> المختبر
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body tab-content p-0">
+                    <!-- الفواتير -->
+                    <div class="tab-pane fade show active p-3" id="invoices-tab">
+                        @if ($invoices->count() > 0)
+                            <div class="table-responsive">
+                                <table class="table data-table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>الخدمة</th>
+                                            <th>التاريخ</th>
+                                            <th>المبلغ</th>
+                                            <th>الحالة</th>
+                                            <th>خيارات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($invoices as $invoice)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $invoice->Service->name ?? $invoice->Group->name }}</td>
+                                                <td>{{ $invoice->invoice_date }}</td>
+                                                <td>{{ number_format($invoice->total_with_tax, 2) }}</td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-pill {{ $invoice->type == 1 ? 'invoice-badge' : 'payment-badge' }}">
+                                                        {{ $invoice->type == 1 ? 'نقدي' : 'آجل' }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="bg-light">
+                                            <th colspan="3">الإجمالي</th>
+                                            <th colspan="3">{{ number_format($invoices->sum('total_with_tax'), 2) }}
+                                            </th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        @else
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </div>
+                                <h4>لا توجد فواتير مسجلة</h4>
+                                <p class="text-muted">لم يتم تسجيل أي فواتير لهذا المريض حتى الآن</p>
+                                {{-- <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i> إضافة فاتورة جديدة
+                        </button> --}}
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- المدفوعات -->
+                    <div class="tab-pane fade p-3" id="payments-tab">
+                        @if ($receipt_accounts->count() > 0)
+                            <div class="table-responsive">
+                                <table class="table data-table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>التاريخ</th>
+                                            <th>المبلغ</th>
+                                            <th>البيان</th>
+                                            <th>خيارات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($receipt_accounts as $receipt_account)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $receipt_account->date }}</td>
+                                                <td>{{ number_format($receipt_account->amount, 2) }}</td>
+                                                <td>{{ $receipt_account->description }}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-success">
+                                                        <i class="fas fa-receipt"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="bg-light">
+                                            <th colspan="2">الإجمالي</th>
+                                            <th colspan="3">{{ number_format($receipt_accounts->sum('amount'), 2) }}
+                                            </th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        @else
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <h4>لا توجد مدفوعات مسجلة</h4>
+                                <p class="text-muted">لم يتم تسجيل أي مدفوعات لهذا المريض حتى الآن</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- كشف الحساب -->
+                    <div class="tab-pane fade p-3" id="account-tab">
+                        @if ($Patient_accounts->count() > 0)
+                            <div class="table-responsive">
+                                <table class="table data-table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>التاريخ</th>
+                                            <th>الوصف</th>
+                                            <th>مدين</th>
+                                            <th>دائن</th>
+                                            <th>الرصيد</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $runningBalance = 0;
+                                        @endphp
+                                        @foreach ($Patient_accounts as $Patient_account)
+                                            @php
+                                                $runningBalance += $Patient_account->Debit - $Patient_account->credit;
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $Patient_account->date }}</td>
+                                                <td>
+                                                    @if ($Patient_account->invoice_id == true)
+                                                        {{ $Patient_account->invoice->Service->name ?? $Patient_account->invoice->Group->name }}
+                                                    @elseif($Patient_account->receipt_id == true)
+                                                        {{ $Patient_account->ReceiptAccount->description }}
+                                                    @elseif($Patient_account->Payment_id == true)
+                                                        {{ $Patient_account->PaymentAccount->description }}
+                                                    @endif
+                                                </td>
+                                                <td>{{ number_format($Patient_account->Debit, 2) }}</td>
+                                                <td>{{ number_format($Patient_account->credit, 2) }}</td>
+                                                <td class="{{ $runningBalance > 0 ? 'text-danger' : 'text-success' }}">
+                                                    {{ number_format(abs($runningBalance), 2) }}
+                                                    ({{ $runningBalance > 0 ? 'مدين' : 'دائن' }})
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="balance-card p-3 mt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">الرصيد الحالي:</h5>
+                                    @php
+                                        $balance = $invoices->sum('total_with_tax') - $receipt_accounts->sum('amount');
+                                    @endphp
+                                    <h3 class="mb-0 {{ $balance > 0 ? 'text-danger' : 'text-success' }}">
+                                        {{ number_format(abs($balance), 2) }}
+                                        <small class="text-muted">({{ $balance > 0 ? 'مدين' : 'دائن' }})</small>
+                                    </h3>
+                                </div>
+                            </div>
+                        @else
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <h4>لا توجد حركات مالية</h4>
+                                <p class="text-muted">لم يتم تسجيل أي حركات مالية لهذا المريض حتى الآن</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- الأشعة -->
+                    <div class="tab-pane fade p-3" id="radiology-tab">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-x-ray"></i>
+                            </div>
+                            <h4>قسم الأشعة قيد التطوير</h4>
+                            <p class="text-muted">سيتم إضافة وظائف الأشعة قريبًا في تحديثات النظام القادمة</p>
+                            <button class="btn btn-primary disabled">
+                                <i class="fas fa-clock"></i> قريبًا
+                            </button>
                         </div>
-                        <h4>قسم المختبر قيد التطوير</h4>
-                        <p class="text-muted">سيتم إضافة وظائف المختبر قريبًا في تحديثات النظام القادمة</p>
-                        <button class="btn btn-primary disabled">
-                            <i class="fas fa-clock"></i> قريبًا
-                        </button>
+                    </div>
+
+                    <!-- المختبر -->
+                    <div class="tab-pane fade p-3" id="lab-tab">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <h4>قسم المختبر قيد التطوير</h4>
+                            <p class="text-muted">سيتم إضافة وظائف المختبر قريبًا في تحديثات النظام القادمة</p>
+                            <button class="btn btn-primary disabled">
+                                <i class="fas fa-clock"></i> قريبًا
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Floating Action Button -->
-<a href="#" class="floating-action-btn" data-toggle="tooltip" title="إضافة جديد">
-    <i class="fas fa-plus"></i>
-</a>
+    <!-- Floating Action Button -->
+    <a href="#" class="floating-action-btn" data-toggle="tooltip" title="إضافة جديد">
+        <i class="fas fa-plus"></i>
+    </a>
 
 @endsection
 

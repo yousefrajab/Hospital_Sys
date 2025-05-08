@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Image;
 use App\Models\Doctor;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,7 +21,7 @@ trait UploadTrait{
             }
 
             $photo = $request->file($inputname);
-            $name = \Str::slug($request->input('name'));
+            $name = Str::slug($request->input('name'));
             $filename = $name. '.' . $photo->getClientOriginalExtension();
 
             // insert Image
@@ -36,15 +37,31 @@ trait UploadTrait{
 
     }
 
-    public function verifyAndStoreImageForeach($varforeach , $foldername , $disk, $imageable_id, $imageable_type) {
+    // public function verifyAndStoreImageForeach($varforeach , $foldername , $disk, $imageable_id, $imageable_type) {
+
+    //     // insert Image
+    //     $Image = new Image();
+    //     $Image->filename = $varforeach->getClientOriginalName();
+    //     $Image->imageable_id = $imageable_id;
+    //     $Image->imageable_type = $imageable_type;
+    //     $Image->save();
+    //     return $varforeach->storeAs($foldername, $varforeach->getClientOriginalName(), $disk);
+    // }
+
+
+    public function verifyAndStoreImageForeach($varforeach, $foldername, $disk, $imageable_id, $imageable_type) {
+        // إنشاء اسم فريد للملف
+        $filename = time() . '_' . uniqid() . '.' . $varforeach->getClientOriginalExtension();
 
         // insert Image
         $Image = new Image();
-        $Image->filename = $varforeach->getClientOriginalName();
+        $Image->filename = $filename; // استخدم الاسم الفريد بدلاً من الاسم الأصلي
         $Image->imageable_id = $imageable_id;
         $Image->imageable_type = $imageable_type;
         $Image->save();
-        return $varforeach->storeAs($foldername, $varforeach->getClientOriginalName(), $disk);
+
+        // حفظ الملف بالاسم الفريد
+        return $varforeach->storeAs($foldername, $filename, $disk);
     }
 
 
@@ -61,9 +78,4 @@ trait UploadTrait{
          ->delete();
 
     }
-
-
-
-
-
 }

@@ -118,12 +118,12 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
              {{-- نفس الـ breadcrumb --}}
-             <div class="d-flex align-items-center"> <h4 class="content-title mb-0 my-auto">{{ trans('main-sidebar_trans.doctors') }}</h4> <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ <a href="{{ route('Doctors.edit', $doctor->id) }}">{{ $doctor->name }}</a></span> <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل جدول العمل</span> </div>
+             <div class="d-flex align-items-center"> <h4 class="content-title mb-0 my-auto">{{ trans('main-sidebar_trans.doctors') }}</h4> <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ <a href="{{ route('admin.Doctors.edit', $doctor->id) }}">{{ $doctor->name }}</a></span> <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل جدول العمل</span> </div>
         </div>
          <div class="d-flex my-xl-auto right-content">
              {{-- نفس أزرار العودة --}}
-             <a href="{{ route('Doctors.edit', $doctor->id) }}" class="btn btn-outline-secondary btn-sm rounded-pill"> <i class="fas fa-user-edit me-1"></i> البيانات الأساسية </a>
-             <a href="{{ route('Doctors.index') }}" class="btn btn-outline-primary btn-sm rounded-pill mr-2"> <i class="fas fa-list me-1"></i> قائمة الأطباء </a>
+             <a href="{{ route('admin.Doctors.edit', $doctor->id) }}" class="btn btn-outline-secondary btn-sm rounded-pill"> <i class="fas fa-user-edit me-1"></i> البيانات الأساسية </a>
+             <a href="{{ route('admin.Doctors.index') }}" class="btn btn-outline-primary btn-sm rounded-pill mr-2"> <i class="fas fa-list me-1"></i> قائمة الأطباء </a>
         </div>
     </div>
     <!-- breadcrumb -->
@@ -147,7 +147,7 @@
                     </span>
                 </div>
 
-                <form action="{{ route('doctors.schedule.update', $doctor->id) }}" method="POST" id="schedule-form" class="needs-validation" novalidate>
+                <form action="{{ route('admin.doctors.schedule.update', $doctor->id) }}" method="POST" id="schedule-form" class="needs-validation" novalidate>
                     @method('PUT')
                     @csrf
 

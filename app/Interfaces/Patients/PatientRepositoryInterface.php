@@ -3,6 +3,7 @@
 namespace App\Interfaces\Patients;
 
 use App\Http\Requests\StorePatientRequest;
+use App\Http\Requests\UpdatePatientRequest;
 
 
 interface PatientRepositoryInterface
@@ -18,7 +19,7 @@ interface PatientRepositoryInterface
     // show Patients
     public function show($id);
     // update Patients
-    public function update(StorePatientRequest $request);
+    public function update(UpdatePatientRequest $request);
     // Deleted Patients
     public function destroy($request);
 }

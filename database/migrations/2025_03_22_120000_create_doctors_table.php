@@ -20,7 +20,7 @@ class CreateDoctorsTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->foreignId('section_id')->references('id')->on('sections')->onDelete('cascade');
-            $table->string('phone')->unique();;
+            $table->string('phone')->unique();
             $table->boolean('status')->default(1);
             $table->integer('number_of_statements');
             $table->timestamps();

@@ -45,7 +45,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $invoice->created_at }}</td>
-                                        <td><a href="{{route('view_rays',$invoice->id)}}">{{ $invoice->Patient->name }}</a></td>
+                                        <td><a href="{{route('ray_employee.view_rays',$invoice->id)}}">{{ $invoice->Patient->name }}</a></td>
                                         <td>{{ $invoice->doctor->name }}</td>
                                         <td>{{ $invoice->description }}</td>
                                         <td>
@@ -64,7 +64,7 @@
                                                         class="fas fa-caret-down mr-1"></i></button>
                                                 <div class="dropdown-menu tx-13">
                                                     <a class="dropdown-item"
-                                                        href="{{ route('invoices_ray_employee.edit', $invoice->id) }}"><i
+                                                        href="{{ route('ray_employee.invoices_ray_employee.edit', $invoice->id) }}"><i
                                                             class="text-primary fa fa-stethoscope"></i>&nbsp;&nbsp;اضافة
                                                         تشخيص </a>
                                                 </div>

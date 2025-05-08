@@ -9,7 +9,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('Diagnostics.store')}}" method="POST">
+            <form action="{{route('doctor.Diagnostics.store')}}" method="POST">
             @csrf
             <div class="modal-body">
 

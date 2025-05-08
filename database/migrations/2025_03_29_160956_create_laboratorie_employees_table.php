@@ -18,8 +18,10 @@ class CreateLaboratorieEmployeesTable extends Migration
             $table->bigInteger('national_id')->unique();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('phone')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('status')->default(1); 
             $table->rememberToken();
             $table->timestamps();
         });

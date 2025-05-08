@@ -242,68 +242,155 @@
                         </svg>
                     </a>
                 </div>
+                {{-- افترض أن هذا الجزء من ملف layout رئيسي أو include للهيدر --}}
                 <div class="dropdown main-profile-menu nav nav-item nav-link">
-                    <a class="profile-user d-flex" href=""><img alt=""
-                            src="{{ Auth::user()->image ? asset('Dashboard/img/doctors/' . Auth::user()->image->filename) : asset('Dashboard/img/faces/doctor_default.png') }}"></a>
+                    @php
+                        $user = null;
+                        $imagePath = asset('Dashboard/img/faces/default_avatar.png'); // صورة افتراضية عامة
+                        $userName = 'زائر';
+                        $userEmail = '';
+
+                        if (Auth::guard('admin')->check()) {
+                            $user = Auth::guard('admin')->user();
+                            $userName = $user->name;
+                            $userEmail = $user->email;
+                            if ($user->image) {
+                                $imagePath = asset('Dashboard/img/admin_photos/' . $user->image->filename); // مسار صور الأدمن
+                            } else {
+                                $imagePath = asset('Dashboard/img/default_admin_avatar.png'); // صورة أدمن افتراضية
+                            }
+                        } elseif (Auth::guard('doctor')->check()) {
+                            $user = Auth::guard('doctor')->user();
+                            $userName = $user->name;
+                            $userEmail = $user->email;
+                            if ($user->image) {
+                                $imagePath = asset('Dashboard/img/doctors/' . $user->image->filename); // مسار صور الأطباء
+                            } else {
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة طبيب افتراضية
+                            }
+                        } elseif (Auth::guard('ray_employee')->check()) {
+                            $user = Auth::guard('ray_employee')->user();
+                            $userName = $user->name;
+                            $userEmail = $user->email;
+                            if ($user->image) {
+                                $imagePath = asset('Dashboard/img/rayEmployees/' . $user->image->filename); // مسار صور موظفي الأشعة
+                            } else {
+                                $imagePath = asset('Dashboard/img/default_ray_employee_avatar.png'); // صورة موظف أشعة افتراضية
+                            }
+                        } elseif (Auth::guard('laboratorie_employee')->check()) {
+                            $user = Auth::guard('laboratorie_employee')->user();
+                            $userName = $user->name;
+                            $userEmail = $user->email;
+                            if ($user->image) {
+                                $imagePath = asset('Dashboard/img/laboratorieEmployees/' . $user->image->filename); // مسار صور موظفي المختبر
+                            } else {
+                                $imagePath = asset('Dashboard/img/default_lab_employee_avatar.png'); // صورة موظف مختبر افتراضية
+                            }
+                        } elseif (Auth::guard('patient')->check()) {
+                            // افترض أن لديك guard وموديل للمرضى
+                            $user = Auth::guard('patient')->user();
+                            $userName = $user->name;
+                            $userEmail = $user->email;
+                            if ($user->image) {
+                                $imagePath = asset('Dashboard/img/patients/' . $user->image->filename); // مسار صور المرضى
+                            } else {
+                                $imagePath = asset('Dashboard/img/default_patient_avatar.png'); // صورة مريض افتراضية
+                            }
+                        } elseif (Auth::guard('web')->check()) {
+                            // للمستخدم العادي (إذا كان لديك)
+                            $user = Auth::guard('web')->user();
+                            $userName = $user->name;
+                            $userEmail = $user->email;
+                            if ($user->image) {
+                                // افترض أن المستخدم العادي لديه علاقة صورة أيضًا
+                                $imagePath = asset('Dashboard/img/user_photos/' . $user->image->filename); // مسار صور المستخدمين
+                            } else {
+                                $imagePath = asset('Dashboard/img/default_user_avatar.png'); // صورة مستخدم افتراضية
+                            }
+                        }
+                    @endphp
+
+                    <a class="profile-user d-flex" href="#">
+                        <img alt="{{ $userName }}" src="{{ $imagePath }}">
+                    </a>
+
                     <div class="dropdown-menu">
                         <div class="main-header-profile bg-primary p-3">
                             <div class="d-flex wd-100p">
-                                <div class="main-img-user"><img alt=""
-                                        src="{{ Auth::user()->image ? asset('Dashboard/img/doctors/' . Auth::user()->image->filename) : asset('Dashboard/img/faces/doctor_default.png') }}"
-                                        class=""></div>
+                                <div class="main-img-user">
+                                    <img alt="{{ $userName }}" src="{{ $imagePath }}" class="">
+                                </div>
                                 <div class="mr-3 my-auto">
-                                    <h6>{{ auth()->user()->name }}</h6><span>{{ auth()->user()->email }}</span>
+                                    <h6>{{ $userName }}</h6>
+                                    @if ($userEmail)
+                                        <span>{{ $userEmail }}</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
+
                         @php
                             $profileShowRoute = '#'; // قيمة افتراضية
+                            $profileEditRoute = '#'; // قيمة افتراضية
 
                             if (Auth::guard('admin')->check()) {
-                                $profileShowRoute = route('admin.profile.show'); // مسار الأدمن (ستحتاج لإنشائه لاحقاً)
+                                $profileShowRoute = route('admin.profile.show');
+                                $profileEditRoute = route('admin.profile.edit');
                             } elseif (Auth::guard('doctor')->check()) {
-                                $profileShowRoute = route('doctor.profile.show'); // <-- استخدام المسار الذي أنشأناه
-                            // } elseif (Auth::guard('patient')->check()) {
-                            //     $profileShowRoute = route('patient.profile.show'); // مسار المريض (ستحتاج لإنشائه لاحقاً)
+                                $profileShowRoute = route('doctor.profile.show'); // تأكد من وجود هذا الـ route
+                                $profileEditRoute = route('doctor.profile.edit'); // تأكد من وجود هذا الـ route
+                            } elseif (Auth::guard('ray_employee')->check()) {
+                                $profileShowRoute = route('ray_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                // $profileEditRoute = route('ray_employee.profile.edit');
+                            } elseif (Auth::guard('laboratorie_employee')->check()) {
+                                // $profileShowRoute = route('laboratorie_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                // $profileEditRoute = route('laboratorie_employee.profile.edit');
+                            } elseif (Auth::guard('patient')->check()) {
+                                // $profileShowRoute = route('patient.profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                // $profileEditRoute = route('patient.profile.edit');
                             }
+                            // يمكنك إضافة المزيد من الشروط لأنواع المستخدمين الأخرى
                         @endphp
 
-
-                        <a class="dropdown-item" href="{{ $profileShowRoute }}"><i
-                                class="bx bx-user-circle"></i>الملف الشخصي</a>
-
-                                @php
-                            $profileShowRoutee = '#'; // قيمة افتراضية
-
-                            if (Auth::guard('admin')->check()) {
-                                $profileShowRoutee = route('admin.profile.edit'); // مسار الأدمن (ستحتاج لإنشائه لاحقاً)
-                            } elseif (Auth::guard('doctor')->check()) {
-                                $profileShowRoutee = route('doctor.profile.edit'); // <-- استخدام المسار الذي أنشأناه
-                            // } elseif (Auth::guard('patient')->check()) {
-                            //     $profileShowRoutee = route('patient.profile.edit'); // مسار المريض (ستحتاج لإنشائه لاحقاً)
-                            }
-                        @endphp
-                        <a class="dropdown-item" href="{{ $profileShowRoutee }}"><i class="bx bx-cog"></i>تعديل الملف الشخصي</a>
-                        @if (auth('web')->check())
-                            <form method="POST" action="{{ route('logout.user') }}">
-                            @elseif(auth('admin')->check())
-                                <form method="POST" action="{{ route('logout.admin') }}">
-                                @elseif(auth('doctor')->check())
-                                    <form method="POST" action="{{ route('logout.doctor') }}">
-                                    @elseif(auth('ray_employee')->check())
-                                        <form method="POST" action="{{ route('logout.ray_employee') }}">
-                                        @elseif(auth('laboratorie_employee')->check())
-                                            <form method="POST" action="{{ route('logout.laboratorie_employee') }}">
-                                            @else
-                                                <form method="POST" action="{{ route('logout.patient') }}">
+                        @if ($profileShowRoute !== '#')
+                            <a class="dropdown-item" href="{{ $profileShowRoute }}">
+                                <i class="bx bx-user-circle"></i>الملف الشخصي
+                            </a>
                         @endif
-                        @csrf
-                        <a class="dropdown-item" href="#"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();"><i
-                                class="bx bx-log-out"></i>تسجيل الخروج</a>
-                        </form>
 
+                        @if ($profileEditRoute !== '#')
+                            <a class="dropdown-item" href="{{ $profileEditRoute }}">
+                                <i class="bx bx-cog"></i>تعديل الملف الشخصي
+                            </a>
+                        @endif
+
+                        {{-- قسم تسجيل الخروج --}}
+                        @php
+                            $logoutRoute = null;
+                            if (Auth::guard('web')->check()) {
+                                $logoutRoute = route('logout.user');
+                            } elseif (Auth::guard('admin')->check()) {
+                                $logoutRoute = route('logout.admin');
+                            } elseif (Auth::guard('doctor')->check()) {
+                                $logoutRoute = route('logout.doctor');
+                            } elseif (Auth::guard('ray_employee')->check()) {
+                                $logoutRoute = route('logout.ray_employee');
+                            } elseif (Auth::guard('laboratorie_employee')->check()) {
+                                $logoutRoute = route('logout.laboratorie_employee');
+                            } elseif (Auth::guard('patient')->check()) {
+                                $logoutRoute = route('logout.patient');
+                            }
+                        @endphp
+
+                        @if ($logoutRoute)
+                            <form method="POST" action="{{ $logoutRoute }}" id="logoutFormGlobal">
+                                @csrf
+                                <a class="dropdown-item" href="{{ $logoutRoute }}"
+                                    onclick="event.preventDefault(); document.getElementById('logoutFormGlobal').submit();">
+                                    <i class="bx bx-log-out"></i>تسجيل الخروج
+                                </a>
+                            </form>
+                        @endif
                     </div>
                 </div>
                 <div class="dropdown main-header-message right-toggle">

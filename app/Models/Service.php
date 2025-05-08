@@ -11,5 +11,5 @@ class Service extends Model
     use Translatable;
     use HasFactory;
     public $translatedAttributes = ['name'];
-    public $fillable= ['price','description','status'];
+    public $fillable= ['name','price','description','status'];
 }
