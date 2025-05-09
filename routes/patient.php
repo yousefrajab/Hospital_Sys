@@ -3,6 +3,7 @@
 use App\Models\Section;
 use App\Http\Controllers\PatientProfileController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Http\Controllers\Dashboard\Patient\ProfilePatController;
 
  use App\Http\Controllers\Dashboard_Doctor\DiagnosticController;
  use App\Http\Controllers\Dashboard_Doctor\LaboratorieController;
@@ -66,6 +67,13 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
         Route::get('chat/doctors',Main::class)->name('chat.doctors');
 
         ############################# end Chat route ######################################
+
+        Route::get('/profile', [ProfilePatController::class, 'show'])->name('patient.profile.show'); // <--- تغيير اسم الدالة إذا أردت
+            Route::get('/profile/edit', [ProfilePatController::class, 'edit'])->name('patient.profile.edit'); // للتعديل
+            Route::put('/profile', [ProfilePatController::class, 'update'])->name('patient.profile.update'); // لحفظ التعديل
+
+
+
     });
 
 

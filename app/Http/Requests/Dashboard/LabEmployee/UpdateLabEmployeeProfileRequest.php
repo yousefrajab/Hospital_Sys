@@ -48,7 +48,7 @@ class UpdateLabEmployeeProfileRequest extends FormRequest
             'current_password' => ['nullable', 'string', 'required_with:password'],
             // كلمة المرور الجديدة اختيارية، وتتطلب تأكيدًا وقواعد قوة
             'password' => ['nullable', 'string', 'confirmed', Password::min(8)->mixedCase()->numbers()],
-            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'], // 2MB
+            // 'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'], // 2MB
         ];
     }
 
@@ -69,7 +69,7 @@ class UpdateLabEmployeeProfileRequest extends FormRequest
             'current_password.required_with' => 'يجب إدخال كلمة المرور الحالية لتغيير كلمة المرور.',
             'password.confirmed' => 'تأكيد كلمة المرور الجديدة غير متطابق.',
             'password.min' => 'كلمة المرور الجديدة يجب أن لا تقل عن 8 أحرف.',
-            'photo.*' => 'خطأ في تحميل الصورة (تأكد من النوع والحجم).',
+            // 'photo.*' => 'خطأ في تحميل الصورة (تأكد من النوع والحجم).',
         ];
     }
 }

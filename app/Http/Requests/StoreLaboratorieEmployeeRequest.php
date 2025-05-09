@@ -68,9 +68,9 @@ class StoreLaboratorieEmployeeRequest extends FormRequest
              'password.min' => 'كلمة المرور يجب أن تتكون من 8 أحرف على الأقل.',
              'status.required' => 'حقل الحالة مطلوب.',
              'status.boolean' => 'قيمة الحالة يجب أن تكون صحيحة أو خاطئة.',
-             'photo.image' => 'الملف المرفوع يجب أن يكون صورة.',
-             'photo.mimes' => 'صيغ الصور المسموح بها: jpeg, png, jpg, gif, svg.',
-             'photo.max' => 'حجم الصورة يجب ألا يتجاوز 2 ميجابايت.',
+            //  'photo.image' => 'الملف المرفوع يجب أن يكون صورة.',
+            //  'photo.mimes' => 'صيغ الصور المسموح بها: jpeg, png, jpg, gif, svg.',
+            //  'photo.max' => 'حجم الصورة يجب ألا يتجاوز 2 ميجابايت.',
          ];
      }
 }

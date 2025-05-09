@@ -1,10 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dashboard_Laboratorie_Employee\InvoiceController;
+use App\Http\Controllers\Dashboard\LabEmployee\ProfileLabController;
 
- use App\Http\Controllers\Dashboard_Laboratorie_Employee\InvoiceController;
- use Illuminate\Support\Facades\Route;
-
- /*
+/*
  |--------------------------------------------------------------------------
  | laboratorie_employee Routes
  |--------------------------------------------------------------------------
@@ -16,35 +16,36 @@
  */
 
 
- Route::group(
-     [
-         'prefix' => LaravelLocalization::setLocale(),
-         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
-     ], function () {
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(),
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+    ],
+    function () {
 
 
-     //################################ dashboard doctor ########################################
+        //################################ dashboard doctor ########################################
 
-     Route::get('/dashboard/laboratorie_employee', function () {
-         return view('Dashboard.dashboard_LaboratorieEmployee.dashboard');
-     })->middleware(['auth:laboratorie_employee'])->name('dashboard.laboratorie_employee');
-     //################################ end dashboard doctor #####################################
+        Route::get('/dashboard/laboratorie_employee', function () {
+            return view('Dashboard.dashboard_LaboratorieEmployee.dashboard');
+        })->middleware(['auth:laboratorie_employee'])->name('dashboard.laboratorie_employee');
+        //################################ end dashboard doctor #####################################
 
-     Route::middleware(['auth:laboratorie_employee'])->name('laboratorie_employee.')->group(function () {
-
-     //############################# invoices route ##########################################
-      Route::resource('invoices_laboratorie_employee', InvoiceController::class);
-      Route::get('completed_invoicess', [InvoiceController::class,'completed_invoices'])->name('completed_invoicess');
-      Route::get('view_laboratories/{id}', [InvoiceController::class,'view_laboratories'])->name('view_laboratories');
-     //############################# end invoices route ######################################
-
-     });
+        Route::middleware(['auth:laboratorie_employee'])->prefix('laboratorie_employee')->name('laboratorie_employee.')->group(function () {
 
 
+            //############################# invoices route ##########################################
+            Route::resource('invoices_laboratorie_employee', InvoiceController::class);
+            Route::get('completed_invoicess', [InvoiceController::class, 'completed_invoices'])->name('completed_invoicess');
+            Route::get('view_laboratories/{id}', [InvoiceController::class, 'view_laboratories'])->name('view_laboratories');
+            //############################# end invoices route ######################################
 
- //---------------------------------------------------------------------------------------------------------------
+            Route::get('/profile', [ProfileLabController::class, 'showw'])->name('profile.show'); // <--- تغيير اسم الدالة إذا أردت
+            Route::get('/profile/edit', [ProfileLabController::class, 'editt'])->name('profile.edit'); // للتعديل
+            Route::put('/profile', [ProfileLabController::class, 'updatee'])->name('profile.update'); // لحفظ التعديل
 
+        });
 
-     require __DIR__ . '/auth.php';
-
- });
+        require __DIR__ . '/auth.php';
+    }
+);

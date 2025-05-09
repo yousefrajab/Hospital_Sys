@@ -57,14 +57,14 @@ return [
         ],
 
         'laboratorie_employee' => [
-             'driver' => 'session',
-             'provider' => 'laboratorie_employees',
-         ],
+            'driver' => 'session',
+            'provider' => 'laboratorie_employees',
+        ],
 
-         'patient' => [
-             'driver' => 'session',
-             'provider' => 'patients',
-         ],
+        'patient' => [
+            'driver' => 'session',
+            'provider' => 'patients',
+        ],
 
 
         'api' => [
@@ -113,14 +113,14 @@ return [
         ],
 
         'laboratorie_employees' => [
-             'driver' => 'eloquent',
-             'model' => App\Models\LaboratorieEmployee::class,
-         ],
+            'driver' => 'eloquent',
+            'model' => App\Models\LaboratorieEmployee::class,
+        ],
 
-         'patients' => [
-             'driver' => 'eloquent',
-             'model' => App\Models\Patient::class,
-         ],
+        'patients' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Patient::class,
+        ],
 
         // 'users' => [
         //     'driver' => 'database',
@@ -150,6 +150,15 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+        'admins' => [ // اسم الـ broker
+            'provider' => 'adminsr', // يشير إلى الـ provider الخاص بالأدمن
+            'table' => 'password_resets', // اسم جدول رموز إعادة التعيين
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+
     ],
 
     /*

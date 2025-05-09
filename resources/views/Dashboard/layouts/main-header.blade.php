@@ -341,13 +341,13 @@
                                 $profileEditRoute = route('doctor.profile.edit'); // تأكد من وجود هذا الـ route
                             } elseif (Auth::guard('ray_employee')->check()) {
                                 $profileShowRoute = route('ray_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                // $profileEditRoute = route('ray_employee.profile.edit');
+                                $profileEditRoute = route('ray_employee.profile.edit');
                             } elseif (Auth::guard('laboratorie_employee')->check()) {
-                                // $profileShowRoute = route('laboratorie_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                // $profileEditRoute = route('laboratorie_employee.profile.edit');
+                                $profileShowRoute = route('laboratorie_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                $profileEditRoute = route('laboratorie_employee.profile.edit');
                             } elseif (Auth::guard('patient')->check()) {
-                                // $profileShowRoute = route('patient.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                // $profileEditRoute = route('patient.profile.edit');
+                                $profileShowRoute = route('patient.profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                $profileEditRoute = route('patient.profile.edit');
                             }
                             // يمكنك إضافة المزيد من الشروط لأنواع المستخدمين الأخرى
                         @endphp

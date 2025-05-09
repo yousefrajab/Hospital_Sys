@@ -1,182 +1,364 @@
-{{-- resources/views/Dashboard/ray_employee/profile/show.blade.php --}}
-@extends('Dashboard.layouts.master') {{-- استخدام نفس الـ layout --}}
+{{-- resources/views/Dashboard/patient_panel/profile/show.blade.php --}}
+@extends('Dashboard.layouts.master') {{-- أو الـ layout الخاص بلوحة تحكم المريض --}}
 
-@section('title')
-    الملف الشخصي - {{ $employee->name }} {{-- استخدام $employee هنا --}}
-@endsection
+@php
+    $patientName = $patient->getTranslation('name', app()->getLocale(), false) ?: $patient->name;
+    $patientAddress = $patient->getTranslation('Address', app()->getLocale(), false) ?: $patient->Address;
+@endphp
+@section('title', 'ملفي الشخصي | ' . $patientName)
 
 @section('css')
     @parent
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+
     <style>
-        /* --- نسخ نفس أنماط CSS الممتازة من ملف الطبيب --- */
         :root {
-            --profile-primary-color: #007bff; /* تغيير الألوان قليلاً لتمييز موظف الأشعة */
-            --profile-secondary-color: #17a2b8; /* Teal */
-            --profile-gradient: linear-gradient(135deg, var(--profile-primary-color), var(--profile-secondary-color));
-            --profile-text-light: #f8f9fa;
-            --profile-text-dark: #495057;
-            --profile-text-muted: #6c757d;
-            --profile-bg-light: #f8f9fa;
-            --profile-border-color: #dee2e6;
-            --profile-success-color: #28a745;
-            --profile-danger-color: #dc3545;
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --text-muted-custom: #6c757d;
+            --card-border-color: #e0e5ec;
         }
 
-        /* ... (انسخ جميع أنماط CSS من ملف show.blade.php للطبيب هنا) ... */
-        .doctor-profile-page { /* يمكنك إعادة تسميته أو إبقائه إذا كانت الأنماط عامة */
-            padding-top: 20px;
+        body {
+            background-color: #f4f7f9; /* خلفية أفتح قليلاً للصفحة */
+            font-family: 'Tajawal', sans-serif;
+            color: var(--dark-color);
         }
-        .profile-card-modern { /* ... */ }
-        .profile-header-modern { /* ... */ }
-        .profile-header-modern::before { /* ... */ }
-        .profile-avatar-modern { /* ... */ }
-        .profile-info-modern { /* ... */ }
-        .profile-info-modern h3 { /* ... */ }
-        .profile-info-modern .role-info { /* تغيير اسم الكلاس من specialty */
-             display: block;
+
+        .patient-profile-view-container {
+            padding: 2rem 1rem;
+        }
+
+        .profile-card-view {
+            background: white;
+            border-radius: 20px; /* حواف أكثر دائرية */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+            border: 1px solid var(--card-border-color);
+        }
+
+        .profile-header-view {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .profile-header-view::after { /* تأثير زخرفي */
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150%;
+            height: 60px;
+            background: white;
+            border-radius: 50% / 100%;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+
+        .profile-avatar-view {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            margin: -65px auto 15px; /* لرفع الصورة فوق الهيدر */
+            position: relative;
+            z-index: 2;
+            background-color: white; /* خلفية للصورة إذا كانت شفافة */
+        }
+
+        .patient-name-view {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .patient-email-view {
+            font-size: 1rem;
+            color: var(--text-muted-custom);
+            margin-bottom: 25px;
+            text-align: center;
+            display: block;
+        }
+        .patient-email-view i {
+            margin-left: 5px;
+        }
+
+        .profile-details-section {
+            padding: 20px 30px 30px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start; /* محاذاة للأعلى إذا كان النص متعدد الأسطر */
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--card-border-color);
+        }
+        .detail-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .detail-icon {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            width: 40px; /* عرض ثابت للأيقونة */
+            flex-shrink: 0;
+            text-align: center;
+            margin-left: 15px; /* RTL: margin-right */
+        }
+
+        .detail-content .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-muted-custom);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            display: block;
+        }
+
+        .detail-content .detail-value {
             font-size: 1rem;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 10px;
+            color: var(--dark-color);
+            word-break: break-word;
         }
-        .profile-status-modern { /* ... */ }
-        .profile-status-modern.active { /* ... */ }
-        .profile-status-modern.inactive { /* ... */ }
-        .profile-status-modern i { /* ... */ }
-        .profile-body-modern { /* ... */ }
-        .info-section { /* ... */ }
-        .info-section-title { /* ... */ }
-        .info-grid { /* ... */ }
-        .info-card { /* ... */ }
-        .info-card:hover { /* ... */ }
-        .info-card .info-icon { /* ... */ }
-        .info-card .info-content label { /* ... */ }
-        .info-card .info-content p { /* ... */ }
-        .profile-actions-modern { /* ... */ }
-        .edit-profile-btn { /* ... */ }
-        .edit-profile-btn:hover { /* ... */ }
-        .edit-profile-btn i { /* ... */ }
+        .detail-content .detail-value.empty { /* إذا كانت القيمة فارغة */
+            color: var(--text-muted-custom);
+            font-style: italic;
+        }
+
+
+        .edit-profile-fab { /* زر تعديل عائم (اختياري) */
+            position: fixed;
+            bottom: 30px;
+            right: 30px; /* RTL: left: 30px; */
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .edit-profile-fab:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        .edit-profile-action-button { /* زر تعديل تقليدي */
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            border: none;
+            padding: 10px 25px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        .edit-profile-action-button i { margin-left: 8px; /* RTL: margin-right */ }
+        .edit-profile-action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(var(--accent-color-rgb, 108, 99, 255), 0.3);
+        }
+        :root { /* لإضافة متغير RGB للون accent إذا لم يكن موجودًا */
+            --accent-color-rgb: 108, 99, 255;
+        }
+
+
+        @media (max-width: 768px) {
+            .profile-header-view { padding: 30px 20px; }
+            .profile-avatar-view { width: 100px; height: 100px; margin-top: -50px; }
+            .patient-name-view { font-size: 1.5rem; }
+            .profile-details-section { padding: 15px 20px 20px; }
+            .detail-item { flex-direction: column; align-items: flex-start; }
+            .detail-icon { margin-left: 0; margin-bottom: 8px; width: auto; }
+            .edit-profile-fab { width: 50px; height: 50px; font-size: 1.2rem; bottom: 20px; right: 20px; }
+        }
 
     </style>
 @endsection
 
 @section('page-header')
-    <!-- breadcrumb -->
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                {{-- تغيير مسار التنقل --}}
-                <h4 class="content-title mb-0 my-auto">لوحة تحكم موظف الأشعة</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ الملف الشخصي</span>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-id-card me-2" style="color:var(--primary-color);"></i>ملفي الشخصي</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ عرض البيانات</span>
             </div>
         </div>
+        <div class="d-flex my-xl-auto right-content">
+            <a href="{{ route('patient.profile.edit') }}" class="edit-profile-action-button">
+                <i class="fas fa-edit"></i> تعديل بياناتي
+            </a>
+        </div>
     </div>
-    <!-- breadcrumb -->
 @endsection
 
 @section('content')
-    @include('Dashboard.messages_alert') {{-- لعرض رسائل النجاح/الخطأ --}}
+    @include('Dashboard.messages_alert') {{-- لعرض رسائل النجاح إذا تم التوجيه هنا بعد التحديث --}}
 
-    <div class="doctor-profile-page"> {{-- يمكنك تغيير اسم الكلاس إذا أردت --}}
-        <div class="profile-card-modern">
-            {{-- رأس الملف الشخصي --}}
-            <div class="profile-header-modern">
-                 {{-- استخدام المتغير $employee لعرض الصورة --}}
-                <img class="profile-avatar-modern" alt="{{ $employee->name }}"
-                    src="{{ $employee->image ? asset('Dashboard/img/rayEmployees/' . $employee->image->filename) : asset('Dashboard/img/default_avatar.png') }}"> {{-- استخدام صورة افتراضية عامة أو خاصة بموظف الأشعة --}}
-                <div class="profile-info-modern">
-                    <h3>{{ $employee->name }}</h3>
-                    {{-- عرض الدور الوظيفي --}}
-                    <span class="role-info"><i class="fas fa-user-cog me-2"></i>موظف قسم الأشعة</span>
-                    {{-- عرض الحالة --}}
-                     @if(property_exists($employee, 'status')) {{-- التحقق من وجود الخاصية --}}
-                        <span class="profile-status-modern {{ $employee->status ? 'active' : 'inactive' }}">
-                            <i class="fas fa-circle"></i>
-                            {{ $employee->status ? 'نشط' : 'غير نشط' }}
-                        </span>
-                    @endif
-                </div>
-            </div>
+    <div class="patient-profile-view-container animate__animated animate__fadeIn">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="profile-card-view">
+                    <div class="profile-header-view">
+                        {{-- يمكن وضع أيقونة أو عنصر زخرفي هنا إذا أردت --}}
+                    </div>
 
-            {{-- جسم الملف الشخصي --}}
-            <div class="profile-body-modern">
+                    <img class="profile-avatar-view"
+                         src="{{ $patient->image ? asset('Dashboard/img/patients/' . $patient->image->filename) : URL::asset('Dashboard/img/default_patient_avatar.png') }}"
+                         alt="{{ $patientName }}">
 
-                {{-- قسم معلومات الاتصال والمعلومات الأساسية --}}
-                <div class="info-section">
-                    <h5 class="info-section-title">المعلومات الأساسية والشخصية</h5>
-                    <div class="info-grid">
-                        {{-- عرض بيانات $employee --}}
-                        <div class="info-card">
-                            <div class="info-icon"><i class="fas fa-envelope"></i></div>
-                            <div class="info-content">
-                                <label>البريد الإلكتروني</label>
-                                <p>{{ $employee->email }}</p>
-                            </div>
-                        </div>
-                         @if($employee->phone)
-                            <div class="info-card">
-                                <div class="info-icon" style="background-color: rgba(23, 162, 184, 0.1); color: #117a8b;"><i class="fas fa-phone-alt"></i></div>
-                                <div class="info-content">
-                                    <label>رقم الهاتف</label>
-                                    <p dir="ltr">{{ $employee->phone }}</p>
+                    <div class="pt-2 pb-4">
+                        <h2 class="patient-name-view">{{ $patientName }}</h2>
+                        @if($patient->email)
+                            <a href="mailto:{{ $patient->email }}" class="patient-email-view">
+                                <i class="fas fa-envelope"></i> {{ $patient->email }}
+                            </a>
+                        @endif
+                    </div>
+
+
+                    <div class="profile-details-section">
+                        <h5 class="section-title mb-4" style="font-size: 1.2rem; padding-bottom: 8px;">
+                            <i class="fas fa-info-circle me-2" style="color: var(--accent-color);"></i>المعلومات الشخصية والطبية
+                        </h5>
+
+                        <div class="row">
+                            {{-- رقم الهاتف --}}
+                            @if($patient->Phone)
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-icon"><i class="fas fa-phone-alt"></i></div>
+                                    <div class="detail-content">
+                                        <span class="detail-label">رقم الهاتف</span>
+                                        <span class="detail-value">{{ $patient->Phone }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        @endif
-                        @if($employee->national_id)
-                            <div class="info-card">
-                                <div class="info-icon" style="background-color: rgba(108, 99, 255, 0.1); color: #6c63ff;"><i class="fas fa-id-card"></i></div>
-                                <div class="info-content">
-                                    <label>رقم الهوية</label>
-                                    <p>{{ $employee->national_id }}</p>
+                            @endif
+
+                            {{-- تاريخ الميلاد --}}
+                            @if($patient->Date_Birth)
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-icon"><i class="fas fa-calendar-day"></i></div>
+                                    <div class="detail-content">
+                                        <span class="detail-label">تاريخ الميلاد</span>
+                                        <span class="detail-value">{{ \Carbon\Carbon::parse($patient->Date_Birth)->translatedFormat('d F Y') }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        @endif
-                        <div class="info-card">
-                            <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
-                            <div class="info-content">
-                                <label>تاريخ الانضمام</label>
-                                <p>{{ $employee->created_at ? $employee->created_at->translatedFormat('d M Y') : '-' }}</p>
+                            @endif
+
+                            {{-- الجنس --}}
+                            @if($patient->Gender)
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-icon"><i class="fas {{ $patient->Gender == 1 ? 'fa-mars' : 'fa-venus' }}"></i></div>
+                                    <div class="detail-content">
+                                        <span class="detail-label">الجنس</span>
+                                        <span class="detail-value">{{ $patient->Gender == 1 ? 'ذكر' : 'أنثى' }}</span>
+                                    </div>
+                                </div>
                             </div>
+                            @endif
+
+                            {{-- فصيلة الدم --}}
+                            @if($patient->Blood_Group)
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-icon"><i class="fas fa-tint"></i></div>
+                                    <div class="detail-content">
+                                        <span class="detail-label">فصيلة الدم</span>
+                                        <span class="detail-value">{{ $patient->Blood_Group }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+
+                             {{-- رقم الهوية --}}
+                             @if($patient->national_id)
+                             <div class="col-md-6">
+                                 <div class="detail-item">
+                                     <div class="detail-icon"><i class="fas fa-id-badge"></i></div>
+                                     <div class="detail-content">
+                                         <span class="detail-label">رقم الهوية</span>
+                                         <span class="detail-value">{{ $patient->national_id }}</span>
+                                     </div>
+                                 </div>
+                             </div>
+                             @endif
+
+                            {{-- تاريخ التسجيل --}}
+                            @if($patient->created_at)
+                            <div class="col-md-6">
+                                <div class="detail-item">
+                                    <div class="detail-icon"><i class="fas fa-calendar-plus"></i></div>
+                                    <div class="detail-content">
+                                        <span class="detail-label">تاريخ التسجيل</span>
+                                        <span class="detail-value">{{ $patient->created_at->translatedFormat('d M Y') }} ({{ $patient->created_at->diffForHumans() }})</span>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+
+                            {{-- العنوان --}}
+                            @if($patientAddress)
+                            <div class="col-md-12">
+                                <div class="detail-item">
+                                    <div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                    <div class="detail-content">
+                                        <span class="detail-label">العنوان</span>
+                                        <span class="detail-value">{{ $patientAddress }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            @else
+                             <div class="col-md-12">
+                                <div class="detail-item">
+                                    <div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                    <div class="detail-content">
+                                        <span class="detail-label">العنوان</span>
+                                        <span class="detail-value empty">لم يتم إدخال عنوان</span>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
-
-                {{-- يمكنك إضافة أقسام أخرى هنا خاصة بمهام موظف الأشعة --}}
-                {{-- مثال: قسم طلبات الأشعة الأخيرة أو الإحصائيات --}}
-                 {{--
-                <div class="info-section">
-                    <h5 class="info-section-title">مهام سريعة</h5>
-                    <div class="info-grid">
-                       <a href="#" class="info-card text-decoration-none">
-                           <div class="info-icon" style="background-color: rgba(255, 193, 7, 0.1); color: #b58404;"><i class="fas fa-notes-medical"></i></div>
-                           <div class="info-content">
-                               <label>طلبات الأشعة</label>
-                               <p>عرض الطلبات المعلقة</p>
-                           </div>
-                       </a>
-                        <a href="#" class="info-card text-decoration-none">
-                           <div class="info-icon" style="background-color: rgba(23, 162, 184, 0.1); color: #117a8b;"><i class="fas fa-history"></i></div>
-                           <div class="info-content">
-                               <label>سجل الأشعة</label>
-                               <p>عرض الأشعة المنجزة</p>
-                           </div>
-                       </a>
-                    </div>
-                </div>
-                 --}}
-
             </div>
-
-             {{-- زر التعديل --}}
-             <div class="profile-actions-modern">
-                <a href="{{ route('ray_employee.profile.edit') }}" class="btn edit-profile-btn"> {{-- استخدام اسم الـ route الصحيح --}}
-                    <i class="fas fa-edit"></i> تعديل الملف الشخصي
-                </a>
-            </div>
-
         </div>
     </div>
+
+    {{-- زر التعديل العائم (اختياري إذا كان الزر في الهيدر كافيًا) --}}
+    {{-- <a href="{{ route('patient.profile.edit') }}" class="edit-profile-fab" title="تعديل ملفي الشخصي">
+        <i class="fas fa-pencil-alt"></i>
+    </a> --}}
 @endsection
 
 @section('js')
@@ -184,24 +366,20 @@
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     <script>
-        console.log("Ray Employee profile page loaded for: {{ $employee->name }}");
+        $(document).ready(function() { // استخدام jQuery إذا كنت تفضل
+            console.log("Patient profile show page loaded for: {{ $patientName }}");
 
-        // عرض رسالة النجاح عند وجودها في الجلسة
-        @if (session('success'))
-            notif({
-                msg: "<i class='fas fa-check-circle me-2'></i> {{ session('success') }}",
-                type: "success",
-                position: "center",
-                timeout: 5000
-            });
-        @endif
-         @if (session('error'))
-            notif({
-                msg: "<i class='fas fa-exclamation-triangle me-2'></i> {{ session('error') }}",
-                type: "error",
-                position: "center",
-                timeout: 7000
-            });
-        @endif
+            // عرض رسائل التنبيه NotifIt (إذا تم التوجيه هنا بعد تحديث ناجح)
+            @if (session('success'))
+                notif({
+                    msg: "<i class='fas fa-check-circle me-2'></i> {{ session('success') }}",
+                    type: "success",
+                    position: "bottom", // أو "center"
+                    autohide: true,
+                    timeout: 5000,
+                    zindex: 9999
+                });
+            @endif
+        });
     </script>
 @endsection

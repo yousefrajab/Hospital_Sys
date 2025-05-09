@@ -1,6 +1,5 @@
 <?php
 
-// تأكد من أن المسار صحيح (قد يكون App\Http\Controllers\Dashboard\RayEmployee)
 namespace App\Http\Controllers\Dashboard\RayEmployee;
 
 use App\Models\RayEmployee;

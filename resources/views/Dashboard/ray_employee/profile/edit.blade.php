@@ -284,7 +284,7 @@
                             <label for="rayPhotoInputEdit" class="ray-upload-btn">
                                 <i class="fas fa-upload me-1"></i> اختيار صورة
                             </label>
-                            <input type="file" name="photo" id="rayPhotoInputEdit" accept="image/*,image/webp"
+                            <input type="file" name="photo" id="rayPhotoInputEdit" 
                                    onchange="rayDisplayFileNameAndPreview(this)">
                             <span id="rayFileNameDisplayEdit" class="ray-file-name">لم يتم اختيار ملف</span>
                             @error('photo') <div class="invalid-feedback">{{ $message }}</div> @enderror

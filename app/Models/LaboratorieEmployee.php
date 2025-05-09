@@ -3,17 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// استخدم Authenticatable إذا كان هذا المستخدم يسجل الدخول
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable; // إضافة Notifiable
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait; // <-- استيراد
+use Illuminate\Contracts\Auth\CanResetPassword;                         // <-- استيراد
 
-class LaboratorieEmployee extends Authenticatable
+class LaboratorieEmployee extends Authenticatable implements CanResetPassword // <-- تطبيق الواجهة
 {
-    use HasFactory, Notifiable; // إضافة Notifiable
+    use HasFactory, Notifiable, CanResetPasswordTrait; // <-- استخدام الـ Trait
 
-    /**
-     * الحقول القابلة للتعبئة الجماعية (أفضل من guarded فارغة).
-     */
     protected $fillable = [
         'national_id',
         'name',
@@ -22,40 +20,28 @@ class LaboratorieEmployee extends Authenticatable
         'email_verified_at',
         'phone',
         'status',
-
     ];
 
-     /**
-      * الحقول المخفية.
-      */
-     protected $hidden = [
-         'password',
-         'remember_token',
-     ];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
-     /**
-      * أنواع الحقول.
-      */
-     protected $casts = [
-         'email_verified_at' => 'datetime',
-          // أضف status إذا كان موجوداً
-          // 'status' => 'boolean',
-     ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'status' => 'boolean', // ** تفعيل هذا إذا كان لديك عمود status **
+        'password' => 'hashed', // ** إضافة هذا **
+    ];
 
-    /**
-     * علاقة الصورة (MorphOne).
-     * افترض أن جدول الصور وموديل Image موجودان.
-     */
     public function image()
     {
         return $this->morphOne(Image::class, 'imageable');
     }
 
-
-    public function patient()
-    {
-        return $this->belongsTo(Patient::class, 'patient_id');
-    }
-
-
+    // هذه العلاقة قد لا تكون منطقية هنا، الموظف لا ينتمي لمريض.
+    // إذا كان الموظف مرتبطًا بالتحاليل الخاصة بمريض، يجب أن تكون العلاقة من خلال جدول التحاليل.
+    // public function patient()
+    // {
+    //     return $this->belongsTo(Patient::class, 'patient_id');
+    // }
 }
