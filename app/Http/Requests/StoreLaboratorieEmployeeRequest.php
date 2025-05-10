@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests; // تأكد من المسار الصحيح
 
+use App\Models\GlobalEmail;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule; // استيراد Rule
 
@@ -34,11 +35,15 @@ class StoreLaboratorieEmployeeRequest extends FormRequest
             Rule::unique('laboratorie_employees', 'national_id')->ignore($employeeId),
         ],
         'email' => [
-            'required',
-            'email',
-            'max:255',
-            Rule::unique('laboratorie_employees', 'email')->ignore($employeeId),
-        ],
+                'required',
+                'email',
+                Rule::unique('laboratorie_employees', 'email'), // 1. فريد في جدول laboratorie_employees
+                function ($attribute, $value, $fail) { // 2. فريد في global_emails
+                    if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                        $fail('هذا البريد الإلكتروني مستخدم بالفعل في النظام.');
+                    }
+                },
+            ],
         'phone' => [
             'required',
             'string',

@@ -298,11 +298,7 @@
             box-shadow: 5 10px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* .avatar-upload label i {
-            color: white;
-            font-size: 100px;
-        } */
-
+       
         .avatar-upload input[type="file"] {
             /* color: white; */
             display: none;

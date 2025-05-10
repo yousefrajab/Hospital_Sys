@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
+use App\Models\Doctor;
 
+use App\Models\GlobalEmail;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateDoctorsRequest extends FormRequest
@@ -25,12 +27,33 @@ class UpdateDoctorsRequest extends FormRequest
      */
     public function rules()
     {
+        $doctorId = $this->route('doctor'); // إذا كان اسم البارامتر في الـ route هو 'doctor'
+        if (!$doctorId && $this->id) { // $this->id هو قيمة حقل 'id' من الفورم إذا كان موجودًا
+            $doctorId = $this->id;
+        } elseif (!$doctorId && $this->route('id')) { // إذا كان اسم البارامتر في الـ route هو 'id'
+            $doctorId = $this->route('id');
+        }
+
+        $currentDoctor = $doctorId ? Doctor::find($doctorId) : null;
+
+
+
+        
         return [
             "national_id" => 'required|string|digits:9|unique:doctors,national_id,' . $this->id,
             'email' => [
                 'required',
                 'email',
-                Rule::unique('doctors', 'email')->ignore($this->id),
+                Rule::unique('doctors', 'email')->ignore($doctorId),
+                function ($attribute, $value, $fail) use ($currentDoctor) {
+                    // إذا لم نتمكن من جلب الطبيب الحالي، لا يمكننا مقارنة الإيميل الأصلي
+                    // في هذه الحالة، يمكنك إما التحقق من global_emails دائمًا أو تجاوز هذا الجزء
+                    if ($currentDoctor && strtolower($value) !== strtolower($currentDoctor->getOriginal('email'))) {
+                        if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                            $fail('هذا البريد الإلكتروني مستخدم بالفعل في النظام من قبل حساب آخر.');
+                        }
+                    }
+                },
             ],
             "password" => [
                 'nullable',

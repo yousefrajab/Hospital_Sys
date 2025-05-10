@@ -2,41 +2,40 @@
 
 namespace App\Http\Requests\Dashboard\LabEmployee;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\GlobalEmail;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateLabEmployeeProfileRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+
     public function authorize(): bool
     {
         // التأكد من أن المستخدم المسجل هو موظف أشعة
         return Auth::guard('laboratorie_employee')->check();
     }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
-        $employeeId = Auth::guard('laboratorie_employee')->id();
+        // $employeeId = Auth::guard('laboratorie_employee')->id();
+
+        $currentPatient = Auth::guard('laboratorie_employee')->user(); // ** الحصول على الموديل الحالي للمريض **
+        $employeeId = $currentPatient->id;
 
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique('laboratorie_employees')->ignore($employeeId), // فريد باستثناء الموظف الحالي
+                'email', // Laravel يضيف max:255 تلقائيًا مع 'email'
+                Rule::unique('laboratorie_employees', 'email')->ignore($employeeId), // 1. فريد في جدول laboratorie_employees
+                function ($attribute, $value, $fail) use ($currentPatient) { // 2. فريد في global_emails إذا تغير
+                    if (strtolower($value) !== strtolower($currentPatient->getOriginal('email'))) {
+                        if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                            $fail('هذا البريد الإلكتروني مستخدم بالفعل من قبل حساب آخر في النظام.');
+                        }
+                    }
+                },
             ],
             'phone' => [
                 'nullable', // اجعله اختياريًا أو required حسب الحاجة

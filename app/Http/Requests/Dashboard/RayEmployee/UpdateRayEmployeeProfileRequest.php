@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests\Dashboard\RayEmployee; // تم تعديل المسار قليلاً
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\GlobalEmail;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRayEmployeeProfileRequest extends FormRequest
 {
@@ -17,17 +18,22 @@ class UpdateRayEmployeeProfileRequest extends FormRequest
 
     public function rules(): array
     {
-        $employeeId = Auth::guard('ray_employee')->id(); // الحصول على ID الموظف المسجل
+        $currentPatient = Auth::guard('ray_employee')->user(); // ** الحصول على الموديل الحالي للمريض **
+        $employeeId = $currentPatient->id;
 
         return [
-            'name' => 'required|string|max:255', // ** متطابق مع الأول **
-            // 'national_id' غير موجود هنا عادةً (الموظف لا يعدل رقم هويته)
+            'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
-                'string', // ** إضافة string للتناسق **
-                'email',
-                'max:255', // ** متطابق مع الأول **
-                Rule::unique('ray_employees', 'email')->ignore($employeeId),
+                'email', // Laravel يضيف max:255 تلقائيًا مع 'email'
+                Rule::unique('ray_employees', 'email')->ignore($employeeId), // 1. فريد في جدول ray_employees
+                function ($attribute, $value, $fail) use ($currentPatient) { // 2. فريد في global_emails إذا تغير
+                    if (strtolower($value) !== strtolower($currentPatient->getOriginal('email'))) {
+                        if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                            $fail('هذا البريد الإلكتروني مستخدم بالفعل من قبل حساب آخر في النظام.');
+                        }
+                    }
+                },
             ],
             'phone' => [
                 // تم جعله required ليتطابق مع الأول، يمكنك تغييره إلى nullable إذا كان الهاتف اختياريًا للموظف

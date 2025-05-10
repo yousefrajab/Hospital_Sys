@@ -8,12 +8,12 @@ use App\Notifications\DoctorResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword;                         // <-- استيراد
-use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait; // <-- استيراد
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 
-class Doctor extends Authenticatable implements TranslatableContract, CanResetPassword // <-- تطبيق الواجهة
+class Doctor extends Authenticatable implements TranslatableContract, CanResetPassword
 {
-    use HasFactory, Notifiable, Translatable, CanResetPasswordTrait; // <-- استخدام الـ Trait
+    use HasFactory, Notifiable, Translatable, CanResetPasswordTrait;
 
     public $translatedAttributes = ['name'];
 
@@ -31,13 +31,11 @@ class Doctor extends Authenticatable implements TranslatableContract, CanResetPa
 
     protected $hidden = [
         'password',
-        // 'remember_token',
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
         'status' => 'boolean',
-        // 'password' => 'hashed', // ** إضافة هذا لضمان تشفير كلمة المرور تلقائيًا عند التعيين **
     ];
 
     public function image()
@@ -50,7 +48,7 @@ class Doctor extends Authenticatable implements TranslatableContract, CanResetPa
         return $this->belongsTo(Section::class, 'section_id');
     }
 
-    public function appointments() // افترض أن هذه هي العلاقة الصحيحة للمواعيد المرتبطة بالطبيب
+    public function appointments()
     {
         return $this->hasMany(Appointment::class, 'doctor_id');
     }
@@ -60,16 +58,13 @@ class Doctor extends Authenticatable implements TranslatableContract, CanResetPa
         return $this->hasMany(DoctorWorkingDay::class, 'doctor_id');
     }
 
-    // هذه العلاقة تبدو مكررة مع appointments() إذا كانت HasMany هي الصحيحة
-    // إذا كانت علاقة many-to-many مع جدول وسيط، أبقِ عليها وعدّل appointments()
     public function doctorappointments()
     {
         return $this->belongsToMany(Appointment::class,'appointment_doctor');
     }
 
-
     public function sendPasswordResetNotification($token)
-{
-    $this->notify(new DoctorResetPasswordNotification($token));
-}
+    {
+        $this->notify(new DoctorResetPasswordNotification($token));
+    }
 }

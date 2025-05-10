@@ -46,6 +46,12 @@ class PatientRepository implements PatientRepositoryInterface
         return view('Dashboard.Patients.create');
     }
 
+    public function edit($id)
+    {
+        $Patient = Patient::findorfail($id);
+        return view('Dashboard.Patients.edit', compact('Patient'));
+    }
+    
     public function store(StorePatientRequest $request)
     {
         try {
@@ -75,11 +81,7 @@ class PatientRepository implements PatientRepositoryInterface
         }
     }
 
-    public function edit($id)
-    {
-        $Patient = Patient::findorfail($id);
-        return view('Dashboard.Patients.edit', compact('Patient'));
-    }
+
     public function update(UpdatePatientRequest $request) // <<<--- استخدام UpdatePatientRequest
     {
         // التحقق من الصحة تم بواسطة UpdatePatientRequest

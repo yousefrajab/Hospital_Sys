@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\RayEmployee;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\GlobalEmail;
+use App\Models\RayEmployee;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRayEmployeeRequest extends FormRequest
 {
@@ -14,21 +16,36 @@ class UpdateRayEmployeeRequest extends FormRequest
 
     public function rules(): array
     {
-        $employeeId = $this->route('ray_employee'); // الحصول على ID الموظف من الـ Route
+        $employeeId = $this->route('ray_employee'); // إذا كان اسم البارامتر في الـ route هو 'ray_employee'
+    if (!$employeeId && $this->id) { // $this->id هو قيمة حقل 'id' من الفورم إذا كان موجودًا
+        $employeeId = $this->id;
+    } elseif (!$employeeId && $this->route('id')) { // إذا كان اسم البارامتر في الـ route هو 'id'
+        $employeeId = $this->route('id');
+    }
 
-        return [
-            'name' => 'required|string|max:255',
-            'national_id' => [
-                'required',
-                'string',
-                'max:20', // أو الطول المناسب
-                Rule::unique('ray_employees', 'national_id')->ignore($employeeId), // فريد باستثناء الحالي
-            ],
-            'email' => [
+    $currentRayEmployee = $employeeId ? RayEmployee::find($employeeId) : null;
+
+    return [
+        'name' => 'required|string|max:255',
+        'national_id' => [
+            'required',
+            'string',
+            'max:20',
+            Rule::unique('ray_employees', 'national_id')->ignore($employeeId),
+        ],
+        'email' => [
                 'required',
                 'email',
-                'max:255',
-                Rule::unique('ray_employees', 'email')->ignore($employeeId), // فريد باستثناء الحالي
+                Rule::unique('ray_employees', 'email')->ignore($employeeId),
+                function ($attribute, $value, $fail) use ( $currentRayEmployee) {
+                    // إذا لم نتمكن من جلب الطبيب الحالي، لا يمكننا مقارنة الإيميل الأصلي
+                    // في هذه الحالة، يمكنك إما التحقق من global_emails دائمًا أو تجاوز هذا الجزء
+                    if ( $currentRayEmployee && strtolower($value) !== strtolower( $currentRayEmployee->getOriginal('email'))) {
+                        if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                            $fail('هذا البريد الإلكتروني مستخدم بالفعل في النظام من قبل حساب آخر.');
+                        }
+                    }
+                },
             ],
             'phone' => [
                 'required',

@@ -582,6 +582,44 @@
         .shake {
             animation: shake 0.5s;
         }
+
+        .avatar-upload {
+            position: relative;
+            width: 100px;
+            height: 180px;
+            margin: 0 auto;
+        }
+
+        .avatar-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            /* border: 3px solid white; */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-upload label {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            width: 40px;
+            height: 40px;
+            background: black;
+            border-radius: 50%;
+            display: flex;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 5 10px 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .avatar-upload input[type="file"] {
+            /* color: white; */
+            display: none;
+        }
     </style>
 </head>
 
@@ -614,6 +652,22 @@
                 <div class="paired-fields">
                     <!-- الصف 1: الاسم والبريد -->
                     <div class="field-row">
+
+                        <div class="col-md-4">
+                            <div class="avatar-upload mb-4">
+                                <img id="output" src="{{ URL::asset('Dashboard/img/doctor_default.png') }}"
+                                    alt="{{ trans('doctors.img') }}">
+                                <label for="avatar-upload">
+                                    <i class="fas fa-camera"></i>
+                                </label>
+                                <input id="avatar-upload" type="file" accept="image/*" name="photo"
+                                    onchange="loadFile(event)">
+                            </div>
+                        </div>
+
+
+
+
                         <div class="field-group">
                             <label for="name" class="form-label required">الاسم الكامل للمريض</label>
                             <input type="text" id="name" name="name" value="{{ old('name') }}"
@@ -1086,6 +1140,14 @@
                 return $(`<span>${icon} ${state.text}</span>`);
             }
         });
+
+        var loadFile = function(event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src);
+            }
+        };
     </script>
 
 

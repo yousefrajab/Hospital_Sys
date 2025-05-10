@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests\RayEmployee;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\GlobalEmail;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRayEmployeeRequest extends FormRequest
 {
@@ -25,8 +26,12 @@ class StoreRayEmployeeRequest extends FormRequest
             'email' => [
                 'required',
                 'email',
-                'max:255',
-                Rule::unique('ray_employees', 'email'), // يجب أن يكون فريدًا
+                Rule::unique('ray_employees', 'email'), // 1. فريد في جدول ray_employees
+                function ($attribute, $value, $fail) { // 2. فريد في global_emails
+                    if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                        $fail('هذا البريد الإلكتروني مستخدم بالفعل في النظام.');
+                    }
+                },
             ],
             'phone' => [
                 'required',

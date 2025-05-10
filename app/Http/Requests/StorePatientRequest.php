@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\GlobalEmail;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePatientRequest extends FormRequest
@@ -26,8 +28,16 @@ class StorePatientRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'national_id' => 'required|digits:9|unique:patients,national_id',
-            'email' => 'required|email|unique:patients,email',
-            'password' => 'required|confirmed|min:8',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('patients', 'email'), // 1. فريد في جدول patients
+                function ($attribute, $value, $fail) { // 2. فريد في global_emails
+                    if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                        $fail('هذا البريد الإلكتروني مستخدم بالفعل في النظام.');
+                    }
+                },
+            ],            'password' => 'required|confirmed|min:8',
             'Phone' => 'required|numeric|unique:patients,Phone',
             'Date_Birth' => 'required|date|before:today',
             'Gender' => 'required|integer|in:1,2',

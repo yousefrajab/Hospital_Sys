@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Patient;
+use App\Models\GlobalEmail;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,17 +26,36 @@ class UpdatePatientRequest extends FormRequest
      */
     public function rules()
     {
+
+        $patientId = $this->route('patient'); // إذا كان اسم البارامتر في الـ route هو 'patient'
+        if (!$patientId && $this->id) { // $this->id هو قيمة حقل 'id' من الفورم إذا كان موجودًا
+            $patientId = $this->id;
+        } elseif (!$patientId && $this->route('id')) { // إذا كان اسم البارامتر في الـ route هو 'id'
+            $patientId = $this->route('id');
+        }
+
+        $currentPatient = $patientId ? Patient::find($patientId) : null;
+
         return [
             'name' => 'required|string|max:255',
             'national_id' => [
                 'required',
                 'digits:9',
-                Rule::unique('patients')->ignore($this->id) // تجاهل ID الحالي
+                Rule::unique('patients')->ignore($patientId) // تجاهل ID الحالي
             ],
             'email' => [
                 'required',
                 'email',
-                Rule::unique('patients')->ignore($this->id) // تجاهل ID الحالي
+                Rule::unique('patients', 'email')->ignore($patientId),
+                function ($attribute, $value, $fail) use ($currentPatient) {
+                    // إذا لم نتمكن من جلب الطبيب الحالي، لا يمكننا مقارنة الإيميل الأصلي
+                    // في هذه الحالة، يمكنك إما التحقق من global_emails دائمًا أو تجاوز هذا الجزء
+                    if ($currentPatient && strtolower($value) !== strtolower($currentPatient->getOriginal('email'))) {
+                        if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                            $fail('هذا البريد الإلكتروني مستخدم بالفعل في النظام من قبل حساب آخر.');
+                        }
+                    }
+                },
             ],
             "password" => [
                 'nullable',
@@ -45,7 +66,7 @@ class UpdatePatientRequest extends FormRequest
             'Phone' => [
                 'required',
                 'numeric',
-                Rule::unique('patients')->ignore($this->id) // تجاهل ID الحالي
+                Rule::unique('patients')->ignore($patientId) // تجاهل ID الحالي
             ],
             'Date_Birth' => 'required|date|before:today',
             'Gender' => 'required|integer|in:1,2',

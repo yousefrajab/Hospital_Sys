@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Patient; // تأكد من المسار الصحيح
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
+use App\Models\GlobalEmail;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password; // لاستخدام قواعد كلمة المرور المتقدمة
 
 class UpdatePatientProfileRequest extends FormRequest
@@ -18,7 +19,9 @@ class UpdatePatientProfileRequest extends FormRequest
 
     public function rules()
     {
-        $patientId = Auth::guard('patient')->id();
+        $currentPatient = Auth::guard('patient')->user(); // ** الحصول على الموديل الحالي للمريض **
+        $patientId = $currentPatient->id;
+
         return [
             'name' => 'required|string|max:255',
             'national_id' => [
@@ -28,8 +31,15 @@ class UpdatePatientProfileRequest extends FormRequest
             ],
             'email' => [
                 'required',
-                'email',
-                Rule::unique('patients')->ignore($patientId) // تجاهل ID الحالي
+                'email', // Laravel يضيف max:255 تلقائيًا مع 'email'
+                Rule::unique('patients', 'email')->ignore($patientId), // 1. فريد في جدول patients
+                function ($attribute, $value, $fail) use ($currentPatient) { // 2. فريد في global_emails إذا تغير
+                    if (strtolower($value) !== strtolower($currentPatient->getOriginal('email'))) {
+                        if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                            $fail('هذا البريد الإلكتروني مستخدم بالفعل من قبل حساب آخر في النظام.');
+                        }
+                    }
+                },
             ],
             "password" => [
                 'nullable',
@@ -68,8 +78,5 @@ class UpdatePatientProfileRequest extends FormRequest
             'Blood_Group.required' => trans('validation.required'),
         ];
     }
-
-
-
 
 }

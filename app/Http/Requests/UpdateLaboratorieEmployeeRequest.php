@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests; // تأكد من المسار الصحيح
 
+use App\Models\GlobalEmail;
+use App\Models\LaboratorieEmployee;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule; // استيراد Rule
 
@@ -23,7 +25,14 @@ class UpdateLaboratorieEmployeeRequest extends FormRequest
      */
     public function rules(): array
 {
-    $employeeId = $this->route('laboratorie_employee'); // تأكد من اسم البارامتر في الراوت
+    $employeeId = $this->route('laboratorie_employee'); // إذا كان اسم البارامتر في الـ route هو 'laboratorie_employee'
+    if (!$employeeId && $this->id) { // $this->id هو قيمة حقل 'id' من الفورم إذا كان موجودًا
+        $employeeId = $this->id;
+    } elseif (!$employeeId && $this->route('id')) { // إذا كان اسم البارامتر في الـ route هو 'id'
+        $employeeId = $this->route('id');
+    }
+
+    $currentLaboratorieEmployee = $employeeId ? LaboratorieEmployee::find($employeeId) : null;
 
     return [
         'name' => 'required|string|max:255',
@@ -34,11 +43,19 @@ class UpdateLaboratorieEmployeeRequest extends FormRequest
             Rule::unique('laboratorie_employees', 'national_id')->ignore($employeeId),
         ],
         'email' => [
-            'required',
-            'email',
-            'max:255',
-            Rule::unique('laboratorie_employees', 'email')->ignore($employeeId),
-        ],
+                'required',
+                'email',
+                Rule::unique('laboratorie_employees', 'email')->ignore($employeeId),
+                function ($attribute, $value, $fail) use ( $currentLaboratorieEmployee) {
+                    // إذا لم نتمكن من جلب الطبيب الحالي، لا يمكننا مقارنة الإيميل الأصلي
+                    // في هذه الحالة، يمكنك إما التحقق من global_emails دائمًا أو تجاوز هذا الجزء
+                    if ( $currentLaboratorieEmployee && strtolower($value) !== strtolower( $currentLaboratorieEmployee->getOriginal('email'))) {
+                        if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                            $fail('هذا البريد الإلكتروني مستخدم بالفعل في النظام من قبل حساب آخر.');
+                        }
+                    }
+                },
+            ],
         'phone' => [
             'required',
             'string',

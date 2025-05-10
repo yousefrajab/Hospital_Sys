@@ -70,7 +70,7 @@ class ProfileController extends Controller
                 if ($doctor->image && $doctor->image->filename) {
                     $old_img_filename = $doctor->image->filename;
                     Log::debug("[Doctor Profile Update] Old image found: {$old_img_filename}. Attempting deletion.");
-                    $this->Delete_attachment('upload_image', 'doctors/' . $old_img_filename, $doctor->id);
+                    $this->Delete_attachment('upload_image', 'doctors/' . $old_img_filename, $doctor->id, 'App\Models\Doctor');
                     Log::info("[Doctor Profile Update] Called Delete_attachment for old image '{$old_img_filename}'.");
                 } else {
                     Log::debug("[Doctor Profile Update] No old image record found for Doctor ID: {$doctor->id}");
