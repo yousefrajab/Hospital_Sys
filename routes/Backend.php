@@ -5,6 +5,7 @@ use App\Events\MyEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminController;
+use App\Http\Controllers\Dashboard\RoomController;
 use App\Http\Controllers\Dashboard\DoctorController;
 use App\Http\Controllers\Dashboard\PatientController;
 use App\Http\Controllers\Dashboard\SectionController;
@@ -174,6 +175,18 @@ Route::group(
             Route::get('/users-roles/{role_key}/{id}/edit', [UserRoleController::class, 'editUser'])->name('users.roles.edit');
             // Route لتحديث بيانات المستخدم
             Route::match(['put', 'patch'], '/users-roles/{role_key}/{id}', [UserRoleController::class, 'updateUser'])->name('users.roles.update');
+
+
+
+
+
+            Route::resource('rooms', RoomController::class);
+
+
+
+
+
+
         });
         require __DIR__ . '/auth.php';
     }

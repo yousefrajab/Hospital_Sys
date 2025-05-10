@@ -20,4 +20,13 @@ class Section extends Model
     {
         return $this->hasMany(Doctor::class);
     }
+
+
+    /**
+     * الغرف التابعة لهذا القسم.
+     */
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
+    }
 }
