@@ -1,51 +1,50 @@
 <?php
 
-namespace App\Http\Controllers\Auth\Admin; // 1. الـ Namespace الصحيح
+namespace App\Http\Controllers\Auth\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails; // 2. استيراد الـ Trait من مساره الصحيح
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password; // ** استخدام Password Facade **
 
-class ForgotPasswordController extends Controller // 3. اسم الكلاس الصحيح
+class ForgotPasswordController extends Controller // ** تأكد أن اسم الكلاس هو ForgotPasswordController **
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller (Admin)
-    |--------------------------------------------------------------------------
-    |
-    | هذا الـ Controller مسؤول عن معالجة طلبات إرسال روابط إعادة تعيين كلمة
-    | المرور لـ guard الأدمن.
-    |
-    */
-
-    use SendsPasswordResetEmails; // 4. استخدام الـ Trait داخل الكلاس
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        // تحديد الـ password broker الذي سيتعامل معه هذا الـ controller
-        config(['auth.defaults.passwords' => 'admins']); // 'admins' يجب أن يكون اسم الـ broker في config/auth.php
-
-        // تطبيق middleware الضيف على الـ Guard 'admin'
-        $this->middleware('guest:admin');
+        // اسم الـ broker الذي سنستخدمه (يجب أن يكون معرفًا في config/auth.php)
+        // لا نحتاج لـ config(['auth.defaults.passwords']) هنا لأننا سنحدد الـ broker مباشرة
+        $this->middleware('guest:admin'); // فقط الضيوف من guard الأدمن
     }
 
     /**
-     * Display the form to request a password reset link.
-     *
-     * @return \Illuminate\View\View
+     * عرض فورم طلب رابط إعادة تعيين كلمة المرور.
      */
     public function showLinkRequestForm()
     {
-        // مسار الـ View لصفحة طلب إعادة تعيين كلمة مرور الأدمن
-        // مثال: resources/views/Dashboard/auth/admin/passwords/email.blade.php
+        // تأكد من أن هذا الـ view موجود
+        // resources/views/Dashboard/auth/admin/passwords/email.blade.php
         return view('Dashboard.auth.admin.passwords.email');
     }
 
-    // دالة `sendResetLinkEmail(Request $request)` موجودة داخل الـ Trait `SendsPasswordResetEmails`
-    // وهي التي سيتم استدعاؤها بواسطة الـ Route:
-    // Route::post('/forgot-password/admin', [AdminForgotPasswordController::class, 'sendResetLinkEmail'])
+    /**
+     * معالجة طلب إرسال رابط إعادة تعيين كلمة المرور.
+     */
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        // استخدام الـ broker 'admins' الذي عرفناه في config/auth.php
+        // Password::broker('admins') يحدد أننا نعمل مع إعدادات 'admins' في config/auth.php -> passwords
+        $response = Password::broker('admins')->sendResetLink(
+            $request->only('email')
+        );
+
+        if ($response == Password::RESET_LINK_SENT) {
+            // إذا تم إرسال الرابط بنجاح
+            return back()->with('status', __($response)); // رسالة نجاح
+        }
+
+        // إذا فشل إرسال الرابط (مثلاً الإيميل غير موجود في provider الأدمن)
+        return back()->withInput($request->only('email'))
+                     ->withErrors(['email' => __($response)]);
+    }
 }

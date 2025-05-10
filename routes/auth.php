@@ -42,20 +42,20 @@ use App\Http\Controllers\Auth\LaboratorieEmployee\ForgotPasswordController as La
 | المسارات العامة (Web Guard - إذا كان لديك مستخدمين عاديين)
 |--------------------------------------------------------------------------
 */
-// Route::middleware('guest:web')->group(function () {
-//     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
-//     Route::post('/register', [RegisteredUserController::class, 'store']);
-//     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
-//     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.user');
+Route::middleware('guest:web')->group(function () {
+    Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+    Route::post('/register', [RegisteredUserController::class, 'store']);
+    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.user');
 
-//     // نسيت كلمة المرور للمستخدم العادي (web guard) - تستخدم الـ Controllers العامة
-//     Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
-//     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
-//     Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
-//     Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
-// });
-// Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:web')->name('logout.user');
-// // ... (مسارات التحقق من الإيميل وتأكيد كلمة المرور للـ web guard يمكن أن تبقى هنا إذا كنت تستخدمها)
+    // نسيت كلمة المرور للمستخدم العادي (web guard) - تستخدم الـ Controllers العامة
+    Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+    Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
+});
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth:web')->name('logout.user');
+// ... (مسارات التحقق من الإيميل وتأكيد كلمة المرور للـ web guard يمكن أن تبقى هنا إذا كنت تستخدمها)
 
 
 /*

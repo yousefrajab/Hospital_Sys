@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Notifications\Notifiable;
 use Astrotomic\Translatable\Translatable;
+use App\Notifications\DoctorResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait; // <-- استيراد
 use Illuminate\Contracts\Auth\CanResetPassword;                         // <-- استيراد
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait; // <-- استيراد
 
 class Doctor extends Authenticatable implements TranslatableContract, CanResetPassword // <-- تطبيق الواجهة
 {
@@ -30,13 +31,13 @@ class Doctor extends Authenticatable implements TranslatableContract, CanResetPa
 
     protected $hidden = [
         'password',
-        'remember_token',
+        // 'remember_token',
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
         'status' => 'boolean',
-        'password' => 'hashed', // ** إضافة هذا لضمان تشفير كلمة المرور تلقائيًا عند التعيين **
+        // 'password' => 'hashed', // ** إضافة هذا لضمان تشفير كلمة المرور تلقائيًا عند التعيين **
     ];
 
     public function image()
@@ -65,4 +66,10 @@ class Doctor extends Authenticatable implements TranslatableContract, CanResetPa
     {
         return $this->belongsToMany(Appointment::class,'appointment_doctor');
     }
+
+
+    public function sendPasswordResetNotification($token)
+{
+    $this->notify(new DoctorResetPasswordNotification($token));
+}
 }

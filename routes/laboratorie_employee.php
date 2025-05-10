@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Dashboard_Laboratorie_Employee\InvoiceController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Dashboard\LabEmployee\ProfileLabController;
+use App\Http\Controllers\Dashboard_Laboratorie_Employee\InvoiceController;
 
 /*
  |--------------------------------------------------------------------------

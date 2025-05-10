@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\RayResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait; // <-- استيراد
 use Illuminate\Contracts\Auth\CanResetPassword;                         // <-- استيراد
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait; // <-- استيراد
 
 class RayEmployee extends Authenticatable implements CanResetPassword // <-- تطبيق الواجهة
 {
@@ -30,11 +31,17 @@ class RayEmployee extends Authenticatable implements CanResetPassword // <-- ت�
     protected $casts = [
         'email_verified_at' => 'datetime',
         'status' => 'boolean', // ** تفعيل هذا إذا كان لديك عمود status **
-        'password' => 'hashed', // ** إضافة هذا **
+        // 'password' => 'hashed', // ** إضافة هذا **
     ];
 
     public function image()
     {
         return $this->morphOne(Image::class, 'imageable');
+    }
+
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new RayResetPasswordNotification($token));
     }
 }

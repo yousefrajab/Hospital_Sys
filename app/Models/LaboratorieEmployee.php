@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\LabResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait; // <-- استيراد
 use Illuminate\Contracts\Auth\CanResetPassword;                         // <-- استيراد
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait; // <-- استيراد
 
 class LaboratorieEmployee extends Authenticatable implements CanResetPassword // <-- تطبيق الواجهة
 {
@@ -30,7 +31,7 @@ class LaboratorieEmployee extends Authenticatable implements CanResetPassword //
     protected $casts = [
         'email_verified_at' => 'datetime',
         'status' => 'boolean', // ** تفعيل هذا إذا كان لديك عمود status **
-        'password' => 'hashed', // ** إضافة هذا **
+        // 'password' => 'hashed', // ** إضافة هذا **
     ];
 
     public function image()
@@ -44,4 +45,10 @@ class LaboratorieEmployee extends Authenticatable implements CanResetPassword //
     // {
     //     return $this->belongsTo(Patient::class, 'patient_id');
     // }
+
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new LabResetPasswordNotification($token));
+    }
 }

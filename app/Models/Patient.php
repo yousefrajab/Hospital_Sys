@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Notifications\PatientResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract; // مهم للترجمة
-use Illuminate\Notifications\Notifiable;                                  // مهم للإشعارات
-use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;    // <-- استيراد
 use Illuminate\Contracts\Auth\CanResetPassword;                            // <-- استيراد
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract; // مهم للترجمة
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;    // <-- استيراد
+use Illuminate\Notifications\Notifiable;                                  // مهم للإشعارات
 
 class Patient extends Authenticatable implements TranslatableContract, CanResetPassword // <-- تطبيق الواجهات
 {
@@ -38,7 +39,7 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
         'email_verified_at' => 'datetime', // إذا كان لديك هذا العمود
         'Date_Birth' => 'date', // تحويل تاريخ الميلاد إلى كائن Carbon
         // 'Gender' => 'integer', // إذا كان رقميًا
-        'password' => 'hashed', // ** إضافة هذا **
+        // 'password' => 'hashed', // ** إضافة هذا **
     ];
 
     public function doctor()
@@ -72,5 +73,11 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
     {
         return $this->belongsToMany(Disease::class, 'disease_patient')
             ->withTimestamps();
+    }
+
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PatientResetPasswordNotification($token));
     }
 }

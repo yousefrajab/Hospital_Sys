@@ -428,7 +428,7 @@
                                                 </form>
                                                 <div class="main-signin-footer mt-4 text-center">
                                                     <p class="mb-2"><a
-                                                            href="{{ route('password.request') }}">{{ trans('signinn.forgot password') }}</a>
+                                                            href="{{ route('admin.password.request')}}">{{ trans('signinn.forgot password') }}</a>
                                                     </p>
                                                     <p class="mb-0">{{ trans('signinn.Having trouble getting in?') }}<a
                                                             href="#">{{ trans('signinn.Contact Technical Support') }}</a>
@@ -475,7 +475,7 @@
                                                 </form>
                                                 <div class="main-signin-footer mt-4 text-center">
                                                     <p class="mb-2"><a
-                                                            href="{{ route('password.request') }}">{{ trans('signinn.forgot password') }}</a>
+                                                            href="{{ route('doctor.password.request') }}">{{ trans('signinn.forgot password') }}</a>
                                                     </p>
                                                     <p class="mb-0">{{ trans('signinn.Having trouble getting in?') }} <a
                                                             href="#">{{ trans('signinn.Contact Technical Support') }}</a>
@@ -522,7 +522,7 @@
                                                 </form>
                                                 <div class="main-signin-footer mt-4 text-center">
                                                     <p class="mb-2"><a
-                                                            href="{{ route('password.request') }}">{{ trans('signinn.forgot password') }}</a>
+                                                            href="{{ route('ray_employee.password.request') }}">{{ trans('signinn.forgot password') }}</a>
                                                     </p>
                                                     <p class="mb-0">{{ trans('signinn.Having trouble getting in?') }} <a
                                                             href="#">{{ trans('signinn.Contact Technical Support') }}</a>
@@ -569,7 +569,7 @@
                                                 </form>
                                                 <div class="main-signin-footer mt-4 text-center">
                                                     <p class="mb-2"><a
-                                                            href="{{ route('password.request') }}">{{ trans('signinn.forgot password') }}</a>
+                                                            href="{{ route('laboratorie_employee.password.request') }}">{{ trans('signinn.forgot password') }}</a>
                                                     </p>
                                                     <p class="mb-0">{{ trans('signinn.Having trouble getting in?') }} <a
                                                             href="#">{{ trans('signinn.Contact Technical Support') }}</a>
@@ -616,7 +616,7 @@
                                                 </form>
                                                 <div class="main-signin-footer mt-4 text-center">
                                                     <p class="mb-2"><a
-                                                            href="{{ route('password.request') }}">{{ trans('signinn.forgot password') }}</a>
+                                                            href="{{ route('patient.password.request') }}">{{ trans('signinn.forgot password') }}</a>
                                                     </p>
                                                     <p class="mb-0">{{ trans('signinn.Don\'t have an account?') }} <a
                                                             href="{{ route('register.patient') }}">{{ trans('signinn.Create new account') }}</a>
