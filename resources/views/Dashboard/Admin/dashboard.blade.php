@@ -13,117 +13,594 @@
                 <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">{{ trans('Admin.Welcome Admin') }}</h2>
             </div>
         </div>
-        {{-- <div class="main-dashboard-header-right">
-            <div>
-                <label class="tx-13">عدد الخدمات المفردة</label>
-                <h5>{{ \App\Models\Service::count() }}</h5>
-            </div>
-            <div>
-                <label class="tx-13">عدد الخدمات المجمعة</label>
-                <h5>{{ \App\Models\Group::count() }}</h5>
-            </div>
-        </div> --}}
+
     </div>
     <!-- /breadcrumb -->
 @endsection
 @section('content')
     <!-- row -->
     <div class="row row-sm">
-        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-            <div class="card overflow-hidden sales-card bg-primary-gradient">
+        <!-- بطاقة الأطباء -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12 mb-3">
+            <div class="card overflow-hidden sales-card bg-primary-gradient animate__animated animate__fadeInLeft">
                 <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-                    <div class="">
-                        <h6 class="mb-3 tx-12 text-white">عدد الاطباء</h6>
-                    </div>
-                    <div class="pb-0 mt-0">
-                        <div class="d-flex">
-                            <div class="">
-                                <h4 class="tx-20 font-weight-bold mb-1 text-white">{{ App\Models\Doctor::count() }}</h4>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 tx-12 text-white">الأطباء</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-xs btn-outline-light dropdown-toggle" type="button" id="doctorDropdown"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="doctorDropdown">
+                                <a class="dropdown-item" href="{{ route('admin.Doctors.index') }}">عرض الكل</a>
+                                <a class="dropdown-item" href="{{ route('admin.Doctors.create') }}">إضافة جديد</a>
                             </div>
-
+                        </div>
+                    </div>
+                    <div class="pb-0 mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="tx-20 font-weight-bold mb-1 text-white">
+                                    {{ number_format(App\Models\Doctor::count()) }}
+                                </h4>
+                                <p class="mb-0 tx-12 text-white op-7">
+                                    <i class="fas fa-arrow-up tx-11"></i>
+                                    @php
+                                        $lastMonth = App\Models\Doctor::where(
+                                            'created_at',
+                                            '>=',
+                                            now()->subDays(30),
+                                        )->count();
+                                        $change =
+                                            $lastMonth > 0
+                                                ? round(((App\Models\Doctor::count() - $lastMonth) / $lastMonth) * 100)
+                                                : 100;
+                                    @endphp
+                                    {{ $change }}% عن الشهر الماضي
+                                </p>
+                            </div>
+                            <span class="float-right my-auto">
+                                <i class="fas fa-user-md text-white" style="font-size: 2.5rem; opacity: 0.7;"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
-                <span id="compositeline" class="pt-1">5,9,5,6,4,12,18,14,10,15,12,5,8,5,12,5,12,10,16,12</span>
+                <div class="card-footer bg-primary-dark py-2">
+                    <small class="text-white">
+                        <i class="far fa-calendar-alt mr-1"></i>
+                        آخر تحديث: {{ now()->format('H:i') }}
+                    </small>
+                </div>
             </div>
         </div>
-        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-            <div class="card overflow-hidden sales-card bg-danger-gradient">
-                <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-                    <div class="">
-                        <h6 class="mb-3 tx-12 text-white">عدد المرضي</h6>
-                    </div>
-                    <div class="pb-0 mt-0">
-                        <div class="d-flex">
-                            <div class="">
-                                <h4 class="tx-20 font-weight-bold mb-1 text-white">{{ App\Models\Patient::count() }}</h4>
-                            </div>
 
+        <!-- بطاقة المرضى -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12 mb-3">
+            <div class="card overflow-hidden sales-card bg-danger-gradient animate__animated animate__fadeInLeft"
+                style="animation-delay: 0.1s">
+                <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 tx-12 text-white">المرضى</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-xs btn-outline-light dropdown-toggle" type="button" id="patientDropdown"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="patientDropdown">
+                                <a class="dropdown-item" href="{{ route('admin.Patients.index') }}">عرض الكل</a>
+                                <a class="dropdown-item" href="{{ route('admin.Patients.create') }}">إضافة جديد</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pb-0 mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="tx-20 font-weight-bold mb-1 text-white">
+                                    {{ number_format(App\Models\Patient::count()) }}
+                                </h4>
+                                <p class="mb-0 tx-12 text-white op-7">
+                                    <i class="fas fa-arrow-up tx-11"></i>
+                                    @php
+                                        $lastMonth = App\Models\Patient::where(
+                                            'created_at',
+                                            '>=',
+                                            now()->subDays(30),
+                                        )->count();
+                                        $change =
+                                            $lastMonth > 0
+                                                ? round(((App\Models\Patient::count() - $lastMonth) / $lastMonth) * 100)
+                                                : 100;
+                                    @endphp
+                                    {{ $change }}% عن الشهر الماضي
+                                </p>
+                            </div>
+                            <span class="float-right my-auto">
+                                <i class="fas fa-procedures text-white" style="font-size: 2.5rem; opacity: 0.7;"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
-                <span id="compositeline2" class="pt-1">5,9,5,6,4,12,18,14,10,15,12,5,8,5,12,5,12,10,16,12</span>
+                <div class="card-footer bg-danger-dark py-2">
+                    <small class="text-white">
+                        <i class="fas fa-user-injured mr-1"></i>
+                        {{ App\Models\PatientAdmission::whereNull('discharge_date')->count() }} حالات دخول حالية
+                    </small>
+                </div>
             </div>
         </div>
-        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-            <div class="card overflow-hidden sales-card bg-success-gradient">
-                <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-                    <div class="">
-                        <h6 class="mb-3 tx-12 text-white">عدد الاقسام</h6>
-                    </div>
-                    <div class="pb-0 mt-0">
-                        <div class="d-flex">
-                            <div class="">
-                                <h4 class="tx-20 font-weight-bold mb-1 text-white">{{ App\Models\Section::count() }}</h4>
-                            </div>
 
+        <!-- بطاقة الأقسام -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12 mb-3">
+            <div class="card overflow-hidden sales-card bg-success-gradient animate__animated animate__fadeInLeft"
+                style="animation-delay: 0.2s">
+                <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 tx-12 text-white">الأقسام</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-xs btn-outline-light dropdown-toggle" type="button" id="sectionDropdown"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sectionDropdown">
+                                <a class="dropdown-item" href="{{ route('admin.Sections.index') }}">عرض الكل</a>
+                                <a class="dropdown-item" href="{{ route('admin.Sections.create') }}">إضافة جديد</a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="pb-0 mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="tx-20 font-weight-bold mb-1 text-white">
+                                    {{ number_format(App\Models\Section::count()) }}
+                                </h4>
+                                <p class="mb-0 tx-12 text-white op-7">
+                                    <i class="fas fa-door-open mr-1"></i>
+                                    {{ App\Models\Room::count() }} غرفة متاحة
+                                </p>
+                            </div>
+                            <span class="float-right my-auto">
+                                <i class="fas fa-hospital-alt text-white" style="font-size: 2.5rem; opacity: 0.7;"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
-                <span id="compositeline3" class="pt-1">5,10,5,20,22,12,15,18,20,15,8,12,22,5,10,12,22,15,16,10</span>
+                <div class="card-footer bg-success-dark py-2">
+                    <small class="text-white">
+                        <i class="fas fa-bed mr-1"></i>
+                        {{ App\Models\Bed::where('status', 'available')->count() }} سرير متاح
+                    </small>
+                </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-            <div class="card overflow-hidden sales-card bg-info-gradient">
+        <!-- بطاقة الغرف -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12 mb-3">
+            <div class="card overflow-hidden sales-card bg-info-gradient animate__animated animate__fadeInLeft"
+                style="animation-delay: 0.3s">
                 <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-                    <div class="">
-                        <h6 class="mb-3 tx-12 text-white">عدد الخدمات المفردة</h6>
-                    </div>
-                    <div class="pb-0 mt-0">
-                        <div class="d-flex">
-                            <div class="">
-                                <h4 class="tx-20 font-weight-bold mb-1 text-white">{{ \App\Models\Service::count() }}</h4>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 tx-12 text-white">الغرف</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-xs btn-outline-light dropdown-toggle" type="button" id="roomDropdown"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="roomDropdown">
+                                <a class="dropdown-item" href="{{ route('admin.rooms.index') }}">عرض الكل</a>
+                                <a class="dropdown-item" href="{{ route('admin.rooms.create') }}">إضافة جديد</a>
                             </div>
-
+                        </div>
+                    </div>
+                    <div class="pb-0 mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="tx-20 font-weight-bold mb-1 text-white">
+                                    {{ number_format(App\Models\Room::count()) }}
+                                </h4>
+                                <p class="mb-0 tx-12 text-white op-7">
+                                    <span class="badge bg-white text-success mr-1">
+                                        {{ App\Models\Room::where('status', 'available')->count() }} متاحة
+                                    </span>
+                                    <span class="badge bg-white text-warning">
+                                        {{ App\Models\Room::where('status', '!=', 'available')->count() }} مشغولة
+                                    </span>
+                                </p>
+                            </div>
+                            <span class="float-right my-auto">
+                                <i class="fas fa-door-closed text-white" style="font-size: 2.5rem; opacity: 0.7;"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
-                <span id="compositeline4" class="pt-1">5,10,5,20,22,12,15,18,20,15,8,12,22,5,10,12,22,15,16,10</span>
+                <div class="card-footer bg-info-dark py-2">
+                    <small class="text-white">
+                        <i class="fas fa-chart-pie mr-1"></i>
+                        {{ round((App\Models\Room::where('status', 'available')->count() / max(App\Models\Room::count(), 1)) * 100) }}%
+                        نسبة الإشغال
+                    </small>
+                </div>
             </div>
         </div>
-        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-            <div class="card overflow-hidden sales-card bg-warning-gradient">
-                <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-                    <div class="">
-                        <h6 class="mb-3 tx-12 text-white">عدد الخدمات المجمعة</h6>
-                    </div>
-                    <div class="pb-0 mt-0">
-                        <div class="d-flex">
-                            <div class="">
-                                <h4 class="tx-20 font-weight-bold mb-1 text-white">{{ \App\Models\Group::count() }}</h4>
-                            </div>
+    </div>
 
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                // تأثير تحريك البطاقات عند التمرير إليها
+                function animateCards() {
+                    $('.sales-card').each(function() {
+                        var cardTop = $(this).offset().top;
+                        var scrollTop = $(window).scrollTop();
+                        var windowHeight = $(window).height();
+
+                        if (scrollTop + windowHeight > cardTop + 100) {
+                            $(this).addClass('animate__fadeInUp');
+                        }
+                    });
+                }
+
+                // تشغيل عند التحميل وعند التمرير
+                animateCards();
+                $(window).scroll(animateCards);
+
+                // تحديث الإحصاءات كل دقيقة (اختياري)
+                setInterval(function() {
+                    $.get('{{ route('dashboard.admin') }}', function(data) {
+                        // يمكنك هنا تحديث الأرقام دون إعادة تحميل الصفحة
+                        // هذا يتطلب إنشاء route وcontroller خاص بالإحصاءات
+                    });
+                }, 60000);
+            });
+        </script>
+    @endpush
+
+    <style>
+        .sales-card {
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sales-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .bg-primary-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .bg-danger-gradient {
+            background: linear-gradient(135deg, #f54ea2 0%, #ff7676 100%);
+        }
+
+        .bg-success-gradient {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .bg-info-gradient {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .bg-primary-dark {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .bg-danger-dark {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .bg-success-dark {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .bg-info-dark {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .badge {
+            font-weight: 500;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+        }
+    </style>
+    <!-- صف جديد للبطاقات الإضافية -->
+    <div class="row row-sm">
+        <!-- بطاقة الأسرة المتاحة -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12 mb-3">
+            <div class="card overflow-hidden sales-card bg-teal-gradient animate__animated animate__fadeInUp">
+                <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 tx-12 text-white">الأسرة المتاحة</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-xs btn-outline-light dropdown-toggle" type="button" id="bedDropdown"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bedDropdown">
+                                <a class="dropdown-item"
+                                    href="{{ route('admin.beds.index', ['bed_status_filter' => 'available']) }}">
+                                    <i class="fas fa-filter mr-1"></i> تصفية حسب المتاحة
+                                </a>
+                                <a class="dropdown-item" href="{{ route('admin.beds.create') }}">
+                                    <i class="fas fa-plus mr-1"></i> إضافة سرير جديد
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pb-0 mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="tx-20 font-weight-bold mb-1 text-white">
+                                    {{ number_format(App\Models\Bed::where('status', 'available')->count()) }}
+                                </h4>
+                                <p class="mb-0 tx-12 text-white op-7">
+                                    <span class="badge bg-white text-teal mr-1">
+                                        {{ round((App\Models\Bed::where('status', 'available')->count() / max(App\Models\Bed::count(), 1)) * 100) }}%
+                                        من الإجمالي
+                                    </span>
+                                </p>
+                            </div>
+                            <span class="float-right my-auto">
+                                <i class="fas fa-bed text-white" style="font-size: 2.5rem; opacity: 0.7;"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
-                <span id="compositeline" class="pt-1">5,9,5,6,4,12,18,14,8,15,12,2,8,5,12,5,12,10,16,12</span>
+                <div class="card-footer bg-teal-dark py-2 d-flex justify-content-between">
+                    <small class="text-white">
+                        <i class="fas fa-arrow-up mr-1"></i>
+                        @php
+                            $occupiedBeds = App\Models\Bed::where('status', 'occupied')->count();
+                            $totalBeds = App\Models\Bed::count();
+                            $occupancyRate = $totalBeds > 0 ? round(($occupiedBeds / $totalBeds) * 100) : 0;
+                        @endphp
+                        نسبة الإشغال: {{ $occupancyRate }}%
+                    </small>
+                    <small>
+                        <a href="{{ route('admin.beds.index') }}" class="text-white">
+                            <i class="fas fa-external-link-alt mr-1"></i> عرض الكل
+                        </a>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- بطاقة المرضى المقيمين -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12 mb-3">
+            <div class="card overflow-hidden sales-card bg-purple-gradient animate__animated animate__fadeInUp"
+                style="animation-delay: 0.1s">
+                <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 tx-12 text-white">المرضى المقيمون</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-xs btn-outline-light dropdown-toggle" type="button"
+                                id="admissionDropdown" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="admissionDropdown">
+                                <a class="dropdown-item" href="{{ route('admin.patient_admissions.index') }}">
+                                    <i class="fas fa-list mr-1"></i> سجل الدخول
+                                </a>
+                                <a class="dropdown-item" href="{{ route('admin.patient_admissions.create') }}">
+                                    <i class="fas fa-plus-circle mr-1"></i> تسجيل دخول جديد
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pb-0 mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="tx-20 font-weight-bold mb-1 text-white">
+                                    {{ number_format(App\Models\PatientAdmission::where('status', 'admitted')->whereNull('discharge_date')->count()) }}
+                                </h4>
+                                <p class="mb-0 tx-12 text-white op-7">
+                                    <span class="badge bg-white text-purple mr-1">
+                                        @php
+                                            $icuPatients = App\Models\PatientAdmission::whereHas('bed.room', function (
+                                                $q,
+                                            ) {
+                                                $q->where('type', 'icu_room');
+                                            })
+                                                ->whereNull('discharge_date')
+                                                ->count();
+                                        @endphp
+                                        {{ $icuPatients }} في العناية المركزة
+                                    </span>
+                                </p>
+                            </div>
+                            <span class="float-right my-auto">
+                                <i class="fas fa-hospital-user text-white" style="font-size: 2.5rem; opacity: 0.7;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-purple-dark py-2 d-flex justify-content-between">
+                    <small class="text-white">
+                        <i class="fas fa-clock mr-1"></i>
+                        @php
+                            $avgStay = App\Models\PatientAdmission::whereNotNull('discharge_date')->avg(
+                                \DB::raw('TIMESTAMPDIFF(DAY, admission_date, discharge_date)'),
+                            );
+                        @endphp
+                        متوسط الإقامة: {{ round($avgStay) }} يوم
+                    </small>
+                    <small>
+                        <a href="#" class="text-white">
+                            <i class="fas fa-clipboard-list mr-1"></i> التفاصيل
+                        </a>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- بطاقة إجمالي الأسرة -->
+        <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12 mb-3">
+            <div class="card overflow-hidden sales-card bg-secondary-gradient animate__animated animate__fadeInUp"
+                style="animation-delay: 0.2s">
+                <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 tx-12 text-white">إجمالي الأسرة</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-xs btn-outline-light dropdown-toggle" type="button"
+                                id="totalBedsDropdown" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="totalBedsDropdown">
+                                <a class="dropdown-item" href="{{ route('admin.beds.index') }}">
+                                    <i class="fas fa-list mr-1"></i> عرض الكل
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-chart-bar mr-1"></i> تقرير الإشغال
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pb-0 mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="tx-20 font-weight-bold mb-1 text-white">
+                                    {{ number_format(App\Models\Bed::count()) }}
+                                </h4>
+                                <p class="mb-0 tx-12 text-white op-7">
+                                    <span class="badge bg-white text-secondary mr-1">
+                                        {{ App\Models\Bed::where('type', 'icu_bed')->count() }} سرير عناية مركزة
+                                    </span>
+                                </p>
+                            </div>
+                            <span class="float-right my-auto">
+                                <i class="fas fa-procedures text-white" style="font-size: 2.5rem; opacity: 0.7;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-secondary-dark py-2 d-flex justify-content-between">
+                    <small class="text-white">
+                        <i class="fas fa-map-marker-alt mr-1"></i>
+                        موزعة على {{ App\Models\Room::count() }} غرفة
+                    </small>
+                    <small>
+                        <a href="{{ route('admin.rooms.index') }}" class="text-white">
+                            <i class="fas fa-door-open mr-1"></i> عرض الغرف
+                        </a>
+                    </small>
+                </div>
             </div>
         </div>
 
 
     </div>
-    <!-- row closed -->
+
+    @push('styles')
+        <style>
+            .bg-teal-gradient {
+                background: linear-gradient(135deg, #0cebeb 0%, #20e3b2 50%, #29ffc6 100%);
+            }
+
+            .bg-purple-gradient {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+
+            .bg-orange-gradient {
+                background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
+            }
+
+            .bg-secondary-gradient {
+                background: linear-gradient(135deg, #868f96 0%, #596164 100%);
+            }
+
+            .bg-teal-dark {
+                background-color: rgba(0, 131, 143, 0.2);
+            }
+
+            .bg-purple-dark {
+                background-color: rgba(102, 126, 234, 0.2);
+            }
+
+            .bg-orange-dark {
+                background-color: rgba(244, 107, 69, 0.2);
+            }
+
+            .bg-secondary-dark {
+                background-color: rgba(134, 143, 150, 0.2);
+            }
+
+            .occupancy-gauge {
+                width: 100%;
+                height: 6px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 3px;
+                margin-top: 8px;
+                overflow: hidden;
+            }
+
+            .occupancy-progress {
+                height: 100%;
+                background: white;
+                border-radius: 3px;
+                transition: width 1s ease;
+            }
+
+            .card-footer small a:hover {
+                text-decoration: underline;
+                opacity: 0.9;
+            }
+        </style>
+    @endpush
+
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                // رسم مؤشرات الإشغال
+                function drawOccupancyIndicators() {
+                    $('.occupancy-progress').each(function() {
+                        var percent = $(this).data('percent');
+                        $(this).css('width', percent + '%');
+                    });
+                }
+
+                // تحديث البطاقات كل دقيقة (اختياري)
+                function updateStatsCards() {
+                    $.get('{{ route('dashboard.admin') }}', function(data) {
+                        $('#available-beds-count').text(data.available_beds);
+                        $('#total-beds-count').text(data.total_beds);
+                        $('#current-patients-count').text(data.current_patients);
+                        $('#occupancy-rate').text(data.occupancy_rate + '%');
+
+                        // تحديث مؤشرات الإشغال
+                        $('.occupancy-progress').data('percent', data.occupancy_rate);
+                        drawOccupancyIndicators();
+                    });
+                }
+
+                // التشغيل الأولي
+                drawOccupancyIndicators();
+
+                // التحديث التلقائي (اختياري)
+                setInterval(updateStatsCards, 60000);
+            });
+        </script>
+    @endpush
 
     <!-- row opened -->
     <div class="row row-sm">

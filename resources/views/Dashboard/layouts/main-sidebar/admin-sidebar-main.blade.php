@@ -73,72 +73,88 @@
         </li>
         {{-- ... (أجزاء أخرى من السايد بار) ... --}}
 
-{{-- قسم إدارة الأقسام (موجود لديك) --}}
-<li class="slide">
-    <a class="side-menu__item" data-toggle="slide" href="#"> {{-- href="#" أو اتركه فارغًا إذا كان data-toggle يعالج الفتح --}}
-        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
-            {{-- أيقونة الأقسام الحالية --}}
-            <path d="M0 0h24v24H0V0z" fill="none" />
-            <path d="M19 5H5v14h14V5zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" opacity=".3" />
-            <path d="M3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm2 0h14v14H5V5zm2 5h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z" />
-        </svg>
-        <span class="side-menu__label">{{ trans('main-sidebar_trans.sections') }}</span>
-        <i class="angle fe fe-chevron-down"></i>
-    </a>
-    <ul class="slide-menu">
-        <li>
-            <a class="slide-item" href="{{ route('admin.Sections.index') }}">
-                {{ trans('main-sidebar_trans.view_all_sections') }} {{-- اقتراح لاسم أوضح --}}
+        {{-- قسم إدارة الأقسام (موجود لديك) --}}
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#"> {{-- href="#" أو اتركه فارغًا إذا كان data-toggle يعالج الفتح --}}
+                <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
+                    {{-- أيقونة الأقسام الحالية --}}
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path d="M19 5H5v14h14V5zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" opacity=".3" />
+                    <path
+                        d="M3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm2 0h14v14H5V5zm2 5h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z" />
+                </svg>
+                <span class="side-menu__label">{{ trans('main-sidebar_trans.sections') }}</span>
+                <i class="angle fe fe-chevron-down"></i>
             </a>
+            <ul class="slide-menu">
+                <li>
+                    <a class="slide-item" href="{{ route('admin.Sections.index') }}">
+                        {{ trans('main-sidebar_trans.view_all') }} {{-- اقتراح لاسم أوضح --}}
+                    </a>
+                </li>
+                {{-- يمكنك إضافة "إضافة قسم جديد" هنا إذا أردت --}}
+                {{-- <li>
+                    <a class="slide-item" href="{{ route('admin.Sections.add') }}">
+                        {{ trans('main-sidebar_trans.add_section') }}
+                    </a>
+                </li> --}}
+            </ul>
         </li>
-        {{-- يمكنك إضافة "إضافة قسم جديد" هنا إذا أردت --}}
-        {{-- <li>
-            <a class="slide-item" href="{{ route('admin.Sections.create') }}">
-                {{ trans('main-sidebar_trans.add_section') }}
+
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#">
+                {{-- أيقونة مناسبة للغرف --}}
+                {{-- مثال باستخدام Font Awesome: --}}
+                <i class="side-menu__icon fas fa-door-open"></i>
+                {{-- أو يمكنك استخدام أيقونة SVG التي تفضلها --}}
+                {{-- <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"> ... أيقونة الغرف ... </svg> --}}
+
+                <span class="side-menu__label">{{ trans('main-sidebar_trans.rooms_management') }}</span>
+                {{-- يجب أن تكون هذه في ملف الترجمة --}}
+                <i class="angle fe fe-chevron-down"></i>
             </a>
-        </li> --}}
-    </ul>
-</li>
-
-{{-- ***** قسم إدارة الغرف (الجديد) ***** --}}
-<li class="slide">
-    <a class="side-menu__item" data-toggle="slide" href="#">
-        {{-- أيقونة جديدة للغرف - مثال: أيقونة باب أو مفتاح أو مبنى صغير --}}
-        {{-- مثال 1: أيقونة باب (Font Awesome) --}}
-        {{-- <i class="side-menu__icon fas fa-door-open"></i> --}}
-
-        {{-- مثال 2: أيقونة مفتاح (Font Awesome) --}}
-        {{-- <i class="side-menu__icon fas fa-key"></i> --}}
-
-        {{-- مثال 3: أيقونة مبنى/وحدات (SVG - يمكنك البحث عن أيقونة SVG مناسبة) --}}
-        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" enable-background="new 0 0 24 24" viewBox="0 0 24 24">
-            <path fill="#707070" opacity=".3" d="M12.5,13.5h-1V12h1V13.5z M12.5,10.5h-1V9h1V10.5z M15.5,10.5h-1V9h1V10.5z M15.5,13.5h-1V12h1V13.5z"/>
-            <path fill="#707070" d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M19,19H5V5h14V19z"/>
-            <path fill="#707070" d="M11,18h2v-2h-2V18z M11,14h2v-2h-2V14z M11,10h2V8h-2V10z M7,10h2V8H7V10z M7,14h2v-2H7V14z M7,18h2v-2H7V18z M15,10h2V8h-2V10z M15,14h2v-2h-2V14z M15,18h2v-2h-2V18z"/>
-        </svg>
-        {{-- أو يمكنك استخدام أيقونة Font Awesome إذا كانت مكتبة الأيقونات لديك تدعمها بشكل أفضل --}}
-        {{-- <i class="side-menu__icon far fa-hospital-alt"></i> --}} {{-- أيقونة مستشفى بديلة --}}
-        {{-- <i class="side-menu__icon fas fa-person-booth"></i> --}} {{-- أيقونة تمثل غرفة/مقصورة --}}
-
-
-        <span class="side-menu__label">{{ trans('ادارة الغرف') }}</span> {{-- كلمة جديدة للترجمة --}}
-        <i class="angle fe fe-chevron-down"></i>
-    </a>
-    <ul class="slide-menu">
-        <li>
-            <a class="slide-item" href="{{ route('admin.rooms.index') }}">
-                {{ trans('عرض الكل') }} {{-- كلمة جديدة للترجمة --}}
-            </a>
+            <ul class="slide-menu">
+                <li>
+                    <a class="slide-item" href="{{ route('admin.rooms.index') }}">
+                        {{ trans('main-sidebar_trans.view_all_rooms') }} {{-- يجب أن تكون هذه في ملف الترجمة --}}
+                    </a>
+                </li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.rooms.create') }}">
+                        {{ trans('main-sidebar_trans.add_new_room') }} {{-- يجب أن تكون هذه في ملف الترجمة --}}
+                    </a>
+                </li>
+            </ul>
         </li>
-        {{-- <li>
-            <a class="slide-item" href="{{ route('admin.rooms.create') }}">
-                {{ trans('main-sidebar_trans.add_new_room') }} {{-- كلمة جديدة للترجمة --}}
-            </a>
-        </li> 
-    </ul>
-</li>
 
-{{-- ... (بقية عناصر السايد بار) ... --}}
+        {{-- ***** قسم إدارة الأسرة (جديد) ***** --}}
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#">
+                {{-- أيقونة مناسبة للأسرة --}}
+                {{-- مثال باستخدام Font Awesome: --}}
+                <i class="side-menu__icon fas fa-bed"></i>
+                {{-- أو أيقونة SVG: --}}
+                {{-- <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"> ... أيقونة الأسرة ... </svg> --}}
+
+                <span class="side-menu__label">{{ trans('main-sidebar_trans.beds_management') }}</span>
+                {{-- كلمة جديدة للترجمة --}}
+                <i class="angle fe fe-chevron-down"></i>
+            </a>
+            <ul class="slide-menu">
+                <li>
+                    <a class="slide-item" href="{{ route('admin.beds.index') }}">
+                        {{ trans('main-sidebar_trans.view_all_beds') }} {{-- كلمة جديدة للترجمة --}}
+                    </a>
+                </li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.beds.create') }}">
+                        {{ trans('main-sidebar_trans.add_new_bed') }} {{-- كلمة جديدة للترجمة --}}
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        {{-- ... (بقية عناصر السايد بار) ... --}}
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
                     xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
@@ -170,7 +186,7 @@
                 <li><a class="slide-item"
                         href="{{ route('admin.Add_GroupServices') }}">{{ trans('main-sidebar_trans.group_services') }}</a>
                 </li>
-                <li><a class="slide-item"
+                {{-- <li><a class="slide-item"
                         href="{{ route('admin.insurance.index') }}">{{ trans('main-sidebar_trans.Insurance') }}</a>
                 </li>
                 <li><a class="slide-item"
@@ -178,20 +194,53 @@
                 </li>
                 <li><a class="slide-item"
                         href="{{ url('/' . ($page = 'calendar')) }}">{{ trans('main-sidebar_trans.Ambulance_calls') }}</a>
-                </li>
+                </li> --}}
             </ul>
         </li>
         <li class="slide">
-            <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
-                    xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
+            <a class="side-menu__item" data-toggle="slide" href="#"> {{-- href="#" أفضل من url(...) إذا كان data-toggle يعالج الفتح --}}
+                {{-- أيقونة المرضى الحالية أو أيقونة جديدة إذا أردت --}}
+                <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
                     <path d="M0 0h24v24H0V0z" fill="none" />
                     <path d="M6.26 9L12 13.47 17.74 9 12 4.53z" opacity=".3" />
                     <path
                         d="M19.37 12.8l-7.38 5.74-7.37-5.73L3 14.07l9 7 9-7zM12 2L3 9l1.63 1.27L12 16l7.36-5.73L21 9l-9-7zm0 11.47L6.26 9 12 4.53 17.74 9 12 13.47z" />
-                </svg><span class="side-menu__label">المرضي</span><i class="angle fe fe-chevron-down"></i></a>
+                </svg>
+                <span class="side-menu__label">المرضى</span>
+                <i class="angle fe fe-chevron-down"></i>
+            </a>
             <ul class="slide-menu">
-                {{-- <li><a class="slide-item" href="{{ route('admin.Patients.create') }}">اضافة مريض</a></li> --}}
-                <li><a class="slide-item" href="{{ route('admin.Patients.index') }}">قائمة المرضي</a></li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.Patients.index') }}">
+                        <i class="fas fa-users me-2 text-primary opacity-75"></i> قائمة المرضى
+                    </a>
+                </li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.Patients.create') }}"> {{-- افترض أن لديك هذا الـ route --}}
+                        <i class="fas fa-user-plus me-2 text-success opacity-75"></i> إضافة مريض جديد
+                    </a>
+                </li>
+                <li>
+                    <hr class="text-muted my-1">
+                </li> {{-- فاصل بصري --}}
+                <li>
+                    <a class="slide-item" href="{{ route('admin.patient_admissions.index') }}">
+                        <i class="fas fa-clipboard-list me-2 text-info opacity-75"></i> سجلات دخول وخروج المرضى
+                    </a>
+                </li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.patient_admissions.create') }}">
+                        <i class="fas fa-hospital-user me-2 text-warning opacity-75"></i> تسجيل دخول مريض جديد
+                    </a>
+                </li>
+                {{-- يمكنك إضافة المزيد من الروابط المتعلقة بالمرضى هنا لاحقًا --}}
+                {{--
+                <li>
+                    <a class="slide-item" href="#"> {{-- route('admin.patients.discharge_list') --}}
+                {{-- <i class="fas fa-user-check me-2 text-secondary opacity-75"></i> المرضى الذين خرجوا --}}
+                {{-- </a>
+                </li>
+                --}}
             </ul>
         </li>
         <li class="slide">

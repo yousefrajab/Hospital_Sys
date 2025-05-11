@@ -4,31 +4,47 @@ namespace App\Models;
 
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Notifications\PatientResetPasswordNotification;
+use App\Notifications\PatientResetPasswordNotification; // تأكد من وجود هذا الملف
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Contracts\Auth\CanResetPassword;                            // <-- استيراد
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract; // مهم للترجمة
-use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;    // <-- استيراد
-use Illuminate\Notifications\Notifiable;                                  // مهم للإشعارات
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use Illuminate\Notifications\Notifiable;
 
-class Patient extends Authenticatable implements TranslatableContract, CanResetPassword // <-- تطبيق الواجهات
+class Patient extends Authenticatable implements TranslatableContract, CanResetPassword
 {
-    use HasFactory, Notifiable, Translatable, CanResetPasswordTrait; // <-- استخدام الـ Traits
+    use HasFactory, Notifiable, Translatable, CanResetPasswordTrait;
 
     public $translatedAttributes = ['name', 'Address'];
 
-    // تأكد من أن $fillable يحتوي على password إذا كنت ستسمح بتغييره
     public $fillable = [
         'national_id',
-        'name', // هذا سيتم التعامل معه بواسطة Translatable
+        // 'name', // يتم التعامل معه بواسطة Translatable
         'email',
         'password',
         'Date_Birth',
-        'Phone', // اسم الحقل بحرف P كبير
+        'Phone',
         'Gender',
         'Blood_Group',
-        'Address' // هذا سيتم التعامل معه بواسطة Translatable
+        // 'Address' // يتم التعامل معه بواسطة Translatable
     ];
+
+    // ** إضافة حقل 'name' و 'Address' إلى fillable إذا كنت ستنشئ/تحدثهم مباشرة أحيانًا **
+    // ** بدون استخدام setTranslation بشكل صريح لكل لغة. **
+    // ** إذا كنت دائمًا تستخدم setTranslation، فهذه ليست ضرورية. **
+    // ** ولكن بما أنك في Controller كنت تستخدم $patient->name = $request->name، فمن الأفضل إضافتهم هنا **
+    // protected $fillable = [
+    //     'national_id',
+    //     'name', // للاسم المترجم
+    //     'email',
+    //     'password',
+    //     'Date_Birth',
+    //     'Phone',
+    //     'Gender',
+    //     'Blood_Group',
+    //     'Address', // للعنوان المترجم
+    // ];
+
 
     protected $hidden = [
         'password',
@@ -36,10 +52,10 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime', // إذا كان لديك هذا العمود
-        'Date_Birth' => 'date', // تحويل تاريخ الميلاد إلى كائن Carbon
-        // 'Gender' => 'integer', // إذا كان رقميًا
-        // 'password' => 'hashed', // ** إضافة هذا **
+        'email_verified_at' => 'datetime',
+        'Date_Birth' => 'date',
+        'password' => 'hashed', // ** تم إضافة هذا لـ Laravel 9+ لتشفير كلمة المرور تلقائيًا **
+        // ** إذا كنت تستخدم إصدارًا أقدم، قم بإزالته وتشفير كلمة المرور يدويًا **
     ];
 
     public function doctor()
@@ -47,14 +63,13 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
         return $this->belongsTo(Doctor::class, 'doctor_id');
     }
 
-    public function Service() // افترض أن هذا Service وليس services (مفرد)
+    public function Service() // اسم الدالة مفرد (Service)
     {
         return $this->belongsTo(Service::class, 'Service_id');
     }
 
-    // هذه العلاقات تبدو غير منطقية هنا، المريض لا ينتمي لموظف.
-    // الموظف هو الذي قد يكون مرتبطًا بخدمة مقدمة للمريض.
-    public function employee()
+    // هذه العلاقات قد تحتاج لمراجعة منطقها كما ذكرت سابقًا
+    public function employee() // افترض أن هذا يعني موظف أشعة
     {
         return $this->belongsTo(RayEmployee::class, 'RayEmployee_id');
     }
@@ -75,9 +90,57 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
             ->withTimestamps();
     }
 
+    // =========================================================================
+    // ***** الدوال الجديدة المضافة هنا *****
+    // =========================================================================
+
+    /**
+     * جميع سجلات دخول هذا المريض.
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function admissions()
+    {
+        return $this->hasMany(PatientAdmission::class);
+    }
+
+    /**
+     * سجل الدخول الحالي النشط لهذا المريض.
+     * سجل نشط يعني أنه لم يتم تسجيل خروجه بعد وحالته 'admitted'.
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function currentAdmission()
+    {
+        return $this->hasOne(PatientAdmission::class)
+            ->whereNull('discharge_date') // لم يتم تحديد تاريخ خروج
+            ->where('status', PatientAdmission::STATUS_ADMITTED); // الحالة هي 'admitted'
+    }
+
+    /**
+     * السرير الذي يشغله المريض حاليًا (عبر currentAdmission).
+     * هذه علاقة مساعدة إذا أردت الوصول للسرير مباشرة من المريض.
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     */
+    public function currentBed()
+    {
+        return $this->hasOneThrough(
+            Bed::class,                     // الموديل النهائي الذي نريد الوصول إليه (Bed)
+            PatientAdmission::class,        // الموديل الوسيط (PatientAdmission)
+            'patient_id',                   // المفتاح الأجنبي في جدول PatientAdmission الذي يشير إلى Patient (هذا الموديل)
+            'id',                           // المفتاح المحلي في جدول Bed (الذي يطابق bed_id في PatientAdmission)
+            'id',                           // المفتاح المحلي في جدول Patient (هذا الموديل)
+            'bed_id'                        // المفتاح الأجنبي في جدول PatientAdmission الذي يشير إلى Bed
+        )->whereNull('patient_admissions.discharge_date') // شرط على الجدول الوسيط
+            ->where('patient_admissions.status', PatientAdmission::STATUS_ADMITTED); // شرط آخر على الجدول الوسيط
+    }
+
+    // =========================================================================
+    // ***** نهاية الدوال الجديدة المضافة *****
+    // =========================================================================
 
     public function sendPasswordResetNotification($token)
     {
+        // تأكد من أن كلاس PatientResetPasswordNotification موجود في المسار الصحيح
+        // App\Notifications\PatientResetPasswordNotification
         $this->notify(new PatientResetPasswordNotification($token));
     }
 }

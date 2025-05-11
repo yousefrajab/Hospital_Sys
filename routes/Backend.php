@@ -5,6 +5,7 @@ use App\Events\MyEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminController;
+use App\Http\Controllers\Dashboard\BedController;
 use App\Http\Controllers\Dashboard\RoomController;
 use App\Http\Controllers\Dashboard\DoctorController;
 use App\Http\Controllers\Dashboard\PatientController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Dashboard\Admin\UserRoleController;
 use App\Http\Controllers\Dashboard\PaymentAccountController;
 use App\Http\Controllers\Dashboard\ReceiptAccountController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Http\Controllers\Dashboard\PatientAdmissionController;
 use App\Http\Controllers\Dashboard\LaboratorieEmployeeController;
 use App\Http\Controllers\Dashboard\appointments\AppointmentController;
 
@@ -176,12 +178,9 @@ Route::group(
             // Route لتحديث بيانات المستخدم
             Route::match(['put', 'patch'], '/users-roles/{role_key}/{id}', [UserRoleController::class, 'updateUser'])->name('users.roles.update');
 
-
-
-
-
             Route::resource('rooms', RoomController::class);
-
+            Route::resource('beds', BedController::class);
+            Route::resource('patient-admissions', PatientAdmissionController::class)->names('patient_admissions');
 
 
 

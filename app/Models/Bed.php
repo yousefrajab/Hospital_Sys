@@ -41,14 +41,37 @@ class Bed extends Model
         return $this->belongsTo(Room::class);
     }
 
+
+    public static function getBedTypes(): array
+    {
+        return [
+            self::TYPE_STANDARD => 'سرير قياسي',
+            self::TYPE_ICU => 'سرير عناية مركزة',
+            self::TYPE_PEDIATRIC => 'سرير أطفال',
+            self::TYPE_SPECIAL_CARE => 'سرير رعاية خاصة',
+            self::TYPE_OTHER => 'آخر',
+        ];
+    }
+
+    public static function getAllBedStatuses(): array
+    {
+        return [
+            self::STATUS_AVAILABLE => 'متاح',
+            self::STATUS_OCCUPIED => 'مشغول',
+            // 'reserved' => 'محجوز',
+            // 'maintenance' => 'تحت الصيانة',
+            // 'cleaning' => 'قيد التنظيف',
+        ];
+    }
+
     /**
      * سجل الدخول الحالي النشط المرتبط بهذا السرير (إذا كان مشغولاً).
      */
     public function currentAdmission()
     {
         return $this->hasOne(PatientAdmission::class)
-                    ->whereNull('discharge_date')
-                    ->where('status', PatientAdmission::STATUS_ADMITTED); // افترض أن لديك هذا الثابت في PatientAdmission
+            ->whereNull('discharge_date')
+            ->where('status', PatientAdmission::STATUS_ADMITTED); // افترض أن لديك هذا الثابت في PatientAdmission
     }
 
     /**
@@ -64,7 +87,7 @@ class Bed extends Model
             'id',         // Local key on beds table
             'patient_id'  // Local key on patient_admissions table
         )->whereNull('patient_admissions.discharge_date')
-         ->where('patient_admissions.status', PatientAdmission::STATUS_ADMITTED);
+            ->where('patient_admissions.status', PatientAdmission::STATUS_ADMITTED);
     }
 
     /**
