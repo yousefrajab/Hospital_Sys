@@ -71,9 +71,90 @@
             </ul>
 
         </li>
+
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
+                    xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path d="M3.31 11l2.2 8.01L18.5 19l2.2-8H3.31zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"
+                        opacity=".3" />
+                    <path
+                        d="M22 9h-4.79l-4.38-6.56c-.19-.28-.51-.42-.83-.42s-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1zM12 4.8L14.8 9H9.2L12 4.8zM18.5 19l-12.99.01L3.31 11H20.7l-2.2 8zM12 13c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                </svg><span class="side-menu__label">{{ trans('main-sidebar_trans.doctors') }}</span><i
+                    class="angle fe fe-chevron-down"></i></a>
+            <ul class="slide-menu">
+                <li><a class="slide-item"
+                        href="{{ route('admin.Doctors.index') }}">{{ trans('main-sidebar_trans.view_all') }}</a></li>
+            </ul>
+        </li>
+
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
+                    xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path d="M13 4H6v16h12V9h-5V4zm3 14H8v-2h8v2zm0-6v2H8v-2h8z" opacity=".3" />
+                    <path
+                        d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" />
+                </svg><span class="side-menu__label">موظفي الأشعة</span><i class="angle fe fe-chevron-down"></i></a>
+            <ul class="slide-menu">
+                <li><a class="slide-item" href="{{ route('admin.ray_employee.index') }}">قائمة الموظفين</a></li>
+                {{-- <li><a class="slide-item" href="{{ url('/' . ($page = 'form-advanced')) }}">قائمة الكشوفات</a></li> --}}
+            </ul>
+        </li>
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
+                    xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path d="M5 5h15v3H5zm12 5h3v9h-3zm-7 0h5v9h-5zm-5 0h3v9H5z" opacity=".3" />
+                    <path
+                        d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8 19H5v-9h3v9zm7 0h-5v-9h5v9zm5 0h-3v-9h3v9zm0-11H5V5h15v3z" />
+                </svg><span class="side-menu__label">موظفي المختبر</span><i class="angle fe fe-chevron-down"></i></a>
+            <ul class="slide-menu">
+                <li><a class="slide-item" href="{{ route('admin.laboratorie_employee.index') }}">قائمة الموظفين</a>
+                </li>
+            </ul>
+        </li>
         {{-- ... (أجزاء أخرى من السايد بار) ... --}}
 
         {{-- قسم إدارة الأقسام (موجود لديك) --}}
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path d="M6.26 9L12 13.47 17.74 9 12 4.53z" opacity=".3" />
+                    <path
+                        d="M19.37 12.8l-7.38 5.74-7.37-5.73L3 14.07l9 7 9-7zM12 2L3 9l1.63 1.27L12 16l7.36-5.73L21 9l-9-7zm0 11.47L6.26 9 12 4.53 17.74 9 12 13.47z" />
+                </svg>
+                <span class="side-menu__label">المرضى</span>
+                <i class="angle fe fe-chevron-down"></i>
+            </a>
+            <ul class="slide-menu">
+                <li>
+                    <a class="slide-item" href="{{ route('admin.Patients.index') }}">
+                        <i class="fas fa-users me-2 text-primary opacity-75"></i> قائمة المرضى
+                    </a>
+                </li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.Patients.create') }}"> {{-- افترض أن لديك هذا الـ route --}}
+                        <i class="fas fa-user-plus me-2 text-success opacity-75"></i> إضافة مريض جديد
+                    </a>
+                </li>
+                <li>
+                    <hr class="text-muted my-1">
+                </li> {{-- فاصل بصري --}}
+                <li>
+                    <a class="slide-item" href="{{ route('admin.patient_admissions.index') }}">
+                        <i class="fas fa-clipboard-list me-2 text-info opacity-75"></i> سجلات دخول وخروج المرضى
+                    </a>
+                </li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.patient_admissions.create') }}">
+                        <i class="fas fa-hospital-user me-2 text-warning opacity-75"></i> تسجيل دخول مريض جديد
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#"> {{-- href="#" أو اتركه فارغًا إذا كان data-toggle يعالج الفتح --}}
                 <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
@@ -101,6 +182,41 @@
             </ul>
         </li>
 
+
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#">
+                {{-- أيقونة رئيسية لقسم "إدارة الأمراض" --}}
+                {{-- خيارات للأيقونة الرئيسية: --}}
+                {{-- 1. أيقونة كتاب طبي أو ملف طبي: --}}
+                <i class="side-menu__icon fas fa-book-medical"></i>
+                {{-- 2. أيقونة فيروسات (كما استخدمتها سابقًا، وهي جيدة): --}}
+                {{-- <i class="side-menu__icon fas fa-viruses"></i> --}}
+                {{-- 3. أيقونة تشخيص (Stethoscope and chart): --}}
+                {{-- <i class="side-menu__icon fas fa-diagnoses"></i> --}}
+                {{-- 4. أيقونة مجهر (إذا كانت الأمراض مرتبطة بالتحاليل): --}}
+                {{-- <i class="side-menu__icon fas fa-microscope"></i> --}}
+
+                <span class="side-menu__label">ادارة الأمراض</span>
+                <i class="angle fe fe-chevron-down"></i>
+            </a>
+            <ul class="slide-menu">
+                <li>
+                    <a class="slide-item" href="{{ route('admin.diseases.index') }}">
+                        {{-- أيقونة لقائمة الأمراض --}}
+                        <i class="fas fa-list-ul me-2 text-primary opacity-75"></i> قائمة الامراض
+                    </a>
+                </li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.diseases.create') }}">
+                        {{-- أيقونة لإضافة مرض جديد --}}
+                        <i class="fas fa-plus-circle me-2 text-success opacity-75"></i> إضافة مرض جديد
+                    </a>
+                </li>
+                {{-- إذا أضفت روابط أخرى لاحقًا، يمكنك استخدام أيقونات مثل: --}}
+                {{-- fas fa-tags (للتصنيفات) --}}
+                {{-- fas fa-chart-bar (للتقارير) --}}
+            </ul>
+        </li>
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
                 {{-- أيقونة مناسبة للغرف --}}
@@ -155,21 +271,7 @@
         </li>
 
         {{-- ... (بقية عناصر السايد بار) ... --}}
-        <li class="slide">
-            <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
-                    xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
-                    <path d="M0 0h24v24H0V0z" fill="none" />
-                    <path d="M3.31 11l2.2 8.01L18.5 19l2.2-8H3.31zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"
-                        opacity=".3" />
-                    <path
-                        d="M22 9h-4.79l-4.38-6.56c-.19-.28-.51-.42-.83-.42s-.64.14-.83.43L6.79 9H2c-.55 0-1 .45-1 1 0 .09.01.18.04.27l2.54 9.27c.23.84 1 1.46 1.92 1.46h13c.92 0 1.69-.62 1.93-1.46l2.54-9.27L23 10c0-.55-.45-1-1-1zM12 4.8L14.8 9H9.2L12 4.8zM18.5 19l-12.99.01L3.31 11H20.7l-2.2 8zM12 13c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-                </svg><span class="side-menu__label">{{ trans('main-sidebar_trans.doctors') }}</span><i
-                    class="angle fe fe-chevron-down"></i></a>
-            <ul class="slide-menu">
-                <li><a class="slide-item"
-                        href="{{ route('admin.Doctors.index') }}">{{ trans('main-sidebar_trans.view_all') }}</a></li>
-            </ul>
-        </li>
+
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
                     xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
@@ -197,52 +299,7 @@
                 </li> --}}
             </ul>
         </li>
-        <li class="slide">
-            <a class="side-menu__item" data-toggle="slide" href="#"> {{-- href="#" أفضل من url(...) إذا كان data-toggle يعالج الفتح --}}
-                {{-- أيقونة المرضى الحالية أو أيقونة جديدة إذا أردت --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
-                    <path d="M0 0h24v24H0V0z" fill="none" />
-                    <path d="M6.26 9L12 13.47 17.74 9 12 4.53z" opacity=".3" />
-                    <path
-                        d="M19.37 12.8l-7.38 5.74-7.37-5.73L3 14.07l9 7 9-7zM12 2L3 9l1.63 1.27L12 16l7.36-5.73L21 9l-9-7zm0 11.47L6.26 9 12 4.53 17.74 9 12 13.47z" />
-                </svg>
-                <span class="side-menu__label">المرضى</span>
-                <i class="angle fe fe-chevron-down"></i>
-            </a>
-            <ul class="slide-menu">
-                <li>
-                    <a class="slide-item" href="{{ route('admin.Patients.index') }}">
-                        <i class="fas fa-users me-2 text-primary opacity-75"></i> قائمة المرضى
-                    </a>
-                </li>
-                <li>
-                    <a class="slide-item" href="{{ route('admin.Patients.create') }}"> {{-- افترض أن لديك هذا الـ route --}}
-                        <i class="fas fa-user-plus me-2 text-success opacity-75"></i> إضافة مريض جديد
-                    </a>
-                </li>
-                <li>
-                    <hr class="text-muted my-1">
-                </li> {{-- فاصل بصري --}}
-                <li>
-                    <a class="slide-item" href="{{ route('admin.patient_admissions.index') }}">
-                        <i class="fas fa-clipboard-list me-2 text-info opacity-75"></i> سجلات دخول وخروج المرضى
-                    </a>
-                </li>
-                <li>
-                    <a class="slide-item" href="{{ route('admin.patient_admissions.create') }}">
-                        <i class="fas fa-hospital-user me-2 text-warning opacity-75"></i> تسجيل دخول مريض جديد
-                    </a>
-                </li>
-                {{-- يمكنك إضافة المزيد من الروابط المتعلقة بالمرضى هنا لاحقًا --}}
-                {{--
-                <li>
-                    <a class="slide-item" href="#"> {{-- route('admin.patients.discharge_list') --}}
-                {{-- <i class="fas fa-user-check me-2 text-secondary opacity-75"></i> المرضى الذين خرجوا --}}
-                {{-- </a>
-                </li>
-                --}}
-            </ul>
-        </li>
+
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
                     xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
@@ -275,32 +332,7 @@
                 <li><a class="slide-item" href="{{ route('admin.Payment.index') }}">سند صرف</a></li>
             </ul>
         </li>
-        <li class="slide">
-            <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
-                    xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
-                    <path d="M0 0h24v24H0V0z" fill="none" />
-                    <path d="M13 4H6v16h12V9h-5V4zm3 14H8v-2h8v2zm0-6v2H8v-2h8z" opacity=".3" />
-                    <path
-                        d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" />
-                </svg><span class="side-menu__label">الاشعة</span><i class="angle fe fe-chevron-down"></i></a>
-            <ul class="slide-menu">
-                <li><a class="slide-item" href="{{ route('admin.ray_employee.index') }}">قائمة الموظفين</a></li>
-                <li><a class="slide-item" href="{{ url('/' . ($page = 'form-advanced')) }}">قائمة الكشوفات</a></li>
-            </ul>
-        </li>
-        <li class="slide">
-            <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
-                    xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
-                    <path d="M0 0h24v24H0V0z" fill="none" />
-                    <path d="M5 5h15v3H5zm12 5h3v9h-3zm-7 0h5v9h-5zm-5 0h3v9H5z" opacity=".3" />
-                    <path
-                        d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8 19H5v-9h3v9zm7 0h-5v-9h5v9zm5 0h-3v-9h3v9zm0-11H5V5h15v3z" />
-                </svg><span class="side-menu__label">المختبر</span><i class="angle fe fe-chevron-down"></i></a>
-            <ul class="slide-menu">
-                <li><a class="slide-item" href="{{ route('admin.laboratorie_employee.index') }}">قائمة الموظفين</a>
-                </li>
-            </ul>
-        </li>
+
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
                     xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">

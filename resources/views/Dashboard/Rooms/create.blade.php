@@ -145,7 +145,7 @@
         <div class="col-lg-10 col-md-12">
             <div class="form-container-card">
                 <div class="card-header card-header-custom">
-                    <h3 class="card-title mb-0"><i class="fas fa-plus-circle"></i> إضافة غرفة جديدة</h3>
+                    <h3 class="card-title mb-0" style="color: white"><i class="fas fa-plus-circle" style="color: white"></i> إضافة غرفة جديدة</h3>
                 </div>
                 <div class="card-body p-4 p-md-5">
                     <form action="{{ route('admin.rooms.store') }}" method="POST" class="needs-validation" novalidate autocomplete="off">

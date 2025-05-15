@@ -4,6 +4,7 @@ namespace App\Http\Requests\RayEmployee;
 
 use App\Models\GlobalEmail;
 use Illuminate\Validation\Rule;
+use App\Models\GlobalIdentifier;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRayEmployeeRequest extends FormRequest
@@ -17,11 +18,22 @@ class StoreRayEmployeeRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            // 'national_id' => [
+            //     'required',
+            //     'string',
+            //     'max:20', // أو الطول المناسب لرقم الهوية
+            //     Rule::unique('ray_employees', 'national_id'), // يجب أن يكون فريدًا
+            // ],
             'national_id' => [
                 'required',
                 'string',
-                'max:20', // أو الطول المناسب لرقم الهوية
-                Rule::unique('ray_employees', 'national_id'), // يجب أن يكون فريدًا
+                'max:20',
+                Rule::unique('ray_employees', 'national_id'), // 1. فريد في جدول ray_employees
+                function ($attribute, $value, $fail) { // 2. فريد في global_national_ids
+                    if (GlobalIdentifier::where('national_id', strtolower($value))->exists()) {
+                        $fail('هذا الرقم مستخدم بالفعل في النظام.');
+                    }
+                },
             ],
             'email' => [
                 'required',

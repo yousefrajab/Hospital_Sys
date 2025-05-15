@@ -13,6 +13,7 @@
         </div>
 
         <div class="collapse navbar-collapse clearfix" id="navbarSupportedContent">
+
             <ul class="navigation clearfix">
                 <li class="current dropdown"><a href="#">الرئيسية</a>
 
@@ -109,6 +110,7 @@
                     </ul>
                 </li>
             </ul>
+
         </div>
 
     </nav>
@@ -117,19 +119,82 @@
     <!-- Main Menu End-->
     <div class="outer-box clearfix">
 
-        {{-- ** هذا هو المكان الجديد لنص الترحيب ** --}}
-        {{-- نستخدم div ونعطيه كلاس للتنسيق --}}
-        <div class="welcome-text">
-            مرحبا بعودتك {{ Auth::user()->name }}
-            <form method="POST" action="{{ route('logout.patient') }}">
-                @csrf
-                <a class="dropdown-item" style="color: white" href="#"
-                    onclick="event.preventDefault();
-                                this.closest('form').submit();">
-                                <i
-                        class="bx bx-log-out" style="color: white"></i>تسجيل الخروج</a>
-            </form>
+        <div class="user-card">
+            <div class="patient-avatar">
+                <img alt="user-img" class="patient-avatar-table"
+                    src="{{ Auth::guard('patient')->user()->image ? asset('Dashboard/img/patients/' . Auth::guard('patient')->user()->image->filename) : asset('Dashboard/img/patient_default.png') }}">
+            </div>
+
+            <div class="user-info">
+                <h4>{{ auth()->user()->name }}</h4>
+                <span>{{ auth()->user()->email }}</span>
+                <form method="POST" action="{{ route('logout.patient') }}">
+                    @csrf
+                    <a class="logout-btn" href="#"
+                        onclick="event.preventDefault(); this.closest('form').submit();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        تسجيل الخروج
+                    </a>
+                </form>
+            </div>
         </div>
+        <style>
+            .user-card {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 10px;
+                background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+                border-radius: 15px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease;
+            }
+
+            .user-card:hover {
+                transform: translateY(-2px);
+            }
+
+            .patient-avatar-table {
+                width: 80px;
+                height: 120px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid #fff;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            .user-info {
+                color: white;
+            }
+
+            .user-info h4 {
+                margin: 0;
+                font-size: 1.2em;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+            }
+
+            .user-info span {
+                font-size: 0.9em;
+                opacity: 0.9;
+            }
+
+            .logout-btn {
+                color: #fff !important;
+                padding: 5px 15px;
+                border-radius: 20px;
+                background: rgba(255, 255, 255, 0.2);
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .logout-btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+                text-decoration: none;
+            }
+        </style>
         {{-- ** نهاية المكان الجديد ** --}}
 
 

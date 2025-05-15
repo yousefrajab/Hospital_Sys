@@ -223,8 +223,8 @@
     <div class="row justify-content-center animate__animated animate__fadeInUp">
         <div class="col-lg-8 col-md-10">
             <div class="form-container-card">
-                <div class="card-header card-header-custom">
-                    <h3 class="card-title mb-0"><i class="fas fa-plus-circle"></i> بيانات السرير الجديد</h3>
+                <div class="card-header card-header-custom" >
+                    <h3 class="card-title mb-0" style="color: white"><i class="fas fa-plus-circle" style="color: white"></i> بيانات السرير الجديد</h3>
                 </div>
                 <div class="card-body p-4 p-md-5">
                     <form action="{{ route('admin.beds.store') }}" method="POST" class="needs-validation" novalidate

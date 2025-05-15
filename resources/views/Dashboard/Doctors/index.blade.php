@@ -235,7 +235,7 @@
                                                         <li>
                                                             <i class="far fa-calendar-check text-success"></i>
                                                             {{-- أيقونة أوضح --}}
-                                                            <strong>{{ trans('doctors.days_short.' . strtolower(trim($day->day))) ?? ucfirst(strtolower(trim($day->day))) }}:</strong>
+                                                            <strong>{{ trans('doctors.' . $day->day) ?? ucfirst(strtolower(trim($day->day))) }}:</strong>
                                                             <span class="times text-nowrap mr-1"
                                                                 dir="ltr">{{ \Carbon\Carbon::parse($day->start_time)->format('h:i A') }}
                                                                 -

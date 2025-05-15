@@ -322,18 +322,13 @@
                                 <div class="col-md-6">
                                     <div class="floating-label">
                                         <label>{{ trans('doctors.national_id') }}</label>
-                                        {{-- <input class="form-control-modern w-100" name="national_id" type="text"
-                                            value="{{ $doctor->national_id }}" pattern="[0-9]{9}"
-                                            title="يجب أن يتكون من 9 أرقام فقط"
-                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="9"
-                                            required> --}}
+
 
 
                                         <input class="form-control" id="national_id" name="national_id"
                                             placeholder="ادخل رقم الهوية (9 أرقام)" type="text"
-                                            value="{{ $doctor->national_id }}" pattern="[0-9]{9}"
-                                            title="يجب أن يتكون رقم الهوية من 9 أرقام" maxlength="9" required
-                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                            value="{{ $doctor->national_id }}" title="يجب أن يتكون رقم الهوية من 9 أرقام"
+                                            maxlength="9" required>
                                         <div class="invalid-feedback">يجب أن يتكون رقم الهوية من 9 أرقام</div>
                                         <div class="valid-feedback"><i class="fas fa-check"></i> صحيح</div>
                                     </div>
@@ -381,8 +376,7 @@
                                         {{-- <input class="form-control-modern w-100" name="phone" type="tel"
                                             value="{{ $doctor->phone }}" required> --}}
 
-                                        <input type="tel" id="phone" name="phone"
-                                            value="{{ $doctor->phone }}"
+                                        <input type="tel" id="phone" name="phone" value="{{ $doctor->phone }}"
                                             class="form-control @error('phone') is-invalid @enderror"
                                             placeholder="05XXXXXXXX" maxlength="12" required pattern="^05\d{8}$"
                                             title="يجب أن يبدأ رقم الجوال بـ 05 ويتكون من 10 أرقام">

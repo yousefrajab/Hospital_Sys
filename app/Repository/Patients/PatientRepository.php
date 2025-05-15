@@ -2,172 +2,385 @@
 
 namespace App\Repository\Patients;
 
+use App\Models\Disease;
 use App\Models\Invoice;
 use App\Models\Patient;
 use App\Traits\UploadTrait;
+use Illuminate\Support\Str;
 use App\Models\PatientAccount;
 use App\Models\ReceiptAccount;
 use App\Models\single_invoice;
-
-
-
+use App\Models\PatientAdmission;
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model; // ليس ضروريًا هنا
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
+use Illuminate\Http\Request; // تم إضافتها بشكل صحيح
 use App\Interfaces\Patients\PatientRepositoryInterface;
+use App\Models\PatientChronicDisease; // ** استيراد هذا الموديل **
 
 class PatientRepository implements PatientRepositoryInterface
 {
     use UploadTrait;
-    public function index()
-    {
-        $Patients = Patient::all();
-        return view('Dashboard.Patients.index', compact('Patients'));
-    }
 
-    public function Show($id)
+    public function index(Request $request)
     {
-        $Patient = patient::findorfail($id);
-        $invoices = single_invoice::where('patient_id', $id)->get();
-        $invoices = Invoice::where('patient_id', $id)->get();
-        $receipt_accounts = ReceiptAccount::where('patient_id', $id)->get();
-        $Patient_accounts = PatientAccount::where('patient_id', $id)->get();
-        //  $Patient_accounts = PatientAccount::where('patient_id', $id)->get();
+        $totalPatients = Patient::count();
+        $admittedPatientsCount = PatientAdmission::where('status', PatientAdmission::STATUS_ADMITTED)
+            ->whereNull('discharge_date')
+            ->distinct('patient_id')
+            ->count('patient_id');
+        $newPatientsThisMonth = Patient::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
 
-        return view('Dashboard.Patients.show', compact('Patient', 'invoices', 'receipt_accounts', 'Patient_accounts'));
+        $query = Patient::with([
+            'image',
+            'currentAdmission' => function ($q) {
+                $q->with(['bed.room.section']); // تحميل متداخل
+            }
+        ]);
+
+        if ($request->filled('search_patient')) {
+            $searchTerm = $request->search_patient;
+            $query->where(function ($q) use ($searchTerm) {
+                // إذا كان name مترجمًا
+                $q->whereTranslationLike('name', "%{$searchTerm}%")
+                    ->orWhere('national_id', 'like', "%{$searchTerm}%")
+                    ->orWhere('email', 'like', "%{$searchTerm}%")
+                    ->orWhere('Phone', 'like', "%{$searchTerm}%");
+            });
+        }
+        if ($request->filled('gender_filter')) {
+            $query->where('Gender', $request->gender_filter);
+        }
+        if ($request->filled('blood_group_filter')) {
+            $query->where('Blood_Group', $request->blood_group_filter);
+        }
+        if ($request->filled('admission_status_filter')) {
+            if ($request->admission_status_filter == 'admitted') {
+                $query->whereHas('currentAdmission');
+            } elseif ($request->admission_status_filter == 'not_admitted') {
+                $query->whereDoesntHave('currentAdmission');
+            }
+        }
+
+        $Patients = $query->orderBy('created_at', 'desc')->paginate(20)->appends($request->query());
+
+        $genders = [1 => 'ذكر', 2 => 'أنثى'];
+        $bloodGroups = ['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
+        $admissionStatusesFilter = [
+            'admitted' => 'مقيم حاليًا',
+            'not_admitted' => 'غير مقيم حاليًا',
+        ];
+
+        return view('Dashboard.Patients.index', compact(
+            'Patients',
+            'request',
+            'totalPatients',
+            'admittedPatientsCount',
+            'newPatientsThisMonth',
+            'genders',
+            'bloodGroups',
+            'admissionStatusesFilter'
+        ));
     }
 
     public function create()
     {
-        return view('Dashboard.Patients.create');
+        // جلب قائمة الأمراض المزمنة فقط للاختيار منها
+        $diseases_list = Disease::where('is_chronic', true)
+            ->orderBy('name') // افترض أن name عمود عادي في Disease
+            ->pluck('name', 'id');
+
+        // جلب قيم Enum لحالة المرض المزمن للمريض
+        $chronic_disease_statuses = PatientChronicDisease::getStatuses();
+
+        Log::info("PatientRepository@create: Loading create patient form.");
+        return view('Dashboard.Patients.create', compact('diseases_list', 'chronic_disease_statuses'));
     }
+
+    public function store(StorePatientRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            // البيانات الأساسية (باستثناء الحقول المترجمة مباشرة والحقول الخاصة)
+            $patientData = $request->except([
+                'name',
+                'Address', // ستتم معالجتها بواسطة Translatable
+                'photo',
+                '_token',
+                '_method',
+                'password_confirmation',
+                'terms',
+                'chronic_diseases' // اسم الحقل المجمع للأمراض المزمنة
+            ]);
+            $patientData['password'] = Hash::make($request->password);
+
+            $patient = Patient::create($patientData); // هذا سيملأ الحقول في $fillable
+
+            // تعيين الحقول المترجمة
+            $patient->name = $request->name;
+            $patient->Address = $request->Address;
+            $patient->save(); // حفظ الكائن مع الترجمات
+            Log::info("PatientRepository@store: Patient base data saved. ID: {$patient->id}");
+
+            // حفظ الأمراض المزمنة
+            if ($request->has('chronic_diseases') && is_array($request->chronic_diseases)) {
+                $syncData = [];
+                foreach ($request->chronic_diseases as $diseaseInput) {
+                    if (!empty($diseaseInput['disease_id'])) {
+                        $syncData[$diseaseInput['disease_id']] = [
+                            'diagnosed_at' => $diseaseInput['diagnosed_at'] ?? null,
+                            'diagnosed_by' => $diseaseInput['diagnosed_by'] ?? null,
+                            'current_status' => $diseaseInput['current_status'] ?? null,
+                            'treatment_plan' => $diseaseInput['treatment_plan'] ?? null,
+                            'notes' => $diseaseInput['notes'] ?? null,
+                        ];
+                    }
+                }
+                if (!empty($syncData)) {
+                    $patient->diagnosedChronicDiseases()->sync($syncData);
+                    Log::info("PatientRepository@store: Synced chronic diseases for Patient ID: {$patient->id}", $syncData);
+                }
+            }
+
+            if ($request->hasFile('photo')) {
+                $this->verifyAndStoreImage($request, 'photo', 'patients', 'upload_image', $patient->id, Patient::class);
+            }
+
+            DB::commit();
+            session()->flash('add', 'تم تسجيل المريض وبياناته الصحية بنجاح.');
+            return redirect()->route('admin.Patients.index');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            Log::error("PatientRepository@store: Validation exception.", ['errors' => $e->errors()]);
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("PatientRepository@store: General error: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء تسجيل المريض: ' . $e->getMessage());
+        }
+    }
+
+    public function show($id)
+    {
+        $Patient = Patient::with([
+            'image',
+            'diagnosedChronicDiseases', // جلب تفاصيل المرض نفسه
+            'admissions' => function ($query) {
+                $query->with(['doctor.translations', 'bed.room.section.translations'])->orderBy('admission_date', 'desc');
+            }
+        ])->findOrFail($id);
+
+        // لتجنب تكرار استدعاء invoices، حدد أي واحدة تريدها أو استخدم اسمًا مختلفًا
+        $invoices = single_invoice::where('patient_id', $id)->get();
+        $invoices = Invoice::where('patient_id', $id)->get();
+        $receipt_accounts = ReceiptAccount::where('patient_id', $id)->get();
+        $Patient_accounts = PatientAccount::where('patient_id', $id)->get();
+        return view('Dashboard.Patients.show', compact('Patient', 'invoices', 'receipt_accounts', 'Patient_accounts'));
+    }
+    public function showQR($id = null)
+    {
+        $patient = null;
+        if ($id) {
+            $patient = Patient::with([
+                'image',
+                // ** التأكد من تحميل علاقة disease داخل diagnosedChronicDiseases **
+                // إذا كانت diagnosedChronicDiseases هي belongsToMany(Disease::class, 'patient_chronic_diseases')
+                // فإن $diagnosedDisease سيكون كائن Disease مباشرة.
+                // إذا كانت diagnosedChronicDiseases هي hasMany(PatientChronicDisease::class)
+                // ستحتاج لـ 'diagnosedChronicDiseases.disease'
+                'diagnosedChronicDiseases' // إذا كانت هذه العلاقة belongsToMany(Disease::class, ...)
+                // 'diagnosedChronicDiseases.disease' // إذا كانت diagnosedChronicDiseases هي hasMany(PatientChronicDisease::class)
+            ])->find($id);
+        } else {
+            $patient = Auth::guard('patient')->user();
+            if ($patient) {
+                $patient->load(['image', 'diagnosedChronicDiseases.diseases']); // أو 'diagnosedChronicDiseases.disease'
+            }
+        }
+
+        if (!$patient) {
+            Log::warning("showQR: Patient not found or not authenticated.");
+            return redirect()->route('home')->with('error', 'المريض غير موجود.');
+        }
+
+        // استدعاء الدالة من الموديل
+        $qrCodeSvg = $patient->generateQrCodeSvg(220, 2, 'M');
+
+        // تحضير المعلومات للعرض النصي في صفحة الويب
+        $displayInfo = [];
+        $displayInfo['الاسم'] = $patient->name;
+        $displayInfo['الهوية'] = $patient->national_id;
+        $displayInfo['ت.الميلاد'] = $patient->Date_Birth ? \Carbon\Carbon::parse($patient->Date_Birth)->format('Y-m-d') : '-';
+        $displayInfo['العمر'] = $patient->Date_Birth ? \Carbon\Carbon::parse($patient->Date_Birth)->age . ' سنة' : '-';
+        $displayInfo['الجنس'] = $patient->Gender == 1 ? 'ذكر' : ($patient->Gender == 2 ? 'أنثى' : '-');
+        $displayInfo['فصيلة الدم'] = $patient->Blood_Group ?: 'غير محددة';
+
+        // الأمراض المشخصة (من العلاقة)
+        $chronicDisplayList = [];
+        if ($patient->relationLoaded('diagnosedChronicDiseases') && $patient->diagnosedChronicDiseases->isNotEmpty()) {
+            foreach ($patient->diagnosedChronicDiseases->take(3) as $diagnosedDiseaseInstance) {
+                // $diagnosedDiseaseInstance هو كائن Disease
+                $chronicDisplayList[] = $diagnosedDiseaseInstance->name;
+            }
+        }
+        if (!empty($chronicDisplayList)) {
+            $displayInfo['الأمراض المشخصة'] = implode('، ', $chronicDisplayList);
+        }
+
+
+
+
+
+
+        // الرابط الكامل
+        try {
+            $displayInfo['ملف إلكتروني (يتطلب إنترنت) / خاص بالأدمن'] = route('admin.Patients.show', $patient->id);
+        } catch (\Exception $e) {
+            $displayInfo['ملف إلكتروني (يتطلب إنترنت)'] = 'الرابط غير متوفر حاليًا';
+        }
+
+        return view('Dashboard.Patients.showQR', compact(
+            'patient',
+            'qrCodeSvg',
+            'displayInfo',
+
+        ));
+    }
+
+
 
     public function edit($id)
     {
-        $Patient = Patient::findorfail($id);
-        return view('Dashboard.Patients.edit', compact('Patient'));
-    }
-    
-    public function store(StorePatientRequest $request)
-    {
-        try {
-            $Patients = new Patient();
-            $Patients->national_id = $request->national_id;
-            $Patients->email = $request->email;
-            $Patients->password = Hash::make($request->password);
-            $Patients->Date_Birth = $request->Date_Birth;
-            $Patients->Phone = $request->Phone;
-            $Patients->Gender = $request->Gender;
-            $Patients->Blood_Group = $request->Blood_Group;
+        $Patient = Patient::with(['diagnosedChronicDiseases', 'image'])->findOrFail($id);
+        $diseases_list = Disease::where('is_chronic', true)->orderBy('name')->pluck('name', 'id');
+        $chronic_disease_statuses = PatientChronicDisease::getStatuses();
 
-            // حفظ الحقول المترجمة
-            $Patients->translateOrNew(app()->getLocale())->name = $request->name;
-            $Patients->translateOrNew(app()->getLocale())->Address = $request->Address;
-
-            $Patients->save();
-
-            // Upload img
-            $this->verifyAndStoreImage($request, 'photo', 'patients', 'upload_image', $Patients->id, 'App\Models\Patient');
-
-            session()->flash('add');
-            return redirect()->route('admin.Patients.index');
-            // return back();
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        $patientExistingChronicDiseases = [];
+        foreach ($Patient->diagnosedChronicDiseases as $diagnosedDisease) {
+            // $diagnosedDisease هو كائن Disease
+            // $diagnosedDisease->pivot هو كائن PatientChronicDisease (بيانات الجدول الوسيط)
+            $patientExistingChronicDiseases[] = [ // تعديل ليكون مصفوفة من الكائنات/المصفوفات
+                'disease_id' => $diagnosedDisease->id,
+                'disease_name' => $diagnosedDisease->name, // اسم المرض للعرض
+                'diagnosed_at' => $diagnosedDisease->pivot->diagnosed_at ? \Carbon\Carbon::parse($diagnosedDisease->pivot->diagnosed_at)->format('Y-m-d') : null,
+                'diagnosed_by' => $diagnosedDisease->pivot->diagnosed_by,
+                'current_status' => $diagnosedDisease->pivot->current_status,
+                'treatment_plan' => $diagnosedDisease->pivot->treatment_plan,
+                'notes' => $diagnosedDisease->pivot->notes,
+                'pivot_record_id' => $diagnosedDisease->pivot->id // ID سجل patient_chronic_diseases نفسه (مفيد إذا أردت تحديث سجل معين)
+            ];
         }
+        Log::info("PatientRepository@edit: Loading edit patient form for ID: {$id}");
+        return view('Dashboard.Patients.edit', compact('Patient', 'diseases_list', 'chronic_disease_statuses', 'patientExistingChronicDiseases'));
     }
 
-
-    public function update(UpdatePatientRequest $request) // <<<--- استخدام UpdatePatientRequest
+    public function update(UpdatePatientRequest $request)
     {
-        // التحقق من الصحة تم بواسطة UpdatePatientRequest
+        $patientId = $request->input('id'); // الحصول على ID من الحقل المخفي (كما هو في الكود الأصلي)
+        $patient = Patient::findOrFail($patientId);
 
-        // جلب المريض المطلوب تعديله (findOrFail لإيجاده أو إرجاع 404)
-        $Patient = Patient::findOrFail($request->input('id')); // الحصول على ID من الحقل المخفي
-
-        Log::info("Updating patient ID: {$Patient->id}");
-
-        DB::beginTransaction(); // بدء Transaction للأمان
-
+        Log::info("PatientRepository@update: Attempting to update Patient ID: {$patient->id}", $request->except(['_token', '_method', 'password', 'password_confirmation', 'photo']));
+        DB::beginTransaction();
         try {
-            // 1. تحديث الحقول الأساسية (غير المترجمة وغير كلمة المرور)
-            $Patient->national_id = $request->national_id;
-            $Patient->email = $request->email;
-            $Patient->Date_Birth = $request->Date_Birth;
-            $Patient->Phone = $request->Phone; // اسم الحقل بحرف P كبير
-            $Patient->Gender = $request->Gender;
-            $Patient->Blood_Group = $request->Blood_Group;
+            // البيانات الأساسية (باستثناء الحقول المترجمة مباشرة وكلمة المرور والصورة)
+            $patientData = $request->except([
+                'name',
+                'Address',
+                'password',
+                'password_confirmation',
+                'photo',
+                '_token',
+                '_method',
+                'terms',
+                'id',
+                'chronic_diseases'
+            ]);
+            $patient->update($patientData);
+
+            // تحديث الترجمات
+            $patient->name = $request->name;
+            $patient->Address = $request->Address;
 
             if ($request->filled('password')) {
-                $Patient->password = bcrypt($request->password);
-                Log::info("Password updated for patient ID: {$Patient->id}");
+                $patient->password = Hash::make($request->password);
             }
+            $patient->save();
+            Log::info("PatientRepository@update: Patient base data, translations, and password (if any) saved for ID: {$patient->id}");
 
-
-            // 3. تحديث الحقول المترجمة
-            $Patient->name = $request->name;
-            $Patient->Address = $request->Address;
-
-            // 4. حفظ كل التغييرات الأساسية والمترجمة وكلمة المرور (إذا تغيرت) مرة واحدة
-            $Patient->save();
-            Log::debug("Patient base data and translations saved for ID: {$Patient->id}");
-
-            // 5. تحديث الصورة (باستخدام الـ Trait) - يتم بعد حفظ البيانات الأخرى
-            if ($request->hasFile('photo')) { // التأكد من اسم الحقل 'photo' في الفورم
-                Log::info("Processing image update for Patient ID: {$Patient->id}");
-                // أ. حذف الصورة القديمة إذا وجدت
-                if ($Patient->image) {
-                    $old_img_filename = $Patient->image->filename;
-                    Log::debug("Attempting to delete old image '{$old_img_filename}' for Patient ID: {$Patient->id}");
-                    // استدعاء دالة الحذف من الـ Trait
-                    // تأكد من اسم الديسك ('upload_attachments') والمجلد ('patients')
-                    $this->Delete_attachment('upload_attachments', 'patients/' . $old_img_filename, $Patient->id);
-                    Log::info("Delete_attachment called for old image of Patient ID: {$Patient->id}");
-                } else {
-                    Log::debug("No old image record found for Patient ID: {$Patient->id}");
+            // تحديث/مزامنة الأمراض المزمنة
+            if ($request->has('chronic_diseases') && is_array($request->chronic_diseases)) {
+                $syncData = [];
+                foreach ($request->chronic_diseases as $diseaseInput) {
+                    if (!empty($diseaseInput['disease_id'])) {
+                        $syncData[$diseaseInput['disease_id']] = [
+                            'diagnosed_at' => $diseaseInput['diagnosed_at'] ?? null,
+                            'diagnosed_by' => $diseaseInput['diagnosed_by'] ?? null,
+                            'current_status' => $diseaseInput['current_status'] ?? null,
+                            'treatment_plan' => $diseaseInput['treatment_plan'] ?? null,
+                            'notes' => $diseaseInput['notes'] ?? null,
+                        ];
+                    }
                 }
-
-                // ب. رفع وتخزين الصورة الجديدة
-                Log::debug("Attempting to store new image for Patient ID: {$Patient->id}");
-                // استدعاء دالة الرفع من الـ Trait
-                $this->verifyAndStoreImage($request, 'photo', 'patients', 'upload_attachments', $Patient->id, 'App\Models\Patient');
-                Log::info("verifyAndStoreImage called for new image of Patient ID: {$Patient->id}");
+                $patient->diagnosedChronicDiseases()->sync($syncData);
+                Log::info("PatientRepository@update: Synced chronic diseases for Patient ID: {$patient->id}", $syncData);
+            } else {
+                $patient->diagnosedChronicDiseases()->detach();
+                Log::info("PatientRepository@update: Detached all chronic diseases for Patient ID: {$patient->id}");
             }
 
-            // 6. Commit Transaction
-            DB::commit();
-            Log::info("Patient update committed successfully for ID: {$Patient->id}");
+            if ($request->hasFile('photo')) {
+                if ($patient->image) {
+                    $this->Delete_attachment('upload_image', 'patients/' . $patient->image->filename, $patient->id, Patient::class);
+                }
+                $this->verifyAndStoreImage($request, 'photo', 'patients', 'upload_image', $patient->id, Patient::class);
+            }
 
-            // 7. إعادة التوجيه مع رسالة نجاح
+            DB::commit();
             session()->flash('edit');
             return redirect()->route('admin.Patients.index');
-            // session()->flash('edit', 'تم تعديل بيانات المريض بنجاح.');
-            // return redirect()->route('admin.Patients.index');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // هذا لا يجب أن     يحدث لأن التحقق يتم في FormRequest
             DB::rollBack();
-            Log::warning("Validation Exception during patient update (should not happen here): ", $e->errors());
+            Log::error("PatientRepository@update: Validation exception for Patient ID {$patient->id}.", ['errors' => $e->errors()]);
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error("Error updating patient ID {$request->input('id')}: " . $e->getMessage());
-            // إرجاع الخطأ للمستخدم مع الحفاظ على المدخلات
-            return redirect()->back()->withErrors(['error' => 'حدث خطأ غير متوقع أثناء التحديث: ' . $e->getMessage()])->withInput();
+            DB::rollBack();
+            Log::error("PatientRepository@update: General error for Patient ID {$patient->id}: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء تحديث بيانات المريض: ' . $e->getMessage());
         }
     }
 
-    public function destroy($request)
+    public function destroy($request) // تستقبل Request
     {
-        if ($request->filename) {
-
-            $this->Delete_attachment('upload_image', 'patients/' . $request->filename, $request->id, $request->filename);
+        $patientId = $request->input('id'); // ID من الحقل المخفي أو من الفورم
+        if (!$patientId) {
+            return redirect()->back()->with('error', 'لم يتم تحديد المريض للحذف.');
         }
-        Patient::destroy($request->id);
-        session()->flash('delete');
-        return redirect()->back();
+        DB::beginTransaction();
+        try {
+            $patient = Patient::findOrFail($patientId);
+            $patientName = $patient->name; // للاستخدام في الرسالة
+
+            if ($patient->image) {
+                $this->Delete_attachment('upload_image', 'patients/' . $patient->image->filename, $patient->id, Patient::class);
+            }
+
+            // PatientObserver سيهتم بـ GlobalEmail
+            // cascadeOnDelete في Migrations سيهتم بـ patient_chronic_diseases و patient_admissions
+            $patient->delete();
+
+            DB::commit();
+            session()->flash('delete', "تم حذف المريض '{$patientName}' وجميع سجلاته المرتبطة بنجاح.");
+            return redirect()->route('admin.Patients.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error deleting patient ID {$patientId}: " . $e->getMessage());
+            return redirect()->back()->with('error', 'حدث خطأ أثناء حذف المريض.');
+        }
     }
 }

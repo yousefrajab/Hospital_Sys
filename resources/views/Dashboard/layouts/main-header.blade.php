@@ -257,7 +257,7 @@
                             if ($user->image) {
                                 $imagePath = asset('Dashboard/img/admin_photos/' . $user->image->filename); // مسار صور الأدمن
                             } else {
-                                $imagePath = asset('Dashboard/img/default_admin_avatar.png'); // صورة أدمن افتراضية
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة أدمن افتراضية
                             }
                         } elseif (Auth::guard('doctor')->check()) {
                             $user = Auth::guard('doctor')->user();
@@ -275,7 +275,7 @@
                             if ($user->image) {
                                 $imagePath = asset('Dashboard/img/rayEmployees/' . $user->image->filename); // مسار صور موظفي الأشعة
                             } else {
-                                $imagePath = asset('Dashboard/img/default_ray_employee_avatar.png'); // صورة موظف أشعة افتراضية
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة موظف أشعة افتراضية
                             }
                         } elseif (Auth::guard('laboratorie_employee')->check()) {
                             $user = Auth::guard('laboratorie_employee')->user();
@@ -284,7 +284,7 @@
                             if ($user->image) {
                                 $imagePath = asset('Dashboard/img/laboratorieEmployees/' . $user->image->filename); // مسار صور موظفي المختبر
                             } else {
-                                $imagePath = asset('Dashboard/img/default_lab_employee_avatar.png'); // صورة موظف مختبر افتراضية
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة موظف مختبر افتراضية
                             }
                         } elseif (Auth::guard('patient')->check()) {
                             // افترض أن لديك guard وموديل للمرضى
@@ -294,7 +294,7 @@
                             if ($user->image) {
                                 $imagePath = asset('Dashboard/img/patients/' . $user->image->filename); // مسار صور المرضى
                             } else {
-                                $imagePath = asset('Dashboard/img/default_patient_avatar.png'); // صورة مريض افتراضية
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مريض افتراضية
                             }
                         } elseif (Auth::guard('web')->check()) {
                             // للمستخدم العادي (إذا كان لديك)
@@ -305,7 +305,7 @@
                                 // افترض أن المستخدم العادي لديه علاقة صورة أيضًا
                                 $imagePath = asset('Dashboard/img/user_photos/' . $user->image->filename); // مسار صور المستخدمين
                             } else {
-                                $imagePath = asset('Dashboard/img/default_user_avatar.png'); // صورة مستخدم افتراضية
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مستخدم افتراضية
                             }
                         }
                     @endphp

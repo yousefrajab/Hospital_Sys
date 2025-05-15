@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Dashboard\BedController;
 use App\Http\Controllers\Dashboard\RoomController;
 use App\Http\Controllers\Dashboard\DoctorController;
+use App\Http\Controllers\Dashboard\DiseaseController;
 use App\Http\Controllers\Dashboard\PatientController;
 use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\AmbulanceController;
@@ -106,6 +107,7 @@ Route::group(
             //############################# Patients route ##########################################
 
             Route::resource('Patients', PatientController::class);
+            Route::get('/QR/patient/{id}/showQR', [PatientController::class, 'showQR'])->name('showQR');
 
             //############################# end Patients route ######################################
 
@@ -183,9 +185,7 @@ Route::group(
             Route::resource('patient-admissions', PatientAdmissionController::class)->names('patient_admissions');
 
 
-
-
-
+            Route::resource('diseases', DiseaseController::class)->names('diseases');
         });
         require __DIR__ . '/auth.php';
     }

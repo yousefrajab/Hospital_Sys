@@ -19,6 +19,7 @@
         "paragonie/random_compat": "9.99.100",
         "paragonie/sodium_compat": "1.17.1",
         "pusher/pusher-php-server": "*",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "stichoza/google-translate-php": "^5.2",
         "twilio/sdk": "^8.5"
     },

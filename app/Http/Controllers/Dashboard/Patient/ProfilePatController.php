@@ -59,7 +59,7 @@ class ProfilePatController extends Controller
         DB::beginTransaction();
         try {
             // تحديث الحقول الأساسية
-            // $patient->national_id = $validatedData['national_id']; // المريض لا يعدل رقم هويته عادةً
+            $patient->national_id = $validatedData['national_id']; // المريض لا يعدل رقم هويته عادةً
             $patient->email = $validatedData['email'];
             $patient->Date_Birth = $validatedData['Date_Birth'];
             $patient->Phone = $validatedData['Phone']; // لاحظ P كبيرة

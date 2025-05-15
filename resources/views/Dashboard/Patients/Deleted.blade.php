@@ -1,5 +1,5 @@
 <!-- Delete Patient Modal - Simplified Version -->
-<div class="modal fade" id="Deleted{{ $Patient->id }}" tabindex="-1" aria-labelledby="deletePatientModalLabel" aria-hidden="true">
+<div class="modal fade" id="deletePatientModal{{ $Patient->id }}" tabindex="-1" aria-labelledby="deletePatientModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
             <!-- Modal Header -->

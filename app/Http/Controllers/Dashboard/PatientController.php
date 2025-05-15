@@ -18,9 +18,9 @@ class PatientController extends Controller
         $this->Patient = $Patient;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return $this->Patient->index();
+        return $this->Patient->index($request);
     }
 
 
@@ -41,6 +41,10 @@ class PatientController extends Controller
         return $this->Patient->show($id);
     }
 
+    public function showQR($id)
+    {
+        return $this->Patient->showQR($id);
+    }
 
     public function edit($id)
     {

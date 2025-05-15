@@ -153,17 +153,4 @@ class Room extends Model
             // self::STATUS_RESERVED => 'محجوزة',
         ];
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

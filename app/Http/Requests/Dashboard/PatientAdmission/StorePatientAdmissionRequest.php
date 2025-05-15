@@ -55,16 +55,5 @@ class StorePatientAdmissionRequest extends FormRequest
         ];
     }
 
-    // (اختياري) يمكنك إضافة قاعدة تحقق مخصصة معقدة للسرير هنا إذا أردت
-    // protected function getValidatorInstance()
-    // {
-    //     return parent::getValidatorInstance()->after(function ($validator) {
-    //         if ($this->filled('bed_id')) {
-    //             $bed = \App\Models\Bed::find($this->bed_id);
-    //             if ($bed && $bed->status !== \App\Models\Bed::STATUS_AVAILABLE) {
-    //                 $validator->errors()->add('bed_id', 'السرير المختار (' . $bed->bed_number . ' - غرفة ' . $bed->room->room_number . ') غير متاح حاليًا.');
-    //             }
-    //         }
-    //     });
-    // }
+    
 }

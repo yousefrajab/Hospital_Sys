@@ -287,7 +287,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center action-buttons">
-                                    <a href="{{ route('admin.beds.show', $bed->id) }}" class="btn btn-sm btn-outline-success" title="عرض التفاصيل"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('admin.beds.show',$bed->id) }}" class="btn btn-sm btn-outline-success" title="عرض التفاصيل"><i class="fas fa-eye"></i></a>
                                     <a href="{{ route('admin.beds.edit', $bed->id) }}" class="btn btn-sm btn-outline-primary" title="تعديل السرير"><i class="fas fa-edit"></i></a>
                                     <form action="{{ route('admin.beds.destroy', $bed->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من رغبتك في حذف هذا السرير؟ هذا الإجراء لا يمكن التراجع عنه.');">
                                         @csrf
@@ -317,7 +317,7 @@
 
             @if ($beds->hasPages())
                 <div class="mt-3 d-flex justify-content-center pagination-container">
-                    {{ $beds->links('pagination::bootstrap-5') }}
+                    {{ $beds->links('pagination::bootstrap') }}
                 </div>
             @endif
         </div>

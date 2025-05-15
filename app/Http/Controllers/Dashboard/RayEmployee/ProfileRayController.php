@@ -63,6 +63,8 @@ class ProfileRayController extends Controller // يمكنك تسميته Profile
             // تحديث البيانات الأساسية
             $employee->name = $validatedData['name'];
             $employee->email = $validatedData['email'];
+            $employee->national_id = $validatedData['national_id'];
+
             if (isset($validatedData['phone'])) {
                 $employee->phone = $validatedData['phone'];
             }

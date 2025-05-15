@@ -10,11 +10,18 @@ class PatientAdmission extends Model
     use HasFactory;
 
     protected $fillable = [
-        'patient_id', 'bed_id', 'doctor_id', 'section_id',
-        'admission_date', 'discharge_date',
-        'reason_for_admission', 'discharge_reason',
-        'admitting_diagnosis', 'discharge_diagnosis',
-        'status', 'notes',
+        'patient_id',
+        'bed_id',
+        'doctor_id',
+        'section_id',
+        'admission_date',
+        'discharge_date',
+        'reason_for_admission',
+        'discharge_reason',
+        'admitting_diagnosis',
+        'discharge_diagnosis',
+        'status',
+        'notes',
     ];
 
     protected $casts = [
@@ -58,8 +65,8 @@ class PatientAdmission extends Model
             if ($admission->bed) {
                 // إذا تم تغيير السرير أو حالة الدخول، أعد حساب حالة السرير ثم حالة الغرفة
                 $admission->bed->status = ($admission->status === self::STATUS_ADMITTED && !$admission->discharge_date)
-                                        ? Bed::STATUS_OCCUPIED
-                                        : Bed::STATUS_AVAILABLE;
+                    ? Bed::STATUS_OCCUPIED
+                    : Bed::STATUS_AVAILABLE;
                 $admission->bed->saveQuietly(); // لمنع حلقة لا نهائية إذا كان BedObserver يستمع لـ save
                 // بعد حفظ السرير، سيقوم BedObserver بتحديث حالة الغرفة
             }
@@ -79,8 +86,18 @@ class PatientAdmission extends Model
             if ($admission->bed) {
                 $admission->bed->status = Bed::STATUS_AVAILABLE;
                 $admission->bed->saveQuietly();
-                 // بعد حفظ السرير، سيقوم BedObserver بتحديث حالة الغرفة
+                // بعد حفظ السرير، سيقوم BedObserver بتحديث حالة الغرفة
             }
         });
+    }
+
+    public static function getAdmissionStatusText($status)
+    {
+        $statuses = [
+            self::STATUS_ADMITTED => 'مقيم',
+            self::STATUS_DISCHARGED => 'خروج',
+            // Add other statuses here
+        ];
+        return $statuses[$status] ?? 'غير معروف';
     }
 }

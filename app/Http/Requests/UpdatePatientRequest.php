@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Patient;
 use App\Models\GlobalEmail;
 use Illuminate\Validation\Rule;
+use App\Models\GlobalIdentifier;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePatientRequest extends FormRequest
@@ -38,11 +39,29 @@ class UpdatePatientRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
+            // 'national_id' => [
+            //     'required',
+            //     'digits:9',
+            //     Rule::unique('patients')->ignore($patientId) // تجاهل ID الحالي
+            // ],
+
+
             'national_id' => [
                 'required',
+                'string',
                 'digits:9',
-                Rule::unique('patients')->ignore($patientId) // تجاهل ID الحالي
+                Rule::unique('patients', 'national_id')->ignore($patientId), // 1. فريد في جدول patients (باستثناء الحالي)
+                function ($attribute, $value, $fail) use ($currentPatient) { // ** استخدام $currentPatient هنا **
+                    // تحقق من global_national_ids فقط إذا تغير الإيميل عن الإيميل الأصلي للطبيب
+                    if (strtolower($value) !== strtolower($currentPatient->getOriginal('national_id'))) {
+                        if (GlobalIdentifier::where('national_id', strtolower($value))->exists()) {
+                            $fail('هذه الهوية  مستخدمة بالفعل من قبل حساب آخر في النظام.');
+                        }
+                    }
+                },
             ],
+
+
             'email' => [
                 'required',
                 'email',
@@ -53,6 +72,10 @@ class UpdatePatientRequest extends FormRequest
                     if ($currentPatient && strtolower($value) !== strtolower($currentPatient->getOriginal('email'))) {
                         if (GlobalEmail::where('email', strtolower($value))->exists()) {
                             $fail('هذا البريد الإلكتروني مستخدم بالفعل في النظام من قبل حساب آخر.');
+                        } elseif (!$currentPatient) { // إذا لم يتم العثور على المريض (نادر، لكن للتحقق)
+                            if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                                $fail('هذا البريد الإلكتروني مستخدم بالفعل في النظام.');
+                            }
                         }
                     }
                 },
@@ -71,7 +94,14 @@ class UpdatePatientRequest extends FormRequest
             'Date_Birth' => 'required|date|before:today',
             'Gender' => 'required|integer|in:1,2',
             'Blood_Group' => 'required|string|in:O-,O+,A+,A-,B+,B-,AB+,AB-',
-            'Address' => 'nullable|string|max:500'
+            'Address' => 'nullable|string|max:500',
+            'chronic_diseases_input' => 'nullable|array',
+            'chronic_diseases_input.*.disease_id' => 'required_with:chronic_diseases_input|exists:diseases,id',
+            'chronic_diseases_input.*.diagnosed_at' => 'nullable|date|before_or_equal:today',
+            'chronic_diseases_input.*.diagnosed_by' => 'nullable|string|max:255',
+            'chronic_diseases_input.*.current_status' => ['nullable', Rule::in(array_keys(\App\Models\PatientChronicDisease::getStatuses()))],
+            'chronic_diseases_input.*.treatment_plan' => 'nullable|string',
+            'chronic_diseases_input.*.notes' => 'nullable|string',
         ];
     }
     public function messages()

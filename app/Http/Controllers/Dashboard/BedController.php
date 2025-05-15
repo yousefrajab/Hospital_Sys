@@ -42,7 +42,7 @@ class BedController extends Controller
             $query->where('status', $request->bed_status_filter);
         }
 
-        $beds = $query->paginate(15)->appends($request->query());
+        $beds = $query->paginate(25)->appends($request->query());
 
         // بيانات لـ dropdowns الفلترة
         $sections = Section::orderByTranslation('name')->get(); // افترض أن اسم القسم ليس مترجمًا حاليًا

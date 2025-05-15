@@ -4,6 +4,7 @@ namespace App\Http\Requests\Patient; // تأكد من المسار الصحيح
 
 use App\Models\GlobalEmail;
 use Illuminate\Validation\Rule;
+use App\Models\GlobalIdentifier;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password; // لاستخدام قواعد كلمة المرور المتقدمة
@@ -24,10 +25,24 @@ class UpdatePatientProfileRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
+            // 'national_id' => [
+            //     'required',
+            //     'string',
+            //     'max:20',
+            //     Rule::unique('patients')->ignore($patientId) // تجاهل ID الحالي
+            // ],
             'national_id' => [
                 'required',
-                'digits:9',
-                Rule::unique('patients')->ignore($patientId) // تجاهل ID الحالي
+                 'string',
+                'digits:9', // Laravel يضيف max:255 تلقائيًا مع 'national_id'
+                Rule::unique('patients', 'national_id')->ignore($patientId), // 1. فريد في جدول patients
+                function ($attribute, $value, $fail) use ($currentPatient) { // 2. فريد في global_national_ids إذا تغير
+                    if (strtolower($value) !== strtolower($currentPatient->getOriginal('national_id'))) {
+                        if (GlobalIdentifier::where('national_id', strtolower($value))->exists()) {
+                            $fail('هذا الرقم مستخدم بالفعل من قبل حساب آخر في النظام.');
+                        }
+                    }
+                },
             ],
             'email' => [
                 'required',
