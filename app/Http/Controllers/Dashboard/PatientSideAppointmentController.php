@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-// ... (باقي الاستيرادات كما هي)
 use App\Models\Doctor;
 use App\Models\Section;
 use App\Models\Appointment;
@@ -11,19 +10,19 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB; // أضف هذا إذا لم يكن موجوداً
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Dashboard\Appointment\CreatePatientAppointmentRequest;
+use App\Models\DoctorWorkingDay; // تأكد من استيراد هذا
 
 class PatientSideAppointmentController extends Controller
 {
-    // ... (دالة create كما هي من التعديل السابق)
     public function create(Request $request)
     {
         Log::info("PatientSideAppointmentController@create: Loading create appointment form.");
 
         try {
             // جلب الأقسام مع الترتيب بالاسم المترجم للغة الحالية (تصاعدياً بشكل افتراضي)
-            $sections = \App\Models\Section::orderByTranslation('name', 'asc')->get();
+            $sections = Section::orderByTranslation('name', 'asc')->get(); // تم التعديل لـ Section
 
             $doctors = collect();
             $selectedSectionId = old('section_id', $request->query('section_id'));
@@ -33,23 +32,18 @@ class PatientSideAppointmentController extends Controller
             $patientEmail = '';
             $patientPhone = '';
 
-            if (\Illuminate\Support\Facades\Auth::guard('patient')->check()) {
-                $patient = \Illuminate\Support\Facades\Auth::guard('patient')->user();
+            if (Auth::guard('patient')->check()) {
+                $patient = Auth::guard('patient')->user();
                 $patientName = $patient->name;
                 $patientEmail = $patient->email;
-                $patientPhone = $patient->Phone;
+                $patientPhone = $patient->Phone; // تأكد أن اسم الحقل في جدول users هو 'Phone'
             }
 
             if ($selectedSectionId) {
-                // هنا يجب أيضاً تحديد اسم الجدول إذا كان orderByTranslation يقوم بعمل join
-                $doctors = \App\Models\Doctor::where('section_id', $selectedSectionId)
+                $doctors = Doctor::where('section_id', $selectedSectionId)
                     ->where('status', 1)
-                    // عند استخدام orderByTranslation مع select، يجب تحديد الأعمدة بوضوح
-                    // لتجنب الغموض، الأفضل هو تحديد جميع الأعمدة المطلوبة من جدول doctors أولاً
-                    // ثم السماح لـ orderByTranslation بالعمل.
-                    // أو، إذا أردنا select محدد:
-                    ->select('doctors.id', 'doctors.name') // حدد اسم الجدول للأعمدة
-                    ->orderByTranslation('name', 'asc') // يجب أن تكون 'name' هنا هي الحقل المترجم في Doctors
+                    ->select('doctors.id', 'doctors.name')
+                    ->orderByTranslation('name', 'asc')
                     ->get();
             }
 
@@ -65,13 +59,12 @@ class PatientSideAppointmentController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Error in PatientSideAppointmentController@create: " . $e->getMessage(), [
-                'userId' => \Illuminate\Support\Facades\Auth::guard('patient')->check() ? \Illuminate\Support\Facades\Auth::guard('patient')->id() : null,
+                'userId' => Auth::guard('patient')->check() ? Auth::guard('patient')->id() : null,
                 'exception_trace' => $e->getTraceAsString()
             ]);
             return redirect()->back()->with('error', 'حدث خطأ أثناء تحميل صفحة حجز المواعيد. يرجى المحاولة لاحقاً.');
         }
     }
-
 
     public function getDoctorsBySection(Request $request)
     {
@@ -83,27 +76,15 @@ class PatientSideAppointmentController extends Controller
         Log::info("AJAX: Fetching doctors for section ID: {$sectionId}");
 
         try {
-            $doctorsQuery = \App\Models\Doctor::where('section_id', $sectionId)
-                ->where('status', 1); // الأطباء النشطون فقط
-
-            // عندما تستخدم orderByTranslation، تقوم الحزمة بعمل JOIN.
-            // لتجنب غموض عمود 'id' وعمود 'name' (إذا كان 'name' موجوداً أيضاً في جدول الترجمات كجزء من النص المترجم)
-            // يجب أن تحدد الأعمدة التي تريدها من الجدول الرئيسي (doctors) بشكل صريح.
-            // 'name' هنا هو اسم الحقل في نموذج Doctor الذي يتم ترجمته.
-            // الحزمة ستتعامل مع جلب الترجمة الصحيحة للاسم.
-            $doctors = $doctorsQuery
-                ->select('doctors.id', 'doctors.name as doctor_name_translatable') // حدد أعمدة جدول doctors
-                // 'name' هنا يجب أن يكون الحقل القابل للترجمة في نموذج Doctor
-                // الـ alias 'doctor_name_translatable' هو فقط لتجنب أي التباس إذا كان 'name' هو اسم الحقل المترجم فعلاً
-                // ويمكنك تركه كـ 'doctors.name' إذا كان الحقل المترجم لديك هو 'name'
-                ->orderByTranslation('name', 'asc') // 'name' هو الحقل الذي تريد الترتيب بناءً على ترجمته
+            $doctors = Doctor::where('section_id', $sectionId)
+                ->where('status', 1) // الأطباء النشطون فقط
+                ->select('doctors.id', 'doctors.name as doctor_name_translatable')
+                ->orderByTranslation('name', 'asc')
                 ->get()
                 ->map(function ($doctor) {
-                    // عند الوصول هنا، $doctor->name يجب أن يعيد الترجمة الصحيحة
-                    // بسبب كيفية عمل spatie/laravel-translatable.
                     return [
-                        'id' => $doctor->id, // هذا هو doctors.id
-                        'name' => $doctor->name, // هذا هو الاسم المترجم
+                        'id' => $doctor->id,
+                        'name' => $doctor->name, // الاسم المترجم
                     ];
                 });
 
@@ -116,19 +97,109 @@ class PatientSideAppointmentController extends Controller
         }
     }
 
-    // ... (دوال store و getAvailableTimes كما هي من التعديل السابق) ...
-    // تأكد من أنها لا تحتوي على نفس المشكلة إذا كانت تستخدم select مع join.
+    public function getDoctorAvailableDates(Request $request)
+    {
+        $validated = $request->validate([
+            'doctor_id' => 'required|exists:doctors,id',
+        ]);
+
+        $doctorId = $validated['doctor_id'];
+        Log::info("AJAX: Fetching available dates for Doctor ID: {$doctorId}");
+
+        try {
+            $doctorModel = Doctor::with(['workingDays' => function ($query) {
+                $query->where('active', true);
+            }])->find($doctorId);
+
+            if (!$doctorModel) {
+                Log::warning("AJAX: Doctor ID {$doctorId} not found for fetching available dates.");
+                return response()->json(['enabledDates' => [], 'message' => 'الطبيب المحدد غير موجود.'], 404);
+            }
+
+            if ($doctorModel->workingDays->isEmpty()) {
+                Log::info("AJAX: Doctor ID {$doctorId} has no active working days.");
+                return response()->json(['enabledDates' => [], 'message' => 'الطبيب ليس لديه أيام عمل مجدولة حالياً.']);
+            }
+
+            $enabledDates = [];
+            $startDate = Carbon::today();
+            $endDate = Carbon::today()->addMonths(3); // نطاق البحث: 3 أشهر
+
+            $dailyAppointmentCounts = Appointment::where('doctor_id', $doctorId)
+                ->where('type', '!=', 'ملغي')
+                ->whereBetween('appointment', [$startDate->copy()->startOfDay(), $endDate->copy()->endOfDay()])
+                ->select(DB::raw('DATE(appointment) as appointment_date'), DB::raw('count(*) as count'))
+                ->groupBy('appointment_date')
+                ->pluck('count', 'appointment_date');
+
+            foreach ($doctorModel->workingDays as $day) {
+                $dayOfWeekNumber = $this->getDayOfWeekNumber($day->day);
+                if ($dayOfWeekNumber === null) {
+                    Log::warning("AJAX: Invalid day name '{$day->day}' for doctor ID {$doctorId}. Skipping.");
+                    continue;
+                }
+
+                for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+                    if ($date->dayOfWeek == $dayOfWeekNumber) {
+                        $dateString = $date->toDateString();
+
+                        $currentCount = $dailyAppointmentCounts->get($dateString, 0);
+                        if ($doctorModel->number_of_statements > 0 && $currentCount >= $doctorModel->number_of_statements) {
+                            continue;
+                        }
+
+                        if (!in_array($dateString, $enabledDates)) {
+                            $enabledDates[] = $dateString;
+                        }
+                    }
+                }
+            }
+            sort($enabledDates);
+
+            Log::info("AJAX: Found " . count($enabledDates) . " enabled dates for Doctor ID: {$doctorId}");
+            return response()->json(['enabledDates' => $enabledDates]);
+
+        } catch (\Exception $e) {
+            Log::error("Error fetching available dates for Doctor ID {$doctorId}: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['error' => 'حدث خطأ أثناء جلب التواريخ المتاحة.', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    private function getDayOfWeekNumber($dayName)
+    {
+        $dayName = trim(strtolower($dayName));
+        $daysMap = [
+            'sunday'    => 0, 'الأحد' => 0, 'الاحد' => 0,
+            'monday'    => 1, 'الإثنين' => 1, 'الاثنين' => 1,
+            'tuesday'   => 2, 'الثلاثاء' => 2,
+            'wednesday' => 3, 'الأربعاء' => 3, 'الاربعاء' => 3,
+            'thursday'  => 4, 'الخميس' => 4,
+            'friday'    => 5, 'الجمعة' => 5,
+            'saturday'  => 6, 'السبت' => 6,
+        ];
+        if (isset($daysMap[$dayName])) {
+            return $daysMap[$dayName];
+        }
+        foreach ($daysMap as $key => $value) {
+            if (str_contains($dayName, $key) || str_contains($key, $dayName)) {
+                return $value;
+            }
+        }
+        Log::warning("Could not map day name to number: '{$dayName}'");
+        return null;
+    }
+
     public function store(CreatePatientAppointmentRequest $request)
     {
         $validatedData = $request->validated();
         Log::info("PatientSideAppointmentController@store: Attempting to store appointment.", $validatedData);
-        DB::beginTransaction(); // تأكد من استيراد DB: use Illuminate\Support\Facades\DB;
+        DB::beginTransaction();
         try {
-            $appointmentDateTime = \Illuminate\Support\Carbon::parse($validatedData['selected_date'] . ' ' . $validatedData['selected_time']);
+            $appointmentDateTime = Carbon::parse($validatedData['selected_date'] . ' ' . $validatedData['selected_time']);
 
-            $isSlotStillAvailable = !\App\Models\Appointment::where('doctor_id', $validatedData['doctor_id'])
+            $isSlotStillAvailable = !Appointment::where('doctor_id', $validatedData['doctor_id'])
                 ->where('appointment', $appointmentDateTime)
-                ->where('type', '!=', 'ملغي')
+                ->where('type', '!=', 'ملغي') // لا تحسب المواعيد الملغاة
                 ->exists();
 
             if (!$isSlotStillAvailable) {
@@ -137,10 +208,10 @@ class PatientSideAppointmentController extends Controller
                 return redirect()->back()->withInput()->with('error', 'عذراً، هذا الموعد تم حجزه للتو. يرجى اختيار وقت آخر.');
             }
 
-            $doctorModel = \App\Models\Doctor::find($validatedData['doctor_id']);
-            $dailyAppointmentCount = \App\Models\Appointment::where('doctor_id', $validatedData['doctor_id'])
+            $doctorModel = Doctor::find($validatedData['doctor_id']);
+            $dailyAppointmentCount = Appointment::where('doctor_id', $validatedData['doctor_id'])
                 ->whereDate('appointment', $validatedData['selected_date'])
-                ->where('type', '!=', 'ملغي')
+                ->where('type', '!=', 'ملغي') // لا تحسب المواعيد الملغاة
                 ->count();
 
             if ($doctorModel && $doctorModel->number_of_statements > 0 && $dailyAppointmentCount >= $doctorModel->number_of_statements) {
@@ -149,21 +220,22 @@ class PatientSideAppointmentController extends Controller
                 return redirect()->back()->withInput()->with('error', 'عذراً، تم الوصول للحد الأقصى للمواعيد المسموح به لهذا اليوم للطبيب المختار.');
             }
 
-            $appointment = \App\Models\Appointment::create([
+            $appointment = Appointment::create([
                 'doctor_id' => $validatedData['doctor_id'],
                 'section_id' => $validatedData['section_id'],
-                'patient_id' => \Illuminate\Support\Facades\Auth::guard('patient')->check() ? \Illuminate\Support\Facades\Auth::guard('patient')->id() : null,
+                'patient_id' => Auth::guard('patient')->check() ? Auth::guard('patient')->id() : null,
                 'name' => $validatedData['patient_name'],
                 'email' => $validatedData['patient_email'],
                 'phone' => $validatedData['patient_phone'],
                 'appointment' => $appointmentDateTime,
                 'notes' => $validatedData['notes'] ?? null,
-                'type' => 'غير مؤكد'
+                'type' => 'غير مؤكد' // الحالة الافتراضية
             ]);
 
             DB::commit();
             Log::info("New appointment [ID: {$appointment->id}] booked successfully for doctor ID: {$appointment->doctor_id}");
-            return redirect()->route('patient.appointment.success')
+            // افترض أن لديك مساراً لعرض رسالة نجاح أو صفحة تفاصيل الموعد
+            return redirect()->route('patient.appointment.success') // تأكد أن هذا المسار معرف
                              ->with('success_message', 'تم حجز موعدك بنجاح! رقم الموعد هو #' . $appointment->id . '. سيتم التواصل معك للتأكيد.');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -188,8 +260,8 @@ class PatientSideAppointmentController extends Controller
         $selectedDate = $validated['selected_date'];
         Log::info("AJAX: Fetching available times for Doctor ID: {$doctorId} on Date: {$selectedDate}");
 
-        $doctor = \App\Models\Doctor::with(['workingDays' => function ($query) {
-            $query->where('active', true)->with('breaks');
+        $doctor = Doctor::with(['workingDays' => function ($query) {
+            $query->where('active', true)->with('breaks'); // تأكد من تحميل breaks
         }])->find($doctorId);
 
         if (!$doctor) {
@@ -197,29 +269,38 @@ class PatientSideAppointmentController extends Controller
         }
 
         try {
-            $dayName = \Illuminate\Support\Carbon::parse($selectedDate)->format('l');
-            $workingDay = $doctor->workingDays->firstWhere('day', $dayName);
+            // استخدام translatedFormat إذا كانت أيام العمل في قاعدة البيانات باللغة الافتراضية (إنجليزية)
+            // وتريد المقارنة مع اسم اليوم المترجم من التاريخ المختار.
+            // أو، إذا كانت أيام العمل مخزنة بالعربية، استخدم format('l') وقارن معها مباشرة.
+            $selectedDayNameCarbon = Carbon::parse($selectedDate);
+            $dayName = $selectedDayNameCarbon->format('l'); // اسم اليوم بالإنجليزية (e.g., Sunday)
+
+            $workingDay = $doctor->workingDays->first(function ($wd) use ($dayName) {
+                // مقارنة اسم اليوم بعد تحويله لحروف صغيرة
+                return strtolower(trim($wd->day)) === strtolower(trim($dayName));
+            });
 
             if (!$workingDay) {
                 Log::info("AJAX: No working day found for Doctor ID: {$doctorId} on {$dayName} ({$selectedDate})");
                 return response()->json(['times' => [], 'message' => 'الطبيب غير متاح في هذا اليوم (ليس يوم عمل).']);
             }
 
-            $startTime = \Illuminate\Support\Carbon::parse($workingDay->start_time);
-            $endTime = \Illuminate\Support\Carbon::parse($workingDay->end_time);
+            $startTime = Carbon::parse($workingDay->start_time);
+            $endTime = Carbon::parse($workingDay->end_time);
             $duration = (int) $workingDay->appointment_duration;
 
             if ($duration <= 0) {
                 return response()->json(['times' => [], 'message' => 'خطأ في مدة الموعد للطبيب.'], 400);
             }
 
-            $bookedTimes = \App\Models\Appointment::where('doctor_id', $doctorId)
+            $bookedTimes = Appointment::where('doctor_id', $doctorId)
                 ->whereDate('appointment', $selectedDate)
-                ->where('type', '!=', 'ملغي')
+                ->where('type', '!=', 'ملغي') // لا تحسب المواعيد الملغاة
                 ->pluck('appointment')
-                ->map(fn($dt) => \Illuminate\Support\Carbon::parse($dt)->format('H:i'))
+                ->map(fn($dt) => Carbon::parse($dt)->format('H:i'))
                 ->toArray();
 
+            // التحقق من الحد الأقصى للمواعيد اليومية
             if ($doctor->number_of_statements > 0 && count($bookedTimes) >= $doctor->number_of_statements) {
                  return response()->json(['times' => [], 'message' => 'تم الوصول للحد الأقصى للمواعيد المحجوزة لهذا اليوم.']);
             }
@@ -233,10 +314,11 @@ class PatientSideAppointmentController extends Controller
                 $timeStr = $slotStart->format('H:i');
                 $isAvailable = true;
 
+                // التحقق من فترات الراحة
                 if ($workingDay->relationLoaded('breaks') && $workingDay->breaks->isNotEmpty()) {
                     foreach ($workingDay->breaks as $break) {
-                        $breakStart = \Illuminate\Support\Carbon::parse($break->start_time);
-                        $breakEnd = \Illuminate\Support\Carbon::parse($break->end_time);
+                        $breakStart = Carbon::parse($break->start_time);
+                        $breakEnd = Carbon::parse($break->end_time);
                         if ($slotStart->lt($breakEnd) && $slotEnd->gt($breakStart)) {
                             $isAvailable = false; break;
                         }
@@ -244,14 +326,17 @@ class PatientSideAppointmentController extends Controller
                 }
                 if (!$isAvailable) { $currentTime->addMinutes($duration); continue; }
 
+                // التحقق من المواعيد المحجوزة
                 if (in_array($timeStr, $bookedTimes)) { $isAvailable = false; }
 
-                $fullSlotStartDateTime = \Illuminate\Support\Carbon::parse($selectedDate . ' ' . $timeStr);
-                if ($fullSlotStartDateTime->isPast()) {
+                // التحقق من أن الوقت لم يمضِ
+                $fullSlotStartDateTime = Carbon::parse($selectedDate . ' ' . $timeStr);
+                if ($fullSlotStartDateTime->isPast() || $fullSlotStartDateTime->lessThan(now()->addMinutes(1))) { // هامش دقيقة واحدة
                     $isAvailable = false;
                 }
 
                 if ($isAvailable) {
+                    // استخدام translatedFormat لعرض الوقت بالصيغة المحلية (AM/PM)
                     $slots[] = ['value' => $timeStr, 'display' => $slotStart->translatedFormat('h:i A')];
                 }
                 $currentTime->addMinutes($duration);
@@ -264,7 +349,4 @@ class PatientSideAppointmentController extends Controller
             return response()->json(['error' => 'خطأ في جلب الأوقات المتاحة.', 'details' => $e->getMessage()], 500);
         }
     }
-
-
-
 }

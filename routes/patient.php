@@ -105,7 +105,7 @@ Route::group(
             }
             return redirect()->route('dashboard.patient'); // صفحة المريض الرئيسية
         })->name('patient.appointment.success')->middleware('auth:patient');
-
+        Route::get('/ajax/get-doctor-available-dates', [PatientSideAppointmentController::class, 'getDoctorAvailableDates'])->name('ajax.get_doctor_available_dates');
 
         require __DIR__ . '/auth.php';
     }
