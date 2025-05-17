@@ -346,8 +346,8 @@
                                 $profileShowRoute = route('laboratorie_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
                                 $profileEditRoute = route('laboratorie_employee.profile.edit');
                             } elseif (Auth::guard('patient')->check()) {
-                                $profileShowRoute = route('patient.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                $profileEditRoute = route('patient.profile.edit');
+                                $profileShowRoute = route('profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                $profileEditRoute = route('profile.edit');
                             }
                             // يمكنك إضافة المزيد من الشروط لأنواع المستخدمين الأخرى
                         @endphp

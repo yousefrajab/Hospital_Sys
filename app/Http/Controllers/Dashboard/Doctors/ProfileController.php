@@ -109,7 +109,6 @@ class ProfileController extends Controller
             DB::commit();
             Log::info("Profile update committed successfully for Doctor ID {$doctor->id}");
             return redirect()->route('doctor.profile.show')->with('success', 'تم تحديث الملف الشخصي بنجاح.');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             // هذا الـ catch قد لا يتم الوصول إليه إذا كان FormRequest يعالج كل أخطاء التحقق
             DB::rollBack();

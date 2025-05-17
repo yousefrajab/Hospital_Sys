@@ -2,376 +2,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/l10n/ar.css">
 
-    {{-- الأنماط المخصصة والأساسية (تم دمجها هنا) --}}
-    <style>
-        /* أنماط Flatpickr والفترات الزمنية */
-        .input-with-icon .flatpickr-input+i {
-            z-index: 2;
-        }
-
-        .time-slots {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .time-slot-btn {
-            background-color: #ecf0f1;
-            border: 1px solid #bdc3c7;
-            border-radius: 6px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            color: #2c3e50;
-        }
-
-        .time-slot-btn:hover {
-            background-color: #d5dbdb;
-            border-color: #aab1b5;
-        }
-
-        .time-slot-btn.selected {
-            background-color: #3498db;
-            color: white;
-            border-color: #2980b9;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
-        }
-
-        .no-slots-message {
-            color: #7f8c8d;
-            font-style: italic;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .error-validation {
-            color: #e74c3c;
-            font-size: 0.85em;
-            display: block;
-            margin-top: 4px;
-        }
-
-        input:disabled,
-        select:disabled,
-        button:disabled {
-            cursor: not-allowed !important;
-            opacity: 0.6 !important;
-        }
-
-        .flatpickr-input[readonly]:disabled {
-            background-color: #eee;
-        }
-
-        .flatpickr-calendar.inline {
-            width: 100%;
-            box-shadow: none;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-
-        /* الأنماط الأصلية للبطاقة والرسائل */
-        .appointment-container {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            to {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-        }
-
-        .appointment-alert {
-            animation: fadeIn 0.5s ease-out forwards;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .appointment-alert.fade-out {
-            animation: fadeOut 0.5s ease-out forwards;
-        }
-
-        .appointment-alert.success {
-            background: #d4edda;
-            color: #155724;
-            border-left: 5px solid #28a745;
-        }
-
-        .appointment-alert.warning {
-            background: #fff3cd;
-            color: #856404;
-            border-left: 5px solid #ffc107;
-        }
-
-        .appointment-alert i {
-            font-size: 24px;
-        }
-
-        .appointment-alert h4 {
-            margin: 0 0 5px;
-            font-size: 1.1rem;
-        }
-
-        .appointment-alert p {
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: inherit;
-        }
-
-        .appointment-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .appointment-header {
-            background: linear-gradient(135deg, #3498db, #2ecc71);
-            color: white;
-            padding: 25px;
-            text-align: center;
-        }
-
-        .appointment-header h2 {
-            margin: 0;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .appointment-header p {
-            margin: 10px 0 0;
-            opacity: 0.9;
-            font-size: 1rem;
-        }
-
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .form-section {
-            flex: 1;
-            min-width: 300px;
-            padding: 25px;
-        }
-
-        .patient-info {
-            background: #f9f9f9;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            color: #2c3e50;
-        }
-
-        .section-header h3 {
-            margin: 0;
-            font-size: 1.3rem;
-        }
-
-        .section-header i {
-            font-size: 1.2rem;
-            color: #3498db;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 0.95rem;
-        }
-
-        .input-with-icon {
-            position: relative;
-        }
-
-        .input-with-icon input {
-            width: 100%;
-            padding: 12px 15px 12px 40px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .input-with-icon input:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-            outline: none;
-        }
-
-        .input-with-icon i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #7f8c8d;
-        }
-
-        .select-with-icon {
-            position: relative;
-        }
-
-        .select-with-icon select {
-            width: 100%;
-            padding: 12px 15px 12px 40px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            appearance: none;
-            background: white;
-            transition: all 0.3s;
-        }
-
-        .select-with-icon select:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-            outline: none;
-        }
-
-        .select-with-icon i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #7f8c8d;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            min-height: 100px;
-            resize: vertical;
-            transition: all 0.3s;
-        }
-
-        textarea:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-            outline: none;
-        }
-
-        .form-actions {
-            text-align: center;
-            padding: 20px;
-            background: #f5f7fa;
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #3498db, #2ecc71);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
-        }
-
-        @media (max-width: 768px) {
-            .form-section {
-                min-width: 100%;
-            }
-
-            .appointment-header h2 {
-                font-size: 1.5rem;
-            }
-
-            .appointment-alert {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .appointment-alert i {
-                margin-bottom: 10px;
-            }
-        }
-
-        .error-message {
-            color: #e74c3c;
-            padding: 10px;
-            margin: 10px 0;
-            background: #fdecea;
-            border-radius: 5px;
-            border-left: 4px solid #e74c3c;
-        }
-
-        .d-none {
-            display: none;
-        }
-
-        /* إضافة بسيطة لتحسين مظهر الرسائل داخل البطاقة */
-        .appointment-card .appointment-alert {
-            margin: 0 25px 20px;
-        }
-    </style>
-
-    {{-- ======================================== --}}
-    {{--  1. محتوى الـ HTML الخاص بالمكون          --}}
-    {{-- ======================================== --}}
 
     <!-- رسائل التنبيه (تستخدم Alpine.js) -->
     @if ($message)
@@ -548,14 +178,373 @@
 
 {{-- استيراد CSS الخاص بـ Flatpickr --}}
 
+{{-- الأنماط المخصصة والأساسية (تم دمجها هنا) --}}
+<style>
+    /* أنماط Flatpickr والفترات الزمنية */
+    .input-with-icon .flatpickr-input+i {
+        z-index: 2;
+    }
 
+    .time-slots {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
 
-{{-- ======================================== --}}
-{{--  3. قسم الـ JavaScript                --}}
-{{-- ======================================== --}}
+    .time-slot-btn {
+        background-color: #ecf0f1;
+        border: 1px solid #bdc3c7;
+        border-radius: 6px;
+        padding: 8px 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        color: #2c3e50;
+    }
 
+    .time-slot-btn:hover {
+        background-color: #d5dbdb;
+        border-color: #aab1b5;
+    }
 
-{{-- *** السكربتات الجديدة المطلوبة *** --}}
+    .time-slot-btn.selected {
+        background-color: #3498db;
+        color: white;
+        border-color: #2980b9;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+    }
+
+    .no-slots-message {
+        color: #7f8c8d;
+        font-style: italic;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .error-validation {
+        color: #e74c3c;
+        font-size: 0.85em;
+        display: block;
+        margin-top: 4px;
+    }
+
+    input:disabled,
+    select:disabled,
+    button:disabled {
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
+    }
+
+    .flatpickr-input[readonly]:disabled {
+        background-color: #eee;
+    }
+
+    .flatpickr-calendar.inline {
+        width: 100%;
+        box-shadow: none;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    /* الأنماط الأصلية للبطاقة والرسائل */
+    .appointment-container {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+    }
+
+    .appointment-alert {
+        animation: fadeIn 0.5s ease-out forwards;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .appointment-alert.fade-out {
+        animation: fadeOut 0.5s ease-out forwards;
+    }
+
+    .appointment-alert.success {
+        background: #d4edda;
+        color: #155724;
+        border-left: 5px solid #28a745;
+    }
+
+    .appointment-alert.warning {
+        background: #fff3cd;
+        color: #856404;
+        border-left: 5px solid #ffc107;
+    }
+
+    .appointment-alert i {
+        font-size: 24px;
+    }
+
+    .appointment-alert h4 {
+        margin: 0 0 5px;
+        font-size: 1.1rem;
+    }
+
+    .appointment-alert p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: inherit;
+    }
+
+    .appointment-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .appointment-header {
+        background: linear-gradient(135deg, #3498db, #2ecc71);
+        color: white;
+        padding: 25px;
+        text-align: center;
+    }
+
+    .appointment-header h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .appointment-header p {
+        margin: 10px 0 0;
+        opacity: 0.9;
+        font-size: 1rem;
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .form-section {
+        flex: 1;
+        min-width: 300px;
+        padding: 25px;
+    }
+
+    .patient-info {
+        background: #f9f9f9;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 25px;
+        color: #2c3e50;
+    }
+
+    .section-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+    }
+
+    .section-header i {
+        font-size: 1.2rem;
+        color: #3498db;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.95rem;
+    }
+
+    .input-with-icon {
+        position: relative;
+    }
+
+    .input-with-icon input {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+
+    .input-with-icon input:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        outline: none;
+    }
+
+    .input-with-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #7f8c8d;
+    }
+
+    .select-with-icon {
+        position: relative;
+    }
+
+    .select-with-icon select {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        appearance: none;
+        background: white;
+        transition: all 0.3s;
+    }
+
+    .select-with-icon select:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        outline: none;
+    }
+
+    .select-with-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #7f8c8d;
+    }
+
+    textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        min-height: 100px;
+        resize: vertical;
+        transition: all 0.3s;
+    }
+
+    textarea:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        outline: none;
+    }
+
+    .form-actions {
+        text-align: center;
+        padding: 20px;
+        background: #f5f7fa;
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, #3498db, #2ecc71);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .form-section {
+            min-width: 100%;
+        }
+
+        .appointment-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .appointment-alert {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .appointment-alert i {
+            margin-bottom: 10px;
+        }
+    }
+
+    .error-message {
+        color: #e74c3c;
+        padding: 10px;
+        margin: 10px 0;
+        background: #fdecea;
+        border-radius: 5px;
+        border-left: 4px solid #e74c3c;
+    }
+
+    .d-none {
+        display: none;
+    }
+
+    /* إضافة بسيطة لتحسين مظهر الرسائل داخل البطاقة */
+    .appointment-card .appointment-alert {
+        margin: 0 25px 20px;
+    }
+</style>
+
 
 {{-- 1. استيراد JS الخاص بـ Flatpickr --}}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

@@ -168,9 +168,9 @@
         .avatar-upload-profile {
             /* تغيير اسم الكلاس */
             position: relative;
-            width: 120px;
+            width: 100px;
             /* تعديل الحجم قليلاً */
-            height: 120px;
+            height: 140px;
             margin: 0 auto 25px;
             /* توسيط */
             border-radius: 50%;
@@ -280,7 +280,7 @@
                     <p class="mb-0">أهلاً بك {{ $patientName }}، قم بتحديث بياناتك هنا.</p>
                 </div>
                 <div class="form-section">
-                    <form action="{{ route('patient.profile.update') }}" method="post" autocomplete="off"
+                    <form action="{{ route('profile.update') }}" method="post" autocomplete="off"
                         id="patientProfileForm" enctype="multipart/form-data" class="needs-validation" novalidate>
                         @method('PUT') {{-- أو PATCH --}}
                         @csrf

@@ -9,7 +9,7 @@ class Appointment extends Model
 {
     use HasFactory;
 
-    // تأكد من أن 'appointment' موجود هنا إذا كنت ستعتمد عليه
+
     protected $fillable = [
         'name',
         'email',
@@ -28,6 +28,11 @@ class Appointment extends Model
         'appointment' => 'datetime',
     ];
 
+    public const STATUS_PENDING   = 'غير مؤكد';
+    public const STATUS_CONFIRMED = 'مؤكد';
+    public const STATUS_COMPLETED = 'منتهي';
+    public const STATUS_CANCELLED = 'ملغي'; // حالة إلغاء عامة، يمكنك تفصيلها إذا أردت
+
     public function doctor()
     {
         return $this->belongsTo(Doctor::class, 'doctor_id');
@@ -41,6 +46,19 @@ class Appointment extends Model
     // في Appointment.php
     public function patient()
     {
-        return $this->belongsTo(Patient::class, 'patient_id'); // استخدام user_id كمفتاح خارجي
+        return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+
+    public function getStatusDisplayAttribute(): string
+    {
+        // يمكنك إضافة المزيد من الحالات هنا إذا لزم الأمر
+        return match ($this->type) {
+            self::STATUS_PENDING => 'بانتظار التأكيد',
+            self::STATUS_CONFIRMED => 'مؤكد',
+            self::STATUS_COMPLETED => 'مكتمل',
+            self::STATUS_CANCELLED => 'ملغى',
+            default => $this->type, // إرجاع القيمة كما هي إذا لم تطابق
+        };
     }
 }

@@ -348,297 +348,6 @@
             </div>
         </div>
     </section>
-
-    <style>
-        .service-list,
-        .doctor-list {
-            list-style: none;
-            padding: 0;
-        }
-
-
-        .doctor-card {
-            text-align: center;
-            padding: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .doctor-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .doctor-image {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            margin-bottom: 10px;
-            border: 3px solid #f0f0f0;
-        }
-
-        .doctor-info h5 {
-            margin-top: 10px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .doctor-info p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .service-list li,
-        .doctor-list li {
-            padding: 8px 0;
-            border-bottom: 1px dashed #eee;
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .service-list li:before,
-        .doctor-list li:before {
-            content: "•";
-            color: #5e72e4;
-            position: absolute;
-            left: 0;
-            font-size: 20px;
-            line-height: 1;
-        }
-
-        /* تخصيصات قسم الأطباء */
-        .section-title {
-            color: #2c3e50;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #3498db, #2ecc71);
-        }
-
-        .doctors-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .doctor-profile-card {
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .doctor-profile-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-        }
-
-        .doctor-avatar-container {
-            position: relative;
-            padding: 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-
-        .doctor-avatar {
-            width: 100px;
-            height: 150px;
-            border-radius: 30%;
-            object-fit: cover;
-            border: 5px solid white;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .doctor-status-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: white;
-        }
-
-        .doctor-status-badge.active {
-            background-color: #2ecc71;
-        }
-
-        .doctor-status-badge.inactive {
-            background-color: #e74c3c;
-        }
-
-        .doctor-details {
-            padding: 20px;
-            text-align: center;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .doctor-name {
-            color: #2c3e50;
-            margin-bottom: 5px;
-            font-size: 1.2rem;
-        }
-
-        .doctor-specialty {
-            color: #7f8c8d;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-        }
-
-        .doctor-meta {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            color: #95a5a6;
-            font-size: 0.85rem;
-        }
-
-        .btn-appointment {
-            background: linear-gradient(90deg, #3498db, #2ecc71);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: auto;
-        }
-
-        .btn-appointment:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
-        }
-
-        .no-doctors {
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .no-doctors img {
-            max-width: 200px;
-            margin-bottom: 20px;
-            opacity: 0.2;
-        }
-
-        .no-doctors p {
-            color: #95a5a6;
-            font-size: 1.1rem;
-        }
-
-        /* تأثيرات للجوال */
-        @media (max-width: 768px) {
-            .doctors-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .doctor-profile-card {
-                flex-direction: row;
-                text-align: left;
-            }
-
-            .doctor-avatar-container {
-                padding: 15px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-
-            /* .doctor-avatar {
-                width: 50px;
-                height: 100px;
-            } */
-
-            .doctor-details {
-                padding: 15px;
-                text-align: left;
-            }
-
-            .doctor-meta {
-                justify-content: flex-start;
-            }
-        }
-
-        .tab-btns .tab-btn {
-            cursor: pointer;
-            transition: all 0.3s;
-            padding: 12px 15px;
-            margin-bottom: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tab-btns .tab-btn:hover,
-        .tab-btns .tab-btn.active-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .tab-btns .tab-btn:after {
-            content: '';
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 0;
-            height: 0;
-            border-top: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            border-right: 10px solid white;
-            opacity: 0;
-            transition: all 0.3s;
-        }
-
-        .tab-btns .tab-btn.active-btn:after {
-            right: 10px;
-            opacity: 1;
-        }
-    </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // تفعيل نظام التبويب
-            const tabBtns = document.querySelectorAll('.tab-btns .tab-btn');
-
-            tabBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // إزالة التنشيط من جميع الأزرار
-                    tabBtns.forEach(b => b.classList.remove('active-btn'));
-
-                    // إضافة التنشيط للزر المحدد
-                    this.classList.add('active-btn');
-
-                    // إخفاء جميع المحتويات
-                    document.querySelectorAll('.tabs-content .tab').forEach(tab => {
-                        tab.classList.remove('active-tab');
-                    });
-
-                    // إظهار المحتوى المحدد
-                    const tabId = this.getAttribute('data-tab');
-                    document.querySelector(tabId).classList.add('active-tab');
-                });
-            });
-        });
-    </script>
-
     <!-- End Department Section -->
 
     <!-- Team Section -->
@@ -1157,6 +866,296 @@
         </div>
     </section>
     <!--End Clients Section-->
+
+
+    <style>
+        .service-list,
+        .doctor-list {
+            list-style: none;
+            padding: 0;
+        }
+
+
+        .doctor-card {
+            text-align: center;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .doctor-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid #f0f0f0;
+        }
+
+        .doctor-info h5 {
+            margin-top: 10px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .doctor-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .service-list li,
+        .doctor-list li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .service-list li:before,
+        .doctor-list li:before {
+            content: "•";
+            color: #5e72e4;
+            position: absolute;
+            left: 0;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        /* تخصيصات قسم الأطباء */
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+        }
+
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .doctor-profile-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doctor-profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .doctor-avatar-container {
+            position: relative;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .doctor-avatar {
+            width: 100px;
+            height: 150px;
+            border-radius: 30%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .doctor-status-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .doctor-status-badge.active {
+            background-color: #2ecc71;
+        }
+
+        .doctor-status-badge.inactive {
+            background-color: #e74c3c;
+        }
+
+        .doctor-details {
+            padding: 20px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doctor-name {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        .doctor-specialty {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .doctor-meta {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #95a5a6;
+            font-size: 0.85rem;
+        }
+
+        .btn-appointment {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .btn-appointment:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .no-doctors {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .no-doctors img {
+            max-width: 200px;
+            margin-bottom: 20px;
+            opacity: 0.2;
+        }
+
+        .no-doctors p {
+            color: #95a5a6;
+            font-size: 1.1rem;
+        }
+
+        /* تأثيرات للجوال */
+        @media (max-width: 768px) {
+            .doctors-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .doctor-profile-card {
+                flex-direction: row;
+                text-align: left;
+            }
+
+            .doctor-avatar-container {
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            /* .doctor-avatar {
+                    width: 50px;
+                    height: 100px;
+                } */
+
+            .doctor-details {
+                padding: 15px;
+                text-align: left;
+            }
+
+            .doctor-meta {
+                justify-content: flex-start;
+            }
+        }
+
+        .tab-btns .tab-btn {
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btns .tab-btn:hover,
+        .tab-btns .tab-btn.active-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .tab-btns .tab-btn:after {
+            content: '';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid white;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .tab-btns .tab-btn.active-btn:after {
+            right: 10px;
+            opacity: 1;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // تفعيل نظام التبويب
+            const tabBtns = document.querySelectorAll('.tab-btns .tab-btn');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // إزالة التنشيط من جميع الأزرار
+                    tabBtns.forEach(b => b.classList.remove('active-btn'));
+
+                    // إضافة التنشيط للزر المحدد
+                    this.classList.add('active-btn');
+
+                    // إخفاء جميع المحتويات
+                    document.querySelectorAll('.tabs-content .tab').forEach(tab => {
+                        tab.classList.remove('active-tab');
+                    });
+
+                    // إظهار المحتوى المحدد
+                    const tabId = this.getAttribute('data-tab');
+                    document.querySelector(tabId).classList.add('active-tab');
+                });
+            });
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

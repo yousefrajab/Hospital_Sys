@@ -202,7 +202,7 @@ class AppointmentController extends Controller
             return redirect()->back()->with('error', '...');
         }
 
-        $cancelReason = $request->input('cancel_reason', 'تم الإلغاء من قبل الإدارة لأسباب تنظيمية');
+        $cancelReason = $request->input('cancel_reason', 'تم الإلغاء من قبل الإدارة لأسباب ادارية');
 
         try {
             $appointment->load(['doctor', 'patient']); // تحميل العلاقات اللازمة للإشعارات

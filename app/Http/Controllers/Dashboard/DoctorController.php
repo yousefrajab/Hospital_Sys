@@ -273,43 +273,7 @@ class DoctorController extends Controller
         }
     }
 
-    // protected function syncBreaks(DoctorBreak $workingDay, array $breaksData)
-    // {
-    //     Log::debug("Syncing breaks for Working Day ID: {$workingDay->id}");
-    //     // 1. حذف جميع الاستراحات الحالية لهذا اليوم
-    //     $workingDay->breaks()->delete();
-    //     Log::debug("Deleted existing breaks for Working Day ID: {$workingDay->id}");
-
-    //     // 2. إضافة الاستراحات الجديدة من البيانات المرسلة
-    //     $newBreaks = [];
-    //     foreach ($breaksData as $index => $break) {
-    //         if (!empty($break['start_time']) && !empty($break['end_time'])) {
-    //             // (اختياري) تحقق إضافي أن النهاية بعد البداية قبل الحفظ
-    //             if (strtotime($break['end_time'] . ':00') > strtotime($break['start_time'] . ':00')) {
-    //                 $newBreaks[] = new DoctorBreak([ // تأكد من اسم الموديل الصحيح
-    //                     'start_time' => $break['start_time'] . ':00',
-    //                     'end_time' => $break['end_time'] . ':00',
-    //                     'reason' => $break['reason'] ?? null,
-    //                     // doctor_working_day_id سيتم تعيينه تلقائيًا بواسطة العلاقة
-    //                 ]);
-    //                 Log::debug("Prepared new break #{$index}: {$break['start_time']} - {$break['end_time']}");
-    //             } else {
-    //                 Log::warning("Skipped invalid break #{$index} for Working Day ID {$workingDay->id}: End time not after start time.");
-    //             }
-    //         } else {
-    //             Log::debug("Skipped empty break data at index #{$index}");
-    //         }
-    //     }
-
-    //     // 3. حفظ الاستراحات الجديدة دفعة واحدة إذا وجدت
-    //     if (!empty($newBreaks)) {
-    //         $workingDay->breaks()->saveMany($newBreaks);
-    //         Log::info("Saved " . count($newBreaks) . " new breaks for Working Day ID: {$workingDay->id}");
-    //     } else {
-    //         Log::info("No new valid breaks to save for Working Day ID: {$workingDay->id}");
-    //     }
-    // }
-
+   
 
 
     public function showSchedule()

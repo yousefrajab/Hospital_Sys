@@ -18,6 +18,29 @@
                 <li class="current dropdown"><a href="#">الرئيسية</a>
 
                 </li>
+
+                <li>
+                    <a title="لوحة التحكم" style="color: white"
+                        href="@auth
+@if (auth()->guard('patient')->check())
+                            {{ route('dashboard.patient') }}
+                        @elseif(auth()->guard('doctor')->check())
+                            {{ route('dashboard.doctor') }}
+                        @elseif(auth()->guard('admin')->check())
+                            {{ route('dashboard.admin') }}
+                        @elseif(auth()->guard('ray_employee')->check())
+                            {{ route('dashboard.ray_employee') }}
+                        @elseif(auth()->guard('laboratorie_employee')->check())
+                            {{ route('dashboard.laboratorie_employee') }}
+                        @else
+                            {{ route('login') }} {{-- إذا لم يكن أي نوع معروف --}}
+                        @endif
+                    @else
+                        {{ route('login') }} {{-- إذا لم يكن مسجل دخول --}} @endauth">
+                        <span class="fas fa-user"> لوحة التحكم
+                        </span>
+                    </a>
+                </li>
                 <li class="dropdown"><a href="#">من نحن</a>
                     <ul>
                         <li><a href="about.html">About Us</a></li>
@@ -97,6 +120,7 @@
 
                 <li><a href="contact.html">تواصل معانا</a></li>
 
+
                 <li class="dropdown"><a href="#">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>
                     <ul>
                         @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
@@ -124,19 +148,43 @@
                 <img alt="user-img" class="patient-avatar-table"
                     src="{{ Auth::guard('patient')->user()->image ? asset('Dashboard/img/patients/' . Auth::guard('patient')->user()->image->filename) : asset('Dashboard/img/patient_default.png') }}">
             </div>
-
+<a class="logout-btn" title="لوحة التحكم" style="color: white"
+                    href="@auth
+@if (auth()->guard('patient')->check())
+                            {{ route('dashboard.patient') }}
+                        @elseif(auth()->guard('doctor')->check())
+                            {{ route('dashboard.doctor') }}
+                        @elseif(auth()->guard('admin')->check())
+                            {{ route('dashboard.admin') }}
+                        @elseif(auth()->guard('ray_employee')->check())
+                            {{ route('dashboard.ray_employee') }}
+                        @elseif(auth()->guard('laboratorie_employee')->check())
+                            {{ route('dashboard.laboratorie_employee') }}
+                        @else
+                            {{ route('login') }} {{-- إذا لم يكن أي نوع معروف --}}
+                        @endif
+                    @else
+                        {{ route('login') }} {{-- إذا لم يكن مسجل دخول --}} @endauth">
+                    <span class="fas fa-user"> لوحة التحكم
+                    </span>
+                </a>
             <div class="user-info">
                 <h4>{{ auth()->user()->name }}</h4>
                 <span>{{ auth()->user()->email }}</span>
+
                 <form method="POST" action="{{ route('logout.patient') }}">
                     @csrf
+
                     <a class="logout-btn" href="#"
                         onclick="event.preventDefault(); this.closest('form').submit();">
                         <i class="fas fa-sign-out-alt"></i>
                         تسجيل الخروج
                     </a>
+                    <br>
+
                 </form>
             </div>
+
         </div>
         <style>
             .user-card {
@@ -208,27 +256,7 @@
             <li><a href="#"><span class="fab fa-twitter"></span></a></li>
             <li><a href="#"><span class="fab fa-linkedin-in"></span></a></li>
             {{-- <li><a title="تسجيل دخول" href="{{route('dashboard.patient.home')}}"><span class="fas fa-user"></span></a> --}}
-            <li>
-                <a title="لوحة التحكم"
-                    href="@auth
-@if (auth()->guard('patient')->check())
-                            {{ route('dashboard.patient') }}
-                        @elseif(auth()->guard('doctor')->check())
-                            {{ route('dashboard.doctor') }}
-                        @elseif(auth()->guard('admin')->check())
-                            {{ route('dashboard.admin') }}
-                        @elseif(auth()->guard('ray_employee')->check())
-                            {{ route('dashboard.ray_employee') }}
-                        @elseif(auth()->guard('laboratorie_employee')->check())
-                            {{ route('dashboard.laboratorie_employee') }}
-                        @else
-                            {{ route('login') }} {{-- إذا لم يكن أي نوع معروف --}}
-                        @endif
-                    @else
-                        {{ route('login') }} {{-- إذا لم يكن مسجل دخول --}} @endauth">
-                    <span class="fas fa-user"></span>
-                </a>
-            </li>
+
             </li>
 
 

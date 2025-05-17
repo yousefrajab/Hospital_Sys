@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PatientProfileController extends Controller
 {
-    public function show() // تغيير اسم الدالة ليكون أوضح
+    public function showpat() // تغيير اسم الدالة ليكون أوضح
     {
         $patient = Auth::guard('patient')->user();
         if (!$patient) {

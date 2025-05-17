@@ -24,11 +24,48 @@ class ProfilePatController extends Controller
     {
         $patient = Auth::guard('patient')->user();
         if (!$patient) {
-            return redirect()->route('login'); // أو route تسجيل دخول المرضى
+            Log::warning("ProfilePatController@show: Patient not authenticated for profile view.");
+            return redirect()->route('login.patient'); // أو أي route تسجيل دخول مناسب للمرضى
         }
-        // جلب أي علاقات أخرى قد تحتاجها للعرض (مثلاً الصورة)
-        $patient->load('image'); // إذا لم تكن محملة تلقائيًا
-        return view('Dashboard.patients.profile.show', compact('patient'));
+
+        // تحميل العلاقات التي قد تحتاجها في صفحة الملف الشخصي أو في توليد نص الـ QR
+        $patient->load([
+            'image',
+            'diagnosedChronicDiseases', // إذا كنت ستعرض الأمراض في ملفه الشخصي أو QR
+            'admissions' // إذا كنت ستعرض سجلات الدخول
+        ]);
+
+        // استدعاء دالة توليد الـ QR Code من موديل Patient
+        // هذه الدالة يجب أن تكون هي نفسها التي تشفر النص المجمع (المعلومات + الرابط)
+        $qrCodeSvg = $patient->generateQrCode(200, 2, 'M'); // يمكنك تعديل الحجم إذا أردت
+
+        // (اختياري) تحضير نفس المعلومات الأساسية لعرضها كنص في صفحة الملف الشخصي
+        // هذا مفيد إذا أردت أن يرى المريض ما هو مشفر في الـ QR Code
+        $displayInfoForQr = [];
+        $locale = app()->getLocale();
+        $displayInfoForQr['الاسم'] =  $patient->name;
+        $displayInfoForQr['الهوية'] = $patient->national_id;
+        $displayInfoForQr['ت.الميلاد'] = $patient->Date_Birth ? \Carbon\Carbon::parse($patient->Date_Birth)->format('Y-m-d') : '-';
+        $displayInfoForQr['فصيلة الدم'] = $patient->Blood_Group ?: 'غير محددة';
+
+        $chronicDisplayList = [];
+        if ($patient->relationLoaded('diagnosedChronicDiseases') && $patient->diagnosedChronicDiseases->isNotEmpty()) {
+            foreach ($patient->diagnosedChronicDiseases->take(2) as $diagnosedDisease) {
+                // $chronicDisplayList[] = $diagnosedDisease->disease->name;
+            }
+        }
+        if (!empty($chronicDisplayList)) {
+            $displayInfoForQr['أمراض مشخصة'] = implode('، ', $chronicDisplayList);
+        }
+
+        // ... يمكنك إضافة المزيد من المعلومات إلى $displayInfoForQr إذا أردت ...
+
+        Log::info("ProfilePatController@show: Displaying profile for Patient ID: {$patient->id}");
+        return view('Dashboard.patients.profile.show', compact(
+            'patient',
+            'qrCodeSvg',
+            'displayInfoForQr' // (اختياري)
+        ));
     }
 
     /**
@@ -59,7 +96,7 @@ class ProfilePatController extends Controller
         DB::beginTransaction();
         try {
             // تحديث الحقول الأساسية
-            $patient->national_id = $validatedData['national_id']; // المريض لا يعدل رقم هويته عادةً
+            // $patient->national_id = $validatedData['national_id']; // المريض لا يعدل رقم هويته عادةً
             $patient->email = $validatedData['email'];
             $patient->Date_Birth = $validatedData['Date_Birth'];
             $patient->Phone = $validatedData['Phone']; // لاحظ P كبيرة
@@ -115,7 +152,7 @@ class ProfilePatController extends Controller
             DB::commit();
             Log::info("Profile update committed successfully for Patient ID {$patient->id}");
 
-            return redirect()->route('patient.profile.show') // أو .show
+            return redirect()->route('profile.show') // أو .show
                 ->with('success', 'تم تحديث ملفك الشخصي بنجاح.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
@@ -125,7 +162,7 @@ class ProfilePatController extends Controller
             DB::rollback();
             Log::error("Error updating patient profile for ID {$patient->id}: " . $e->getMessage());
             Log::error($e->getTraceAsString());
-            return redirect()->route('patient.profile.show')->with('error', 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.');
+            return redirect()->route('profile.show')->with('error', 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.');
         }
     }
 

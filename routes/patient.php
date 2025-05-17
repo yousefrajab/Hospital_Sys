@@ -1,21 +1,18 @@
 <?php
 
 use App\Models\Section;
-use App\Http\Controllers\PatientProfileController;
+use App\Http\Livewire\Chat\Main;
+use Illuminate\Support\Facades\Route;
+
+
+use App\Http\Livewire\Chat\Createchat;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Http\Controllers\Dashboard_Patient\PatientController;
 use App\Http\Controllers\Dashboard\Patient\ProfilePatController;
+use App\Http\Controllers\Dashboard_Ray_Employee\InvoiceController;
+use App\Http\Controllers\Dashboard\PatientSideAppointmentController;
 
- use App\Http\Controllers\Dashboard_Doctor\DiagnosticController;
- use App\Http\Controllers\Dashboard_Doctor\LaboratorieController;
- use App\Http\Controllers\Dashboard_Doctor\RayController;
- use App\Http\Controllers\Dashboard_Doctor\PatientDetailsController;
- use App\Http\Controllers\Dashboard_Patient\PatientController;
- use App\Http\Livewire\Chat\Main;
- use App\Http\Controllers\Dashboard_Ray_Employee\InvoiceController;
- use App\Http\Livewire\Chat\Createchat;
- use Illuminate\Support\Facades\Route;
-
- /*
+/*
  |--------------------------------------------------------------------------
  | doctor Routes
  |--------------------------------------------------------------------------
@@ -27,56 +24,89 @@ use App\Http\Controllers\Dashboard\Patient\ProfilePatController;
  */
 
 
- Route::group(
-     [
-         'prefix' => LaravelLocalization::setLocale(),
-         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
-     ], function () {
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(),
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+    ],
+    function () {
 
 
-     //################################ dashboard patient ########################################
+        //################################ dashboard patient ########################################
 
-     Route::get('/home', function () {
-         $sections = Section::with('doctors')->get();
-         return view('welcome',compact('sections'));
-     })->middleware(['auth:patient'])->name('dashboard.patient.home');
+        Route::get('/home', function () {
+            $sections = Section::with('doctors')->get();
+            return view('welcome', compact('sections'));
+        })->middleware(['auth:patient'])->name('dashboard.patient.home');
 
-     Route::get('/dashboard/patient', function () {
-         return view('Dashboard.dashboard_patient.dashboard');
-     })->middleware(['auth:patient'])->name('dashboard.patient');
-     //################################ end dashboard patient #####################################
-
-     Route::middleware(['auth:patient'])->group(function () {
-
-        Route::get('/profile', [PatientProfileController::class, 'show'])->name('profile.show');
-        Route::get('/profile/edit', [PatientProfileController::class, 'edit'])->name('profile.edit');
-        Route::put('/profile', [PatientProfileController::class, 'update'])->name('profile.update');
-
-        //############################# patients route ##########################################
-        Route::get('invoices', [PatientController::class,'invoices'])->name('invoices.patient');
-        Route::get('laboratories', [PatientController::class,'laboratories'])->name('laboratories.patient');
-        Route::get('view_laboratoriess/{id}', [PatientController::class,'viewLaboratories'])->name('laboratories.view');
-        Route::get('rays', [PatientController::class,'rays'])->name('rays.patient');
-        Route::get('view_rayss/{id}', [PatientController::class,'viewRays'])->name('rays.view');
-        Route::get('payments', [PatientController::class,'payments'])->name('payments.patient');
-        //############################# end patients route ######################################
+        Route::get('/dashboard/patient', function () {
+            return view('Dashboard.dashboard_patient.dashboard');
+        })->middleware(['auth:patient'])->name('dashboard.patient');
+        //################################ end dashboard patient #####################################
 
 
-        ############################# Chat route ##########################################
-        Route::get('list/doctors',Createchat::class)->name('list.doctors');
-        Route::get('chat/doctors',Main::class)->name('chat.doctors');
+        Route::middleware(['auth:patient'])->prefix('patient')->group(function () {
 
-        ############################# end Chat route ######################################
+            Route::get('/profile', [ProfilePatController::class, 'show'])->name('profile.show');
+            Route::get('/profile/edit', [ProfilePatController::class, 'edit'])->name('profile.edit');
+            Route::put('/profile', [ProfilePatController::class, 'update'])->name('profile.update');
 
-        Route::get('/profile', [ProfilePatController::class, 'show'])->name('patient.profile.show'); // <--- تغيير اسم الدالة إذا أردت
-            Route::get('/profile/edit', [ProfilePatController::class, 'edit'])->name('patient.profile.edit'); // للتعديل
-            Route::put('/profile', [ProfilePatController::class, 'update'])->name('patient.profile.update'); // لحفظ التعديل
+            //############################# patients route ##########################################
+            Route::get('invoices', [PatientController::class, 'invoices'])->name('invoices.patient');
+            Route::get('laboratories', [PatientController::class, 'laboratories'])->name('laboratories.patient');
+            Route::get('view_laboratoriess/{id}', [PatientController::class, 'viewLaboratories'])->name('laboratories.view');
+            Route::get('rays', [PatientController::class, 'rays'])->name('rays.patient');
+            Route::get('view_rayss/{id}', [PatientController::class, 'viewRays'])->name('rays.view');
+            Route::get('payments', [PatientController::class, 'payments'])->name('payments.patient');
+            //############################# end patients route ######################################
+
+
+            ############################# Chat route ##########################################
+            Route::get('list/doctors', Createchat::class)->name('list.doctors');
+            Route::get('chat/doctors', Main::class)->name('chat.doctors');
+
+            ############################# end Chat route ######################################
 
 
 
-    });
+            Route::get('/appointments/upcoming', [PatientController::class, 'upcomingAppointments'])->name('appointments.upcoming');
+            Route::get('/appointments/past', [PatientController::class, 'pastAppointments'])->name('appointments.past');
+
+            Route::patch('/appointments/{appointment}/cancel-by-patient', [PatientController::class, 'cancelAppointmentByPatient'])->name('appointments.cancelByPatient');
+
+            Route::view('dashboard', 'livewire.dashboard.patient-appointment-form')->name('patient-appointment-form');
+        });
+
+        // Route لعرض فورم حجز الموعد
+        Route::get('/patient/appointments/create-form', [PatientSideAppointmentController::class, 'create'])
+            ->name('patient.appointments.create.form') // اسم مختلف عن route الـ store
+            ->middleware(['auth:patient']); // مثال لحماية الـ route
+
+        // Route لحفظ الموعد
+        Route::post('/patient/appointments', [PatientSideAppointmentController::class, 'store'])
+            ->name('patient.appointments.store')
+            ->middleware(['auth:patient']);
 
 
-     require __DIR__ . '/auth.php';
+        // ***** Routes جديدة لـ AJAX *****
+        Route::get('/ajax/doctors-by-section', [PatientSideAppointmentController::class, 'getDoctorsBySection'])
+            ->name('ajax.get_doctors_by_section')
+            ->middleware(['auth:patient']); // أو أي middleware مناسب
 
- });
+        Route::get('/ajax/available-times', [PatientSideAppointmentController::class, 'getAvailableTimes'])
+            ->name('ajax.get_available_times')
+            ->middleware(['auth:patient']); // أو أي middleware مناسب
+
+        // Route لصفحة نجاح الحجز (اختياري)
+        Route::get('/patient/appointment/success', function () {
+            // يمكنك عرض رسالة نجاح بسيطة هنا أو توجيه لصفحة أخرى
+            if (session('success_message')) {
+                return view('dashboard_pages.appointment_success', ['message' => session('success_message')]);
+            }
+            return redirect()->route('dashboard.patient'); // صفحة المريض الرئيسية
+        })->name('patient.appointment.success')->middleware('auth:patient');
+
+
+        require __DIR__ . '/auth.php';
+    }
+);
