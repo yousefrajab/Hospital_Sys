@@ -67,4 +67,16 @@ class Doctor extends Authenticatable implements TranslatableContract, CanResetPa
     {
         $this->notify(new DoctorResetPasswordNotification($token));
     }
+
+
+    public function prescription()
+    {
+        return $this->belongsTo(Prescription::class);
+    }
+
+
+    public function PrescriptionItem()
+    {
+        return $this->belongsTo(PrescriptionItem::class);
+    }
 }

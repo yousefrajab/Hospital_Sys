@@ -8,28 +8,30 @@ use App\Http\Controllers\Auth\DoctorController;
 use App\Http\Controllers\Auth\PatientController;
 use App\Http\Controllers\Auth\RayEmployeeController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\RegisteredPatientController;
+use App\Http\Controllers\Auth\PharmacyManagerController;
 
 // Controllers تسجيل المستخدمين (تبقى كما هي)
-use App\Http\Controllers\Auth\LaboratorieEmployeeController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\PharmacyEmployeeController;
+use App\Http\Controllers\Auth\RegisteredPatientController;
 
 // ### Controllers "نسيت كلمة المرور" المخصصة (يجب إنشاؤها) ###
 // يجب أن تكون هذه الـ Controllers موجودة في المسارات المحددة
+use App\Http\Controllers\Auth\LaboratorieEmployeeController;
+
+
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController; // لـ reset
-
-
 use App\Http\Controllers\Auth\PasswordResetLinkController; // لـ forgot
+
 use App\Http\Controllers\Auth\Admin\ResetPasswordController as AdminResetPasswordController;
 use App\Http\Controllers\Auth\Admin\ForgotPasswordController as AdminForgotPasswordController;
 
 use App\Http\Controllers\Auth\Doctor\ResetPasswordController as DoctorResetPasswordController;
 use App\Http\Controllers\Auth\Doctor\ForgotPasswordController as DoctorForgotPasswordController;
 
+// Controllers العامة (تبقى كما هي للـ Guard 'web' إذا كنت تستخدمه)
 use App\Http\Controllers\Auth\Patient\ResetPasswordController as PatientResetPasswordController;
 use App\Http\Controllers\Auth\Patient\ForgotPasswordController as PatientForgotPasswordController;
-
-// Controllers العامة (تبقى كما هي للـ Guard 'web' إذا كنت تستخدمه)
 use App\Http\Controllers\Auth\RayEmployee\ResetPasswordController as RayEmployeeResetPasswordController;
 use App\Http\Controllers\Auth\RayEmployee\ForgotPasswordController as RayEmployeeForgotPasswordController;
 use App\Http\Controllers\Auth\LaboratorieEmployee\ResetPasswordController as LaboratorieEmployeeResetPasswordController;
@@ -154,3 +156,54 @@ Route::get('/reset-password/laboratorie-employee/{token}', [LaboratorieEmployeeR
     ->middleware('guest:laboratorie_employee')->name('laboratorie_employee.password.reset');
 Route::post('/reset-password/laboratorie-employee', [LaboratorieEmployeeResetPasswordController::class, 'reset'])
     ->middleware('guest:laboratorie_employee')->name('laboratorie_employee.password.update');
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| مسارات موظف الصيدلي (PharmacyEmployee Guard)
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/login/pharmacy_employee', [PharmacyEmployeeController::class, 'store'])->middleware('guest:pharmacy_employee')->name('login.pharmacy_employee');
+Route::post('/logout/pharmacy_employee', [PharmacyEmployeeController::class, 'destroy'])->middleware('auth:pharmacy_employee')->name('logout.pharmacy_employee');
+
+// نسيت كلمة المرور لموظف المختبر
+// Route::get('/forgot-password/laboratorie-employee', [PharmacyEmployeeController::class, 'showLinkRequestForm']) // استخدام laboratorie-employee في الـ URL
+//     ->middleware('guest:pharmacy_employee')->name('pharmacy_employee.password.request');
+// Route::post('/forgot-password/laboratorie-employee', [PharmacyEmployeeController::class, 'sendResetLinkEmail'])
+//     ->middleware('guest:pharmacy_employee')->name('pharmacy_employee.password.email');
+// Route::get('/reset-password/laboratorie-employee/{token}', [PharmacyEmployeeController::class, 'showResetForm'])
+//     ->middleware('guest:pharmacy_employee')->name('pharmacy_employee.password.reset');
+// Route::post('/reset-password/laboratorie-employee', [PharmacyEmployeeController::class, 'reset'])
+//     ->middleware('guest:pharmacy_employee')->name('pharmacy_employee.password.update');
+
+
+
+/*
+|--------------------------------------------------------------------------
+| مسارات موظف الصيدلي (PharmacyManager Guard)
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/login/pharmacy_manager', [PharmacyManagerController::class, 'store'])->middleware('guest:pharmacy_manager')->name('login.pharmacy_manager');
+Route::post('/logout/pharmacy_manager', [PharmacyManagerController::class, 'destroy'])->middleware('auth:pharmacy_manager')->name('logout.pharmacy_manager');
+
+// نسيت كلمة المرور لموظف المختبر
+// Route::get('/forgot-password/laboratorie-employee', [PharmacyManagerController::class, 'showLinkRequestForm']) // استخدام laboratorie-employee في الـ URL
+//     ->middleware('guest:PharmacyManager')->name('PharmacyManager.password.request');
+// Route::post('/forgot-password/laboratorie-employee', [PharmacyManagerController::class, 'sendResetLinkEmail'])
+//     ->middleware('guest:PharmacyManager')->name('PharmacyManager.password.email');
+// Route::get('/reset-password/laboratorie-employee/{token}', [PharmacyManagerController::class, 'showResetForm'])
+//     ->middleware('guest:PharmacyManager')->name('PharmacyManager.password.reset');
+// Route::post('/reset-password/laboratorie-employee', [PharmacyManagerController::class, 'reset'])
+//     ->middleware('guest:PharmacyManager')->name('PharmacyManager.password.update');
+
+
+
+
+
+
+
+

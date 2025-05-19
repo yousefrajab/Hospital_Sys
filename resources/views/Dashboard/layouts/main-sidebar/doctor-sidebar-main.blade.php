@@ -17,9 +17,10 @@
                 <div class="user-avatar-wrapper">
                     <img alt="user-img" class="avatar avatar-lg rounded-circle user-avatar"
                         src="{{ Auth::guard('doctor')->user()->image ? asset('Dashboard/img/doctors/' . Auth::guard('doctor')->user()->image->filename) : asset('Dashboard/img/doctor_default.png') }}">
-                    <span class="avatar-status-indicator {{ Auth::guard('doctor')->user()->status ? 'online' : 'offline' }}"></span>
+                    <span
+                        class="avatar-status-indicator {{ Auth::guard('doctor')->user()->status ? 'online' : 'offline' }}"></span>
 
-                        {{-- <span class="avatar-status profile-status bg-green"></span> --}}
+                    {{-- <span class="avatar-status profile-status bg-green"></span> --}}
 
                 </div>
                 <div class="user-info">
@@ -37,6 +38,40 @@
                     <i class="side-menu__icon fas fa-tachometer-alt"></i> {{-- أيقونة لوحة التحكم --}}
                     <span class="side-menu__label">{{ trans('main-sidebar_trans.index') }}</span>
                 </a>
+            </li>
+
+
+
+            <li class="side-item side-item-category">إدارة الوصفات الطبية</li>
+            <li
+                class="slide {{ request()->routeIs(['doctor.prescriptions.*', 'doctor.patients.search_for_prescription']) ? 'open active' : '' }}">
+                <a class="side-menu__item" data-toggle="slide" href="#">
+                    <i class="side-menu__icon fas fa-file-medical-alt"></i> {{-- أيقونة للوصفات --}}
+                    <span class="side-menu__label">الوصفات الطبية</span>
+                    <i class="angle fe fe-chevron-left"></i>
+                </a>
+                <ul class="slide-menu">
+                    {{-- الرابط لإنشاء وصفة جديدة (سيوجه لصفحة البحث عن مريض أولاً) --}}
+                    <li class="{{ request()->routeIs('doctor.patients.search_for_prescription') ? 'current' : '' }}">
+                        <a class="slide-item" href="{{ route('doctor.patients.search_for_prescription') }}">
+                            <i class="fas fa-plus-circle fa-xs me-2"></i>إنشاء وصفة جديدة
+                        </a>
+                    </li>
+                    {{-- الرابط لقائمة الوصفات التي أنشأها الطبيب --}}
+                    <li class="{{ request()->routeIs('doctor.prescriptions.index') ? 'current' : '' }}">
+                        <a class="slide-item" href="{{ route('doctor.prescriptions.index') }}">
+                            <i class="fas fa-list-ul fa-xs me-2"></i>قائمة وصفاتي
+                        </a>
+                    </li>
+                    {{-- (اختياري) يمكنك إضافة روابط أخرى هنا لاحقًا --}}
+                    {{--
+        <li class="{{ request()->routeIs('doctor.prescriptions.pending_review') ? 'current' : '' }}">
+            <a class="slide-item" href="#">
+                <i class="fas fa-hourglass-half fa-xs me-2"></i>وصفات تحتاج مراجعة
+            </a>
+        </li>
+        --}}
+                </ul>
             </li>
 
             {{-- 2. الكشوفات --}}

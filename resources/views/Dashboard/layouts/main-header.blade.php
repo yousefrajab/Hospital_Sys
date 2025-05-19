@@ -296,6 +296,26 @@
                             } else {
                                 $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مريض افتراضية
                             }
+                        } elseif (Auth::guard('pharmacy_employee')->check()) {
+                            // افترض أن لديك guard وموديل للمرضى
+                            $user = Auth::guard('pharmacy_employee')->user();
+                            $userName = $user->name;
+                            $userEmail = $user->email;
+                            if ($user->image) {
+                                $imagePath = asset('Dashboard/img/pharmacyEmployees/' . $user->image->filename); // مسار صور المرضى
+                            } else {
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مريض افتراضية
+                            }
+                        } elseif (Auth::guard('pharmacy_manager')->check()) {
+                            // افترض أن لديك guard وموديل للمرضى
+                            $user = Auth::guard('pharmacy_manager')->user();
+                            $userName = $user->name;
+                            $userEmail = $user->email;
+                            if ($user->image) {
+                                $imagePath = asset('Dashboard/img/pharmacy_managers/' . $user->image->filename); // مسار صور المرضى
+                            } else {
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مريض افتراضية
+                            }
                         } elseif (Auth::guard('web')->check()) {
                             // للمستخدم العادي (إذا كان لديك)
                             $user = Auth::guard('web')->user();
@@ -308,6 +328,7 @@
                                 $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مستخدم افتراضية
                             }
                         }
+
                     @endphp
 
                     <a class="profile-user d-flex" href="#">
@@ -348,6 +369,12 @@
                             } elseif (Auth::guard('patient')->check()) {
                                 $profileShowRoute = route('profile.show'); // ستحتاج لإنشاء هذه الـ routes
                                 $profileEditRoute = route('profile.edit');
+                            } elseif (Auth::guard('pharmacy_employee')->check()) {
+                                $profileShowRoute = route('pharmacy_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                $profileEditRoute = route('pharmacy_employee.profile.edit');
+                            }elseif (Auth::guard('pharmacy_manager')->check()) {
+                                $profileShowRoute = route('pharmacy_manager.profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                $profileEditRoute = route('pharmacy_manager.profile.edit');
                             }
                             // يمكنك إضافة المزيد من الشروط لأنواع المستخدمين الأخرى
                         @endphp
@@ -379,6 +406,10 @@
                                 $logoutRoute = route('logout.laboratorie_employee');
                             } elseif (Auth::guard('patient')->check()) {
                                 $logoutRoute = route('logout.patient');
+                            } elseif (Auth::guard('pharmacy_employee')->check()) {
+                                $logoutRoute = route('logout.pharmacy_employee');
+                            }elseif (Auth::guard('pharmacy_manager')->check()) {
+                                $logoutRoute = route('logout.pharmacy_manager');
                             }
                         @endphp
 

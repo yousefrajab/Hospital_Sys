@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\Dashboard; // أو Namespace الخاص بـ Controller الطبيب
 
 use App\Models\Doctor;
+use App\Models\Patient;
 use Twilio\Rest\Client;
 use App\Models\Appointment;
 use App\Models\DoctorBreak;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\DoctorWorkingDay;
-use App\Mail\AppointmentCompleted;
 
 // --- استيرادات الإشعارات ---
-use Illuminate\Support\Facades\DB;
+use App\Mail\AppointmentCompleted;
 // *** إنشاء Mailable جديد أو استخدام نفس Mailable الإلغاء مع تعديل النص ***
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 // use App\Mail\AppointmentCancelled; // أو استخدام الموجود
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -254,7 +255,6 @@ class DoctorController extends Controller
                         // هذا لا يجب أن يحدث لأننا نتحقق من allowedActiveDays، لكنه تحذير جيد
                         Log::warning("Attempted to update non-existent or inactive working day '{$day}' for Doctor ID {$doctor->id}. This shouldn't happen.");
                     }
-
                 }
             }
 
@@ -273,7 +273,7 @@ class DoctorController extends Controller
         }
     }
 
-   
+
 
 
     public function showSchedule()
@@ -532,5 +532,38 @@ class DoctorController extends Controller
             Log::error("General Exception sending Twilio SMS for {$context} - Appt ID: {$appointmentId} - Error: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function searchPatientsForPrescription(Request $request)
+    {
+        $doctorId = Auth::guard('doctor')->id();
+        Log::info("Doctor ID {$doctorId} is searching for a patient to create a prescription.");
+
+        $query = Patient::with([
+            'image',
+            'diagnosedChronicDiseases',
+            'currentAdmission' => function ($q_admission) {
+                $q_admission->with(['bed.room.section']);
+            }
+        ]);
+
+        if ($request->filled('search_term')) {
+            $term = $request->search_term;
+            Log::info("Search term provided: {$term}");
+            $query->where(function ($q) use ($term) {
+                $q->whereTranslationLike('name', "%{$term}%")
+                    ->orWhere('national_id', 'like', "%{$term}%")
+                    ->orWhere('email', 'like', "%{$term}%")
+                    ->orWhere('Phone', 'like', "%{$term}%");
+            });
+        }
+
+        // ... (أي فلاتر صلاحيات إضافية) ...
+
+        $patients = $query->orderByTranslation('name', 'asc')
+            ->paginate(10)
+            ->appends($request->query());
+
+        return view('Dashboard.Doctors.Patients.search_for_prescription', compact('patients', 'request'));
     }
 } // نهاية الكلاس DoctorController

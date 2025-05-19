@@ -66,6 +66,17 @@ return [
             'provider' => 'patients',
         ],
 
+        'pharmacy_employee' => [
+            'driver' => 'session',
+            'provider' => 'pharmacy_employees',
+        ],
+
+
+        'pharmacy_manager' => [
+            'driver' => 'session',
+            'provider' => 'pharmacy_managers',
+        ],
+
 
         'api' => [
             'driver' => 'token',
@@ -122,10 +133,15 @@ return [
             'model' => App\Models\Patient::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'pharmacy_employees' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\PharmacyEmployee::class,
+        ],
+
+         'pharmacy_managers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\PharmacyManager::class,
+        ],
     ],
 
     'passwords' => [
@@ -164,6 +180,21 @@ return [
         ],
         'laboratorie_employees' => [
             'provider' => 'laboratorie_employees',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+
+        'pharmacy_employees' => [
+            'provider' => 'pharmacy_employees',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'pharmacy_managers' => [
+            'provider' => 'pharmacy_managers',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

@@ -23,7 +23,7 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
     // مصفوفة $fillable كما هي لديك (مع التأكد من تضمين name و Address إذا كنت تستخدم create أو update معهم)
     public $fillable = [
         'national_id',
-        'name', // مهم إذا كنت تستخدم $patient->name = ... ثم save() أو create/update مع الاسم
+        // 'name', // مهم إذا كنت تستخدم $patient->name = ... ثم save() أو create/update مع الاسم
         'email',
         'password',
         'Date_Birth',
@@ -195,64 +195,7 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
             Log::error("Patient Model (generateQrCodeSvg): Error generating QR code for Patient ID {$this->id}. Error: " . $e->getMessage(), ['trace' => substr($e->getTraceAsString(), 0, 250)]);
             return '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 100 30" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#fee2e2"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#ef4444">خطأ في إنشاء QR</text></svg>';
         }
-    } // public function generateQrCode(int $size = 220, int $margin = 2, string $errorCorrection = 'M'): string
-    // {
-    //     if (!$this->id) {
-    //         Log::warning("Patient Model (generateQrCodeSvg): Attempted for patient without ID.");
-    //         return '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 120 30"><text x="50%" y="50%" fill="red" font-family="sans-serif" font-size="9">خطأ: لا يوجد ID</text></svg>';
-    //     }
-
-    //     try {
-    //         $infoLines = [];
-    //         $locale = app()->getLocale(); // للحصول على الاسم المترجم
-
-    //         // المعلومات الأساسية
-    //         // للوصول للاسم المترجم بشكل آمن
-    //         $patientName = $this->getTranslation('name', $locale, false) ?: $this->getAttributes()['name'] ?? 'غير متوفر';
-    //         $infoLines[] = "الاسم: " . $patientName;
-    //         $infoLines[] = "الهوية: " . ($this->national_id ?? 'غير متوفر');
-    //         $infoLines[] = "ت.الميلاد: " . ($this->Date_Birth ? \Carbon\Carbon::parse($this->Date_Birth)->format('Y-m-d') : 'غير متوفر');
-    //         $infoLines[] = "العمر: " . ($this->Date_Birth ? \Carbon\Carbon::parse($this->Date_Birth)->age . ' سنة' : '-');
-    //         $infoLines[] = "فصيلة الدم: " . ($this->Blood_Group ?: 'غير محددة');
-
-    //         // عرض الأمراض المشخصة من العلاقة diagnosedChronicDiseases
-    //         $chronicDiseasesFromRelation = [];
-    //         // ** مهم: تأكد أن العلاقة محملة قبل الوصول إليها **
-    //         // الـ Controller هو المسؤول عن تحميلها باستخدام with() أو load()
-    //         if ($this->relationLoaded('diagnosedChronicDiseases') && $this->diagnosedChronicDiseases->isNotEmpty()) {
-    //             foreach ($this->diagnosedChronicDiseases->take(2) as $disease) { // $disease هو كائن Disease
-    //                 $chronicDiseasesFromRelation[] = $disease->name; // يفترض أن Disease->name هو الاسم المترجم أو العادي
-    //             }
-    //         }
-
-    //         if (!empty($chronicDiseasesFromRelation)) {
-    //             $infoLines[] = "أمراض مشخصة: " . implode('، ', $chronicDiseasesFromRelation);
-    //         }
-    //         // يمكنك إضافة الحقل النصي كـ fallback إذا أردت:
-    //         // elseif (!empty($this->chronic_diseases)) {
-    //         //     $infoLines[] = "أمراض مزمنة (نص): " . Str::limit($this->chronic_diseases, 40);
-    //         // }
-
-    //         // إضافة رابط الملف الشخصي الكامل
-    //         try {
-    //             $profileUrl = route('admin.Patients.show', $this->id); // الرابط لا يزال هنا
-    //             $infoLines[] = "ملف إلكتروني (إنترنت): " . $profileUrl;
-    //         } catch (\Exception $routeException) {
-    //             Log::warning("Could not generate admin patient profile URL for QR (Patient ID: {$this->id}): " . $routeException->getMessage());
-    //         }
-
-    //         $qrText = implode("\n", $infoLines);
-    //         Log::info("Patient Model (generateQrCodeSvg): Generating QR for Patient ID {$this->id}. Content: [{$qrText}]");
-
-    //         return QrCode::format('svg')
-    //             ->size($size)->style('round')->eye('circle')->margin($margin)
-    //             ->errorCorrection($errorCorrection)->encoding('UTF-8')
-    //             ->generate($qrText);
-    //     } catch (\Exception $e) {
-    //         Log::error("Patient Model (generateQrCodeSvg): Error generating QR code for Patient ID {$this->id}. Error: " . $e->getMessage(), ['trace' => substr($e->getTraceAsString(), 0, 250)]);
-    //         return '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 100 30"><text x="50%" y="50%" fill="red" font-family="sans-serif" font-size="9">خطأ بإنشاء QR</text></svg>';
-    //     }
-    // }
+    }
 
     public function generateQrCodeSvg(int $size = 220, int $margin = 2, string $errorCorrection = 'M'): string
     {
@@ -287,14 +230,6 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
             elseif (!empty($this->chronic_diseases)) { // إذا لم تكن هناك أمراض منظمة، اعرض النص
                 $infoLines[] = "أمراض مزمنة (نص): " . Str::limit($this->chronic_diseases, 40);
             }
-
-
-            // ** إذا كنت لا تزال تريد عرض الحساسيات من حقل نصي منفصل **
-            // if (!empty($this->allergies)) {
-            //     $infoLines[] = "حساسيات: " . Str::limit($this->allergies, 40);
-            // }
-
-            // إضافة رابط الملف الشخصي الكامل
             try {
                 $profileUrl = route('admin.Patients.show', $this->id);
                 $infoLines[] = "ملف إلكتروني (إنترنت): خاص بالأدمن" . $profileUrl;
@@ -355,5 +290,18 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
                 // Appointment::STATUS_NO_SHOW (إذا أضفتها)
             ])
             ->orderBy('appointment', 'desc');    // ** استخدام 'appointment' **
+    }
+
+
+
+    public function prescription()
+    {
+        return $this->belongsTo(Prescription::class);
+    }
+
+
+    public function PrescriptionItem()
+    {
+        return $this->belongsTo(PrescriptionItem::class);
     }
 }

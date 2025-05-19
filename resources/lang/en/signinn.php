@@ -32,6 +32,10 @@ return array(
     'Don\'t have an account?' => 'Don\'t have an account?',
     'Create new account' => 'Create new account',
 
+    'pharmacy Staff Login' => 'pharmacy Staff Login',
+    'pharmacy_employee'=>'pharmacy_employee',
+
+
     // 'Radiological Officer'=>'Radiological Officer',
     // 'Radiological Officer'=>'Radiological Officer',
     // 'Radiological Officer'=>'Radiological Officer',

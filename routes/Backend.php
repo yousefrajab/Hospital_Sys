@@ -14,6 +14,7 @@ use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\AmbulanceController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\InsuranceController;
+use App\Http\Controllers\Dashboard\MedicationController;
 use App\Http\Controllers\Dashboard\RayEmployeeController;
 use App\Http\Controllers\Dashboard\AdminProfileController;
 use App\Http\Controllers\Dashboard\SingleServiceController;
@@ -21,10 +22,11 @@ use App\Http\Controllers\Dashboard\Admin\UserRoleController;
 use App\Http\Controllers\Dashboard\PaymentAccountController;
 use App\Http\Controllers\Dashboard\ReceiptAccountController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Http\Controllers\Dashboard\PharmacyManagercontroller;
 use App\Http\Controllers\Dashboard\PatientAdmissionController;
+use App\Http\Controllers\Dashboard\PharmacyEmployeeController;
 use App\Http\Controllers\Dashboard\LaboratorieEmployeeController;
 use App\Http\Controllers\Dashboard\appointments\AppointmentController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -186,6 +188,16 @@ Route::group(
 
 
             Route::resource('diseases', DiseaseController::class)->names('diseases');
+
+            Route::resource('pharmacy_employee', PharmacyEmployeeController::class);
+            Route::get('/pharmacy_employee/{id}/edit', [PharmacyEmployeeController::class, 'edit'])->name('pharmacy_employee.edit');
+
+            Route::resource('medications', MedicationController::class);
+
+
+             Route::resource('pharmacy_manager', PharmacyManagercontroller::class);
+            Route::get('/pharmacy_manager/{id}/edit', [PharmacyManagerController::class, 'edit'])->name('pharmacy_manager.edit');
+
         });
         require __DIR__ . '/auth.php';
     }

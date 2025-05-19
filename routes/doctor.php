@@ -9,6 +9,7 @@ use App\Http\Middleware\CheckDoctorStatus;
 use App\Http\Controllers\doctor\InvoiceController;
 use App\Http\Controllers\Dashboard\DoctorController;
 use App\Http\Controllers\Dashboard_Doctor\RayController;
+use App\Http\Controllers\Dashboard\PrescriptionController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Dashboard\Doctors\ProfileController;
 use App\Http\Controllers\Dashboard_Doctor\DiagnosticController;
@@ -123,6 +124,11 @@ Route::group([
         Route::get('chat/patients', Main::class)->name('chat.patients');
 
         ############################# end Chat route ######################################
+
+        Route::resource('prescriptions', PrescriptionController::class);
+
+        Route::get('/patients/search-for-prescription', [App\Http\Controllers\Dashboard\DoctorController::class, 'searchPatientsForPrescription'])->name('patients.search_for_prescription');        // أو إذا أنشأت كنترولر خاص:
+        // Route::get('/patients/search-for-prescription', [App\Http\Controllers\Dashboard\DoctorPatientSearchController::class, 'searchPatientsForPrescription'])->name('patients.search_for_prescription');
 
         Route::get('/404', function () {
             return view('Dashboard.404');
