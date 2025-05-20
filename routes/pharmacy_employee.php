@@ -9,7 +9,9 @@ use App\Http\Controllers\Dashboard_Doctor\LaboratorieController;
 use App\Http\Controllers\Dashboard_Ray_Employee\InvoiceController;
 use App\Http\Controllers\Dashboard_Doctor\PatientDetailsController;
 use App\Http\Controllers\Dashboard\RayEmployee\ProfileRayController;
+use App\Http\Controllers\Dashboard\PharmacyManager\PharmacyStockController;
 use App\Http\Controllers\Dashboard\PharmacyEmployee\ProfilePharmacyController;
+use App\Http\Controllers\Dashboard\PharmacyEmployee\PharmacyEmployeePrescriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +46,21 @@ Route::group(
             Route::get('/profile', [ProfilePharmacyController::class, 'show'])->name('profile.show'); // <--- تغيير اسم الدالة إذا أردت
             Route::get('/profile/edit', [ProfilePharmacyController::class, 'edit'])->name('profile.edit'); // للتعديل
             Route::put('/profile', [ProfilePharmacyController::class, 'update'])->name('profile.update'); // لحفظ التعديل
+
+
+
+
+            Route::get('/prescriptions', [PharmacyEmployeePrescriptionController::class, 'index'])->name('prescriptions.index');
+            Route::get('/prescriptions/{prescription}/dispense', [App\Http\Controllers\Dashboard\PharmacyEmployee\PharmacyEmployeePrescriptionController::class, 'showDispenseForm'])->name('prescriptions.dispense.form');
+            Route::post('/prescriptions/{prescription}/dispense', [App\Http\Controllers\Dashboard\PharmacyEmployee\PharmacyEmployeePrescriptionController::class, 'processDispense'])->name('prescriptions.dispense.process');
+            Route::get('/prescriptions/dispensed', [App\Http\Controllers\Dashboard\PharmacyEmployee\PharmacyEmployeePrescriptionController::class, 'dispensedPrescriptions'])->name('prescriptions.dispensed'); // *** جديد: الوصفات المصروفة ***
+            Route::get('/prescriptions/on-hold', [App\Http\Controllers\Dashboard\PharmacyEmployee\PharmacyEmployeePrescriptionController::class, 'onHoldPrescriptions'])->name('prescriptions.on_hold');       // *** جديد: وصفات قيد الانتظار ***
+            //     // مسارات البحث عن الأدوية (يمكن أن تشير إلى MedicationController مع صلاحيات محدودة)
+            Route::get('/medications/search', [App\Http\Controllers\Dashboard\MedicationController::class, 'searchIndexForPharmacy'])->name('medications.search');
+            Route::get('/medications/{medication}/stocks', [PharmacyStockController::class, 'index'])->name('medications.stocks.index');
+
         });
+
 
 
 

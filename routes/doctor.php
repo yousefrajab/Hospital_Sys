@@ -129,7 +129,7 @@ Route::group([
 
         Route::get('/patients/search-for-prescription', [App\Http\Controllers\Dashboard\DoctorController::class, 'searchPatientsForPrescription'])->name('patients.search_for_prescription');        // أو إذا أنشأت كنترولر خاص:
         // Route::get('/patients/search-for-prescription', [App\Http\Controllers\Dashboard\DoctorPatientSearchController::class, 'searchPatientsForPrescription'])->name('patients.search_for_prescription');
-
+        Route::get('/patient-details/{id}', [PatientDetailsController::class, 'index'])->name('patient.details');
         Route::get('/404', function () {
             return view('Dashboard.404');
         })->name('404');

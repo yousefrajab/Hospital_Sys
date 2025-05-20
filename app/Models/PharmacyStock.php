@@ -97,4 +97,7 @@ class PharmacyStock extends Model
     // {
     //     return $query->whereDate('expiry_date', '>', now());
     // }
+
+
+    
 }

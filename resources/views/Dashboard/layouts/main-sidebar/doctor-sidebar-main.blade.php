@@ -18,17 +18,12 @@
                     <img alt="user-img" class="avatar avatar-lg rounded-circle user-avatar"
                         src="{{ Auth::guard('doctor')->user()->image ? asset('Dashboard/img/doctors/' . Auth::guard('doctor')->user()->image->filename) : asset('Dashboard/img/doctor_default.png') }}">
                     <span
-                        class="avatar-status-indicator {{ Auth::guard('doctor')->user()->status ? 'online' : 'offline' }}"></span>
-
-                    {{-- <span class="avatar-status profile-status bg-green"></span> --}}
-
-                </div>
-                <div class="user-info">
+                        class="avatar-status-indicator {{ Auth::guard('doctor')->user()->status ? 'online' : 'offline' }}"></span><br>
                     <h6 class="font-weight-semibold user-name mb-1">{{ Auth::guard('doctor')->user()->name }}</h6>
-                    <span class="text-muted user-email d-block">{{ Auth::guard('doctor')->user()->email }}</span>
+                    <span class="text-muted user-email d-block">{{ Auth::guard('doctor')->user()->email }}</span><br>
                 </div>
+
             </a>
-            {{-- زر تسجيل الخروج يمكن وضعه هنا أو في الأسفل --}}
         </div>
 
         <ul class="side-menu">

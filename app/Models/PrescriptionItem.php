@@ -38,12 +38,22 @@ class PrescriptionItem extends Model
     {
         return [
             self::STATUS_NEW => 'جديدة',
-            self::STATUS_APPROVED => 'معتمدة (جاهزة للصرف)',
-            self::STATUS_DISPENSED => 'تم صرفها بالكامل',
+            self::STATUS_PENDING_REVIEW => 'قيد المراجعة',
+            self::STATUS_APPROVED => 'موافقة',
+            self::STATUS_DISPENSED => 'تم صرفها',
             self::STATUS_PARTIALLY_DISPENSED => 'تم صرفها جزئيًا',
-            self::STATUS_ON_HOLD => 'قيد الانتظار',
-            self::STATUS_CANCELLED_BY_DOCTOR => 'ملغاة (بواسطة الطبيب)',
-            // أضف الحالات الأخرى إذا أردت فلترتها
+            self::STATUS_ON_HOLD => 'معلقة',
+            self::STATUS_CANCELLED_BY_DOCTOR => 'ملغاة من قبل الطبيب',
+            self::STATUS_CANCELLED_BY_PHARMACIST => 'ملغاة من قبل الصيدلي',
+            self::STATUS_CANCELLED_BY_PATIENT => 'ملغاة من قبل المريض',
+            self::STATUS_EXPIRED => 'منتهية الصلاحية',
         ];
     }
+
+    // public function dispensedEntries() // <-- هذا هو اسم العلاقة
+    // {
+    //     // افترض أن لديك موديل DispensedItem وجدول dispensed_items
+    //     // وأن جدول dispensed_items يحتوي على prescription_item_id
+    //     return $this->hasMany(DispensedItem::class, 'prescription_item_id');
+    // }
 }

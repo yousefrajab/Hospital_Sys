@@ -4,8 +4,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboard\MedicationController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use App\Http\Controllers\Dashboard_Doctor\DiagnosticController;
 // use App\Http\Controllers\Dashboard\Patients\ProfileRayController;
+use App\Http\Controllers\Dashboard\PharmacyManagercontroller;
+use App\Http\Controllers\Dashboard_Doctor\DiagnosticController;
 use App\Http\Controllers\Dashboard_Doctor\LaboratorieController;
 use App\Http\Controllers\Dashboard_Ray_Employee\InvoiceController;
 use App\Http\Controllers\Dashboard_Doctor\PatientDetailsController;
@@ -35,9 +36,8 @@ Route::group(
 
         //################################ dashboard PharmacyManager ########################################
 
-        Route::get('/dashboard/pharmacy_manager', function () {
-            return view('Dashboard.dashboard_PharmacyManager.dashboard');
-        })->middleware(['auth:pharmacy_manager'])->name('dashboard.pharmacy_manager');
+        Route::get('/dashboard/pharmacy_manager',[PharmacyManagercontroller::class, 'indexx'])->middleware(['auth:pharmacy_manager'])->name('dashboard.pharmacy_manager');
+
         //################################ end dashboard ray_employee #####################################
 
         Route::middleware(['auth:pharmacy_manager'])->prefix('PharmacyManager')->name('pharmacy_manager.')->group(function () {

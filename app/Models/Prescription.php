@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Prescription extends Model
 {
@@ -108,13 +109,61 @@ class Prescription extends Model
     /**
      * (اختياري) يمكن إضافة دالة لإنشاء رقم وصفي فريد للوصفة تلقائيًا.
      */
+    // protected static function booted()
+    // {
+    //     static::creating(function (Prescription $prescription) {
+    //         if (empty($prescription->prescription_number)) {
+    //             // مثال بسيط: PRSC-YYYYMMDD-XXXX (رقم عشوائي)
+    //             $prescription->prescription_number = 'PRSC-' . now()->format('Ymd') . '-' . strtoupper(substr(md5(uniqid(rand(), true)), 0, 6));
+    //         }
+    //     });
+    // }
+    public function dispensedByPharmacyEmployee()
+    {
+        // افترض أن اسم موديل الموظف هو Employee
+        // وأن المفتاح الأجنبي هو dispensed_by_pharmacy_employee_id
+        // وأن المفتاح المحلي في جدول employees هو id (الافتراضي)
+        return $this->belongsTo(PharmacyEmployee::class, 'dispensed_by_pharmacy_employee_id');
+    }
+
     protected static function booted()
     {
-        static::creating(function (Prescription $prescription) {
+        static::creating(function ($prescription) {
             if (empty($prescription->prescription_number)) {
-                // مثال بسيط: PRSC-YYYYMMDD-XXXX (رقم عشوائي)
-                $prescription->prescription_number = 'PRSC-' . now()->format('Ymd') . '-' . strtoupper(substr(md5(uniqid(rand(), true)), 0, 6));
+                $datePart = now()->format('Ymd');
+                $uniquePart = strtoupper(Str::random(6));
+                $baseNumber = 'PRSC-' . $datePart . '-' . $uniquePart;
+                $count = 1;
+                $prescription->prescription_number = $baseNumber;
+                // حلقة للتحقق من التفرد (نادر جدًا أن تحتاجها مع random(6) + التاريخ)
+                while (static::where('prescription_number', $prescription->prescription_number)->exists()) {
+                    $uniquePart = strtoupper(Str::random(6));
+                    $prescription->prescription_number = 'PRSC-' . $datePart . '-' . $uniquePart . '-' . $count;
+                    $count++;
+                }
             }
         });
+    }
+
+    /**
+     * إرجاع مصفوفة بحالات الوصفة كنص مقروء للاستخدام في الفلاتر أو العرض.
+     *
+     * @return array
+     */
+    public static function getStatusesForFilter(): array
+    {
+        return [
+            self::STATUS_NEW => 'جديدة', // تم إنشاؤها بواسطة الطبيب
+            self::STATUS_APPROVED => 'معتمدة', // جاهزة للصرف من الصيدلية
+            self::STATUS_PENDING_REVIEW => 'قيد المراجعة', // إذا كان هناك خطوة مراجعة
+            self::STATUS_DISPENSED => 'تم صرفها بالكامل',
+            self::STATUS_PARTIALLY_DISPENSED => 'مصروفة جزئياً',
+            self::STATUS_ON_HOLD => 'قيد الانتظار', // معلقة لسبب ما في الصيدلية
+            self::STATUS_CANCELLED_BY_DOCTOR => 'ملغاة (بواسطة الطبيب)',
+            self::STATUS_CANCELLED_BY_PHARMACIST => 'ملغاة (بواسطة الصيدلي)',
+            self::STATUS_CANCELLED_BY_PATIENT => 'ملغاة (بواسطة المريض)', // إذا كان المريض يمكنه الإلغاء
+            self::STATUS_EXPIRED => 'منتهية الصلاحية', // إذا كان للوصفات تاريخ انتهاء
+            // يمكنك إضافة أو إزالة الحالات حسب نظامك
+        ];
     }
 }

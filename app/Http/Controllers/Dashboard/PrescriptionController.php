@@ -95,12 +95,8 @@ class PrescriptionController extends Controller
         if ($patientId) {
             $patient = Patient::with([
                 'image',
-                'diagnosedChronicDiseases.disease', // .disease لجلب تفاصيل المرض من جدول diseases
-                // إذا كانت diagnosedChronicDiseases هي belongsToMany(Disease::class, ...)
-                // فإن $diagnosedDisease سيكون كائن Disease نفسه.
-                // إذا كانت hasMany(PatientChronicDisease::class) ستحتاج .disease
-                // إذا كان لديك حقل 'initial_allergies_text' في موديل Patient وهو حقل عادي
-                // لا تحتاج لتحميله بشكل خاص هنا، سيتم جلبه مع كائن Patient
+                'diagnosedChronicDiseases', // .disease لجلب تفاصيل المرض من جدول diseases
+
             ])
                 ->find($patientId);
         }
@@ -220,7 +216,7 @@ class PrescriptionController extends Controller
 
     public function show(Prescription $prescription)
     {
-        $prescription->load(['patient.image', 'doctor.image', 'items.medication']);
+        $prescription->load(['patient.image', 'doctor.image', 'items.medication','dispensedByPharmacyEmployee']);
         Log::info("PrescriptionController@show: Displaying Prescription ID: {$prescription->id}");
         // تأكد من أن مسار الـ view هذا صحيح
         return view('Dashboard.Doctors.Prescriptions.show', compact('prescription'));

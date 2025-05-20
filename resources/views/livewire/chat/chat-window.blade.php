@@ -42,9 +42,9 @@
                                                 <div class="me-3"> {{-- استخدام me-3 لـ margin --}}
                                                     {{-- التأكد من مسار الصورة الصحيح للمرضى --}}
                                                     @if ($user->image)
-                                                        <img src="{{ asset('Dashboard/img/doctors/' . $user->image->filename) }}"
+                                                        <img src="{{ asset('Dashboard/img/patients/' . $user->image->filename) }}"
                                                             height="50px" width="50px"
-                                                            class="rounded-circle border shadow-sm" alt="صورة الطبيب">
+                                                            class="rounded-circle border shadow-sm" alt="صورة المريض">
                                                     @else
                                                         <img src="{{ asset('Dashboard/img/faces/doctor_default.png') }}"
                                                             height="50px" width="50px"
