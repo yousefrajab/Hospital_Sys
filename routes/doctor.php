@@ -128,11 +128,16 @@ Route::group([
         Route::resource('prescriptions', PrescriptionController::class);
 
         Route::get('/patients/search-for-prescription', [App\Http\Controllers\Dashboard\DoctorController::class, 'searchPatientsForPrescription'])->name('patients.search_for_prescription');        // أو إذا أنشأت كنترولر خاص:
-        // Route::get('/patients/search-for-prescription', [App\Http\Controllers\Dashboard\DoctorPatientSearchController::class, 'searchPatientsForPrescription'])->name('patients.search_for_prescription');
         Route::get('/patient-details/{id}', [PatientDetailsController::class, 'index'])->name('patient.details');
+
         Route::get('/404', function () {
             return view('Dashboard.404');
         })->name('404');
     });
+    Route::get('prescriptions/approval-requests', [PrescriptionController::class, 'approvalRequests'])->name('doctor.prescriptions.approvalRequests');
+    Route::post('prescriptions/{prescription}/approve-refill', [PrescriptionController::class, 'approveRefill'])->name('doctor.prescriptions.approveRefill');
+    Route::post('prescriptions/{prescription}/deny-refill', [PrescriptionController::class, 'denyRefill'])->name('doctor.prescriptions.denyRefill');
+    Route::get('prescriptions/adherence-dashboard', [PrescriptionController::class, 'adherenceDashboard'])->name('doctor.prescriptions.adherenceDashboard');
+
     require __DIR__ . '/auth.php';
 });

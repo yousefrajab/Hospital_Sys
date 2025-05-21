@@ -6,23 +6,12 @@ use Illuminate\Support\Facades\Route;
 
 
 use App\Http\Livewire\Chat\Createchat;
+use App\Http\Controllers\Patient\PatientPharmacyController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Dashboard_Patient\PatientController;
 use App\Http\Controllers\Dashboard\Patient\ProfilePatController;
 use App\Http\Controllers\Dashboard_Ray_Employee\InvoiceController;
 use App\Http\Controllers\Dashboard\PatientSideAppointmentController;
-
-/*
- |--------------------------------------------------------------------------
- | doctor Routes
- |--------------------------------------------------------------------------
- |
- | Here is where you can register web routes for your application. These
- | routes are loaded by the RouteServiceProvider within a group which
- | contains the "web" middleware group. Now create something great!
- |
- */
-
 
 Route::group(
     [
@@ -76,6 +65,12 @@ Route::group(
 
             Route::view('dashboard', 'livewire.dashboard.patient-appointment-form')->name('patient-appointment-form');
         });
+        Route::get('patient/pharmacy/', [PatientPharmacyController::class, 'index'])->name('patient.pharmacy.index'); // هذا هو الرابط المطلوب
+        Route::get('/{prescription}', [PatientPharmacyController::class, 'show'])->name('patient.pharmacy.show'); // لاحقًا لتفاصيل الوصفة
+        Route::post('/{prescription}/request-refill', [PatientPharmacyController::class, 'requestRefill'])->name('patient.pharmacy.request-refill');
+        Route::get('/refill-requests/pending', [PatientPharmacyController::class, 'pendingRefillRequests'])
+            ->name('patient.pharmacy.refill-requests.pending');
+
 
         // Route لعرض فورم حجز الموعد
         Route::get('/patient/appointments/create-form', [PatientSideAppointmentController::class, 'create'])
@@ -106,6 +101,11 @@ Route::group(
             return redirect()->route('dashboard.patient'); // صفحة المريض الرئيسية
         })->name('patient.appointment.success')->middleware('auth:patient');
         Route::get('/ajax/get-doctor-available-dates', [PatientSideAppointmentController::class, 'getDoctorAvailableDates'])->name('ajax.get_doctor_available_dates');
+
+
+
+
+
 
         require __DIR__ . '/auth.php';
     }

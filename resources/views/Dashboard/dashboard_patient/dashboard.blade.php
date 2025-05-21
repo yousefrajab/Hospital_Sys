@@ -218,9 +218,9 @@
                         @endif
                     @else
                         <p class="text-center text-muted">لا توجد لديك مواعيد قادمة حالياً.</p>
-                        <div class="text-center mt-2">
+                        {{-- <div class="text-center mt-2">
                              <a href="{{route('patient.appointments.create')}}" class="btn btn-success"><i class="fas fa-calendar-plus"></i> حجز موعد جديد</a>
-                        </div>
+                        </div> --}}
                     @endif
                 </div>
             </div>

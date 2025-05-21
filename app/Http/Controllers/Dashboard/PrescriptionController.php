@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Dashboard; // أو المسار المناسب
 
-use App\Models\Patient;
 use App\Models\Doctor;
+use App\Models\Patient;
 use App\Models\Medication;
 use App\Models\Prescription;
+use Illuminate\Support\Carbon;
 use App\Models\PrescriptionItem;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request; // سنستبدله بـ FormRequest لاحقًا
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 // سننشئ هذا FormRequest
+use Illuminate\Http\Request; // سنستبدله بـ FormRequest لاحقًا
 use App\Http\Requests\Dashboard\Prescription\StorePrescriptionRequest;
 
 class PrescriptionController extends Controller
@@ -216,7 +217,7 @@ class PrescriptionController extends Controller
 
     public function show(Prescription $prescription)
     {
-        $prescription->load(['patient.image', 'doctor.image', 'items.medication','dispensedByPharmacyEmployee']);
+        $prescription->load(['patient.image', 'doctor.image', 'items.medication', 'dispensedByPharmacyEmployee']);
         Log::info("PrescriptionController@show: Displaying Prescription ID: {$prescription->id}");
         // تأكد من أن مسار الـ view هذا صحيح
         return view('Dashboard.Doctors.Prescriptions.show', compact('prescription'));
@@ -367,5 +368,206 @@ class PrescriptionController extends Controller
             return redirect()->route('doctor.prescriptions.index')
                 ->with('error', 'حدث خطأ أثناء إلغاء الوصفة.');
         }
+    }
+    public function adherenceDashboard(Request $request)
+    {
+        $doctorId = Auth::guard('doctor')->id();
+        if (!$doctorId) {
+            abort(403, 'غير مصرح لك بالوصول.');
+        }
+        Log::info("DoctorID {$doctorId} accessing adherence dashboard with filter: " . $request->input('filter_type'));
+
+        // --- 1. بيانات البطاقات الإحصائية العلوية (تبقى كما هي تقريباً) ---
+        $needsDecisionCount = Prescription::where('doctor_id', $doctorId)
+            ->where('status', Prescription::STATUS_REFILL_REQUESTED) // مثال مبدئي
+            // ... (أضف شروط أكثر دقة هنا إذا كان هناك تصعيد للطبيب)
+            ->count();
+
+        $nonCompliantGracePeriod = config('your_config_file.non_compliant_grace_days', 7); // مثال لقراءة من config
+        $nonCompliantPatientsCount = Prescription::where('doctor_id', $doctorId)
+            ->where('is_chronic_prescription', true)
+            ->whereNotNull('next_refill_due_date')
+            ->where('next_refill_due_date', '<', Carbon::today()->subDays($nonCompliantGracePeriod))
+            ->whereNotIn('status', [
+                Prescription::STATUS_REFILL_REQUESTED,
+                Prescription::STATUS_DISPENSED, // قد تحتاج لإعادة النظر في هذا الشرط
+                Prescription::STATUS_CANCELLED_BY_DOCTOR,
+                Prescription::STATUS_EXPIRED
+            ])
+            ->distinct('patient_id')
+            ->count();
+
+        $upcomingRefillWindow = config('your_config_file.upcoming_refill_window_days', 7); // مثال
+        $upcomingRefillsCount = Prescription::where('doctor_id', $doctorId)
+            ->where('is_chronic_prescription', true)
+            ->whereNotNull('next_refill_due_date')
+            ->whereBetween('next_refill_due_date', [Carbon::today(), Carbon::today()->addDays($upcomingRefillWindow)])
+            ->whereNotIn('status', [Prescription::STATUS_REFILL_REQUESTED, Prescription::STATUS_DISPENSED])
+            ->count();
+
+        // --- 2. بيانات قسم "متابعة التزام المرضى (الوصفات المزمنة)" ---
+        $chronicPrescriptionsQuery = Prescription::where('doctor_id', $doctorId)
+            ->where('is_chronic_prescription', true)
+            ->whereIn('status', [ /* ... الحالات النشطة ... */
+                Prescription::STATUS_NEW,
+                Prescription::STATUS_APPROVED,
+                Prescription::STATUS_PROCESSING,
+                Prescription::STATUS_READY_FOR_PICKUP,
+                Prescription::STATUS_DISPENSED,
+                Prescription::STATUS_PARTIALLY_DISPENSED,
+                Prescription::STATUS_REFILL_REQUESTED,
+                Prescription::STATUS_ON_HOLD
+            ])
+            ->with([
+                'patient' => function ($query) {
+                    $query->select('id')->with('image');
+                },
+                'items' => function ($query) {
+                    $query->select('prescription_id', 'refills_allowed', 'refills_done', 'medication_id')
+                        ->with('medication:id,name');
+                }
+            ])
+            ->withCount('items'); // لحساب items_count
+
+        // ***** تطبيق الفلترة بناءً على البارامتر القادم من البطاقات *****
+        $filter_type = $request->input('filter_type');
+        $pageTitleSuffix = ''; // لتغيير عنوان الصفحة الفرعي بناءً على الفلتر
+
+        if ($filter_type === 'needs_decision') {
+            // هذا الفلتر سيوجه لقسم آخر لاحقاً، لكن مبدئياً يمكن أن يفلتر الوصفات التي STATUS_REFILL_REQUESTED
+            $chronicPrescriptionsQuery->where('status', Prescription::STATUS_REFILL_REQUESTED);
+            // ... أضف شروطاً أكثر دقة للطلبات التي تحتاج قرار الطبيب ...
+            $pageTitleSuffix = ' - طلبات تحتاج قرارك';
+        } elseif ($filter_type === 'non_compliant') {
+            $chronicPrescriptionsQuery->whereNotNull('next_refill_due_date')
+                ->where('next_refill_due_date', '<', Carbon::today()->subDays($nonCompliantGracePeriod))
+                ->whereNotIn('status', [
+                    Prescription::STATUS_REFILL_REQUESTED,
+                    Prescription::STATUS_DISPENSED,
+                    Prescription::STATUS_CANCELLED_BY_DOCTOR,
+                    Prescription::STATUS_EXPIRED
+                ]);
+            $pageTitleSuffix = ' - مرضى بعدم التزام محتمل';
+        } elseif ($filter_type === 'upcoming_refills') {
+            $chronicPrescriptionsQuery->whereNotNull('next_refill_due_date')
+                ->whereBetween('next_refill_due_date', [Carbon::today(), Carbon::today()->addDays($upcomingRefillWindow)])
+                ->whereNotIn('status', [Prescription::STATUS_REFILL_REQUESTED, Prescription::STATUS_DISPENSED]);
+            $pageTitleSuffix = ' - وصفات بتجديد قريب';
+        }
+        // إذا لم يتم تحديد فلتر، يعرض الكل (مرتبة بالأولوية)
+        $chronicPrescriptionsQuery->orderByRaw("CASE
+         WHEN next_refill_due_date IS NOT NULL AND next_refill_due_date < CURDATE() - INTERVAL {$nonCompliantGracePeriod} DAY THEN 1 /* الأكثر تأخراً أولاً */
+         WHEN next_refill_due_date IS NOT NULL AND next_refill_due_date BETWEEN CURDATE() AND CURDATE() + INTERVAL {$upcomingRefillWindow} DAY THEN 2 /* القريبة ثانياً */
+         WHEN status = '" . Prescription::STATUS_REFILL_REQUESTED . "' THEN 3 /* طلبات التجديد ثالثاً */
+         ELSE 4
+         END, next_refill_due_date ASC, updated_at DESC");
+
+
+        $monitoredPrescriptions = $chronicPrescriptionsQuery->paginate(10, ['*'], 'monitored_page')->appends($request->except('monitored_page'));
+
+        $monitoredPrescriptions->getCollection()->transform(function ($prescription) use ($nonCompliantGracePeriod, $upcomingRefillWindow) {
+            $prescription->compliance_status_key = 'normal'; // normal, warning, danger, info
+            $prescription->compliance_status = 'متابعة عادية';
+            $prescription->compliance_badge_class = 'status-default';
+
+            if ($prescription->status === Prescription::STATUS_REFILL_REQUESTED) {
+                $prescription->compliance_status_key = 'info';
+                $prescription->compliance_status = 'طلب تجديد مُرسل';
+                $prescription->compliance_badge_class = 'status-refill_requested';
+            } elseif ($prescription->next_refill_due_date) {
+                $dueDate = Carbon::parse($prescription->next_refill_due_date);
+                $today = Carbon::today();
+
+                if ($dueDate->isPast() && $dueDate->diffInDays($today) > $nonCompliantGracePeriod) {
+                    if (!in_array($prescription->status, [Prescription::STATUS_DISPENSED, Prescription::STATUS_CANCELLED_BY_DOCTOR, Prescription::STATUS_EXPIRED])) {
+                        $prescription->compliance_status_key = 'danger';
+                        $prescription->compliance_status = 'متأخر عن التجديد';
+                        $prescription->compliance_badge_class = 'status-cancelled_by_doctor'; // Red
+                    }
+                } elseif ($dueDate->isBetween($today, $today->copy()->addDays($upcomingRefillWindow))) {
+                    if (!in_array($prescription->status, [Prescription::STATUS_DISPENSED])) {
+                        $prescription->compliance_status_key = 'warning';
+                        $prescription->compliance_status = 'تجديد قريب';
+                        $prescription->compliance_badge_class = 'status-pending_review'; // Yellow
+                    }
+                } elseif ($prescription->status === Prescription::STATUS_DISPENSED || $prescription->status === Prescription::STATUS_PARTIALLY_DISPENSED || $dueDate->isFuture()) {
+                    $lastDispensed = $prescription->dispensed_at ?? $prescription->updated_at;
+                    if ($lastDispensed && Carbon::parse($lastDispensed)->diffInDays($today) < (config('your_config_file.assumed_compliance_period_days', 45))) { //  فترة افتراضية للالتزام
+                        $prescription->compliance_status_key = 'success';
+                        $prescription->compliance_status = 'ملتزم (متابعة جيدة)';
+                        $prescription->compliance_badge_class = 'status-dispensed'; // Green
+                    }
+                }
+            }
+            return $prescription;
+        });
+
+
+        return view('Dashboard.Doctors.Prescriptions.adherence_dashboard', compact(
+            'needsDecisionCount',
+            'nonCompliantPatientsCount',
+            'upcomingRefillsCount',
+            'monitoredPrescriptions',
+            'request', // لتمرير الـ request للفلاتر إذا أضفتها
+            'filter_type', // لتمرير نوع الفلتر للـ view لعرض عنوان مناسب
+            'pageTitleSuffix'
+        ));
+    }
+    public function approvalRequests(Request $request)
+    {
+        $doctorId = Auth::guard('doctor')->id();
+        if (!$doctorId) { abort(403, 'غير مصرح لك بالوصول.'); }
+
+        Log::info("DoctorID {$doctorId} accessing prescription refill approval requests page.");
+
+        $query = Prescription::where('doctor_id', $doctorId)
+            ->where('status', Prescription::STATUS_REFILL_REQUESTED) // فقط الطلبات التي أرسلها المريض
+            // الشروط التي تجعل الطلب يحتاج موافقة الطبيب
+            // سنبسطها مبدئياً، ويمكن تعقيدها لاحقاً لتشمل حالات التصعيد من الصيدلي الخ
+            ->where(function ($q) {
+                // الحالة 1: الوصفة لديها بنود، وجميع البنود المسموح لها بإعادة الصرف قد استنفدت
+                $q->whereHas('items', function($itemQuery){
+                    $itemQuery->havingRaw('SUM(refills_allowed) > 0 AND SUM(refills_done) >= SUM(refills_allowed)');
+                }, '>=', 1) // يجب أن يكون هناك على الأقل بند واحد يطابق هذا الشرط
+                // الحالة 2: الوصفة ليس لديها أي بنود مسموح لها بإعادة الصرف (refills_allowed كلها صفر أو null)
+                // وهي وصفة مزمنة والمريض يطلب تجديداً
+                ->orWhere(function ($subQ){
+                     $subQ->where('is_chronic_prescription', true)
+                          ->whereDoesntHave('items', function($itemQuery){
+                              $itemQuery->where('refills_allowed', '>', 0);
+                          });
+                })
+                // الحالة 3: (مثال لمستقبل) إذا انتهت صلاحية الوصفة - تحتاج حقل prescription_expiry_date
+                // ->orWhere('prescription_expiry_date', '<', now())
+                // الحالة 4: (مثال لمستقبل) إذا تم تصعيدها من الصيدلية - تحتاج حقل escalation_reason
+                // ->orWhereNotNull('pharmacy_escalation_reason')
+                ;
+            })
+            ->with([
+                'patient' => function ($patientQuery) {
+                    $patientQuery->select('id', 'name', 'gender', 'Date_Birth')->with('image');
+                },
+                'items.medication' => function ($medQuery){ // تحميل الأدوية لتفاصيل سريعة
+                    $medQuery->select('id', 'name', 'strength', 'dosage_form');
+                }
+            ])
+            ->withCount('items')
+            ->orderBy('updated_at', 'desc'); // الطلبات الأحدث تعديلاً (وقت إرسال الطلب)
+
+        // يمكنك إضافة فلاتر هنا (بحث باسم المريض، إلخ)
+         if ($request->filled('search_patient_approval')) {
+             $searchTerm = $request->search_patient_approval;
+             $query->whereHas('patient', function($q) use ($searchTerm){
+                 $q->whereTranslationLike('name', "%{$searchTerm}%")
+                   ->orWhere('national_id', 'like', "%{$searchTerm}%");
+             });
+         }
+
+        $approvalRequests = $query->paginate(10)->appends($request->query());
+
+        return view('Dashboard.Doctors.Prescriptions.approval_requests', compact(
+            'approvalRequests',
+            'request'
+        ));
     }
 }

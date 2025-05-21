@@ -200,47 +200,6 @@ class MedicationController extends Controller
                 ->with('error', 'حدث خطأ أثناء حذف الدواء.');
         }
     }
-    // public function searchIndex(Request $request)
-    // {
-    //     Log::info("MedicationController@searchIndexForPharmacy: Fetching medications list for pharmacy employee search.");
-
-    //     $query = Medication::where('status', 1) // عرض الأدوية النشطة فقط لموظف الصيدلية عادةً
-    //         ->withSum(['stocks' => function ($query) {
-    //             $query->where('quantity_on_hand', '>', 0)
-    //                 ->whereDate('expiry_date', '>', now());
-    //         }], 'quantity_on_hand') // لحساب إجمالي الكمية المتاحة
-    //         ->with(['stocks' => function ($query) { // لتحميل تفاصيل الدفعات إذا أردت عرضها مباشرة
-    //             $query->where('quantity_on_hand', '>', 0)
-    //                 ->whereDate('expiry_date', '>', now())
-    //                 ->orderBy('expiry_date', 'asc');
-    //         }])
-    //         ->orderBy('name', 'asc');
-
-    //     if ($request->filled('search_medication_pharmacy')) { // استخدم اسم بارامتر مختلف للبحث لتجنب التعارض
-    //         $searchTerm = $request->search_medication_pharmacy;
-    //         $query->where(function ($q) use ($searchTerm) {
-    //             $q->where('name', 'like', "%{$searchTerm}%")
-    //                 ->orWhere('generic_name', 'like', "%{$searchTerm}%")
-    //                 ->orWhere('barcode', 'like', "%{$searchTerm}%");
-    //         });
-    //     }
-    //     if ($request->filled('category_filter_pharmacy')) {
-    //         $query->where('category', $request->category_filter_pharmacy);
-    //     }
-    //     // يمكنك إضافة فلاتر أخرى إذا لزم الأمر
-
-    //     $medications = $query->paginate(15)->appends($request->query());
-
-    //     $categories = Medication::getCommonCategories(); // لفلتر التصنيف
-
-    //     // تأكد أن مسار الـ view هذا صحيح أو قم بإنشائه
-    //     return view('Dashboard.pharmacy_employee.Medications.search', compact(
-    //         'medications',
-    //         'request',
-    //         'categories'
-    //     ));
-    // }
-
     public function searchIndexForPharmacy(Request $request) // تم تغيير اسم الدالة ليتطابق مع المسار
     {
         Log::info("MedicationController@searchIndexForPharmacy: Pharmacy employee searching for medications.");

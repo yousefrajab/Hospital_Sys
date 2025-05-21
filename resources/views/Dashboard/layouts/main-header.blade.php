@@ -190,9 +190,9 @@
                                 <span class="badge badge-pill badge-warning mr-auto my-auto float-left">Mark All
                                     Read</span>
                             </div>
-                            <p data-count="{{ App\Models\Notification::CountNotification(auth()->user()->id)->count() }}"
+                            <p data-count="{{ App\Models\Notification::CountNotification(auth()->user())->count() }}"
                                 class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 notif-count">
-                                {{ App\Models\Notification::CountNotification(auth()->user()->id)->count() }}</p>
+                                {{ App\Models\Notification::CountNotification(auth()->user())->count() }}</p>
                         </div>
                         <div class="main-notification-list Notification-scroll">
 
@@ -211,7 +211,7 @@
                                 </a>
                             </div>
 
-                            @foreach (App\Models\Notification::where('user_id', auth()->user()->id)->where('reader_status', 0)->get() as $notification)
+                            @foreach (App\Models\Notification::where('user_id', auth()->user())->where('reader_status', 0)->get() as $notification)
                                 <a class="d-flex p-3 border-bottom" href="#">
                                     <div class="notifyimg bg-pink">
                                         <i class="la la-file-alt text-white"></i>
@@ -455,7 +455,7 @@
     var new_message = notificationsWrapper.find('.new_message');
     new_message.hide();
 
-    Echo.private('create-invoice.{{ auth()->user()->id }}').listen('.create-invoice', (data) => {
+    Echo.private('create-invoice.{{ auth()->user() }}').listen('.create-invoice', (data) => {
         var newNotificationHtml = `
        <h4 class="notification-label mb-1">` + data.message + data.patient + `</h4>
        <div class="notification-subtext">` + data.created_at + `</div>`;

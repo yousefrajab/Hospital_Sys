@@ -103,6 +103,30 @@
                 </ul>
             </li>
 
+            {{-- قسم الصيدلية --}}
+            <li class="slide {{ request()->is('patient/pharmacy*') ? 'is-expanded active' : '' }}">
+                <a class="side-menu__item" data-toggle="slide" href="javascript:void(0);">
+                    <i class="side-menu__icon fas fa-pills"></i> {{-- أو fas fa-prescription-bottle-alt --}}
+                    <span class="side-menu__label">وصفاتي الطبية</span>
+                    <i class="angle fe fe-chevron-down"></i>
+                </a>
+                <ul class="slide-menu">
+                    <li class="{{ request()->routeIs('patient.pharmacy.index') ? 'active' : '' }}">
+                        <a class="slide-item" href="{{ route('patient.pharmacy.index') }}">
+                            <i class="fas fa-list-alt me-2"></i> عرض وصفاتي
+                        </a>
+                    </li>
+                    {{-- يمكنك إضافة "طلبات إعادة الصرف المعلقة" هنا لاحقًا إذا أردت --}}
+
+                    <li class="{{ request()->routeIs('patient.pharmacy.refill-requests.pending') ? 'active' : '' }}">
+                        <a class="slide-item" href="{{ route('patient.pharmacy.refill-requests.pending') }}">
+                            <i class="fas fa-hourglass-half me-2"></i> طلبات إعادة الصرف
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
             {{-- قسم عمليات المريض --}}
             <li
                 class="slide {{ request()->is('patient/invoices*') || request()->is('patient/laboratories*') || request()->is('patient/rays*') ? 'is-expanded active' : '' }}">
@@ -171,33 +195,33 @@
 
 
 @section('js')
-<!--Internal  Chart.bundle js -->
-<script src="{{ URL::asset('Dashboard/plugins/chart.js/Chart.bundle.min.js') }}"></script>
-<!-- Moment js -->
-<script src="{{ URL::asset('Dashboard/plugins/raphael/raphael.min.js') }}"></script>
-<!--Internal  Flot js-->
-{{-- <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.js') }}"></script> --}}
-{{-- <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.pie.js') }}"></script> --}}
-{{-- <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.resize.js') }}"></script> --}}
-{{-- <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.categories.js') }}"></script> --}}
-{{-- <script src="{{ URL::asset('Dashboard/js/dashboard.sampledata.js') }}"></script> --}}
-{{-- <script src="{{ URL::asset('Dashboard/js/chart.flot.sampledata.js') }}"></script> --}}
-<!--Internal Apexchart js-->
-<script src="{{ URL::asset('Dashboard/js/apexcharts.js') }}"></script>
-<!-- Internal Map -->
-{{-- <script src="{{ URL::asset('Dashboard/plugins/jqvmap/jquery.vmap.min.js') }}"></script> --}}
-{{-- <script src="{{ URL::asset('Dashboard/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script> --}}
-{{-- <script src="{{ URL::asset('Dashboard/js/modal-popup.js') }}"></script> --}}
-<!--Internal  index js -->
-<script src="{{ URL::asset('Dashboard/js/index.js') }}"></script> {{-- هذا قد يكون ضرورياً لعمل الشريط الجانبي --}}
-{{-- <script src="{{ URL::asset('Dashboard/js/jquery.vmap.sampledata.js') }}"></script> --}}
+    <!--Internal  Chart.bundle js -->
+    <script src="{{ URL::asset('Dashboard/plugins/chart.js/Chart.bundle.min.js') }}"></script>
+    <!-- Moment js -->
+    <script src="{{ URL::asset('Dashboard/plugins/raphael/raphael.min.js') }}"></script>
+    <!--Internal  Flot js-->
+    {{-- <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.js') }}"></script> --}}
+    {{-- <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.pie.js') }}"></script> --}}
+    {{-- <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.resize.js') }}"></script> --}}
+    {{-- <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.categories.js') }}"></script> --}}
+    {{-- <script src="{{ URL::asset('Dashboard/js/dashboard.sampledata.js') }}"></script> --}}
+    {{-- <script src="{{ URL::asset('Dashboard/js/chart.flot.sampledata.js') }}"></script> --}}
+    <!--Internal Apexchart js-->
+    <script src="{{ URL::asset('Dashboard/js/apexcharts.js') }}"></script>
+    <!-- Internal Map -->
+    {{-- <script src="{{ URL::asset('Dashboard/plugins/jqvmap/jquery.vmap.min.js') }}"></script> --}}
+    {{-- <script src="{{ URL::asset('Dashboard/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script> --}}
+    {{-- <script src="{{ URL::asset('Dashboard/js/modal-popup.js') }}"></script> --}}
+    <!--Internal  index js -->
+    <script src="{{ URL::asset('Dashboard/js/index.js') }}"></script> {{-- هذا قد يكون ضرورياً لعمل الشريط الجانبي --}}
+    {{-- <script src="{{ URL::asset('Dashboard/js/jquery.vmap.sampledata.js') }}"></script> --}}
 
-<script>
-    // يمكنك إضافة أي كود JavaScript خاص بهذه الصفحة هنا إذا احتجت
-    // مثلاً، لتحديث بيانات العرض البياني إذا كانت ديناميكية
-    $(function() {
-        'use strict';
-        // أي تهيئة خاصة بـ Charts أو Maps إذا أردت تفعيلها
-    });
-</script>
+    <script>
+        // يمكنك إضافة أي كود JavaScript خاص بهذه الصفحة هنا إذا احتجت
+        // مثلاً، لتحديث بيانات العرض البياني إذا كانت ديناميكية
+        $(function() {
+            'use strict';
+            // أي تهيئة خاصة بـ Charts أو Maps إذا أردت تفعيلها
+        });
+    </script>
 @endsection

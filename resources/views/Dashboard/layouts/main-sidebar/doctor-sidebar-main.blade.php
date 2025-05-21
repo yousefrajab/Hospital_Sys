@@ -58,6 +58,23 @@
                             <i class="fas fa-list-ul fa-xs me-2"></i>قائمة وصفاتي
                         </a>
                     </li>
+                    <li class="{{ request()->routeIs('doctor.prescriptions.approvalRequests') ? 'current' : '' }}">
+                        <a class="slide-item" href="{{ route('doctor.prescriptions.approvalRequests') }}">
+                            <i class="fas fa-user-nurse fa-xs me-2 text-warning"></i>طلبات تجديد للموافقة
+                            {{-- يمكن إضافة عداد هنا إذا كان لديك طريقة سهلة لحساب عدد هذه الطلبات --}}
+                            {{-- @php $pendingApprovalCount = \App\Models\Prescription::getPendingDoctorApprovalCount(Auth::id()); @endphp
+                            @if ($pendingApprovalCount > 0)
+                        <span class="badge bg-warning-transparent text-warning float-end">{{ $pendingApprovalCount }}</span>
+                              @endif --}}
+                        </a>
+                    </li>
+                    <li
+                        class="{{ request()->routeIs('doctor.prescriptions.adherenceDashboard') ? 'active is-expanded' : '' }}">
+                        <a class="slide-item" href="{{ route('doctor.prescriptions.adherenceDashboard') }}">
+                            <i class="fas fa-chart-line fa-xs me-2"></i>متابعة التزام المرضى
+                        </a>
+                    </li>
+
                     {{-- (اختياري) يمكنك إضافة روابط أخرى هنا لاحقًا --}}
                     {{--
         <li class="{{ request()->routeIs('doctor.prescriptions.pending_review') ? 'current' : '' }}">

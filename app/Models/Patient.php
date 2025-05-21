@@ -299,6 +299,10 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
         return $this->belongsTo(Prescription::class);
     }
 
+    public function prescriptions()
+    {
+        return $this->hasMany(\App\Models\Prescription::class)->orderBy('prescription_date', 'desc');
+    }
 
     public function PrescriptionItem()
     {
