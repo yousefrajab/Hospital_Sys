@@ -25,31 +25,56 @@ class AppointmentController extends Controller
      * عرض قائمة المواعيد غير المؤكدة (للأدمن).
      * GET /appointments
      */
-    public function index()
+    public function index(Request $request) // كانت للمواعيد "غير المؤكدة"
     {
-        Log::info("Fetching pending appointments for admin view.");
-        $appointments = Appointment::where('type', 'غير مؤكد')
-            ->with(['doctor', 'section']) // تحميل العلاقات
-            ->latest('created_at')
-            ->paginate(10); // استخدام Pagination
+        Log::info("Admin: Fetching PENDING appointments that need action.");
+        // فترة سماح للمواعيد غير المؤكدة قبل أن نعتبرها "فائتة تماماً"
+        $pendingGraceDays = intval(config('appointments.admin_pending_grace_days', 1)); // مثال: يوم واحد
 
-        return view('Dashboard.appointments.index', compact('appointments'));
+        $query = Appointment::where('type', Appointment::STATUS_PENDING) // فقط "غير مؤكد"
+            ->whereNotNull('appointment')
+            // وقت الموعد لم يفت بعد بيوم كامل (كمثال)
+            ->where('appointment', '>=', Carbon::now()->subDays($pendingGraceDays))
+            // وأيضاً هي قادمة أو اليوم (لتجنب عرض ما فات بيوم ولكن لا يزال ضمن فترة السماح)
+            // ->where('appointment', '>=', Carbon::today()->startOfDay()) //  هذا قد يكون صارماً جداً
+            ->with(['doctor:id', 'section:id', 'patient:id'])
+            ->orderBy('appointment', 'asc'); // الأقرب أولاً
+
+        // فلاتر البحث (يمكنك تكييفها)
+        if ($request->filled('search_pending')) {
+            // ... منطق البحث ...
+        }
+
+        $appointments = $query->paginate(config('pagination.admin_pending', 10))->appends($request->query());
+
+        return view('Dashboard.appointments.index', compact('appointments', 'request')); //  نفس الـ view
     }
 
     /**
-     * عرض قائمة المواعيد المؤكدة (للأدمن).
-     * GET /appointments/confirmed
+     * عرض قائمة المواعيد المؤكدة والقادمة (بما في ذلك التي فات وقتها قليلاً وتحتاج تحديث حالة من الطبيب).
      */
-    public function index2()
+    public function index2(Request $request) // كانت للمواعيد "المؤكدة"
     {
-        Log::info("Fetching confirmed appointments for admin view.");
-        $appointments = Appointment::where('type', 'مؤكد')
-            ->with(['doctor', 'section'])
-            ->orderBy('appointment', 'asc')
-            ->paginate(10);
+        Log::info("Admin: Fetching CONFIRMED & UPCOMING appointments.");
+        // فترة سماح قصيرة بعد الموعد المؤكد ليقوم الطبيب بتحديث الحالة
+        $confirmedActionGraceHours = intval(config('appointments.doctor_action_grace_hours', 3)); // مثال: 3 ساعات
 
-        return view('Dashboard.appointments.index2', compact('appointments'));
+        $query = Appointment::where('type', Appointment::STATUS_CONFIRMED)
+            ->whereNotNull('appointment')
+            // وقت الموعد لم يفت بعد بـ 3 ساعات (مثلاً)
+            ->where('appointment', '>=', Carbon::now()->subHours($confirmedActionGraceHours))
+            ->with(['doctor:id', 'section:id', 'patient:id'])
+            ->orderBy('appointment', 'asc');
+
+        if ($request->filled('search_confirmed')) {
+            // ... منطق البحث ...
+        }
+
+        $appointments = $query->paginate(config('pagination.admin_confirmed', 10))->appends($request->query());
+
+        return view('Dashboard.appointments.index2', compact('appointments', 'request')); // نفس الـ view
     }
+
 
     /**
      * عرض قائمة المواعيد المنتهية (للأدمن).
@@ -58,8 +83,8 @@ class AppointmentController extends Controller
     public function indexCompleted()
     {
         Log::info("Fetching completed appointments for admin view.");
-        $appointments = Appointment::where('type', 'منتهي')
-            ->with(['doctor', 'section'])
+        $appointments = Appointment::where('type', Appointment::STATUS_COMPLETED)
+            ->with(['doctor', 'section', 'patient'])
             ->orderBy('appointment', 'desc')
             ->paginate(10);
 
@@ -73,12 +98,78 @@ class AppointmentController extends Controller
     public function indexCancelled()
     {
         Log::info("Fetching cancelled appointments for admin view.");
-        $appointments = Appointment::where('type', 'ملغي') // التأكد من القيمة الصحيحة
-            ->with(['doctor', 'section'])
-            ->orderBy('updated_at', 'desc')
+        $appointments = Appointment::where('type', Appointment::STATUS_CANCELLED)
+            ->with(['doctor', 'section', 'patient'])
+            ->orderBy('updated_at', 'desc') //  تاريخ الإلغاء هو آخر تحديث
             ->paginate(10);
 
         return view('Dashboard.appointments.index_cancelled', compact('appointments'));
+    }
+
+    public function lapsedAppointments(Request $request)
+    {
+        Log::info("Admin: Fetching Lapsed Appointments - SIMPLIFIED QUERY v2.");
+
+        $now = Carbon::now(); // الوقت الحالي
+
+        $query = Appointment::query()
+            // الشرط الأساسي: أحضر المواعيد التي وقتها المحدد قد مضى
+            ->whereNotNull('appointment') // تأكد أن حقل وقت الموعد ليس فارغاً
+            ->where('appointment', '<', $now) // وقت الموعد أقدم من الآن
+
+            // و حالتها لا تزال "نشطة" (مؤكد أو غير مؤكد)
+            ->whereIn('type', [
+                Appointment::STATUS_PENDING,   // 'غير مؤكد'
+                Appointment::STATUS_CONFIRMED  // 'مؤكد'
+            ])
+            // لا نحتاج لـ whereNotIn هنا إذا كنا سنعتمد على المهمة المجدولة لاحقاً
+            // لتغييرها إلى STATUS_LAPSED, ولكن للإضافة الآن:
+            // ->whereNotIn('type', [
+            //     Appointment::STATUS_COMPLETED,
+            //     Appointment::STATUS_CANCELLED,
+            //     Appointment::STATUS_LAPSED
+            // ])
+            ->with([
+                'doctor' => fn($q) => $q->select('id'),
+                'section' => fn($q) => $q->select('id'),
+                'patient' => fn($q) => $q->select('id', 'phone')
+            ])
+            ->orderBy('appointment', 'asc'); // الأقدم (الأكثر فواتاً) أولاً
+
+        // فلتر البحث (كما هو لديك)
+        if ($request->filled('search_lapsed')) {
+            $searchTerm = $request->search_lapsed;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereHas('patient', fn($pq) => $pq->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhereTranslationLike('name', "%{$searchTerm}%"))
+                    ->orWhereHas('doctor', fn($dq) => $dq->where('name', 'like', "%{$searchTerm}%")
+                        ->orWhereTranslationLike('name', "%{$searchTerm}%"))
+                    ->orWhere('appointments.name', 'like', "%{$searchTerm}%"); // اسم المريض في جدول appointments
+            });
+        }
+        // فلتر التاريخ (كما هو لديك)
+        if ($request->filled('date_lapsed_filter')) {
+            try {
+                $dateFilter = Carbon::parse($request->date_lapsed_filter)->toDateString();
+                $query->whereDate('appointment', $dateFilter);
+            } catch (\Exception $e) {/* ignore */
+            }
+        }
+
+        $lapsedAppointments = $query->paginate(15)->appends($request->query()); // 15 عنصر لكل صفحة
+
+        Log::info("Admin Lapsed Appointments: Found {$lapsedAppointments->total()} results with simplified query.");
+        if ($lapsedAppointments->isEmpty()) {
+            Log::warning("Admin Lapsed Appointments: No appointments matched the simplified query conditions.");
+            // يمكنك هنا تسجيل بعض استعلامات SQL التي نفذت إذا لم تظهر نتائج لفحصها
+            // DB::enableQueryLog();
+            // $lapsedAppointments = $query->paginate(15)...
+            // Log::debug(DB::getQueryLog());
+        }
+
+
+        // تم تغيير اسم المتغير هنا ليتطابق مع ما استخدمته في الـ Blade المُرسل
+        return view('Dashboard.appointments.lapsed_appointments', compact('lapsedAppointments', 'request'));
     }
 
 
@@ -133,7 +224,6 @@ class AppointmentController extends Controller
                         $sectionNameForMail
                     ));
                     Log::info("Confirmation email sent to patient: {$patientEmail} for appt ID: {$appointment->id}");
-
                 } else {
                     Log::warning("Cannot send confirmation email for appt ID: {$appointment->id}. Email or Time missing.");
                     $emailWarning = 'لم يتم العثور على بريد إلكتروني صالح للمريض.';

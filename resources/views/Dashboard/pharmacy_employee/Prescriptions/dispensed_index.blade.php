@@ -144,7 +144,6 @@
 
 @section('js')
     @parent
-    {{-- نفس JS المستخدم في index.blade.php للوصفات --}}
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
     <script src="{{ URL::asset('dashboard/plugins/notify/js/notifit-custom.js') }}"></script>

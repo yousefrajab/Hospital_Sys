@@ -46,9 +46,11 @@ Route::group(
     ],
     function () {
         //################################ dashboard admin ########################################
-        Route::get('/dashboard/admin', function () {
-            return view('Dashboard.Admin.dashboard');
-        })->middleware(['auth:admin'])->name('dashboard.admin');
+        // Route::get('/dashboard/admin', function () {
+        //     return view('Dashboard.Admin.dashboard');
+        // })->middleware(['auth:admin'])->name('dashboard.admin');
+
+        Route::get('/dashboard/admin',[AdminProfileController::class, 'dashboard'])->middleware(['auth:admin'])->name('dashboard.admin');
 
         //################################ end dashboard admin ####################################
         Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -63,7 +65,6 @@ Route::group(
             //############################# sections route ##########################################
 
             Route::resource('Sections', SectionController::class);
-            // Route::post('update_status', [SectionController::class, 'update_status'])->name('update_status');
 
             //############################# end sections route ######################################
 
@@ -170,6 +171,7 @@ Route::group(
             Route::get('/completed', [AppointmentController::class, 'indexCompleted'])->name('completed'); // منتهية
             Route::get('/cancelled', [AppointmentController::class, 'indexCancelled'])->name('cancelled'); // ملغاة
             Route::patch('/admin-cancel/{appointment}', [AppointmentController::class, 'adminCancelAppointment'])->name('admin_cancel');
+            Route::get('appointments/lapsed', [AppointmentController::class, 'lapsedAppointments'])->name('appointments.lapsed');
             // استخدمنا {appointment} للاستفادة من Route Model Binding
 
             // (اختياري) مسار الحذف النهائي (قد يكون موجوداً ضمن destroy في Route::resource)

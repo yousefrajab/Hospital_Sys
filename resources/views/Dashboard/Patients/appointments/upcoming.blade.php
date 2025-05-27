@@ -1,217 +1,166 @@
-@extends('Dashboard.layouts.master') {{-- أو الـ layout الخاص بلوحة تحكم المريض --}}
+@extends('Dashboard.layouts.master') {{-- Or your patient-specific layout --}}
 
-@section('title', 'مواعيـدي القادمة')
+@section('title', 'مواعيدي القادمة')
 
 @section('css')
     @parent
-    {{-- Font Awesome --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    {{-- Animate.css --}}
+    {{-- Font Awesome is usually in master, ensure it's loaded --}}
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /> --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    {{-- NotifIt CSS (إذا كنت ستعرض رسائل هنا) --}}
     <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    {{-- SweetAlert2 --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 
     <style>
-        /* --- المتغيرات الأساسية (Globals & Dark Mode) --- */
         :root {
-            --primary-color: #4A90E2;
-            /* لون أساسي جذاب */
-            --primary-dark: #3A7BC8;
-            --secondary-color: #4A4A4A;
-            /* رمادي داكن للنصوص أو العناصر الثانوية */
-            --accent-color: #50E3C2;
-            /* لون مميز (تركواز) */
-            --light-bg: #f9fbfd;
-            /* خلفية فاتحة جداً للصفحة */
-            --border-color: #e5e9f2;
-            /* لون حدود ناعم */
-            --white-color: #ffffff;
-            --success-color: #2ecc71;
-            /* أخضر للنجاح/التأكيد */
-            --warning-color: #f39c12;
-            /* برتقالي للتحذير */
-            --danger-color: #e74c3c;
-            /* أحمر للخطر/الإلغاء */
-            --info-color: #3498db;
-            /* أزرق للمعلومات */
-            --text-dark: #34495e;
-            /* لون نص داكن */
-            --text-muted: #95a5a6;
-            /* لون نص باهت */
-            --card-shadow: 0 8px 25px rgba(140, 152, 164, 0.1);
-            --admin-radius-md: 0.5rem;
-            /* 8px */
-            --admin-radius-lg: 0.75rem;
-            /* 12px */
-            --admin-transition: all 0.3s ease-in-out;
+            --patient-primary: #007bff; /* Primary Blue */
+            --patient-primary-rgb: 0, 123, 255;
+            --patient-primary-dark: #0056b3;
+            --patient-primary-light: #cfe2ff;
+            --patient-secondary: #6c757d; /* Secondary Gray */
+            --patient-success: #198754;  /* Success Green */
+            --patient-success-rgb: 25, 135, 84;
+            --patient-warning: #ffc107;  /* Warning Yellow */
+            --patient-warning-rgb: 255, 193, 7;
+            --patient-danger: #dc3545;   /* Danger Red */
+            --patient-danger-rgb: 220, 53, 69;
+            --patient-info: #0dcaf0;     /* Info Cyan */
+            --patient-text-dark: #212529;
+            --patient-text-light: #6c757d;
+            --patient-bg: #f8f9fa;
+            --patient-card-bg: #ffffff;
+            --patient-border-color: #dee2e6;
+            --patient-card-radius: 0.75rem; /* 12px */
+            --patient-card-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.075);
+            --patient-transition: all 0.3s ease-in-out;
         }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --light-bg: #1a1d24;
-                --white-color: #242930;
-                --border-color: #374151;
-                --text-dark: #e9ecef;
-                --text-muted: #adb5bd;
-                --primary-color: #5c9bff;
-                --accent-color: #67e8f9;
-            }
-
-            .appointment-card {
-                border-left-color: var(--accent-color) !important;
-            }
-
-            .appointment-card:hover {
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            }
-        }
-
-        /* كلاس .dark لتفعيل الوضع الداكن يدويًا */
-        .dark body {
-            /* ... (نفس متغيرات prefers-color-scheme: dark) ... */
-        }
-
 
         body {
-            background: var(--light-bg);
-            font-family: 'Tajawal', sans-serif;
-            color: var(--text-dark);
+            background-color: var(--patient-bg);
+            font-family: 'Tajawal', sans-serif; /* Ensure Tajawal is loaded */
+            color: var(--patient-text-dark);
         }
 
         .appointments-page-container {
-            padding: 1.5rem;
-            max-width: 1200px;
+            padding: 2rem 1.5rem;
+            max-width: 1320px; /* Slightly wider for better grid */
             margin: auto;
         }
 
-        .page-header-flex {
-            /* لتنسيق هيدر الصفحة */
+        .page-header-custom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--patient-border-color);
         }
 
-        .page-title-flex {
-            font-size: 1.75rem;
+        .page-title-custom {
+            font-size: 2rem;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--patient-primary);
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            margin: 0;
         }
-
-        .page-title-flex i {
-            font-size: 1.2em;
-        }
+        .page-title-custom i { font-size: 1.1em; }
 
         .page-actions .btn {
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-            border-radius: var(--admin-radius-md);
+            font-size: 0.95rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--patient-card-radius);
+            font-weight: 500;
         }
-
-        .btn-primary-custom {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-        }
-
-        .btn-primary-custom:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .btn-outline-secondary-custom {
-            color: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-
-        .btn-outline-secondary-custom:hover {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
+        .btn-primary-patient { background-color: var(--patient-primary); border-color: var(--patient-primary); color: white; }
+        .btn-primary-patient:hover { background-color: var(--patient-primary-dark); border-color: var(--patient-primary-dark); }
+        .btn-outline-secondary-patient { color: var(--patient-secondary); border-color: var(--patient-secondary); }
+        .btn-outline-secondary-patient:hover { background-color: var(--patient-secondary); color: white; }
 
         .appointments-grid-patient {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            /* عرض أدنى أكبر قليلاً */
-            gap: 1.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .appointment-card-wrapper {
+            transition: var(--patient-transition);
+        }
+        .appointment-card-wrapper:hover {
+            transform: translateY(-6px);
         }
 
         .appointment-card {
-            background: var(--white-color);
-            border-radius: var(--admin-radius-lg);
-            box-shadow: var(--card-shadow);
-            border-left: 5px solid var(--accent-color);
-            /* لون مميز للمواعيد القادمة */
-            padding: 0;
-            transition: var(--admin-transition);
+            background: var(--patient-card-bg);
+            border-radius: var(--patient-card-radius);
+            box-shadow: var(--patient-card-shadow);
+            border: 1px solid var(--patient-border-color);
             display: flex;
             flex-direction: column;
-            /* لترتيب الفوتر في الأسفل */
+            height: 100%; /* Ensure cards in a row have same height */
             overflow: hidden;
-            /* لضمان احتواء العناصر الداخلية */
+            position: relative;
         }
+        .appointment-card::before { /* Status indicator strip */
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0; /* RTL */
+            bottom: 0;
+            width: 7px;
+            background-color: var(--patient-info); /* Default */
+            border-radius: 0 var(--patient-card-radius) var(--patient-card-radius) 0; /* RTL */
+            transition: background-color 0.3s;
+        }
+        .appointment-card[data-status="مؤكد"]::before,
+        .appointment-card[data-status-key="confirmed"]::before { background-color: var(--patient-success); }
+        .appointment-card[data-status="غير مؤكد"]::before,
+        .appointment-card[data-status-key="pending"]::before { background-color: var(--patient-warning); }
+        .appointment-card[data-status^="ملغي"]::before, /* Starts with "ملغي" */
+        .appointment-card[data-status-key="cancelled"]::before { background-color: var(--patient-danger); }
 
-        .appointment-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            /* تأثير hover أكبر */
-            box-shadow: 0 12px 35px rgba(var(--primary-color-rgb, 74, 144, 226), 0.2);
-        }
 
         .appointment-card-header-patient {
-            padding: 1.25rem;
-            border-bottom: 1px solid var(--border-color);
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--patient-border-color);
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
         }
 
         .appointment-title-patient {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 0.25rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--patient-text-dark);
+            margin-bottom: 0.3rem;
         }
 
-        .appointment-date-patient {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--secondary-color);
-            /* لون مختلف للتاريخ */
+        .appointment-datetime-patient {
+            font-size: 0.9rem;
+            color: var(--patient-text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }
+        .appointment-datetime-patient i { color: var(--patient-secondary); }
 
         .appointment-status-badge {
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 0.35rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.4em 0.9em;
             border-radius: 50px;
-            text-transform: uppercase;
+            text-transform: capitalize;
+            white-space: nowrap;
         }
-
-        .badge-confirmed-patient {
-            background-color: rgba(var(--success-color-rgb, 46, 204, 113), 0.15);
-            color: var(--success-color);
-            border: 1px solid rgba(var(--success-color-rgb), 0.3);
-        }
-
-        .badge-pending-patient {
-            background-color: rgba(var(--warning-color-rgb, 243, 156, 18), 0.15);
-            color: var(--warning-color);
-            border: 1px solid rgba(var(--warning-color-rgb), 0.3);
-        }
+        .badge-status-confirmed { background-color: rgba(var(--patient-success-rgb), 0.1); color: var(--patient-success); border: 1px solid rgba(var(--patient-success-rgb),0.2); }
+        .badge-status-pending { background-color: rgba(var(--patient-warning-rgb), 0.15); color: #a17400; border: 1px solid rgba(var(--patient-warning-rgb),0.3); } /* Darker yellow text */
+        .badge-status-cancelled { background-color: rgba(var(--patient-danger-rgb), 0.1); color: var(--patient-danger); border: 1px solid rgba(var(--patient-danger-rgb),0.2); }
 
 
         .appointment-card-body-patient {
-            padding: 1.25rem;
+            padding: 1.25rem 1.5rem;
             flex-grow: 1;
-            /* لجعل الجسم يملأ المساحة المتبقية */
         }
 
         .appointment-details-list-patient {
@@ -219,118 +168,76 @@
             padding: 0;
             margin: 0;
         }
-
         .appointment-details-list-patient li {
             display: flex;
             align-items: flex-start;
-            /* محاذاة للبداية للنصوص الطويلة */
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.85rem;
             font-size: 0.95rem;
+            color: var(--patient-text-dark);
         }
-
         .appointment-details-list-patient li i {
-            width: 22px;
+            width: 24px; /* For icon alignment */
             text-align: center;
-            margin-left: 10px;
-            /* RTL: margin-right */
-            color: var(--text-muted);
-            font-size: 1em;
-            padding-top: 2px;
-            /* لمحاذاة أفضل مع النص */
+            margin-left: 12px; /* RTL */
+            color: var(--patient-primary);
+            font-size: 1.1em;
+            padding-top: 1px;
         }
+        .appointment-details-list-patient li .detail-value { font-weight: 500; }
+        .appointment-details-list-patient li .detail-label { color: var(--patient-text-light); margin-right: 5px;} /* For RTL */
 
-        .appointment-details-list-patient li strong {
-            font-weight: 500;
-            color: var(--text-dark);
-        }
-
-        .appointment-details-list-patient li .detail-label {
-            font-weight: 400;
-            color: var(--text-muted);
-            min-width: 70px;
-            display: inline-block;
-        }
 
         .appointment-card-footer-patient {
-            background-color: #fdfdff;
-            /* لون أفتح قليلاً جداً */
-            padding: 0.75rem 1.25rem;
-            border-top: 1px solid var(--border-color);
-            border-radius: 0 0 var(--admin-radius-lg) var(--admin-radius-lg);
-            text-align: left;
-            /* الأزرار على اليسار في RTL */
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--patient-border-color);
+            background-color: #fcfdff; /* Slightly off-white */
+            text-align: left; /* RTL: buttons to the left */
         }
-
         .btn-appointment-action {
-            font-size: 0.8rem;
-            padding: 0.4rem 1rem;
-            border-radius: var(--admin-radius-md);
+            font-size: 0.85rem;
+            padding: 0.5rem 1.1rem;
+            border-radius: var(--patient-card-radius);
             font-weight: 500;
-            transition: var(--admin-transition);
         }
-
-        .btn-outline-danger-custom {
-            color: var(--danger-color);
-            border-color: var(--danger-color);
-        }
-
-        .btn-outline-danger-custom:hover {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
-        .btn-disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        .btn-outline-danger-patient { color: var(--patient-danger); border-color: var(--patient-danger); }
+        .btn-outline-danger-patient:hover { background-color: var(--patient-danger); color: white; }
+        .btn-disabled-custom { opacity: 0.65; cursor: not-allowed !important; }
 
         .no-appointments-patient {
             text-align: center;
-            padding: 3rem 1rem;
-            background: var(--white-color);
-            border-radius: var(--admin-radius-lg);
-            box-shadow: var(--card-shadow);
-            color: var(--text-muted);
+            padding: 4rem 2rem;
+            background: var(--patient-card-bg);
+            border-radius: var(--patient-card-radius);
+            box-shadow: var(--patient-card-shadow);
+            color: var(--patient-text-light);
+            border: 1px dashed var(--patient-border-color);
         }
-
         .no-appointments-patient i {
-            font-size: 3rem;
+            font-size: 4rem;
             display: block;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            color: var(--patient-primary-light);
+        }
+        .no-appointments-patient h4 { font-size: 1.5rem; color: var(--patient-text-dark); margin-bottom: 0.5rem; }
+        .no-appointments-patient p { font-size: 1rem; margin-bottom: 1.5rem;}
+
+        .pagination-wrapper { margin-top: 2.5rem; }
+        .pagination .page-item .page-link {
+            color: var(--patient-primary);
+            border-radius: 0.3rem;
+            margin: 0 0.2rem;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: var(--patient-primary);
+            border-color: var(--patient-primary);
+            color: white;
+        }
+        .pagination .page-item.disabled .page-link {
+            color: var(--patient-text-light);
         }
 
-        .no-appointments-patient p {
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        /* Pagination */
-        .pagination-wrapper {
-            margin-top: 2rem;
-            display: flex;
-            justify-content: center;
-        }
-
-        /* ... (أنماط Pagination كما هي من الرد السابق) ... */
-        :root {
-            /* ... (متغيرات الألوان بصيغة RGB إذا احتجتها في JavaScript) ... */
-            --success-color-rgb: 46, 204, 113;
-            --warning-color-rgb: 243, 156, 18;
-        }
-
-        .badge-confirmed-patient {
-            background-color: rgba(var(--success-color-rgb, 46, 204, 113), 0.15);
-            color: var(--success-color);
-            border: 1px solid rgba(var(--success-color-rgb), 0.3);
-        }
-
-        .badge-pending-patient {
-            background-color: rgba(var(--warning-color-rgb, 243, 156, 18), 0.15);
-            color: var(--warning-color);
-            border: 1px solid rgba(var(--warning-color-rgb), 0.3);
-        }
+        /* Animation */
+        .animate__faster { animation-duration: 0.6s !important; }
     </style>
 @endsection
 
@@ -338,136 +245,129 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-calendar-check me-2 text-success"></i>مواعيـدي</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ القادمة</span>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-calendar-alt me-2 text-primary"></i>مواعيدي</h4>
+                <span class="text-muted mt-1 tx-13 ms-2 mb-0">/ القادمة</span> {{-- ms-2 for RTL --}}
             </div>
         </div>
-        <div class="d-flex my-xl-auto right-content">
+        <div class="d-flex my-xl-auto right-content align-items-center">
             @if (Route::has('patient.appointments.past'))
-                <a href="{{ route('patient.appointments.past') }}" class="btn btn-outline-secondary btn-sm me-2"
-                    style="border-radius:var(--admin-radius-md);">
+                <a href="{{ route('patient.appointments.past') }}" class="btn btn-outline-secondary-patient btn-sm me-2">
                     <i class="fas fa-history me-1"></i> المواعيد السابقة
                 </a>
             @endif
-            @if (Route::has('patient.appointments.book'))
-                {{-- أو اسم الـ route الخاص بـ Livewire --}}
-                <a href="{{ route('patient.appointments.book') }}" class="btn btn-primary btn-sm"
-                    style="border-radius:var(--admin-radius-md);">
-                    <i class="fas fa-plus-circle me-1"></i> طلب موعد جديد
-                </a>
-            @endif
+            {{-- Update this route name if it's different --}}
+            <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-primary-patient btn-sm">
+                <i class="fas fa-plus-circle me-1"></i> طلب موعد جديد
+            </a>
         </div>
     </div>
 @endsection
 
 @section('content')
-    @include('Dashboard.messages_alert')
+    @include('Dashboard.messages_alert') {{-- For session messages from non-AJAX redirects --}}
 
     <div class="appointments-page-container">
-        <div class="page-header-flex animate__animated animate__fadeInDown">
-            <h1 class="page-title-flex"><i class="fas fa-business-time"></i> مواعيدك القادمة</h1>
+        <div class="page-header-custom animate__animated animate__fadeInDown">
+            <h1 class="page-title-custom"><i class="fas fa-business-time"></i> مواعيدك القادمة</h1>
+            {{-- Optional: Add a filter/sort dropdown here if needed later --}}
         </div>
 
-        @if (isset($appointments) && $appointments->isNotEmpty()) {{-- ** إضافة تحقق من وجود $appointments ** --}}
+        @if (isset($appointments) && $appointments->isNotEmpty())
             <div class="appointments-grid-patient">
                 @foreach ($appointments as $appointment)
-                    <div class="appointment-card animate__animated animate__fadeInUp"
-                        data-appointment-id="{{ $appointment->id }}" style="animation-delay: {{ $loop->index * 0.08 }}s;">
-                        <div class="appointment-card-header-patient">
-                            <div>
-                                <h5 class="appointment-title-patient">
-                                    @if ($appointment->section)
-                                        {{ $appointment->section->name }} {{-- افترض أن name هنا ليس مترجمًا --}}
-                                    @else
-                                        موعد عام
-                                    @endif
-                                    {{-- إذا كان لديك حقل 'type' خاص بالموعد نفسه غير حالته --}}
-                                    {{-- {{ $appointment->type_of_appointment ? ' - ' . $appointment->type_of_appointment : '' }} --}}
-                                </h5>
-                                <span class="appointment-date-patient">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    {{-- ** استخدام $appointment->appointment ** --}}
-                                    {{ $appointment->appointment ? $appointment->appointment->translatedFormat('l، j F Y') : 'تاريخ غير محدد' }}
-                                    <i class="far fa-clock ms-2"></i>
-                                    {{ $appointment->appointment ? $appointment->appointment->translatedFormat('h:i A') : 'وقت غير محدد' }}
+                    @php
+                        $appointmentDateTime = \Carbon\Carbon::parse($appointment->appointment);
+                        $statusKey = 'pending'; // Default
+                        $statusText = $appointment->type; // Original status text
+                        $statusBadgeClass = 'badge-status-pending'; // Default
+
+                        if ($appointment->type == (\App\Models\Appointment::STATUS_CONFIRMED ?? 'مؤكد')) {
+                            $statusKey = 'confirmed';
+                            $statusBadgeClass = 'badge-status-confirmed';
+                        } elseif (str_starts_with($appointment->type, 'ملغي')) {
+                             $statusKey = 'cancelled';
+                             $statusBadgeClass = 'badge-status-cancelled';
+                        }
+                        // If you have a status_display accessor for translations:
+                        // $statusText = $appointment->status_display ?? $appointment->type;
+
+                        // Determine if cancellable
+                        $cancellationWindowHours = config('app.appointment_cancellation_window_hours', 24);
+                        $isCancellable = in_array($appointment->type, [\App\Models\Appointment::STATUS_PENDING ?? 'غير مؤكد', \App\Models\Appointment::STATUS_CONFIRMED ?? 'مؤكد']) &&
+                                         $appointmentDateTime->isFuture() &&
+                                         $appointmentDateTime->diffInHours(now()) >= $cancellationWindowHours;
+                    @endphp
+                    <div class="appointment-card-wrapper animate__animated animate__fadeInUp" style="animation-delay: {{ $loop->index * 0.1 }}s;">
+                        <div class="appointment-card" data-appointment-id="{{ $appointment->id }}" data-status-key="{{ $statusKey }}" data-status="{{ $appointment->type }}">
+                            <div class="appointment-card-header-patient">
+                                <div>
+                                    <h5 class="appointment-title-patient">
+                                        {{ $appointment->section->name ?? 'موعد عام' }}
+                                    </h5>
+                                    <div class="appointment-datetime-patient">
+                                        <span><i class="fas fa-calendar-alt"></i> {{ $appointmentDateTime->translatedFormat('l، j F Y') }}</span>
+                                        <span><i class="far fa-clock"></i> {{ $appointmentDateTime->translatedFormat('h:i A') }}</span>
+                                    </div>
+                                </div>
+                                <span class="badge appointment-status-badge {{ $statusBadgeClass }}">
+                                    @if($statusKey == 'confirmed') <i class="fas fa-check-circle me-1"></i> @endif
+                                    @if($statusKey == 'pending') <i class="fas fa-hourglass-half me-1"></i> @endif
+                                    @if($statusKey == 'cancelled') <i class="fas fa-ban me-1"></i> @endif
+                                    {{ $statusText }}
                                 </span>
                             </div>
-                            @php
-                                $statusText = $appointment->type; // ** استخدام $appointment->type مباشرة **
-                                $statusBadgeClass = 'badge-secondary'; // افتراضي
-                                if ($appointment->type == \App\Models\Appointment::STATUS_CONFIRMED) {
-                                    // استخدام الثابت
-                                    $statusBadgeClass = 'badge-confirmed-patient';
-                                } elseif ($appointment->type == \App\Models\Appointment::STATUS_PENDING) {
-                                    // استخدام الثابت
-                                    $statusBadgeClass = 'badge-pending-patient';
-                                }
-                            @endphp
-                            <span class="badge appointment-status-badge {{ $statusBadgeClass }}">
-                                @if ($appointment->type == \App\Models\Appointment::STATUS_CONFIRMED)
-                                    <i class="fas fa-check-circle me-1"></i>
-                                @endif
-                                @if ($appointment->type == \App\Models\Appointment::STATUS_PENDING)
-                                    <i class="fas fa-hourglass-half me-1"></i>
-                                @endif
-                                {{ $statusText }} {{-- عرض النص مباشرة من $appointment->type --}}
-                            </span>
-                        </div>
-                        <div class="appointment-card-body-patient">
-                            <ul class="appointment-details-list-patient">
-                                @if ($appointment->doctor)
-                                    <li><i class="fas fa-user-md"></i> <span class="detail-label">الطبيب:</span>
-                                        <strong>{{ $appointment->doctor->name }}</strong>
-                                    </li> {{-- افترض أن name هنا ليس مترجمًا --}}
-                                @endif
-                                {{-- ملاحظة: $appointment->notes_by_patient و $appointment->notes_by_staff غير موجودة في $fillable لموديل Appointment الذي أرسلته --}}
-                                {{-- إذا أضفتها، يمكنك عرضها هنا --}}
-                                @if ($appointment->notes)
-                                    {{-- استخدام الحقل العام 'notes' --}}
-                                    <li><i class="fas fa-sticky-note"></i> <span class="detail-label">ملاحظات الموعد:</span>
-                                        <strong>{{ Str::limit($appointment->notes, 120) }}</strong>
+                            <div class="appointment-card-body-patient">
+                                <ul class="appointment-details-list-patient">
+                                    @if ($appointment->doctor)
+                                        <li><i class="fas fa-user-md"></i>
+                                            <span class="detail-value">{{ $appointment->doctor->name ?? 'غير محدد' }}</span>
+                                        </li>
+                                    @endif
+                                     <li><i class="fas fa-user"></i>
+                                        <span class="detail-value">{{ $appointment->name }}</span> {{-- Patient Name on appointment --}}
                                     </li>
+                                    @if ($appointment->notes)
+                                        <li><i class="fas fa-sticky-note"></i>
+                                            <span class="detail-label">ملاحظاتك:</span>
+                                            <span class="detail-value">{{ Str::limit($appointment->notes, 100) }}</span>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
+                            <div class="appointment-card-footer-patient">
+                                @if ($isCancellable)
+                                    <button type="button"
+                                        class="btn btn-appointment-action btn-outline-danger-patient cancel-appointment-btn"
+                                        data-appointment-id="{{ $appointment->id }}"
+                                        data-appointment-doctor="{{ $appointment->doctor->name ?? 'الطبيب' }}"
+                                        data-appointment-datetime="{{ $appointmentDateTime->translatedFormat('l، j F Y - h:i A') }}"
+                                        title="إلغاء هذا الموعد">
+                                        <i class="fas fa-times-circle me-1"></i> إلغاء الموعد
+                                    </button>
+                                @elseif (in_array($statusKey, ['pending', 'confirmed']))
+                                     <span class="text-muted small"><i class="fas fa-info-circle me-1"></i> لا يمكن الإلغاء (الموعد قريب جداً أو فات وقته).</span>
+                                @else
+                                    <span class="text-muted small"><i class="fas fa-ban me-1"></i> لا توجد إجراءات متاحة لهذا الموعد.</span>
                                 @endif
-                                {{-- <li><i class="fas fa-clock"></i> <span class="detail-label">المدة المتوقعة:</span>
-                                    <strong>{{ $appointment->appointment_duration ?? 'غير محددة' }} دقيقة</strong>
-                                </li> --}}
-                                {{-- افترض وجود appointment_duration --}}
-                            </ul>
-                        </div>
-                        <div class="appointment-card-footer-patient">
-                            @if (
-                                $appointment->type == \App\Models\Appointment::STATUS_PENDING ||
-                                    $appointment->type == \App\Models\Appointment::STATUS_CONFIRMED)
-                                <button type="button"
-                                    class="btn btn-appointment-action btn-outline-danger-custom cancel-appointment-action-btn"
-                                    {{-- ** تم تغيير الكلاس هنا ليكون أكثر تحديدًا ** --}} data-appointment-id="{{ $appointment->id }}"
-                                    data-appointment-details="موعد لـ '{{ $appointment->name }}' مع د. {{ $appointment->doctor->name ?? 'غير محدد' }} بتاريخ {{ $appointment->appointment ? $appointment->appointment->translatedFormat('d M Y \ا\ل\س\ا\ع\ة H:i') : '' }}"
-                                    title="إلغاء هذا الموعد">
-                                    <i class="fas fa-times-circle"></i> إلغاء الموعد
-                                </button>
-                            @else
-                                <span class="text-muted small">لا توجد إجراءات متاحة</span>
-                            @endif
+                            </div>
                         </div>
                     </div>
                 @endforeach
             </div>
 
             @if ($appointments->hasPages())
-                <div class="pagination-wrapper mt-4">
-                    {{ $appointments->links('pagination::bootstrap-5') }}
+                <div class="pagination-wrapper d-flex justify-content-center">
+                    {{ $appointments->links() }} {{-- Default pagination view, or specify bootstrap-5 if needed --}}
                 </div>
             @endif
         @else
-            <div class="no-appointments-patient text-center py-5">
-                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                <p>لا توجد لديك مواعيد قادمة حاليًا.</p>
-                @if (Route::has('patient.appointments.book'))
-                    {{-- أو اسم الـ route الخاص بـ Livewire --}}
-                    <a href="{{ route('patient.appointments.book') }}" class="btn btn-lg btn-primary-custom mt-2">
-                        <i class="fas fa-plus-circle me-2"></i> اطلب موعدًا جديدًا الآن
-                    </a>
-                @endif
+            <div class="no-appointments-patient animate__animated animate__fadeIn">
+                <i class="fas fa-calendar-check"></i>
+                <h4>لا توجد لديك مواعيد قادمة حاليًا.</h4>
+                <p>عندما تقوم بحجز موعد جديد، سيظهر هنا.</p>
+                <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-lg btn-primary-patient mt-2">
+                    <i class="fas fa-plus-circle me-2"></i> اطلب موعدًا جديدًا الآن
+                </a>
             </div>
         @endif
     </div>
@@ -476,134 +376,154 @@
 @section('js')
     @parent
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    {{-- SweetAlert2 (موصى به للتأكيد) --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+ <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script> AOS.init(); </script>
     <script>
-        AOS.init({
-            duration: 600,
-            easing: 'ease-out-cubic',
-            once: true
-        });
-
-        $(document).ready(function() { // استخدام jQuery
-            const csrfToken = $('meta[name="csrf-token"]').attr('content'); // استخدام jQuery لجلب التوكن
-
-            function showAppNotification(message, type = 'info', timeout = 5000, position = 'bottom') {
-                let iconClass = 'fas fa-info-circle';
-                if (type === 'success') iconClass = 'fas fa-check-circle';
-                else if (type === 'error') iconClass = 'fas fa-times-circle';
-                else if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
-
-                notif({
-                    msg: `<div class="d-flex align-items-center"><i class='${iconClass} fa-lg me-2'></i><div>${message}</div></div>`,
-                    type: type,
-                    position: position,
-                    width: "auto",
-                    multiline: true,
-                    autohide: true,
-                    timeout: timeout,
-                    zindex: 99999,
-                    bgcolor: type === 'success' ? '#28a745' : (type === 'error' ? '#dc3545' : (type ===
-                        'warning' ? '#ffc107' : '#17a2b8')),
-                    color: "#ffffff",
+        $(document).ready(function() {
+            // Initialize AOS if not done globally
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 600,
+                    easing: 'ease-out-cubic',
+                    once: true
                 });
             }
 
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            function showNotification(message, type = 'info', options = {}) {
+                const defaultOptions = {
+                    position: "top-right", // Changed default position
+                    autohide: true,
+                    timeout: 5000,
+                    zindex: 999999,
+                    bgcolor: '', // Will be set based on type
+                    color: "#ffffff",
+                    multiline: true,
+                    width: 'auto'
+                };
+
+                let iconClass = 'fas fa-info-circle';
+                switch (type) {
+                    case 'success':
+                        iconClass = 'fas fa-check-circle';
+                        defaultOptions.bgcolor = 'var(--patient-success)';
+                        break;
+                    case 'error':
+                        iconClass = 'fas fa-times-circle';
+                        defaultOptions.bgcolor = 'var(--patient-danger)';
+                        break;
+                    case 'warning':
+                        iconClass = 'fas fa-exclamation-triangle';
+                        defaultOptions.bgcolor = 'var(--patient-warning)';
+                        break;
+                    default: // info
+                        defaultOptions.bgcolor = 'var(--patient-info)';
+                        break;
+                }
+
+                const finalOptions = { ...defaultOptions, ...options };
+                finalOptions.msg = `<div class='d-flex align-items-center p-1'><i class='${iconClass} fa-lg me-2'></i><div style='font-size: 0.9rem;'>${message}</div></div>`;
+                notif(finalOptions);
+            }
+
+            // Handle session messages passed from controller (non-AJAX redirects)
             @if (session('success'))
-                showAppNotification("{{ session('success') }}", "success");
+                showNotification("{{ session('success') }}", "success");
             @endif
             @if (session('error'))
-                showAppNotification("{{ session('error') }}", "error", 7000);
+                showNotification("{{ session('error') }}", "error", { timeout: 7000 });
+            @endif
+            @if (session('info'))
+                showNotification("{{ session('info') }}", "info");
             @endif
 
-            // --- التعامل مع زر إلغاء الموعد ---
-            // استخدام event delegation إذا تم تحميل البطاقات ديناميكيًا لاحقًا
-            // أو ربط مباشر إذا كانت كل البطاقات موجودة عند تحميل الصفحة
-            $('.appointments-grid-patient').on('click', '.cancel-appointment-action-btn', function() {
+
+            $('.appointments-grid-patient').on('click', '.cancel-appointment-btn', function() {
                 const appointmentId = $(this).data('appointment-id');
-                const appointmentDetails = $(this).data('appointment-details');
-                const $buttonElement = $(this); // الزر الذي تم النقر عليه (كائن jQuery)
-                const $cardElement = $buttonElement.closest('.appointment-card');
+                const doctorName = $(this).data('appointment-doctor');
+                const appointmentDatetime = $(this).data('appointment-datetime');
+                const $button = $(this);
+                const $card = $button.closest('.appointment-card');
 
                 if (!appointmentId) {
-                    console.error('Appointment ID not found on cancel button.');
+                    console.error('Appointment ID not found for cancellation.');
+                    showNotification('خطأ: معرف الموعد غير موجود.', 'error');
                     return;
                 }
 
                 Swal.fire({
                     title: 'تأكيد إلغاء الموعد',
-                    html: `هل أنت متأكد من رغبتك في إلغاء هذا الموعد؟<br><small class="text-muted">${appointmentDetails}</small>`,
+                    html: `هل أنت متأكد من رغبتك في إلغاء موعدك مع:<br><strong>د. ${doctorName}</strong><br>يوم ${appointmentDatetime}؟`,
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#d33', // أحمر
-                    cancelButtonColor: '#6c757d', // رمادي
-                    confirmButtonText: '<i class="fas fa-trash-alt"></i> نعم، قم بالإلغاء',
-                    cancelButtonText: '<i class="fas fa-times"></i> لا، تراجع',
+                    confirmButtonColor: 'var(--patient-danger)',
+                    cancelButtonColor: 'var(--patient-secondary)',
+                    confirmButtonText: '<i class="fas fa-trash-alt me-1"></i> نعم، إلغاء',
+                    cancelButtonText: '<i class="fas fa-times me-1"></i> تراجع',
                     customClass: {
+                        popup: 'animate__animated animate__fadeInDown animate__faster',
                         confirmButton: 'btn btn-danger mx-1',
                         cancelButton: 'btn btn-secondary mx-1'
                     },
-                    buttonsStyling: false,
+                    buttonsStyling: false, // Use custom Bootstrap classes
                     showLoaderOnConfirm: true,
                     preConfirm: async () => {
                         try {
-                            // بناء الـ URL بشكل صحيح
-                            const cancelUrl = "{{ url('patient/appointments') }}/" +
-                                appointmentId + "/cancel-by-patient";
-
+                            // Route model binding will handle {appointment}
+                            const cancelUrl = `{{ url('patient/appointments') }}/${appointmentId}/cancel-by-patient`;
                             const response = await fetch(cancelUrl, {
-                                method: 'PATCH', // أو 'DELETE' إذا كان الـ route كذلك
+                                method: 'PATCH', // Or POST if your route is POST and you use _method
                                 headers: {
                                     'Content-Type': 'application/json',
                                     'X-CSRF-TOKEN': csrfToken,
                                     'Accept': 'application/json'
-                                },
-                                // body: JSON.stringify({ reason: 'سبب الإلغاء إذا أردت إضافته من مودال آخر' })
+                                }
+                                // No body needed if reason is default, or pass { reason_patient: '...' }
                             });
+
+                            const responseData = await response.json();
                             if (!response.ok) {
-                                const errorData = await response.json();
-                                throw new Error(errorData.message ||
-                                    `فشل الإلغاء (حالة: ${response.status})`);
+                                throw new Error(responseData.message || `فشل الإلغاء (HTTP ${response.status})`);
                             }
-                            return await response.json();
+                            return responseData;
                         } catch (error) {
-                            Swal.showValidationMessage(`فشل طلب الإلغاء: ${error.message}`);
+                            Swal.showValidationMessage(`فشل الطلب: ${error.message}`);
+                            // Log detailed error to console for debugging
+                            console.error("Cancellation preConfirm error:", error);
                         }
                     },
                     allowOutsideClick: () => !Swal.isLoading()
                 }).then((result) => {
                     if (result.isConfirmed && result.value) {
                         const apiResult = result.value;
-                        showAppNotification(apiResult.message || 'تم إلغاء الموعد بنجاح.',
-                            'success');
+                        showNotification(apiResult.message || 'تم إلغاء الموعد بنجاح.', 'success');
 
-                        // تحديث واجهة المستخدم للبطاقة الملغاة
-                        if ($cardElement.length) {
-                            $cardElement.attr('data-status', apiResult.new_status ||
-                                'ملغي'); // تحديث data-status
-                            $cardElement.css('border-left-color',
-                                'var(--danger-color)'); // تغيير لون الشريط الجانبي
+                        // Update card UI
+                        $card.attr('data-status-key', 'cancelled');
+                        $card.attr('data-status', apiResult.new_status_display || apiResult.new_status); // Update display status
 
-                            const $statusBadge = $cardElement.find('.appointment-status-badge');
-                            if ($statusBadge.length) {
-                                $statusBadge.removeClass(
-                                        'badge-confirmed-patient badge-pending-patient')
-                                    .addClass('badge-cancelled-past') // افترض أن لديك هذا الكلاس
-                                    .html(
-                                        `<i class="fas fa-ban me-1"></i> ${apiResult.new_status || 'ملغي'}`
-                                    );
-                            }
-                            // استبدال زر الإلغاء بنص أو إخفاء قسم الفوتر
-                            $buttonElement.closest('.appointment-card-footer-patient')
-                                .html(
-                                    '<span class="text-danger small fw-bold p-2">تم إلغاء هذا الموعد</span>'
-                                );
-                            // أو يمكنك إخفاء البطاقة بالكامل إذا أردت
-                            // $cardElement.fadeOut(500, function() { $(this).remove(); });
+                        const $statusBadge = $card.find('.appointment-status-badge');
+                        if ($statusBadge.length) {
+                            $statusBadge.removeClass('badge-status-confirmed badge-status-pending')
+                                .addClass('badge-status-cancelled')
+                                .html(`<i class="fas fa-ban me-1"></i> ${apiResult.new_status_display || apiResult.new_status}`);
                         }
+
+                        $button.closest('.appointment-card-footer-patient')
+                            .html('<span class="text-danger small fw-bold p-2"><i class="fas fa-check-circle me-1"></i> تم إلغاء هذا الموعد.</span>');
+
+                        // Optional: Add a class to the card for further styling or filtering
+                        $card.addClass('appointment-cancelled');
+
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        // User cancelled
+                    } else if (result.isDenied) {
+                        // This won't happen with current button setup
+                    } else if (result.value === undefined && result.isConfirmed === false) {
+                        // Error from preConfirm, Swal.showValidationMessage was shown
+                        showNotification('لم يتم إلغاء الموعد بسبب خطأ في الطلب.', 'error');
                     }
                 });
             });

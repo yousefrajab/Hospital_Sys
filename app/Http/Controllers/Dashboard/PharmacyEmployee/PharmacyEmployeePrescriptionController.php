@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Dashboard\PharmacyEmployee; // تأكد من ال
 use App\Models\Patient;
 use App\Models\Medication;
 use App\Models\Prescription;
-use App\Models\PharmacyStock; // مهم لعملية الصرف
-use App\Models\PrescriptionItem;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
+use App\Models\PrescriptionItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\PharmacyStock; // مهم لعملية الصرف
 // ستحتاج FormRequest لعملية الصرف لاحقًا
 // use App\Http\Requests\Dashboard\PharmacyEmployee\DispensePrescriptionRequest;
 
@@ -22,18 +23,48 @@ class PharmacyEmployeePrescriptionController extends Controller
      */
     public function index(Request $request)
     {
-        $pharmacyEmployeeId = Auth::guard('pharmacy_employee')->id(); // الموظف المسجل حاليًا
+        $pharmacyEmployeeId = Auth::guard('pharmacy_employee')->id();
         Log::info("PharmacyEmployeePrescriptionController@index: Fetching pending prescriptions for PharmacyEmployee ID: {$pharmacyEmployeeId}");
 
-        // جلب الوصفات التي حالتها 'approved' أو 'new' (حسب نظامك)
-        // والتي لم يتم صرفها بالكامل بعد أو لم يتم إلغاؤها
-        $query = Prescription::whereIn('status', [Prescription::STATUS_APPROVED, Prescription::STATUS_NEW, Prescription::STATUS_PARTIALLY_DISPENSED])
-            ->where(function ($q) { // إذا أردت استثناء الوصفات التي صرفها هذا الموظف بالفعل بالكامل
-                $q->where('dispensed_by_pharmacy_employee_id', '!=', Auth::guard('pharmacy_employee')->id())
-                    ->orWhereNull('dispensed_by_pharmacy_employee_id');
+        // قائمة الحالات التي يجب أن يراها الصيدلي كمهام معلقة
+        $targetStatuses = [
+            Prescription::STATUS_NEW,                   // وصفات جديدة تماماً من الطبيب
+            Prescription::STATUS_APPROVED,              // وصفات معتمدة (قد تكون جديدة أو تم تحديثها بعد مراجعة)
+            Prescription::STATUS_RENEWAL_APPROVED,      // <<<--- أضفنا هذه الحالة: وصفات وافق الطبيب على تجديدها
+            Prescription::STATUS_PARTIALLY_DISPENSED,   // وصفات تم صرف جزء منها وتحتاج إكمال
+            // يمكنك إضافة Prescription::STATUS_REFILL_REQUESTED هنا إذا كان الصيدلي هو أول من يراجع طلبات المرضى الروتينية
+            // ولكن بناءً على نقاشنا، الطلبات التي تصل للطبيب هي التي تحتاج موافقته، ثم تعود للصيدلي
+        ];
+
+        $query = Prescription::whereIn('status', $targetStatuses)
+            // الشرط لإظهار الوصفات التي لم يتم تعيينها لأحد أو لم يتم تعيينها لهذا الموظف
+            // أو إذا تم تعيينها لهذا الموظف ولم يتم صرفها بالكامل بعد
+            // هذا الشرط مُحسَّن قليلاً
+            ->where(function ($q) use ($pharmacyEmployeeId) {
+                $q->whereNull('dispensed_by_pharmacy_employee_id') // لم يتم تعيينها لأحد بعد
+                    ->orWhere('dispensed_by_pharmacy_employee_id', $pharmacyEmployeeId); // أو معينة لهذا الموظف (وربما صرف جزء منها)
             })
-            ->with(['patient:id', 'doctor:id']) // معلومات أساسية
-            ->orderBy('prescription_date', 'asc'); // الأقدم أولاً
+            // استبعاد الوصفات التي تم صرفها بالكامل من قبل هذا الموظف (إذا كانت status لا تزال partially_dispensed لسبب ما)
+            // هذا الشرط إضافي للسلامة، الحالة الأساسية `dispensed` يجب أن تزيلها من القائمة
+            ->where(function ($q) use ($pharmacyEmployeeId) {
+                $q->where('status', '!=', Prescription::STATUS_DISPENSED) // ليست مصروفة بالكامل
+                    ->orWhere('dispensed_by_pharmacy_employee_id', '!=', $pharmacyEmployeeId); // أو لم يصرفها هذا الموظف
+            })
+            // للتأكد أننا لا نعرض وصفة معينة لموظف آخر وهي مكتملة الصرف
+            ->where(function ($q) {
+                $q->whereNull('dispensed_at') // لم تصرف بالكامل
+                    ->orWhereIn('status', [Prescription::STATUS_PARTIALLY_DISPENSED, Prescription::STATUS_RENEWAL_APPROVED, Prescription::STATUS_APPROVED, Prescription::STATUS_NEW]); // أو أنها لا تزال في حالة تتطلب عملاً
+            })
+            ->with([
+                'patient' => function ($patientQuery) { // معلومات المريض الأساسية مع الصورة
+                    $patientQuery->select('id')->with('image:id,filename,imageable_id,imageable_type');
+                },
+                'doctor:id', // معلومات الطبيب الأساسية
+                'items' // تحميل البنود لمعرفة عددها أو عرض ملخص سريع
+            ])
+            ->withCount('items') // لحساب عدد الأدوية
+            ->orderBy('prescription_date', 'asc') // الأقدم تاريخ إصدار أولاً
+            ->orderBy('updated_at', 'asc'); // ثم الأقدم تحديثاً (مهم للطلبات المجددة)
 
         // --- الفلاتر ---
         if ($request->filled('search_term')) {
@@ -43,24 +74,66 @@ class PharmacyEmployeePrescriptionController extends Controller
                     ->orWhereHas('patient', fn($pq) => $pq->whereTranslationLike('name', "%{$searchTerm}%"))
                     ->orWhereHas('doctor', fn($dq) => $dq->whereTranslationLike('name', "%{$searchTerm}%"));
             });
+            Log::info("Filter applied: search_term = {$searchTerm}");
         }
-        if ($request->filled('date_filter')) {
+        if ($request->filled('prescription_status_filter')) { // اسم فلتر مختلف هنا لصفحة الصيدلي
+            $statusFilter = $request->prescription_status_filter;
+            if (in_array($statusFilter, $targetStatuses)) { // تأكد أن الحالة المطلوبة ضمن الحالات المستهدفة
+                $query->where('status', $statusFilter);
+                Log::info("Filter applied: prescription_status_filter = {$statusFilter}");
+            }
+        }
+        if ($request->filled('date_from_filter')) { // اسم فلتر مختلف
             try {
-                $query->whereDate('prescription_date', '=', \Carbon\Carbon::parse($request->date_filter)->format('Y-m-d'));
-            } catch (\Exception $e) { /* تجاهل التاريخ غير الصالح */
+                $dateFrom = Carbon::parse($request->date_from_filter)->startOfDay();
+                $query->where('prescription_date', '>=', $dateFrom);
+                Log::info("Filter applied: date_from_filter = {$dateFrom->toDateString()}");
+            } catch (\Exception $e) {
+                Log::warning("Invalid date_from_filter format: " . $request->date_from_filter);
+            }
+        }
+        if ($request->filled('date_to_filter')) { // اسم فلتر مختلف
+            try {
+                $dateTo = Carbon::parse($request->date_to_filter)->endOfDay();
+                $query->where('prescription_date', '<=', $dateTo);
+                Log::info("Filter applied: date_to_filter = {$dateTo->toDateString()}");
+            } catch (\Exception $e) {
+                Log::warning("Invalid date_to_filter format: " . $request->date_to_filter);
             }
         }
         // --- نهاية الفلاتر ---
 
-        $pendingPrescriptions = $query->paginate(15)->appends($request->query());
+        $pendingPrescriptions = $query->paginate(config('pagination.default', 15)) // استخدام قيمة من config
+            ->appends($request->query());
 
-        // يمكنك تمرير إحصائيات بسيطة إذا أردت
-        $newPrescriptionsCount = Prescription::where('status', Prescription::STATUS_NEW)->count(); // مثال
+        // إحصائية لعدد الوصفات الجديدة/المجددة التي تنتظر أول إجراء
+        $actionablePrescriptionsCount = Prescription::whereIn('status', [
+            Prescription::STATUS_NEW,
+            Prescription::STATUS_APPROVED,
+            Prescription::STATUS_RENEWAL_APPROVED
+        ])
+            ->where(function ($q) use ($pharmacyEmployeeId) {
+                $q->whereNull('dispensed_by_pharmacy_employee_id')
+                    ->orWhere('dispensed_by_pharmacy_employee_id', $pharmacyEmployeeId);
+            })
+            ->count();
+        // حالات الفلترة لواجهة المستخدم
+        $statusesForFilterDropdown = [];
+        if (class_exists(Prescription::class) && method_exists(Prescription::class, 'getStatusesForFilter')) {
+            $allStatuses = Prescription::getStatusesForFilter();
+            foreach ($targetStatuses as $statusKey) {
+                if (isset($allStatuses[$statusKey])) {
+                    $statusesForFilterDropdown[$statusKey] = $allStatuses[$statusKey];
+                }
+            }
+        }
+
 
         return view('Dashboard.pharmacy_employee.Prescriptions.index', compact(
             'pendingPrescriptions',
-            'request',
-            'newPrescriptionsCount'
+            'request', // لتمرير الفلاتر للـ view إذا كنت ستعرضها
+            'actionablePrescriptionsCount', // تمرير العدد الجديد لواجهة المستخدم
+            'statusesForFilterDropdown' // تمرير الحالات للفلتر
         ));
     }
     public function showDispenseForm(Prescription $prescription)

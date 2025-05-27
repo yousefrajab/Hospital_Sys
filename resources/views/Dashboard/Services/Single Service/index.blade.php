@@ -1,16 +1,6 @@
 @extends('Dashboard.layouts.master')
-{{-- @if ($errors->any())
-    <div class="w-full max-w-3xl mx-auto mt-6 mb-4">
-        <div class="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100 border border-red-300 dark:border-red-700 rounded-xl p-4 shadow-md animate-fade-in">
-            <h2 class="font-bold text-lg mb-2">❗ هناك بعض الأخطاء:</h2>
-            <ul class="list-disc list-inside space-y-1">
-                @foreach ($errors->all() as $error)
-                    <li class="text-sm">{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    </div>
-@endif --}}
+
+
 @section('title')
     {{ trans('main-sidebar_trans.Single_service') }}
 @stop

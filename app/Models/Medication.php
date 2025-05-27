@@ -4,16 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-// (اختياري) إذا كنت ستستخدم الترجمة لاحقًا
-// use Astrotomic\Translatable\Translatable;
-// use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 
-class Medication extends Model // implements TranslatableContract (إذا استخدمت الترجمة)
+class Medication extends Model
 {
     use HasFactory;
-    // use Translatable; // إذا استخدمت الترجمة
 
-    // ** تعديل $fillable ليطابق الـ migration الحالي **
     protected $fillable = [
         'name', 'generic_name', 'description', 'category', 'manufacturer',
         'dosage_form', 'strength', 'unit_of_measure', 'barcode',
@@ -24,23 +19,20 @@ class Medication extends Model // implements TranslatableContract (إذا است
         'status',
     ];
 
-    // public $translatedAttributes = ['name', 'description', 'contraindications', 'side_effects']; // إذا استخدمت الترجمة
-
     protected $casts = [
         'requires_prescription' => 'boolean',
         'status' => 'boolean',
         'purchase_price' => 'decimal:2',
         'selling_price' => 'decimal:2',
-        'minimum_stock_level' => 'integer', // تأكد من تطابق النوع
-        'maximum_stock_level' => 'integer', // تأكد من تطابق النوع
+        'minimum_stock_level' => 'integer',
+        'maximum_stock_level' => 'integer',
     ];
 
-
+    // --- الدوال المساعدة لجلب القوائم الثابتة ---
     public static function getCommonCategories(): array
     {
-        // يمكنك توسيع هذه القائمة أو جلبها من جدول منفصل لاحقًا إذا أردت
         return [
-            'antibiotic' => 'مضاد حيوي',
+            'antibiotic' => 'مضاد حيوي', // ... باقي القائمة
             'analgesic' => 'مسكن للألم',
             'antipyretic' => 'خافض للحرارة',
             'anti_inflammatory' => 'مضاد للالتهاب',
@@ -56,14 +48,10 @@ class Medication extends Model // implements TranslatableContract (إذا است
         ];
     }
 
-    /**
-     * إرجاع مصفوفة بالأشكال الصيدلانية الشائعة.
-     * @return array
-     */
     public static function getCommonDosageForms(): array
     {
         return [
-            'tablet' => 'أقراص (حبوب)',
+            'tablet' => 'أقراص (حبوب)', // ... باقي القائمة
             'capsule' => 'كبسولات',
             'syrup' => 'شراب',
             'suspension' => 'معلق',
@@ -85,29 +73,56 @@ class Medication extends Model // implements TranslatableContract (إذا است
         ];
     }
 
-    /**
-     * إرجاع مصفوفة بوحدات القياس الشائعة للأدوية.
-     * @return array
-     */
     public static function getCommonUnitsOfMeasure(): array
     {
         return [
-            'tablet' => 'قرص',
+            'tablet' => 'قرص', // ... باقي القائمة
             'capsule' => 'كبسولة',
             'ml' => 'مل (مليلتر)',
             'mg' => 'مجم (مليجرام)',
             'g' => 'جم (جرام)',
-            'unit' => 'وحدة (Unit)', // مثل الأنسولين
+            'unit' => 'وحدة (Unit)',
             'package' => 'علبة',
             'bottle' => 'زجاجة',
             'tube' => 'أنبوب',
             'sachet' => 'كيس (مغلف)',
-            'application' => 'تطبيق (Application - للمراهم مثلاً)',
-            'puff' => 'بخة (للبخاخات)',
+            'application' => 'تطبيق',
+            'puff' => 'بخة',
             'drop' => 'قطرة',
             'other' => 'وحدة أخرى',
         ];
     }
+
+    // --- الـ Accessors المفقودة ---
+    /**
+     * Accessor: للحصول على النص المقروء للشكل الصيدلاني.
+     * @return string
+     */
+    public function getDosageFormDisplayAttribute(): string
+    {
+        if ($this->dosage_form) {
+            // تستدعي الدالة الثابتة من نفس الكلاس
+            $commonForms = self::getCommonDosageForms();
+            return $commonForms[$this->dosage_form] ?? ucfirst(str_replace('_', ' ', $this->dosage_form));
+        }
+        return ''; // أو 'غير محدد' أو أي قيمة افتراضية
+    }
+
+    /**
+     * Accessor: للحصول على النص المقروء لوحدة القياس.
+     * @return string
+     */
+    public function getUnitOfMeasureDisplayAttribute(): string
+    {
+        if ($this->unit_of_measure) {
+             // تستدعي الدالة الثابتة من نفس الكلاس
+            $commonUnits = self::getCommonUnitsOfMeasure();
+            return $commonUnits[$this->unit_of_measure] ?? ucfirst(str_replace('_', ' ', $this->unit_of_measure));
+        }
+        return ''; // أو 'غير محدد'
+    }
+    // --- نهاية الـ Accessors ---
+
 
     public function stocks()
     {
@@ -116,10 +131,7 @@ class Medication extends Model // implements TranslatableContract (إذا است
 
     public function prescriptionItems()
     {
-        // افترض أن لديك موديل PrescriptionItem
-        // إذا لم يكن لديك بعد، يمكنك تعليق هذه العلاقة أو إنشائه لاحقًا
         return $this->hasMany(PrescriptionItem::class);
-        // return null; // مؤقتًا إذا لم يكن الموديل موجودًا
     }
 
     public function getTotalStockAttribute(): int
@@ -132,7 +144,6 @@ class Medication extends Model // implements TranslatableContract (إذا است
 
     public function getIsLowStockAttribute(): bool
     {
-        // تأكد من أن minimum_stock_level ليس null قبل المقارنة
         return $this->minimum_stock_level !== null && $this->total_stock <= $this->minimum_stock_level;
     }
 }

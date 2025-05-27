@@ -516,58 +516,187 @@ class PrescriptionController extends Controller
     public function approvalRequests(Request $request)
     {
         $doctorId = Auth::guard('doctor')->id();
-        if (!$doctorId) { abort(403, 'غير مصرح لك بالوصول.'); }
+        if (!$doctorId) {
+            abort(403, 'غير مصرح لك بالوصول.');
+        }
 
-        Log::info("DoctorID {$doctorId} accessing prescription refill approval requests page.");
+        Log::info("DoctorID {$doctorId} accessing prescription refill approval requests page (SIMPLIFIED QUERY).");
 
         $query = Prescription::where('doctor_id', $doctorId)
-            ->where('status', Prescription::STATUS_REFILL_REQUESTED) // فقط الطلبات التي أرسلها المريض
-            // الشروط التي تجعل الطلب يحتاج موافقة الطبيب
-            // سنبسطها مبدئياً، ويمكن تعقيدها لاحقاً لتشمل حالات التصعيد من الصيدلي الخ
-            ->where(function ($q) {
-                // الحالة 1: الوصفة لديها بنود، وجميع البنود المسموح لها بإعادة الصرف قد استنفدت
-                $q->whereHas('items', function($itemQuery){
-                    $itemQuery->havingRaw('SUM(refills_allowed) > 0 AND SUM(refills_done) >= SUM(refills_allowed)');
-                }, '>=', 1) // يجب أن يكون هناك على الأقل بند واحد يطابق هذا الشرط
-                // الحالة 2: الوصفة ليس لديها أي بنود مسموح لها بإعادة الصرف (refills_allowed كلها صفر أو null)
-                // وهي وصفة مزمنة والمريض يطلب تجديداً
-                ->orWhere(function ($subQ){
-                     $subQ->where('is_chronic_prescription', true)
-                          ->whereDoesntHave('items', function($itemQuery){
-                              $itemQuery->where('refills_allowed', '>', 0);
-                          });
-                })
-                // الحالة 3: (مثال لمستقبل) إذا انتهت صلاحية الوصفة - تحتاج حقل prescription_expiry_date
-                // ->orWhere('prescription_expiry_date', '<', now())
-                // الحالة 4: (مثال لمستقبل) إذا تم تصعيدها من الصيدلية - تحتاج حقل escalation_reason
-                // ->orWhereNotNull('pharmacy_escalation_reason')
-                ;
-            })
+            ->where('status', Prescription::STATUS_REFILL_REQUESTED) // <<--- الشرط الوحيد مبدئياً
             ->with([
                 'patient' => function ($patientQuery) {
-                    $patientQuery->select('id', 'name', 'gender', 'Date_Birth')->with('image');
+                    $patientQuery->select('id', 'gender', 'Date_Birth')->with('image');
                 },
-                'items.medication' => function ($medQuery){ // تحميل الأدوية لتفاصيل سريعة
+                'items.medication' => function ($medQuery) {
                     $medQuery->select('id', 'name', 'strength', 'dosage_form');
                 }
             ])
             ->withCount('items')
-            ->orderBy('updated_at', 'desc'); // الطلبات الأحدث تعديلاً (وقت إرسال الطلب)
+            ->orderBy('updated_at', 'desc');
 
-        // يمكنك إضافة فلاتر هنا (بحث باسم المريض، إلخ)
-         if ($request->filled('search_patient_approval')) {
-             $searchTerm = $request->search_patient_approval;
-             $query->whereHas('patient', function($q) use ($searchTerm){
-                 $q->whereTranslationLike('name', "%{$searchTerm}%")
-                   ->orWhere('national_id', 'like', "%{$searchTerm}%");
-             });
-         }
-
+        // ... (باقي كود الفلترة بالبحث) ...
         $approvalRequests = $query->paginate(10)->appends($request->query());
 
         return view('Dashboard.Doctors.Prescriptions.approval_requests', compact(
             'approvalRequests',
             'request'
         ));
+    }
+    public function approveRefill(Request $request, Prescription $prescription)
+    {
+        $doctor = Auth::guard('doctor')->user();
+
+        if ($prescription->doctor_id !== $doctor->id) {
+            Log::warning("AUTH_FAIL: DoctorID {$doctor->id} tried to approve refill for PrescriptionID {$prescription->id} not belonging to them.");
+            return redirect()->route('doctor.prescriptions.approvalRequests')->with('error', 'غير مصرح لك بمعالجة هذه الوصفة.');
+        }
+
+        if ($prescription->status !== Prescription::STATUS_REFILL_REQUESTED) {
+            Log::warning("INVALID_STATUS: DoctorID {$doctor->id} tried to approve refill for PrescriptionID {$prescription->id} with status '{$prescription->status}'.");
+            return redirect()->route('doctor.prescriptions.approvalRequests')->with('error', 'لا يمكن معالجة هذه الوصفة لأن حالتها الحالية لا تتطلب موافقة تجديد.');
+        }
+
+        $validated = $request->validate([
+            'items' => 'required|array|min:1',
+            'items.*.renew' => 'nullable|string',
+            'items.*.refills_allowed_new' => [
+                'nullable',
+                'required_if:items.*.renew,on',
+                'integer',
+                'min:0',
+                'max:12' // يمكن جعل max من config
+            ],
+            'items.*.item_notes_new' => 'nullable|string|max:255',
+            'general_approval_notes' => 'nullable|string|max:1000',
+            'new_next_refill_due_date' => 'nullable|date|after_or_equal:today', // تم تغيير الاسم ليتطابق مع blade
+        ], [
+            'items.*.refills_allowed_new.required_if' => 'يجب تحديد عدد مرات الصرف الجديدة للدواء الذي اخترت تجديده.',
+            'items.*.refills_allowed_new.min' => 'عدد مرات الصرف لا يمكن أن يكون أقل من صفر.',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $atLeastOneItemRenewed = false;
+            $prescriptionItemsData = $validated['items'];
+
+            foreach ($prescription->items as $originalItem) {
+                if (isset($prescriptionItemsData[$originalItem->id])) {
+                    $itemData = $prescriptionItemsData[$originalItem->id];
+                    if (isset($itemData['renew']) && $itemData['renew'] === 'on' && isset($itemData['refills_allowed_new'])) {
+                        $originalItem->refills_allowed = (int)$itemData['refills_allowed_new'];
+                        $originalItem->refills_done = 0; // *** مهم: تصفير مرات الصرف السابقة لهذا البند ***
+                        // (اختياري) يمكنك إضافة ملاحظات الطبيب الخاصة بالبند هنا إذا كان لديك حقل لها
+                        // $originalItem->renewal_notes_by_doctor = $itemData['item_notes_new'] ?? null;
+                        $originalItem->save();
+                        $atLeastOneItemRenewed = true;
+                    } else {
+                        // إذا لم يحدد الطبيب تجديد هذا البند، يمكنك إما:
+                        // 1. تركه كما هو (قد يكون refills_done >= refills_allowed من قبل ولن يُصرف)
+                        // 2. أو وضع علامة عليه كـ "غير مجدد" (يتطلب عمود إضافي is_renewed_active مثلاً) - هذا أكثر تعقيداً
+                        // حالياً، سنفترض الخيار الأول.
+                        Log::info("DoctorID {$doctor->id} did not renew itemID {$originalItem->id} for PrescriptionID {$prescription->id}");
+                    }
+                }
+            }
+
+            if (!$atLeastOneItemRenewed) {
+                DB::rollBack();
+                return redirect()->back()->withInput()->with('error', 'يجب الموافقة على تجديد دواء واحد على الأقل وتحديد عدد مرات الصرف له.');
+            }
+
+            // تحديث بيانات الوصفة الرئيسية
+            $prescription->status = Prescription::STATUS_APPROVED; // تعود إلى "معتمدة" لتظهر للصيدلي
+
+            // *** مهم: تصفير معلومات الصرف السابقة للوصفة ككل ***
+            $prescription->dispensed_by_pharmacy_employee_id = null;
+            $prescription->dispensed_at = null;
+            $prescription->pharmacy_notes = null; // (اختياري) مسح ملاحظات الصيدلي السابقة
+
+            // ملاحظات الطبيب العامة على هذا التجديد
+            $prescription->doctor_notes = $validated['general_approval_notes'] ?? $prescription->doctor_notes;
+
+            // تحديث تاريخ إعادة الصرف القادم إذا تم إرساله
+            if (isset($validated['new_next_refill_due_date'])) {
+                $prescription->next_refill_due_date = $validated['new_next_refill_due_date'];
+            } else {
+                // يمكنك هنا وضع منطق لحساب تاريخ إعادة الصرف التالي تلقائياً إذا لم يدخله الطبيب
+                // مثلاً، بعد شهر من الآن إذا كانت شهرية، أو بناءً على أقصر مدة لدواء مجدد.
+                // $prescription->next_refill_due_date = now()->addMonth()->toDateString(); // مثال
+            }
+            // إذا كانت الوصفة غير مزمنة، قد ترغب في مسح next_refill_due_date
+            // if (!$prescription->is_chronic_prescription) {
+            //     $prescription->next_refill_due_date = null;
+            // }
+
+            $prescription->save();
+
+            Log::info("REFILL_APPROVED: DoctorID {$doctor->id} approved renewal for PrescriptionID {$prescription->id}. New Status: {$prescription->status}. Monitored items:", $validated['items']);
+
+            // TODO: إرسال إشعار للمريض والصيدلية
+            // ... (منطق الإشعارات) ...
+
+            DB::commit();
+
+            return redirect()->route('doctor.prescriptions.approvalRequests')
+                ->with('success', "تمت الموافقة بنجاح على تجديد بنود الوصفة رقم: {$prescription->prescription_number}. تم إرسالها للصيدلية.");
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("APPROVE_REFILL_ERROR: DoctorID {$doctor->id} for PrescriptionID {$prescription->id}: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return redirect()->back()->with('error', 'حدث خطأ فني أثناء الموافقة على تجديد الوصفة. يرجى المحاولة مرة أخرى.');
+        }
+    }
+    /**
+     * رفض طلب تجديد/إعادة صرف وصفة.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Prescription  $prescription
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function denyRefill(Request $request, Prescription $prescription)
+    {
+        $doctor = Auth::guard('doctor')->user();
+
+        // 1. التحقق من الصلاحية الأساسية
+        if ($prescription->doctor_id !== $doctor->id) {
+            return redirect()->route('doctor.prescriptions.approvalRequests')->with('error', 'غير مصرح لك بمعالجة هذه الوصفة.');
+        }
+        if ($prescription->status !== Prescription::STATUS_REFILL_REQUESTED) {
+            return redirect()->route('doctor.prescriptions.approvalRequests')->with('error', 'حالة الوصفة لا تسمح بهذا الإجراء.');
+        }
+
+        // 2. سبب الرفض إلزامي
+        $validated = $request->validate([
+            'denial_reason' => 'required|string|min:10|max:1000',
+        ], [
+            'denial_reason.required' => 'يجب إدخال سبب رفض طلب التجديد.',
+            'denial_reason.min' => 'سبب الرفض يجب أن لا يقل عن 10 أحرف.',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $prescription->status = Prescription::STATUS_REFILL_DENIED_BY_DOCTOR; // حالة جديدة مقترحة
+            // يمكنك تخزين سبب الرفض في pharmacy_notes أو doctor_notes أو حقل مخصص لسبب الرفض
+            $prescription->doctor_notes = ($prescription->doctor_notes ? $prescription->doctor_notes . "\n--- سبب رفض التجديد ---\n" : '') . $validated['denial_reason']; // إضافة لسجل الملاحظات
+            // أو $prescription->refill_denial_reason = $validated['denial_reason'];
+            $prescription->save();
+
+            Log::info("REFILL_DENIED_BY_DOCTOR: DoctorID {$doctor->id} denied refill for PrescriptionID {$prescription->id}. Reason: {$validated['denial_reason']}");
+
+            // إرسال إشعار للمريض والصيدلية بالرفض والسبب
+            // ... (منطق الإشعارات) ...
+
+            DB::commit();
+
+            return redirect()->route('doctor.prescriptions.approvalRequests')
+                ->with('success', "تم رفض طلب تجديد الوصفة رقم: {$prescription->prescription_number}.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("DENY_REFILL_ERROR: DoctorID {$doctor->id} - Error denying refill for PrescriptionID {$prescription->id}: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return redirect()->back()->with('error', 'حدث خطأ أثناء رفض طلب تجديد الوصفة.');
+        }
     }
 }

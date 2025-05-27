@@ -9,7 +9,7 @@ class Invoice extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    // protected $fillable =['invoice_status'];
+    protected $fillable =['invoice_status'];
 
     public function Group()
     {
@@ -35,4 +35,5 @@ class Invoice extends Model
     {
         return $this->belongsTo(Section::class, 'section_id');
     }
+
 }

@@ -20,9 +20,9 @@
                                         الأفكار ، 100٪ التسليم مضمون
                                     </div>
                                     <div class="btn-box">
-                                        <a href="contact.html" class="theme-btn appointment-btn"><span
-                                                class="txt">المواعيد</span></a>
-                                        <a href="services.html" class="theme-btn services-btn">الخدمات</a>
+                                        <a href="{{ route('website.my.appointments') }}" class="theme-btn appointment-btn"><span>المواعيد</span></a>
+                                        <a href="{{ route('website.services.all') }}"
+                                            class="theme-btn services-btn">الخدمات</a>
                                     </div>
                                 </div>
                             </div>
@@ -251,9 +251,9 @@
                                             <div class="column col-lg-6 col-md-6 col-sm-12">
                                                 <h3>الخدمات الرئيسية</h3>
                                                 <div class="column-text">
-                                                    @if ($section->services && count($section->services) > 0)
+                                                    @if ($section->Service && count($section->Service) > 0)
                                                         <ul class="service-list">
-                                                            @foreach ($section->services as $service)
+                                                            @foreach ($section->Service as $service)
                                                                 <li>{{ $service->name }}</li>
                                                             @endforeach
                                                         </ul>
@@ -288,23 +288,9 @@
                                                                         <h4 class="doctor-name">{{ $doctor->name }}</h4>
                                                                         <p class="doctor-specialty">
                                                                             {{ $doctor->specialization }}</p>
-                                                                        <div class="doctor-meta">
-                                                                            <span class="doctor-rating">
-                                                                                <i class="fas fa-star"></i> 4.8
-                                                                            </span>
-                                                                            <span class="doctor-experience">
-                                                                                <i class="fas fa-briefcase-medical"></i> 10
-                                                                                سنوات
-                                                                            </span>
-                                                                        </div>
-                                                                        {{-- <button class="btn btn-appointment" onclick="window.location.href='/appointment/{{ $doctor->id }}'">
-                                                                            حجز موعد <i class="fas fa-calendar-check"></i>
-                                                                        </button> --}}
 
-                                                                        {{-- في ملف Blade الذي يعرض الأقسام والأطباء --}}
-                                                                        {{-- ... (داخل حلقة عرض الأطباء) ... --}}
 
-                                                                        <button type="button" {{-- تأكد أن النوع button وليس submit --}}
+                                                                        <button type="button"
                                                                             class="btn btn-appointment book-doctor-btn"
                                                                             {{-- الكلاس موجود بالفعل --}}
                                                                             data-doctor-id="{{ $doctor->id }}"
@@ -317,9 +303,6 @@
                                                                             {{-- هذا للاحتياط أو العرض لاحقاً --}}
                                                                             حجز موعد <i class="fas fa-calendar-check"></i>
                                                                         </button>
-
-                                                                        {{-- ... (باقي الكود) ... --}}
-
 
                                                                     </div>
                                                                 </div>
@@ -1079,9 +1062,9 @@
             }
 
             /* .doctor-avatar {
-                    width: 50px;
-                    height: 100px;
-                } */
+                            width: 50px;
+                            height: 100px;
+                        } */
 
             .doctor-details {
                 padding: 15px;

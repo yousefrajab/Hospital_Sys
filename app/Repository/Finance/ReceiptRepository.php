@@ -3,7 +3,6 @@
 
 namespace App\Repository\Finance;
 
-
 use App\Interfaces\Finance\ReceiptRepositoryInterface;
 use App\Models\FundAccount;
 use App\Models\Patient;

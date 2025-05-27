@@ -73,6 +73,23 @@
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
+                <i class="side-menu__icon fas fa-sitemap"></i> {{-- أيقونة هيكل تنظيمي أو أقسام --}}
+                <span class="side-menu__label">{{ trans('main-sidebar_trans.sections') }}</span>
+                <i class="angle fe fe-chevron-down"></i>
+            </a>
+            <ul class="slide-menu">
+                <li>
+                    <a class="slide-item" href="{{ route('admin.Sections.index') }}">
+                        <i class="fas fa-stream me-2"></i> {{ trans('main-sidebar_trans.view_all') }}
+                        {{-- stream: لتمثيل قائمة أو تدفق --}}
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#">
                 <i class="side-menu__icon fas fa-user-md"></i> {{-- أيقونة طبيب --}}
                 <span class="side-menu__label">{{ trans('main-sidebar_trans.doctors') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
@@ -85,6 +102,27 @@
                 </li>
             </ul>
         </li>
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#">
+                <i class="side-menu__icon fas fa-pills"></i> {{-- أيقونة صيدلية/أدوية --}}
+                <span class="side-menu__label">الصيدلية</span>
+                <i class="angle fe fe-chevron-down"></i>
+            </a>
+            <ul class="slide-menu">
+                <li>
+                    <a class="slide-item" href="{{ route('admin.pharmacy_manager.index') }}"> {{-- {{ route('admin.pharmacy.staff.index') }} --}}
+                        <i class="fas fa-users-cog me-2"></i> قائمة مديري الصيدلية {{-- (أو أيقونة مناسبة لموظفي الصيدلية) --}}
+                    </a>
+                </li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.pharmacy_employee.index') }}"> {{-- {{ route('admin.pharmacy.staff.index') }} --}}
+                        <i class="fas fa-users-cog me-2"></i> قائمة الموظفين{{-- (أو أيقونة مناسبة لموظفي الصيدلية) --}}
+                    </a>
+                </li>
+
+            </ul>
+        </li>
+
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
@@ -149,48 +187,36 @@
                 </li>
             </ul>
         </li>
-
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-sitemap"></i> {{-- أيقونة هيكل تنظيمي أو أقسام --}}
-                <span class="side-menu__label">{{ trans('main-sidebar_trans.sections') }}</span>
+                <i class="side-menu__icon fas fa-calendar-alt"></i> {{-- أيقونة تقويم/مواعيد --}}
+                <span class="side-menu__label">المواعيد</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
-                    <a class="slide-item" href="{{ route('admin.Sections.index') }}">
-                        <i class="fas fa-stream me-2"></i> {{ trans('main-sidebar_trans.view_all') }}
-                        {{-- stream: لتمثيل قائمة أو تدفق --}}
-                    </a>
-                </li>
-                {{-- <li>
-                    <a class="slide-item" href="{{ route('admin.Sections.add') }}">
-                        <i class="fas fa-plus-square me-2"></i> {{ trans('main-sidebar_trans.add_section') }}
-                    </a>
-                </li> --}}
-            </ul>
-        </li>
-
-        <li class="slide">
-            <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-pills"></i> {{-- أيقونة صيدلية/أدوية --}}
-                <span class="side-menu__label">الصيدلية</span>
-                <i class="angle fe fe-chevron-down"></i>
-            </a>
-            <ul class="slide-menu">
-                <li>
-                    <a class="slide-item" href="{{ route('admin.pharmacy_manager.index') }}"> {{-- {{ route('admin.pharmacy.staff.index') }} --}}
-                        <i class="fas fa-users-cog me-2"></i> قائمة مديري الصيدلية {{-- (أو أيقونة مناسبة لموظفي الصيدلية) --}}
+                    <a class="slide-item" href="{{ route('admin.appointments.index') }}">
+                        <i class="fas fa-calendar-day me-2"></i> قائمة المواعيد الغير مؤكدة
                     </a>
                 </li>
                 <li>
-                    <a class="slide-item" href="{{ route('admin.pharmacy_employee.index') }}"> {{-- {{ route('admin.pharmacy.staff.index') }} --}}
-                        <i class="fas fa-users-cog me-2"></i> قائمة الموظفين{{-- (أو أيقونة مناسبة لموظفي الصيدلية) --}}
+                    <a class="slide-item" href="{{ route('admin.appointments.index2') }}">
+                        <i class="fas fa-calendar-check me-2"></i> قائمة المواعيد المؤكدة
                     </a>
                 </li>
                 <li>
-                    <a class="slide-item" href="#"> {{-- {{ route('admin.pharmacy.medicines.index') }} --}}
-                        <i class="fas fa-tablets me-2"></i> إدارة الأدوية
+                    <a class="slide-item" href="{{ route('admin.completed') }}">
+                        <i class="fas fa-calendar-times me-2"></i> قائمة المواعيد المنتهية
+                    </a>
+                </li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.appointments.lapsed') }}">
+                        <i class="fas fa-calendar-day me-2"></i> قائمة المواعيد الفائتة
+                    </a>
+                </li>
+                <li>
+                    <a class="slide-item" href="{{ route('admin.cancelled') }}">
+                        <i class="fas fa-ban me-2"></i> قائمة المواعيد الملغاة
                     </a>
                 </li>
             </ul>
@@ -321,35 +347,7 @@
             </ul>
         </li>
 
-        <li class="slide">
-            <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-calendar-alt"></i> {{-- أيقونة تقويم/مواعيد --}}
-                <span class="side-menu__label">المواعيد</span>
-                <i class="angle fe fe-chevron-down"></i>
-            </a>
-            <ul class="slide-menu">
-                <li>
-                    <a class="slide-item" href="{{ route('admin.appointments.index') }}">
-                        <i class="fas fa-calendar-day me-2"></i> قائمة المواعيد الغير مؤكدة
-                    </a>
-                </li>
-                <li>
-                    <a class="slide-item" href="{{ route('admin.appointments.index2') }}">
-                        <i class="fas fa-calendar-check me-2"></i> قائمة المواعيد المؤكدة
-                    </a>
-                </li>
-                <li>
-                    <a class="slide-item" href="{{ route('admin.completed') }}">
-                        <i class="fas fa-calendar-times me-2"></i> قائمة المواعيد المنتهية
-                    </a>
-                </li>
-                <li>
-                    <a class="slide-item" href="{{ route('admin.cancelled') }}">
-                        <i class="fas fa-ban me-2"></i> قائمة المواعيد الملغاة
-                    </a>
-                </li>
-            </ul>
-        </li>
+
         <li class="side-item side-item-category">Pages</li> {{-- يمكنك إزالة هذا إذا لم يكن له معنى كبير --}}
     </ul>
 </div>

@@ -5,20 +5,19 @@ namespace App\Http\Controllers\Dashboard\Admin;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\RayEmployee;
+use App\Models\Section;
 use Illuminate\Http\Request;
+use App\Models\PharmacyManager;       // <--- *** استيراد موديل مدير الصيدلية ***
+use App\Models\PharmacyEmployee;     // <--- *** استيراد موديل موظف الصيدلية ***
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Models\LaboratorieEmployee;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
-use App\Models\Section; // استيراد Section
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Hash; // لاستخدام Hash
-use App\Traits\UploadTrait;         // لاستخدام UploadTrait
-// ستحتاج لإنشاء FormRequests إذا لم تكن موجودة
-// use App\Http\Requests\Dashboard\User\UpdateDoctorUserRequest; // مثال
-// use App\Http\Requests\Dashboard\User\UpdateRayEmployeeUserRequest; // مثال
+use Illuminate\Support\Facades\Hash;
+use App\Traits\UploadTrait;
 
 class UserRoleController extends Controller
 {
@@ -26,66 +25,92 @@ class UserRoleController extends Controller
 
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 15); // السماح بتغيير عدد العناصر لكل صفحة
+        $perPage = $request->input('per_page', 15);
         $locale = app()->getLocale();
         Log::info("UserRoleController: Fetching users for roles page...");
 
         $mapUser = function ($user, $roleName, $roleKey, $isTranslatableName = false) use ($locale) {
             $user->role_name = $roleName;
-            $user->role_key = $roleKey;
+            $user->role_key = $roleKey; // مهم للـ CSS والفلاتر
             if ($isTranslatableName && method_exists($user, 'getTranslation')) {
                 $user->display_name = $user->getTranslation('name', $locale, false) ?: $user->name;
             } else {
                 $user->display_name = $user->name;
             }
-            // التحقق من وجود خاصية status قبل الوصول إليها
             if (property_exists($user, 'status') && $user->status !== null) {
                 $user->status_display = $user->status ? 'نشط' : 'غير نشط';
             } else {
-                // إذا لم يكن للمستخدم status، افترض أنه نشط أو أي قيمة تراها مناسبة
-                $user->status = true; // قيمة افتراضية للحالة
+                $user->status = true;
                 $user->status_display = 'نشط';
             }
             return $user;
         };
 
-        $doctors = Doctor::with(['image', 'translations']) // تحميل الترجمة مع الصورة
-            ->select('id', 'email', 'created_at', 'status', 'phone', 'section_id') // أضف section_id
+        // جلب الأطباء
+        $doctors = Doctor::with(['image', 'translations', 'section' => function($q_section) {
+                $q_section->withTranslation()->select('id'); // جلب القسم مع الترجمة واسم محدد
+            }])
+            ->select('id', 'email', 'created_at', 'status', 'phone', 'section_id')
             ->get()
-            ->map(fn($user) => $mapUser($user, 'طبيب', 'doctor', true)); // true لأن الاسم مترجم
+            ->map(function($user) use ($mapUser, $locale) { // تمرير $locale هنا
+                $user = $mapUser($user, 'طبيب', 'doctor', true);
+                // جلب اسم القسم المترجم إذا كان موجودًا
+                $user->section_name = $user->section ? ($user->section->getTranslation('name', $locale, false) ?: $user->section->name) : 'غير محدد';
+                return $user;
+            });
 
-        $patients = Patient::with(['image', 'translations']) // تحميل الترجمة مع الصورة
+
+        // جلب المرضى
+        $patients = Patient::with(['image', 'translations'])
             ->select('id', 'email', 'created_at', 'phone') // المرضى قد لا يكون لديهم status
             ->get()
             ->map(fn($user) => $mapUser($user, 'مريض', 'patient', true));
 
+        // جلب موظفي الأشعة
         $rayEmployees = RayEmployee::with('image')
             ->select('id', 'name', 'email', 'created_at', 'status', 'phone')
             ->get()
             ->map(fn($user) => $mapUser($user, 'موظف أشعة', 'ray_employee'));
 
+        // جلب موظفي المختبر
         $labEmployees = LaboratorieEmployee::with('image')
             ->select('id', 'name', 'email', 'created_at', 'status', 'phone')
             ->get()
             ->map(fn($user) => $mapUser($user, 'موظف مختبر', 'laboratorie_employee'));
 
+        // *** جلب مديري الصيدلية ***
+        $pharmacyManagers = PharmacyManager::with('image') // افترض أن لديهم علاقة image
+            ->select('id', 'name', 'email', 'created_at', 'status', 'phone') // تأكد من أن هذه الأعمدة موجودة
+            ->get()
+            ->map(fn($user) => $mapUser($user, 'مدير صيدلية', 'pharmacy_manager'));
+
+        // *** جلب موظفي الصيدلية ***
+        $pharmacyEmployees = PharmacyEmployee::with('image') // افترض أن لديهم علاقة image
+            ->select('id', 'name', 'email', 'created_at', 'status', 'phone') // تأكد من أن هذه الأعمدة موجودة
+            ->get()
+            ->map(fn($user) => $mapUser($user, 'موظف صيدلية', 'pharmacy_employee'));
+
+
+        // دمج جميع المستخدمين في مجموعة واحدة
         $allUsersCollection = new Collection(array_merge(
             $doctors->all(),
             $patients->all(),
             $rayEmployees->all(),
-            $labEmployees->all()
+            $labEmployees->all(),
+            $pharmacyManagers->all(),     // <--- *** إضافة مديري الصيدلية ***
+            $pharmacyEmployees->all()    // <--- *** إضافة موظفي الصيدلية ***
         ));
-        Log::info("Total users merged: " . $allUsersCollection->count());
+        Log::info("Total users merged including pharmacy staff: " . $allUsersCollection->count());
 
+        // تطبيق الفلاتر (تبقى كما هي)
         $filteredUsers = $allUsersCollection;
         if ($request->filled('role')) {
             $filteredUsers = $filteredUsers->where('role_key', $request->role);
         }
         // فلتر الحالة
-        if ($request->filled('status') && $request->status !== '') { // تحقق أن القيمة ليست سلسلة فارغة
-            $statusValue = (bool) $request->status; // تحويل إلى boolean
+        if ($request->filled('status') && $request->status !== '') {
+            $statusValue = (bool) $request->status;
             $filteredUsers = $filteredUsers->filter(function ($user) use ($statusValue) {
-                // التأكد من وجود خاصية status قبل فلترتها
                 return property_exists($user, 'status') && $user->status === $statusValue;
             });
         }
@@ -100,7 +125,8 @@ class UserRoleController extends Controller
             });
         }
 
-        $sortedUsers = $filteredUsers->sortBy('display_name');
+        // ترتيب وترقيم النتائج (تبقى كما هي)
+        $sortedUsers = $filteredUsers->sortByDesc('created_at')->sortBy('display_name'); // ترتيب إضافي حسب تاريخ الإنشاء (الأحدث أولاً) ثم الاسم
         $currentPage = LengthAwarePaginator::resolveCurrentPage('page');
         $currentPageItems = $sortedUsers->slice(($currentPage - 1) * $perPage, $perPage)->values();
         $paginatedUsers = new LengthAwarePaginator($currentPageItems, $sortedUsers->count(), $perPage, $currentPage, [
@@ -110,11 +136,13 @@ class UserRoleController extends Controller
 
         return view('Dashboard.Admin.users_roles.index', [
             'users' => $paginatedUsers,
-            'roles' => [
+            'roles' => [ // *** تحديث قائمة الأدوار ***
                 'doctor' => 'طبيب',
                 'patient' => 'مريض',
                 'ray_employee' => 'موظف أشعة',
                 'laboratorie_employee' => 'موظف مختبر',
+                'pharmacy_manager' => 'مدير صيدلية',      // <--- *** إضافة دور مدير الصيدلية ***
+                'pharmacy_employee' => 'موظف صيدلية',   // <--- *** إضافة دور موظف الصيدلية ***
             ],
             'request' => $request,
         ]);
@@ -123,60 +151,42 @@ class UserRoleController extends Controller
     public function editUser($role_key, $id)
     {
         $editRouteName = null;
-
+        // ... (الـ switch case لديك) ...
         switch ($role_key) {
             case 'doctor':
-                // افترض أن اسم route تعديل الطبيب هو 'admin.Doctors.edit'
                 $editRouteName = 'admin.Doctors.edit';
                 break;
             case 'patient':
-                // افترض أن اسم route تعديل المريض هو 'admin.Patients.edit'
                 $editRouteName = 'admin.Patients.edit';
                 break;
             case 'ray_employee':
-                // افترض أن اسم route تعديل موظف الأشعة هو 'admin.ray_employee.edit'
                 $editRouteName = 'admin.ray_employee.edit';
                 break;
             case 'laboratorie_employee':
-                // افترض أن اسم route تعديل موظف المختبر هو 'admin.laboratorie_employee.edit'
                 $editRouteName = 'admin.laboratorie_employee.edit';
+                break;
+            // *** إضافة حالات لمدير وموظف الصيدلية ***
+            case 'pharmacy_manager':
+                // افترض أن لديك route لتعديل مدير الصيدلية
+                $editRouteName = 'admin.pharmacy_manager.edit'; // تأكد من اسم الـ route لديك
+                break;
+            case 'pharmacy_employee':
+                // افترض أن لديك route لتعديل موظف الصيدلية
+                $editRouteName = 'admin.pharmacy_employee.edit'; // تأكد من اسم الـ route لديك
                 break;
             default:
                 Log::warning("UserRoleController: Unknown role_key '{$role_key}' for editing user ID {$id}. Cannot redirect.");
                 return redirect()->route('admin.users.roles.index')->with('error', 'لا يمكن تعديل هذا النوع من المستخدمين من هنا.');
         }
 
-        // التحقق من وجود الـ route قبل التوجيه
-        if ($editRouteName && \Illuminate\Support\Facades\Route::has($editRouteName)) {
-            // التوجيه إلى الـ route المحدد مع تمرير الـ ID
-            // لاحظ أن اسم البارامتر في الـ route قد يختلف (مثلاً 'doctor' بدلاً من 'id')
-            // تأكد من أن الـ route يتوقع 'id' أو قم بتعديل البارامتر هنا
-            // سأفترض أن الـ routes تتوقع بارامتر اسمه مطابق لاسم الموديل (doctor, patient, etc.)
-            $paramName = $role_key; // افتراض أولي
-            // تعديل خاص لأسماء الـ routes الشائعة
-            if ($role_key === 'doctor') $paramName = 'Doctor'; // إذا كان route model binding يتوقع Doctor
-            if ($role_key === 'patient') $paramName = 'Patient';
-
-            // تحقق من اسم البارامتر المتوقع في الـ route المحدد
-            // هذا الجزء قد يحتاج لتعديل بناءً على تعريف الـ routes لديك
+        // ... (باقي كود التوجيه كما هو، سيفترض أن الـ routes الجديدة تتبع نفس النمط) ...
+         if ($editRouteName && \Illuminate\Support\Facades\Route::has($editRouteName)) {
             try {
-                // إذا كان الـ route يتوقع ID فقط
-                if (str_contains(app('router')->getRoutes()->getByName($editRouteName)->uri(), '{id}')) {
-                    return Redirect::route($editRouteName, ['id' => $id]);
-                }
-                // إذا كان الـ route يتوقع اسم الموديل (Route Model Binding)
-                else {
-                    // قد تحتاج لتمرير الكائن كله أو فقط ال ID بناءً على تعريف الـ route
-                    // سأمرر الـ ID هنا كافتراض أكثر أمانًا يتوافق مع معظم التعريفات
-                    // التي لا تستخدم Route Model Binding صريح في اسم الـ route
-                    // تحقق من اسم البارامتر في تعريف الـ route (قد يكون doctor, patient, ray_employee, id)
-                    // مثال: إذا كان Route::get('/doctors/{doctor}/edit', ...)->name('admin.Doctors.edit');
-                    $routeParameters = app('router')->getRoutes()->getByName($editRouteName)->parameterNames();
-                    $parameterName = $routeParameters[0] ?? 'id'; // الحصول على اسم أول بارامتر
-                    return Redirect::route($editRouteName, [$parameterName => $id]);
-                }
+                $routeParameters = app('router')->getRoutes()->getByName($editRouteName)->parameterNames();
+                $parameterNameInRoute = $routeParameters[0] ?? 'id'; // الحصول على اسم أول بارامتر في تعريف الـ route
+                return Redirect::route($editRouteName, [$parameterNameInRoute => $id]);
             } catch (\Exception $e) {
-                Log::error("Error generating route '{$editRouteName}' for user ID {$id}: " . $e->getMessage());
+                Log::error("Error generating route '{$editRouteName}' for user (role: {$role_key}, ID: {$id}): " . $e->getMessage());
                 return redirect()->route('admin.users.roles.index')->with('error', 'خطأ في الوصول لصفحة التعديل.');
             }
         } else {
@@ -184,4 +194,7 @@ class UserRoleController extends Controller
             return redirect()->route('admin.users.roles.index')->with('error', 'صفحة التعديل غير متاحة لهذا الدور.');
         }
     }
+
+    // يمكنك إضافة دوال لـ updatePassword, updateStatus إذا كانت عامة أو تحتاج لتكييف خاص
+    // إذا كانت هذه الدوال موجودة في الكنترولرات الخاصة بكل دور، فالأمر جيد.
 }

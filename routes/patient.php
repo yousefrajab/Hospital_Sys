@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 
 use App\Http\Livewire\Chat\Createchat;
+use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\Patient\PatientPharmacyController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Dashboard_Patient\PatientController;
@@ -23,18 +24,39 @@ Route::group(
 
         //################################ dashboard patient ########################################
 
-        Route::get('/home', function () {
-            $sections = Section::with('doctors')->get();
-            return view('welcome', compact('sections'));
-        })->middleware(['auth:patient'])->name('dashboard.patient.home');
 
-        Route::get('/dashboard/patient', function () {
-            return view('Dashboard.dashboard_patient.dashboard');
-        })->middleware(['auth:patient'])->name('dashboard.patient');
         //################################ end dashboard patient #####################################
+        Route::get('/home', [WebsiteController::class, 'home'])->middleware(['auth:patient'])->name('home');
 
 
         Route::middleware(['auth:patient'])->prefix('patient')->group(function () {
+
+
+            Route::get('/departments', [WebsiteController::class, 'showAllDepartments'])->name('website.departments.all');
+            Route::get('/department/{id}', [WebsiteController::class, 'showDepartmentDetails'])->name('website.department.details');
+            // يمكنك استخدام {slug} بدلاً من {id} إذا أردت روابط صديقة لمحركات البحث،
+            // لكن هذا يتطلب إضافة حقل slug لموديل Section وتعديل الكنترولر للبحث بالـ slug.
+            Route::get('/services', [WebsiteController::class, 'showAllServices'])->name('website.services.all');
+            Route::get('/group-services', [WebsiteController::class, 'showAllGroupServices'])->name('website.group_services.all');
+
+            // Routes الجديدة للأطباء
+            Route::get('/doctors', [WebsiteController::class, 'showAllDoctors'])->name('website.doctors.all');
+            Route::get('/doctor/{id}', [WebsiteController::class, 'showDoctorDetails'])->name('website.doctor.details');
+            Route::get('/dashboard/patient', [PatientController::class, 'dashboard'])->middleware(['auth:patient'])->name('dashboard.patient');
+
+            Route::get('/my-appointments', [WebsiteController::class, 'myAppointments'])->name('website.my.appointments')->middleware('auth:patient'); // مثال لحماية المسار
+
+            // مسار لإلغاء الموعد (يفضل استخدام PATCH أو DELETE، ولكن POST أسهل مع الفورم)
+            Route::post('/my-appointments/{appointment}/cancel', [WebsiteController::class, 'cancelAppointmentFromWebsite'])->name('website.appointment.cancel')->middleware('auth:patient');
+            Route::get('/my-invoices', [WebsiteController::class, 'myInvoices'])->name('website.my.invoices')->middleware('auth:patient');
+
+            Route::get('/my-invoices/{invoice}/print', [WebsiteController::class, 'printInvoice'])
+                ->name('website.invoice.print')
+                ->middleware('auth:patient');
+
+            Route::get('/my-account', [WebsiteController::class, 'myAccountStatement'])->name('website.my.account')->middleware('auth:patient');
+            Route::get('/my-receipts/{receiptAccount}/print', [WebsiteController::class, 'printReceipt'])->name('website.receipt.print')->middleware('auth:patient');
+
 
             Route::get('/profile', [ProfilePatController::class, 'show'])->name('profile.show');
             Route::get('/profile/edit', [ProfilePatController::class, 'edit'])->name('profile.edit');
@@ -65,11 +87,6 @@ Route::group(
 
             Route::view('dashboard', 'livewire.dashboard.patient-appointment-form')->name('patient-appointment-form');
         });
-        Route::get('patient/pharmacy/', [PatientPharmacyController::class, 'index'])->name('patient.pharmacy.index'); // هذا هو الرابط المطلوب
-        Route::get('/{prescription}', [PatientPharmacyController::class, 'show'])->name('patient.pharmacy.show'); // لاحقًا لتفاصيل الوصفة
-        Route::post('/{prescription}/request-refill', [PatientPharmacyController::class, 'requestRefill'])->name('patient.pharmacy.request-refill');
-        Route::get('/refill-requests/pending', [PatientPharmacyController::class, 'pendingRefillRequests'])
-            ->name('patient.pharmacy.refill-requests.pending');
 
 
         // Route لعرض فورم حجز الموعد
@@ -104,6 +121,11 @@ Route::group(
 
 
 
+        Route::get('patient/pharmacy/', [PatientPharmacyController::class, 'index'])->name('patient.pharmacy.index'); // هذا هو الرابط المطلوب
+        Route::get('/{prescription}', [PatientPharmacyController::class, 'show'])->name('patient.pharmacy.show'); // لاحقًا لتفاصيل الوصفة
+        Route::post('/{prescription}/request-refill', [PatientPharmacyController::class, 'requestRefill'])->name('patient.pharmacy.request-refill');
+        Route::get('/refill-requests/pending', [PatientPharmacyController::class, 'pendingRefillRequests'])
+            ->name('patient.pharmacy.refill-requests.pending');
 
 
 

@@ -329,9 +329,9 @@
                                         </div>
                                         <div class="col-sm-5">
                                             <div class="form-group mb-0">
-                                                <label for="disp_qty_{{ $item->id }}" class="form-label">الكمية المصروفة
+                                                <label for="disp_qty_{{ $item->id }}" class="form-label" >الكمية المصروفة
                                                     <small class="text-danger">*</small></label>
-                                                <input type="number" name="items[{{ $index }}][dispensed_quantity]"
+                                                <input type="number" name="items[{{ $index }}][dispensed_quantity]" disabled
                                                     id="disp_qty_{{ $item->id }}"
                                                     value="{{ old('items.' . $index . '.dispensed_quantity', ($item->quantity_prescribed > 0 ? $item->quantity_prescribed : 0)) }}"
                                                     class="form-control @error('items.' . $index . '.dispensed_quantity') is-invalid @enderror"

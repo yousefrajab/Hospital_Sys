@@ -2,12 +2,11 @@
 
 namespace App\Http\Livewire\Appointments;
 
-
+use Log;
 use App\Models\Doctor;
 use App\Models\Section;
 use Livewire\Component;
 use App\Models\Appointment;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DoctorWorkingDay; // *** استيراد ضروري ***
 use Illuminate\Support\Carbon;    // *** استيراد ضروري ***
@@ -261,7 +260,6 @@ class Create extends Component
         $validatedData = $this->validate([
             'section' => 'required|exists:sections,id',
             'doctor' => 'required|exists:doctors,id',
-            // 'patient'=>'required|exists:patients,id',
             'form.name' => 'required|string|max:255',
             'form.email' => 'required|email|max:255',
             'form.Phone' => 'required|string|max:20', // يمكن إضافة تحقق من صيغة الهاتف
@@ -312,7 +310,7 @@ class Create extends Component
             Appointment::create([
                 'doctor_id' => $this->doctor,
                 'section_id' => $this->section,
-                'patient_id' => Auth::id(), 
+                'user_id' => Auth::id(), // معرّف المستخدم المسجل دخوله (إذا كان ضرورياً)
                 'name' => $this->form['name'],
                 'email' => $this->form['email'],
                 'phone' => $this->form['Phone'],

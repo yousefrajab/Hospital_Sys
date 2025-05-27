@@ -29,4 +29,10 @@ class Section extends Model
     {
         return $this->hasMany(Room::class);
     }
+
+    public function Service()
+    {
+        return $this->belongsTo(Service::class, 'Service_id');
+    }
+
 }

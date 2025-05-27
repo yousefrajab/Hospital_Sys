@@ -49,6 +49,13 @@ class Prescription extends Model
     public const STATUS_CANCELLED_BY_PATIENT = 'cancelled_by_patient'; // إذا كان المريض يمكنه الإلغاء
     public const STATUS_EXPIRED = 'expired';                 // الوصفة انتهت صلاحيتها (إذا كان لها تاريخ انتهاء)
     public const STATUS_REFILL_REQUESTED = 'refill_requested'; // المريض طلب إعادة صرف
+    public const STATUS_REFILL_INTERNAL_APPROVED = 'refill_internal_approved'; // الطبيب وافق، تنتظر إجراء الصيدلية
+    public const STATUS_REFILL_DENIED_BY_DOCTOR  = 'refill_denied_by_doctor';  // الطبيب رفض طلب التجديد
+    public const STATUS_REFILL_DENIED_BY_PHARMACY = 'refill_denied_by_pharmacy';
+    public const STATUS_RENEWAL_APPROVED = 'renewal_approved'; // تجديد معتمد (جاهز للصرف)
+    public const STATUS_RENEWAL_DENIED = 'renewal_denied'; // تجديد مرفوض (من قبل الطبيب أو الصيدلي)
+    public const STATUS_RENEWAL_REQUESTED = 'renewal_requested'; // طلب تجديد من المريض
+    public const STATUS_RENEWAL_INTERNAL_APPROVED = 'renewal_internal_approved'; // تجديد داخلي معتمد
 
 
     /**
@@ -111,6 +118,8 @@ class Prescription extends Model
             self::STATUS_CANCELLED_BY_PATIENT => 'ملغاة (المريض)',
             self::STATUS_EXPIRED => 'منتهية الصلاحية',
             self::STATUS_REFILL_REQUESTED => 'طلب إعادة صرف',
+            self::STATUS_RENEWAL_APPROVED => 'تجديد معتمد (جاهز للصرف)',
+            self::STATUS_REFILL_DENIED_BY_DOCTOR => 'مرفوض (بواسطة الطبيب)',
             default => ucfirst(str_replace('_', ' ', $this->status ?? 'غير معروفة')),
         };
     }
@@ -165,6 +174,8 @@ class Prescription extends Model
             self::STATUS_CANCELLED_BY_PATIENT => 'ملغاة (بواسطة المريض)',
             self::STATUS_EXPIRED => 'منتهية الصلاحية',
             self::STATUS_REFILL_REQUESTED => 'طلب إعادة صرف',
+            self::STATUS_RENEWAL_APPROVED => 'تجديد معتمد',
+            self::STATUS_REFILL_DENIED_BY_DOCTOR => 'مرفوض (بواسطة الطبيب)',
         ];
     }
 
@@ -173,9 +184,8 @@ class Prescription extends Model
      */
     public function getStatusBadgeClassAttribute()
     {
-        // هذه الدالة سترجع اسم الكلاس مباشرة كما هو معرف في CSS
-        // مثال: 'status-new', 'status-processing'
-        // تأكد أن لديك أنماط CSS مقابلة لهذه الكلاسات
+
+
         return 'status-' . str_replace('_', '-', $this->status ?? 'default');
     }
 

@@ -124,15 +124,14 @@ class Chatbox extends Component
     /**
      * وضع علامة مقروءة (read = true) على الرسائل غير المقروءة في المحادثة الحالية.
      */
-    public function markMessagesAsRead()
-    {
-        if ($this->selected_conversation && $this->auth_email) {
-            try {
-                // --- >> التأكد من تحديث read وليس read_at << ---
-                $updatedCount = Message::where('conversation_id', $this->selected_conversation->id)
-                                       ->where('receiver_email', $this->auth_email)
-                                       ->where('read', false) // <<< التحقق من read = false (أو 0)
-                                       ->update(['read' => true]); // <<< تحديث read إلى true (أو 1)
+   public function markMessagesAsRead()
+{
+    if ($this->selected_conversation && $this->auth_email) {
+        try {
+            $updatedCount = Message::where('conversation_id', $this->selected_conversation->id)
+                                   ->where('receiver_email', $this->auth_email)
+                                   ->where('read', false)
+                                   ->update(['read' => true]);
 
                 if ($updatedCount > 0) {
                     Log::info("[Chatbox] Marked {$updatedCount} messages as read (boolean) for conversation ID {$this->selected_conversation->id} and user {$this->auth_email}");
