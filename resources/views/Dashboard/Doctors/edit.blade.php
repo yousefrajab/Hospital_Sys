@@ -322,9 +322,6 @@
                                 <div class="col-md-6">
                                     <div class="floating-label">
                                         <label>{{ trans('doctors.national_id') }}</label>
-
-
-
                                         <input class="form-control" id="national_id" name="national_id"
                                             placeholder="ادخل رقم الهوية (9 أرقام)" type="text"
                                             value="{{ $doctor->national_id }}" title="يجب أن يتكون رقم الهوية من 9 أرقام"
@@ -337,8 +334,6 @@
                                 <div class="col-md-6">
                                     <div class="floating-label">
                                         <label>{{ trans('doctors.email') }}</label>
-
-
                                         <input type="email" id="email" name="email" value="{{ $doctor->email }}"
                                             class="form-control @error('email') is-invalid @enderror"
                                             placeholder="example@domain.com" required>
@@ -346,11 +341,6 @@
                                         <div class="valid-feedback"><i class="fas fa-check"></i> صحيح</div>
                                     </div>
                                 </div>
-
-
-
-
-
                                 <div class="col-md-6">
                                     <div class="floating-label position-relative">
                                         <label>{{ trans('doctors.password') }}</label>
@@ -417,26 +407,6 @@
                                 </select>
                                 <div class="invalid-feedback">يرجى اختيار القسم</div>
                                 <div class="valid-feedback"><i class="fas fa-check"></i> تم الاختيار</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="floating-label">
-                                <label>{{ trans('doctors.appointments') }}</label>
-                                <select class="form-control-modern select w-100" name="appointments[]"
-                                    multiple="multiple">
-                                    @foreach ($appointments as $appointment)
-                                        @php $check = []; @endphp
-                                        @foreach ($doctor->doctorappointments as $key => $appointmentDOC)
-                                            @php
-                                                $check[] = $appointmentDOC->id;
-                                            @endphp
-                                        @endforeach
-                                        <option value="{{ $appointment->id }}"
-                                            {{ in_array($appointment->id, $check) ? 'selected' : '' }}>
-                                            {{ $appointment->name }}</option>
-                                    @endforeach
-                                </select>
                             </div>
                         </div>
                     </div>

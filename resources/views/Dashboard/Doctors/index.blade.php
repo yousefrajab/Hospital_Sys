@@ -120,16 +120,15 @@
                                     <th>#</th>
                                     <th><input name="select_all" type="checkbox" id="example-select-all"></th>
                                     <th>{{ trans('doctors.name') }}</th>
-                                    {{-- <th>{{ trans('doctors.national_id') }}</th> --}} {{-- تم إخفاءه لتوفير مساحة --}}
+                                    <th>{{ trans('doctors.national_id') }}</th> {{-- تم إخفاءه لتوفير مساحة --}}
                                     <th>{{ trans('doctors.img') }}</th>
                                     <th>{{ trans('doctors.email') }}</th>
                                     <th>{{ trans('doctors.section') }}</th>
                                     <th>{{ trans('doctors.phone') }}</th>
-                                    {{-- <th>{{ trans('doctors.appointments') }}</th> --}} {{-- إخفاء العمود القديم --}}
                                     <th>{{ trans('doctors.number_of_statements') }}</th>
                                     <th>ساعات العمل</th> {{-- *** عنوان العمود الجديد *** --}}
                                     <th>{{ trans('doctors.Status') }}</th>
-                                    <th>{{ trans('doctors.created_at') }}</th>
+                                    {{-- <th>{{ trans('doctors.created_at') }}</th> --}}
                                     <th>{{ trans('doctors.Processes') }}</th>
                                 </tr>
                             </thead>
@@ -157,7 +156,7 @@
                                             </div>
                                         </td>
                                         <td><strong>{{ $doctor->name }}</strong></td>
-                                        {{-- <td>{{ $doctor->national_id }}</td> --}}
+                                        <td>{{ $doctor->national_id }}</td>
                                         <td>
                                             {{-- عرض الصورة كما هو --}}
                                             @if ($doctor->image)
@@ -258,15 +257,14 @@
                                                 {{ $doctor->status == 1 ? trans('doctors.Enabled') : trans('doctors.Not_enabled') }}
                                             </span>
                                         </td>
-                                        <td class="creation-time-cell">
-                                            {{-- عرض تاريخ الإنشاء كما هو --}}
+                                        {{-- <td class="creation-time-cell">
                                             <div class="time-display"
                                                 title="{{ $doctor->created_at->format('Y/m/d h:i A') }}"> <small
                                                     class="text-muted"> {{ $doctor->created_at->format('Y/m/d') }} <span
                                                         class="time-period {{ $doctor->created_at->format('A') == 'AM' ? 'morning' : 'evening' }}">
                                                         {{ $doctor->created_at->format('A') == 'AM' ? trans('doctors.AM') : trans('doctors.PM') }}
                                                     </span> </small> </div>
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             {{-- Dropdown العمليات كما هو --}}
                                             <div class="dropdown">

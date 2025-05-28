@@ -260,6 +260,7 @@ class Create extends Component
         $validatedData = $this->validate([
             'section' => 'required|exists:sections,id',
             'doctor' => 'required|exists:doctors,id',
+            // 'patient' => 'nullable|exists:patients,id', // إذا كان ضرورياً
             'form.name' => 'required|string|max:255',
             'form.email' => 'required|email|max:255',
             'form.Phone' => 'required|string|max:20', // يمكن إضافة تحقق من صيغة الهاتف
@@ -310,7 +311,7 @@ class Create extends Component
             Appointment::create([
                 'doctor_id' => $this->doctor,
                 'section_id' => $this->section,
-                'user_id' => Auth::id(), // معرّف المستخدم المسجل دخوله (إذا كان ضرورياً)
+                'patient_id' => Auth::id(), // معرّف المستخدم المسجل دخوله (إذا كان ضرورياً)
                 'name' => $this->form['name'],
                 'email' => $this->form['email'],
                 'phone' => $this->form['Phone'],

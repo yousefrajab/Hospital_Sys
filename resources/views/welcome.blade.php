@@ -10,20 +10,62 @@
                 <div class="swiper-slide slide">
                     <div class="auto-container">
                         <div class="row clearfix">
+                            <!-- Content Column -->
+                            <div class="content-column col-lg-6 col-md-12 col-sm-12">
+                                <div class="inner-column">
+                                    <div class="sub-title" style="color: white">رعايتك هي أولويتنا</div>
+                                    <h1 style="color: white">شريكك الصحي الموثوق، <br>لحياة مليئة بالعافية</h1>
+                                    <div class="text">
+                                        نلتزم بتقديم أعلى مستويات الرعاية الطبية بخبرات عالمية وتقنيات متطورة. صحتك معنا في
+                                        أيدٍ أمينة.
+                                    </div>
+                                    <div class="btn-box">
+                                        <a href="{{ route('website.departments.all') }}"
+                                            class="theme-btn appointment-btn"><i class="fas fa-hospital-alt me-2"></i>
+                                            <span> الأقسام </span></a>
+                                        <a href="{{ route('website.doctors.all') }}" class="theme-btn services-btn"><i
+                                                class="fas fa-user-md me-2"></i>
+                                            الأطباء</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Image Column -->
+                            <div class="image-column col-lg-6 col-md-12 col-sm-12">
+                                <div class="inner-column">
+                                    <div class="image">
+                                        <img src="{{ asset('Dashboard/img/media/ps1.jpg') }}" alt="" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="swiper-slide slide">
+                    <div class="auto-container">
+                        <div class="row clearfix">
 
                             <!-- Content Column -->
                             <div class="content-column col-lg-6 col-md-12 col-sm-12">
                                 <div class="inner-column">
-                                    <h2>شريكك الصحي الأكثر ثقة مدى الحياة</h2>
-                                    <div class="text">
-                                        نحن نقدم استشارات مجانية وأفضل إدارة مشروع لك
-                                        الأفكار ، 100٪ التسليم مضمون
+                                    <div class="sub-title animated-text" style="color: #e0e0e0;">حلول صحية مبتكرة</div>
+                                    <h1 class="animated-text" style="color: white;">خدمات طبية متكاملة،<br> تلبي كافة
+                                        احتياجاتك</h1>
+                                    <div class="text animated-text">
+                                        نوفر باقة واسعة من الخدمات التشخيصية والعلاجية المتقدمة، مع فريق متخصص يسعى لراحتك
+                                        وشفائك التام.
                                     </div>
                                     <div class="btn-box">
-                                        <a href="{{ route('website.my.appointments') }}" class="theme-btn appointment-btn"><span>المواعيد</span></a>
-                                        <a href="{{ route('website.services.all') }}"
-                                            class="theme-btn services-btn">الخدمات</a>
+                                        <a href="{{ route('website.services.all') }}" class="theme-btn appointment-btn"> <i
+                                                class="fas fa-medkit me-2"></i> <span>الخدمات المفردة</span></a>
+                                        <a href="{{ route('website.group_services.all') }}" class="theme-btn services-btn">
+                                            <i class="fas fa-users-medical me-2"></i> <span>الخدمات المجمعة</span></a>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -49,14 +91,24 @@
                             <!-- Content Column -->
                             <div class="content-column col-lg-6 col-md-12 col-sm-12">
                                 <div class="inner-column">
-                                    <h2>Your Most Trusted Health Partner For Life.</h2>
-                                    <div class="text">We offer free consulting and the best project management for your
-                                        ideas, 100% delivery guaranteed.
+                                    <div class="sub-title animated-text" style="color: #e0e0e0;">وصولك السهل للرعاية</div>
+                                    <h1 class="animated-text" style="color: white;">إدارة صحتك أصبحت أسهل،<br> كل ما تحتاجه
+                                        في مكان واحد</h1>
+                                    <div class="text animated-text">
+                                        نقدم لك أدوات رقمية متطورة لمتابعة فواتيرك، حجوزاتك، والتواصل المباشر مع فريقنا
+                                        الطبي بكل يسر وأمان.
                                     </div>
                                     <div class="btn-box">
-                                        <a href="contact.html" class="theme-btn appointment-btn"><span
-                                                class="txt">Appointment</span></a>
-                                        <a href="services.html" class="theme-btn services-btn">Services</a>
+                                        <a href="{{ route('website.my.invoices') }}"
+                                            class="theme-btn appointment-btn"><i class="fas fa-file-invoice-dollar me-2"></i> <span>الفواتير</span></a>
+                                        <a href="{{ route('website.my.account') }}"
+                                            class="theme-btn services-btn"><i class="fas fa-user-cog me-2"></i> <span>كشف الحساب</span></a>
+                                        <div class="btn-box">
+                                            <a href="{{ route('website.my.appointments') }}"
+                                                class="theme-btn appointment-btn"><i class="fas fa-calendar-check me-2"></i> <span>المواعيد</span></a>
+                                            {{-- <a href="{{ route('website.doctors.all') }}"
+                                            class="theme-btn services-btn">الأطباء</a> --}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -65,41 +117,7 @@
                             <div class="image-column col-lg-6 col-md-12 col-sm-12">
                                 <div class="inner-column">
                                     <div class="image">
-                                        <img src="{{ URL::asset('WebSite/images/main-slider/3.jpg') }}" alt="" />
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <div class="swiper-slide slide">
-                    <div class="auto-container">
-                        <div class="row clearfix">
-
-                            <!-- Content Column -->
-                            <div class="content-column col-lg-6 col-md-12 col-sm-12">
-                                <div class="inner-column">
-                                    <h2>Your Most Trusted Health Partner For Life.</h2>
-                                    <div class="text">We offer free consulting and the best project management for your
-                                        ideas, 100% delivery guaranteed.
-                                    </div>
-                                    <div class="btn-box">
-                                        <a href="contact.html" class="theme-btn appointment-btn"><span
-                                                class="txt">Appointment</span></a>
-                                        <a href="services.html" class="theme-btn services-btn">Services</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Image Column -->
-                            <div class="image-column col-lg-6 col-md-12 col-sm-12">
-                                <div class="inner-column">
-                                    <div class="image">
-                                        <img src="{{ URL::asset('WebSite/images/main-slider/3.jpg') }}" alt="" />
+                                        <img src="{{ asset('WebSite/images/main-slider/3.png') }}" alt="" />
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +162,7 @@
                     <div class="image-column col-lg-5 col-md-12 col-sm-12">
                         <div class="inner-column wow fadeInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
                             <div class="image">
-                                <img src="{{ URL::asset('WebSite/images/resource/image-3.jpg') }}" alt="" />
+                                <img src="{{ URL::asset('Dashboard/img/media/medical.jpg') }}" alt="" />
                             </div>
                         </div>
                     </div>
@@ -1062,9 +1080,9 @@
             }
 
             /* .doctor-avatar {
-                            width: 50px;
-                            height: 100px;
-                        } */
+                                        width: 50px;
+                                        height: 100px;
+                                    } */
 
             .doctor-details {
                 padding: 15px;

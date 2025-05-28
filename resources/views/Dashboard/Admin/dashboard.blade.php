@@ -328,16 +328,6 @@
                                                     <i class="fas fa-tag fa-xs"></i> طلب منذ: {{ $appointment->created_at->diffForHumans() }}
                                                 </div>
                                             </div>
-                                            <div class="item-action">
-                                                <form action="{{ route('admin.appointments.approval', $appointment->id) }}" method="POST" class="d-inline"
-                                                      onsubmit="return confirm('هل أنت متأكد من تأكيد هذا الموعد؟ سيتم إعلام الطالب.');">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button type="submit" class="btn btn-sm btn-success-gradient py-1 px-2" data-bs-toggle="tooltip" title="تأكيد هذا الموعد الآن">
-                                                        <i class="fas fa-check"></i> تأكيد
-                                                    </button>
-                                                </form>
-                                            </div>
                                         </div>
                                     </li>
                                 @endforeach

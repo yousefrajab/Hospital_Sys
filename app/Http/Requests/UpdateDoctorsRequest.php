@@ -85,10 +85,7 @@ class UpdateDoctorsRequest extends FormRequest
             ],
             "section_id" => 'required|exists:sections,id',
             "number_of_statements" => 'required|integer|min:1|max:20',
-            "photo" => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            "appointments" => 'nullable|array',
-            "appointments.*" => 'exists:appointments,id',
-            "status" => 'required|boolean', // الأدمن يمكنه تغيير الحالة
+           
         ];
     }
 

@@ -339,11 +339,11 @@
                         <i class="fas fa-file-import me-2"></i> سند قبض {{-- file-import: إدخال --}}
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a class="slide-item" href="{{ route('admin.Payment.index') }}">
-                        <i class="fas fa-file-export me-2"></i> سند صرف {{-- file-export: إخراج --}}
+                        <i class="fas fa-file-export me-2"></i> سند صرف
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
 
