@@ -353,6 +353,7 @@
                         @php
                             $profileShowRoute = '#'; // قيمة افتراضية
                             $profileEditRoute = '#'; // قيمة افتراضية
+                            $webEditRoute = '#'; // قيمة افتراضية
 
                             if (Auth::guard('admin')->check()) {
                                 $profileShowRoute = route('admin.profile.show');
@@ -367,18 +368,24 @@
                                 $profileShowRoute = route('laboratorie_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
                                 $profileEditRoute = route('laboratorie_employee.profile.edit');
                             } elseif (Auth::guard('patient')->check()) {
+                                $webEditRoute = url('/home');
                                 $profileShowRoute = route('profile.show'); // ستحتاج لإنشاء هذه الـ routes
                                 $profileEditRoute = route('profile.edit');
                             } elseif (Auth::guard('pharmacy_employee')->check()) {
                                 $profileShowRoute = route('pharmacy_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
                                 $profileEditRoute = route('pharmacy_employee.profile.edit');
-                            }elseif (Auth::guard('pharmacy_manager')->check()) {
+                            } elseif (Auth::guard('pharmacy_manager')->check()) {
                                 $profileShowRoute = route('pharmacy_manager.profile.show'); // ستحتاج لإنشاء هذه الـ routes
                                 $profileEditRoute = route('pharmacy_manager.profile.edit');
                             }
                             // يمكنك إضافة المزيد من الشروط لأنواع المستخدمين الأخرى
                         @endphp
-
+                        @if ($webEditRoute !== '#')
+                            <a class="dropdown-item" href="{{ $webEditRoute }}"
+                                class="btn btn-outline-secondary ripple" target="_blank" ;>
+                                <i class="fas fa-home me-1"></i> الموقع الخارجي
+                            </a>
+                        @endif
                         @if ($profileShowRoute !== '#')
                             <a class="dropdown-item" href="{{ $profileShowRoute }}">
                                 <i class="bx bx-user-circle"></i>الملف الشخصي
@@ -390,6 +397,8 @@
                                 <i class="bx bx-cog"></i>تعديل الملف الشخصي
                             </a>
                         @endif
+
+
 
                         {{-- قسم تسجيل الخروج --}}
                         @php
@@ -408,7 +417,7 @@
                                 $logoutRoute = route('logout.patient');
                             } elseif (Auth::guard('pharmacy_employee')->check()) {
                                 $logoutRoute = route('logout.pharmacy_employee');
-                            }elseif (Auth::guard('pharmacy_manager')->check()) {
+                            } elseif (Auth::guard('pharmacy_manager')->check()) {
                                 $logoutRoute = route('logout.pharmacy_manager');
                             }
                         @endphp

@@ -53,8 +53,8 @@
                         </a>
                     </li>
                     {{-- الرابط لقائمة الوصفات التي أنشأها الطبيب --}}
-                    <li class="{{ request()->routeIs('doctor.prescriptions.index') ? 'current' : '' }}">
-                        <a class="slide-item" href="{{ route('doctor.prescriptions.index') }}">
+                    <li class="{{ request()->routeIs('prescriptions.index') ? 'current' : '' }}">
+                        <a class="slide-item" href="{{ route('prescriptions.index') }}">
                             <i class="fas fa-list-ul fa-xs me-2"></i>قائمة وصفاتي
                         </a>
                     </li>
@@ -97,7 +97,7 @@
                     <i class="angle fe fe-chevron-left"></i></a> {{-- تغيير اتجاه السهم --}}
                 <ul class="slide-menu">
                     <li class="{{ request()->routeIs('invoices.index') ? 'current' : '' }}"><a class="slide-item"
-                            href="{{ route('doctor.invoices.index') }}">قائمة الكشوفات</a></li>
+                            href="{{ route('invoices.index') }}">قائمة الكشوفات</a></li>
                     <li class="{{ request()->routeIs('completedInvoices') ? 'current' : '' }}"><a class="slide-item"
                             href="{{ route('doctor.completedInvoices') }}">الكشوفات المكتملة</a></li>
                     <li class="{{ request()->routeIs('reviewInvoices') ? 'current' : '' }}"><a class="slide-item"

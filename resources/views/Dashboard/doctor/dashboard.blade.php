@@ -263,7 +263,7 @@
             <a href="{{ route('doctor.prescriptions.adherenceDashboard') }}" class="btn btn-outline-primary ripple me-2">
                 <i class="fas fa-chart-line me-1"></i> متابعة التزام المرضى
             </a>
-            <a href="{{ route('doctor.prescriptions.create') }}" class="btn btn-primary-gradient ripple">
+            <a href="{{ route('prescriptions.create') }}" class="btn btn-primary-gradient ripple">
                 <i class="fas fa-plus-circle me-1"></i> إنشاء وصفة جديدة
             </a>
         </div>
@@ -273,7 +273,6 @@
 @section('content')
     @include('Dashboard.messages_alert')
 
-    <!-- Row: Quick Stats Cards -->
     <div class="row row-sm">
         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="100">
             <a href="{{ route('doctor.appointments') }}" class="stat-card-doctor">
@@ -307,7 +306,7 @@
             </a>
         </div>
         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="300">
-            <a href="{{ route('doctor.prescriptions.index') }}" class="stat-card-doctor">
+            <a href="{{ route('prescriptions.index') }}" class="stat-card-doctor">
                 <div class="stat-icon-bg bg-cyan-gradient"><i class="fas fa-prescription"></i></div>
                 <div class="stat-info">
                     <h6>وصفات هذا الشهر</h6>
@@ -437,7 +436,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title-main mb-0"><i class="fas fa-file-prescription me-2 text-primary"></i>أحدث
                         الوصفات المُنشأة/المُعدلة</h4>
-                    <a href="{{ route('doctor.prescriptions.index') }}" class="btn btn-sm btn-outline-primary ripple">كل
+                    <a href="{{ route('prescriptions.index') }}" class="btn btn-sm btn-outline-primary ripple">كل
                         الوصفات</a>
                 </div>
                 <div class="card-body pt-2 pb-2">
@@ -447,7 +446,7 @@
                                 <li class="list-group-item">
                                     <div class="d-flex w-100 justify-content-between">
                                         <div>
-                                            <a href="{{ route('doctor.prescriptions.show', $rx->id) }}"
+                                            <a href="{{ route('prescriptions.show', $rx->id) }}"
                                                 class="item-title text-primary-dark hover-underline">{{ $rx->prescription_number }}</a>
                                             <div class="item-meta">للمريض: {{ $rx->patient->name ?? 'غير محدد' }}</div>
                                         </div>

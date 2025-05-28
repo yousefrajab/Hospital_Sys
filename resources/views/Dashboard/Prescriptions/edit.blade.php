@@ -90,10 +90,10 @@
             </div>
         </div>
          <div class="d-flex my-xl-auto right-content">
-            <a href="{{ route('doctor.prescriptions.show', $prescription->id) }}" class="btn btn-outline-info btn-sm ripple-effect me-2">
+            <a href="{{ route('prescriptions.show', $prescription->id) }}" class="btn btn-outline-info btn-sm ripple-effect me-2">
                  <i class="fas fa-eye me-1"></i> عرض الوصفة
             </a>
-            <a href="{{ route('doctor.prescriptions.index') }}" class="btn btn-outline-secondary btn-sm ripple-effect">
+            <a href="{{ route('prescriptions.index') }}" class="btn btn-outline-secondary btn-sm ripple-effect">
                  <i class="fas fa-list-ul me-1"></i> كل الوصفات
             </a>
         </div>
@@ -138,7 +138,7 @@
         @endif
 
         @if($patient && $prescription)
-            <form action="{{ route('doctor.prescriptions.update', $prescription->id) }}" method="POST" id="prescriptionEditForm" novalidate class="needs-validation">
+            <form action="{{ route('prescriptions.update', $prescription->id) }}" method="POST" id="prescriptionEditForm" novalidate class="needs-validation">
                 @csrf
                 @method('PUT') {{-- مهم لعملية التحديث --}}
                 <input type="hidden" name="patient_id" value="{{ $patient->id }}">
@@ -275,7 +275,7 @@
                 </div>
 
                 <div class="form-actions-footer mt-4">
-                    <a href="{{ route('doctor.prescriptions.show', $prescription->id) }}" class="btn btn-outline-secondary me-2">
+                    <a href="{{ route('prescriptions.show', $prescription->id) }}" class="btn btn-outline-secondary me-2">
                         <i class="fas fa-times me-1"></i> إلغاء التعديل
                     </a>
                     <button type="submit" class="btn btn-primary btn-submit-prescription" id="submitPrescriptionEditBtn">

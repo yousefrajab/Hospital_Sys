@@ -286,8 +286,7 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
             ->orWhereIn('type', [             // ** استخدام 'type' **
                 Appointment::STATUS_COMPLETED,
                 Appointment::STATUS_CANCELLED, // افترض أن لديك حالة إلغاء عامة
-                // إذا كان لديك حالات إلغاء مفصلة، أضفها هنا
-                // Appointment::STATUS_NO_SHOW (إذا أضفتها)
+                
             ])
             ->orderBy('appointment', 'desc');    // ** استخدام 'appointment' **
     }

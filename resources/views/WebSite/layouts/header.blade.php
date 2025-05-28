@@ -129,7 +129,7 @@
         </ul>
 
         <!-- Search Btn -->
-        <div class="search-box-btn"><span class="icon flaticon-search"></span></div>
+        {{-- <div class="search-box-btn"><span class="icon flaticon-search"></span></div> --}}
     </div>
 </div>
 

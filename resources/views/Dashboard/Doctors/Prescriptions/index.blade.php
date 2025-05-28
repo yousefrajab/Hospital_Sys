@@ -237,7 +237,7 @@
             <h5 class="card-title mb-0"><i class="fas fa-filter text-primary me-2"></i>فلترة الوصفات</h5>
         </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('doctor.prescriptions.index') }}">
+            <form method="GET" action="{{ route('prescriptions.index') }}">
                 <div class="row g-3 align-items-end">
                     <div class="col-lg-4 col-md-6">
                         <label for="search_prescription_input" class="form-label">بحث برقم الوصفة / اسم المريض:</label>
@@ -271,7 +271,7 @@
                         <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i>
                             تطبيق</button>
                         @if (request()->hasAny(['search_prescription', 'status_filter', 'date_from', 'date_to']))
-                            <a href="{{ route('doctor.prescriptions.index') }}"
+                            <a href="{{ route('prescriptions.index') }}"
                                 class="btn btn-outline-secondary w-100 mt-2 btn-sm">
                                 <i class="fas fa-eraser me-1"></i> مسح الفلتر
                             </a>
@@ -336,7 +336,7 @@
                                     <td class="text-center">
                                         {{ $prescription->items_count ?? $prescription->items()->count() }}</td>
                                     <td class="text-center action-buttons">
-                                        <a href="{{ route('doctor.prescriptions.show', $prescription->id) }}"
+                                        <a href="{{ route('prescriptions.show', $prescription->id) }}"
                                             class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip"
                                             title="عرض تفاصيل الوصفة">
                                             <i class="fas fa-eye"></i> <span class="d-none d-md-inline">عرض</span>
@@ -349,7 +349,7 @@
                                             ];
                                         @endphp
                                         @if (in_array($prescription->status, $editableStatuses))
-                                            <a href="{{ route('doctor.prescriptions.edit', $prescription->id) }}"
+                                            <a href="{{ route('prescriptions.edit', $prescription->id) }}"
                                                 class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
                                                 title="تعديل الوصفة">
                                                 <i class="fas fa-edit"></i> <span class="d-none d-md-inline">تعديل</span>
@@ -364,7 +364,7 @@
                                             ];
                                         @endphp
                                         @if (in_array($prescription->status, $cancellableStatuses))
-                                            <form action="{{ route('doctor.prescriptions.destroy', $prescription->id) }}"
+                                            <form action="{{ route('prescriptions.destroy', $prescription->id) }}"
                                                 method="POST" class="d-inline"
                                                 onsubmit="return confirm('هل أنت متأكد من رغبتك في إلغاء هذه الوصفة؟ قد لا يمكن التراجع عن هذا الإجراء.');">
                                                 @csrf

@@ -25,6 +25,6 @@
          Auth::guard('patient')->logout();
          $request->session()->invalidate();
          $request->session()->regenerateToken();
-         return redirect('/');
+         return redirect('/login');
      }
  }

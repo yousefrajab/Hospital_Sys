@@ -37,7 +37,7 @@ return array(
     'Don\'t have an account?' => 'لا تمتلك حساب؟',
     'Create new account' => 'إنشاء حساب جديد',
     'pharmacy Staff Login'=>'تسجيل دخول الصيدلي',
-    'pharmacy_employee'=>'ًصيدلي',
+    'pharmacy_employee'=>'موظف صيدلية',
     'Pharmacy Manager'=>'مدير صيدلية',
     'Pharmacy Manager Login'=>'تسجيل دخول مدير صيدلية',
     'Pharmacy Employees Login'=>'تسجيل دخول موظف صيدلية',

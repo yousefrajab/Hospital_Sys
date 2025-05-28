@@ -409,6 +409,7 @@ class DoctorController extends Controller
     }
     public function myAppointments(Request $request)
     {
+        // Debugging: عرض جميع البيانات الواردة في الطلب
         $doctorId = Auth::guard('doctor')->id();
         // هذه الدالة تعرض "مواعيدي" - القائمة التفصيلية مع pagination
         // يمكن أن تبقى كما هي لتعرض المواعيد المؤكدة والقادمة
@@ -420,7 +421,7 @@ class DoctorController extends Controller
 
         $appointments = $query->paginate(config('pagination.doctor_my_appointments', 10))->appends($request->query()); // pagination مع appends
 
-        return view('Dashboard.Doctors.appointments.my_appointments', compact('appointments', 'request'));
+        return view('Dashboard.Doctors.appointments.my_appointments', compact('appointments'));
     }
 
     /**

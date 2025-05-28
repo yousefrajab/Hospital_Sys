@@ -337,7 +337,7 @@
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
-            <a href="{{ route('doctor.prescriptions.index') }}" class="btn btn-outline-secondary btn-sm ripple-effect me-2">
+            <a href="{{ route('prescriptions.index') }}" class="btn btn-outline-secondary btn-sm ripple-effect me-2">
                 <i class="fas fa-list-ul me-1"></i> عرض كل الوصفات
             </a>
             <button onclick="window.print();" class="btn btn-info btn-sm ripple-effect me-2">
@@ -541,14 +541,14 @@
 
                 @if (in_array($prescription->status, $editableStatusesFooter) &&
                         Auth::guard('doctor')->id() === $prescription->doctor_id)
-                    <a href="{{ route('doctor.prescriptions.edit', $prescription->id) }}" class="btn btn-primary ripple">
+                    <a href="{{ route('prescriptions.edit', $prescription->id) }}" class="btn btn-primary ripple">
                         <i class="fas fa-edit me-1"></i> تعديل الوصفة
                     </a>
                 @endif
 
                 @if (in_array($prescription->status, $cancellableStatusesFooter) &&
                         Auth::guard('doctor')->id() === $prescription->doctor_id)
-                    <form action="{{ route('doctor.prescriptions.destroy', $prescription->id) }}" method="POST"
+                    <form action="{{ route('prescriptions.destroy', $prescription->id) }}" method="POST"
                         class="d-inline" onsubmit="return confirm('هل أنت متأكد من رغبتك في إلغاء هذه الوصفة؟');">
                         @csrf
                         @method('DELETE')

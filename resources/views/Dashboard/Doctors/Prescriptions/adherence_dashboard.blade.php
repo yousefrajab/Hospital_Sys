@@ -98,7 +98,7 @@
                      <i class="fas fa-undo me-1"></i> عرض كل المتابعات
                  </a>
              @endif
-             <a href="{{ route('doctor.prescriptions.create') }}" class="btn btn-primary-gradient ripple">
+             <a href="{{ route('prescriptions.create') }}" class="btn btn-primary-gradient ripple">
                  <i class="fas fa-plus-circle me-1"></i> وصفة جديدة
              </a>
         </div>
@@ -237,7 +237,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('doctor.prescriptions.show', $prescription->id) }}" class="fw-500 d-block" data-bs-toggle="tooltip" title="عرض تفاصيل الوصفة كاملة">
+                                        <a href="{{ route('prescriptions.show', $prescription->id) }}" class="fw-500 d-block" data-bs-toggle="tooltip" title="عرض تفاصيل الوصفة كاملة">
                                             {{ $prescription->prescription_number }}
                                         </a>
                                         <small class="text-muted">
@@ -285,7 +285,7 @@
                                     </td>
                                     <td class="text-center">
                                          <div class="btn-group" role="group">
-                                             <a href="{{ route('doctor.prescriptions.show', $prescription->id) }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="عرض/تعديل الوصفة">
+                                             <a href="{{ route('prescriptions.show', $prescription->id) }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="عرض/تعديل الوصفة">
                                                  <i class="fas fa-eye"></i>
                                              </a>
                                              <a href="{{ route('doctor.patient.details', $prescription->patient_id) }}" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="ملف المريض">

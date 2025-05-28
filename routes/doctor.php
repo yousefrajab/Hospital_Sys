@@ -36,29 +36,16 @@ Route::group([
 
     //################################ dashboard doctor ########################################
 
-    
-
-    Route::get('/dashboard/doctor',[DoctorController::class, 'dashboard'])->middleware(['auth:doctor'])->name('dashboard.doctor');
-
     //################################ end dashboard doctor #####################################
 
     //---------------------------------------------------------------------------------------------------------------
+    Route::get('/dashboard/doctor', [DoctorController::class, 'dashboard'])->middleware(['auth:doctor', 'doctor.status'])->name('dashboard.doctor');
 
     Route::middleware(['auth:doctor', 'doctor.status'])->prefix('doctor')->name('doctor.')->group(function () {
 
 
 
         //############################# completed_invoices route ##########################################
-        Route::get('completed_invoices', [InvoiceController::class, 'completedInvoices'])->name('completedInvoices');
-        //############################# end invoices route ################################################
-
-        //############################# review_invoices route ##########################################
-        Route::get('review_invoices', [InvoiceController::class, 'reviewInvoices'])->name('reviewInvoices');
-        //############################# end invoices route #############################################
-
-        //############################# invoices route ##########################################
-        Route::resource('invoices', InvoiceController::class);
-        // Route::get('invoices', [InvoiceController::class,'index'])->name('invoices.index');
 
         //############################# end invoices route ######################################
 
@@ -75,10 +62,7 @@ Route::group([
         //############################# end Diagnostics route ######################################
         // Route::resource('Doctors', DoctorController::class);
 
-        Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile.show'); // <--- تغيير اسم الدالة إذا أردت
-        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit'); // للتعديل
-        Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update'); // لحفظ التعديل
-        // إضافة مسار تعديل الجدول
+          // إضافة مسار تعديل الجدول
         // --- مسارات جدول العمل ---
         Route::get('/schedule', [DoctorController::class, 'showSchedule'])->name('schedule.show'); // <-- المسار الجديد لعرض الجدول
         Route::get('/schedule/edit/{id}', [DoctorController::class, 'editSchedule'])->name('schedule.edit');
@@ -93,10 +77,6 @@ Route::group([
         Route::put('/doctors/{doctor}/update-schedule', [DoctorController::class, 'updateSchedulee'])
             ->name('doctor.schedule.updatee');
 
-        Route::get('/my-appointments', [DoctorController::class, 'myAppointments'])->name('appointments');
-        Route::patch('/my-appointments/{appointment}/confirm', [DoctorController::class, 'confirmAppointment'])->name('appointments.confirm');
-        Route::patch('/my-appointments/{appointment}/cancel', [DoctorController::class, 'cancelAppointment'])->name('appointments.cancel');
-        Route::patch('/my-appointments/{appointment}/complete', [DoctorController::class, 'completeAppointment'])->name('appointments.complete');
 
         //############################# rays route ##########################################
 
@@ -125,19 +105,42 @@ Route::group([
 
         ############################# end Chat route ######################################
 
-        Route::resource('prescriptions', PrescriptionController::class);
-
-        Route::get('/patients/search-for-prescription', [App\Http\Controllers\Dashboard\DoctorController::class, 'searchPatientsForPrescription'])->name('patients.search_for_prescription');        // أو إذا أنشأت كنترولر خاص:
-        Route::get('/patient-details/{id}', [PatientDetailsController::class, 'index'])->name('patient.details');
+        Route::get('prescriptions/approval-requests', [PrescriptionController::class, 'approvalRequests'])->name('prescriptions.approvalRequests');
+        Route::post('prescriptions/{prescription}/approve-refill', [PrescriptionController::class, 'approveRefill'])->name('prescriptions.approveRefill');
+        Route::post('prescriptions/{prescription}/deny-refill', [PrescriptionController::class, 'denyRefill'])->name('prescriptions.denyRefill');
+        Route::get('prescriptions/adherence-dashboard', [PrescriptionController::class, 'adherenceDashboard'])->name('prescriptions.adherenceDashboard');
 
         Route::get('/404', function () {
             return view('Dashboard.404');
         })->name('404');
     });
-    Route::get('prescriptions/approval-requests', [PrescriptionController::class, 'approvalRequests'])->name('doctor.prescriptions.approvalRequests');
-    Route::post('prescriptions/{prescription}/approve-refill', [PrescriptionController::class, 'approveRefill'])->name('doctor.prescriptions.approveRefill');
-    Route::post('prescriptions/{prescription}/deny-refill', [PrescriptionController::class, 'denyRefill'])->name('doctor.prescriptions.denyRefill');
-    Route::get('prescriptions/adherence-dashboard', [PrescriptionController::class, 'adherenceDashboard'])->name('doctor.prescriptions.adherenceDashboard');
+
+    Route::get('/profile', [ProfileController::class, 'showProfile'])->name('doctor.profile.show'); // <--- تغيير اسم الدالة إذا أردت
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('doctor.profile.edit'); // للتعديل
+        Route::put('/profile', [ProfileController::class, 'update'])->name('doctor.profile.update'); // لحفظ التعديل
+
+
+    Route::get('completed_invoices', [InvoiceController::class, 'completedInvoices'])->middleware(['auth:doctor', 'doctor.status'])->name('doctor.completedInvoices');
+    //############################# end invoices route ################################################
+
+    //############################# review_invoices route ##########################################
+    Route::get('review_invoices', [InvoiceController::class, 'reviewInvoices'])->middleware(['auth:doctor', 'doctor.status'])->name('doctor.reviewInvoices');
+    //############################# end invoices route #############################################
+
+    //############################# invoices route ##########################################
+    Route::resource('invoices', InvoiceController::class)->middleware(['auth:doctor', 'doctor.status']);
+    // Route::get('invoices', [InvoiceController::class,'index'])->name('invoices.index');
+
+
+    Route::resource('prescriptions', PrescriptionController::class);
+    Route::get('/patients/search-for-prescription', [App\Http\Controllers\Dashboard\DoctorController::class, 'searchPatientsForPrescription'])->name('doctor.patients.search_for_prescription');        // أو إذا أنشأت كنترولر خاص:
+    Route::get('/patient-details/{id}', [PatientDetailsController::class, 'index'])->name('doctor.patient.details');
+
+    Route::get('/my-appointments', [DoctorController::class, 'myAppointments'])->name('doctor.appointments');
+    Route::patch('/my-appointments/{appointment}/confirm', [DoctorController::class, 'confirmAppointment'])->name('doctor.appointments.confirm');
+    Route::patch('/my-appointments/{appointment}/cancel', [DoctorController::class, 'cancelAppointment'])->name('doctor.appointments.cancel');
+    Route::patch('/my-appointments/{appointment}/complete', [DoctorController::class, 'completeAppointment'])->name('doctor.appointments.complete');
+
 
     require __DIR__ . '/auth.php';
 });

@@ -174,88 +174,47 @@ class WebsiteController extends Controller
         return view('WebSite.services.all_group_services_standalone', compact('groupedServices'));
     }
 
-    public function myAppointments(Request $request)
-    {
-        if (!Auth::guard('patient')->check()) {
-            return redirect()->route('login')->with('info_notify', 'يرجى تسجيل الدخول أولاً لعرض مواعيدك.');
-        }
-
-        $patient = Auth::guard('patient')->user();
-
-        // --- جلب المواعيد القادمة ---
-        $upcomingAppointments = $patient->upcomingAppointments()
-            ->where('appointment', '>=', now()->startOfDay()) // من بداية اليوم الحالي فصاعدًا
-            // الحالات التي تعتبر قادمة ونشطة
-            ->whereIn('type', [
-                Appointment::STATUS_PENDING,
-                Appointment::STATUS_CONFIRMED
-            ])
-            ->with([
-                'doctor' => function ($query) {
-                    $query->withTranslation()->select('doctors.id'/*, 'doctors.name as doctor_name' - تأكد من أن الاسم يتم جلبه بشكل صحيح*/);
-                },
-                'section' => function ($query) {
-                    $query->withTranslation()->select('sections.id'/*, 'sections.name as section_name'*/);
-                }
-            ])
-            ->orderBy('appointment', 'asc')
-            ->paginate(config('pagination.website_patient_appointments_upcoming', 6), ['*'], 'upcoming_page');
-
-        // --- جلب المواعيد السابقة ---
-        $pastAppointmentsQuery = $patient->pastAppointments()
-            // المواعيد التي تاريخها قبل بداية اليوم الحالي أو حالتها تدل على أنها انتهت
-            ->where(function ($query) {
-                $query->where('appointment', '<', now()->startOfDay())
-                    ->orWhereIn('type', [
-                        Appointment::STATUS_COMPLETED,
-                        Appointment::STATUS_CANCELLED, // أو STATUS_CANCELLED_BY_PATIENT, STATUS_CANCELLED_BY_DOCTOR إذا فصلتها
-                        Appointment::STATUS_LAPSED,
-                        // يمكنك إضافة Appointment::STATUS_CANCELLED_BY_PATIENT و Appointment::STATUS_CANCELLED_BY_DOCTOR إذا كانت لديك هذه الثوابت
-                        // وتستخدمها بدلاً من STATUS_CANCELLED العام.
-                    ]);
-            })
-            // إذا كان الموعد القادم اليوم ولكنه ملغي، لا يعتبر سابقًا بل ملغيًا في القادم
-            // لذا، نستبعد الحالات النشطة (غير مؤكد، مؤكد) إذا كان تاريخها اليوم أو في المستقبل
-            // هذا الشرط معقد قليلاً ويحتاج دقة. الشرط أعلاه أبسط وأكثر شيوعًا.
-            // ->whereNot(function ($query) {
-            //     $query->where('appointment', '>=', now()->startOfDay())
-            //           ->whereIn('type', [Appointment::STATUS_PENDING, Appointment::STATUS_CONFIRMED]);
-            // })
-            ->with([
-                'doctor' => function ($query) {
-                    $query->withTranslation()->select('doctors.id');
-                },
-                'section' => function ($query) {
-                    $query->withTranslation()->select('sections.id');
-                }
-            ])
-            ->orderBy('appointment', 'desc'); // الأحدث أولاً للمواعيد السابقة
-
-        // فلترة إضافية للمواعيد السابقة للتأكد من أنها ليست قادمة نشطة بطريق الخطأ
-        // هذا الشرط يضمن أن أي موعد "غير مؤكد" أو "مؤكد" لا يظهر في السابقة حتى لو كان تاريخه اليوم
-        // ولكن الشرط الأول `where('appointment', '<', now()->startOfDay())` يجب أن يكون كافيًا.
-        // قد تحتاج لهذا إذا كان لديك مواعيد "ملغاة" بتاريخ اليوم وتريدها أن تظهر في "السابقة".
-        // $pastAppointmentsQuery->where(function ($q) {
-        //     $q->where('appointment', '<', now()->startOfDay())
-        //       ->orWhereIn('type', [
-        //           Appointment::STATUS_COMPLETED,
-        //           Appointment::STATUS_CANCELLED,
-        //           Appointment::STATUS_LAPSED,
-        //           // إذا كان لديك Appointment::STATUS_CANCELLED_BY_PATIENT
-        //           // و Appointment::STATUS_CANCELLED_BY_DOCTOR يمكنك إضافتهم هنا
-        //       ]);
-        // });
-
-
-        $pastAppointments = $pastAppointmentsQuery->paginate(config('pagination.website_patient_appointments_past', 6), ['*'], 'past_page');
-
-        return view('WebSite.appointments.my_appointments_standalone', compact(
-            'patient',
-            'upcomingAppointments',
-            'pastAppointments'
-        ));
+   public function myAppointments(Request $request)
+{
+    if (!Auth::guard('patient')->check()) {
+   
     }
 
+    $patient = Auth::guard('patient')->user();
+    $patientId = $patient->id; // احصل على ID المريض
+
+    // --- جلب المواعيد القادمة ---
+    $upcomingAppointments = Appointment::where('patient_id', $patientId) // <<< قيد إضافي هنا
+        ->where('appointment', '>=', now()->startOfDay())
+        ->whereIn('type', [
+            Appointment::STATUS_PENDING,
+            Appointment::STATUS_CONFIRMED
+        ])
+        ->with([ /* ... with clauses ... */ ])
+        ->orderBy('appointment', 'asc')
+        ->paginate(config('pagination.website_patient_appointments_upcoming', 6), ['*'], 'upcoming_page');
+
+    // --- جلب المواعيد السابقة ---
+    $pastAppointmentsQuery = Appointment::where('patient_id', $patientId) // <<< قيد إضافي هنا
+        ->where(function ($query) {
+            $query->where('appointment', '<', now()->startOfDay())
+                ->orWhereIn('type', [
+                    Appointment::STATUS_COMPLETED,
+                    Appointment::STATUS_CANCELLED,
+                    Appointment::STATUS_LAPSED,
+                ]);
+        })
+        ->with([ /* ... with clauses ... */ ])
+        ->orderBy('appointment', 'desc');
+
+    $pastAppointments = $pastAppointmentsQuery->paginate(config('pagination.website_patient_appointments_past', 6), ['*'], 'past_page');
+
+    return view('WebSite.appointments.my_appointments_standalone', compact(
+        'patient',
+        'upcomingAppointments',
+        'pastAppointments'
+    ));
+}
 
     public function cancelAppointmentFromWebsite(Request $request, Appointment $appointment)
     {

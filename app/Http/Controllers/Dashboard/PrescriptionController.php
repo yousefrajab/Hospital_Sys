@@ -177,7 +177,7 @@ class PrescriptionController extends Controller
                 // استخدام $key مهم هنا للحصول على الفهرس الصحيح لـ is_prn
                 foreach ($validatedData['items'] as $key => $itemData) {
                     if (!empty($itemData['medication_id']) && !empty($itemData['dosage']) && !empty($itemData['frequency'])) {
-                        $itemsToCreate[] = new \App\Models\PrescriptionItem([ // استخدام FQCN
+                        $itemsToCreate[] = new PrescriptionItem([ // استخدام FQCN
                             'medication_id' => $itemData['medication_id'],
                             'dosage' => $itemData['dosage'],
                             'frequency' => $itemData['frequency'],
@@ -202,7 +202,7 @@ class PrescriptionController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('doctor.prescriptions.index') // تأكد أن هذا المسار صحيح
+            return redirect()->route('prescriptions.index') // تأكد أن هذا المسار صحيح
                 ->with('success', "تم إنشاء الوصفة رقم {$prescription->prescription_number} بنجاح.");
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
@@ -239,7 +239,7 @@ class PrescriptionController extends Controller
             if (method_exists(Prescription::class, 'getStatusesForFilter')) {
                 $statusName = (Prescription::getStatusesForFilter()[$prescription->status] ?? $prescription->status);
             }
-            return redirect()->route('doctor.prescriptions.show', $prescription->id)
+            return redirect()->route('prescriptions.show', $prescription->id)
                 ->with('error', 'لا يمكن تعديل هذه الوصفة لأن حالتها الحالية هي: ' . $statusName);
         }
 
@@ -275,7 +275,7 @@ class PrescriptionController extends Controller
             $statusName = method_exists(Prescription::class, 'getStatusesForFilter')
                 ? (Prescription::getStatusesForFilter()[$prescription->status] ?? $prescription->status)
                 : ucfirst(str_replace('_', ' ', $prescription->status));
-            return redirect()->route('doctor.prescriptions.show', $prescription->id)
+            return redirect()->route('prescriptions.show', $prescription->id)
                 ->with('error', 'لا يمكن تعديل هذه الوصفة بسبب حالتها الحالية: ' . $statusName);
         }
 
@@ -318,7 +318,7 @@ class PrescriptionController extends Controller
 
             DB::commit();
             Log::info("Prescription ID: {$prescription->id} updated successfully.");
-            return redirect()->route('doctor.prescriptions.show', $prescription->id)
+            return redirect()->route('prescriptions.show', $prescription->id)
                 ->with('success', "تم تعديل الوصفة رقم {$prescription->prescription_number} بنجاح.");
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
@@ -348,7 +348,7 @@ class PrescriptionController extends Controller
             $statusName = method_exists(Prescription::class, 'getStatusesForFilter')
                 ? (Prescription::getStatusesForFilter()[$prescription->status] ?? $prescription->status)
                 : ucfirst(str_replace('_', ' ', $prescription->status));
-            return redirect()->route('doctor.prescriptions.show', $prescription->id)
+            return redirect()->route('prescriptions.show', $prescription->id)
                 ->with('error', 'لا يمكن إلغاء هذه الوصفة لأن حالتها الحالية هي: ' . $statusName . '.');
         }
 
@@ -360,12 +360,12 @@ class PrescriptionController extends Controller
 
             DB::commit();
             Log::info("Prescription ID {$prescription->id} (Number: {$prescriptionNumber}) cancelled by Doctor ID: {$doctor->id}.");
-            return redirect()->route('doctor.prescriptions.index')
+            return redirect()->route('prescriptions.index')
                 ->with('success', "تم إلغاء الوصفة رقم {$prescriptionNumber} بنجاح.");
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Error cancelling prescription ID {$prescription->id} by doctor: " . $e->getMessage());
-            return redirect()->route('doctor.prescriptions.index')
+            return redirect()->route('prescriptions.index')
                 ->with('error', 'حدث خطأ أثناء إلغاء الوصفة.');
         }
     }

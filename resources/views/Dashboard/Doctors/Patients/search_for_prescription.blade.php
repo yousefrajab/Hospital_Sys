@@ -349,7 +349,7 @@
         </div>
         {{-- يمكنك إضافة زر رجوع هنا إلى قائمة الوصفات إذا أردت --}}
         <div class="d-flex my-xl-auto right-content">
-            <a href="{{ route('doctor.prescriptions.index') }}" class="btn btn-outline-secondary btn-sm ripple-effect">
+            <a href="{{ route('prescriptions.index') }}" class="btn btn-outline-secondary btn-sm ripple-effect">
                 <i class="fas fa-list-ul me-1"></i> عرض وصفاتي
             </a>
         </div>
@@ -511,7 +511,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('doctor.prescriptions.create', ['patient_id' => $patient_result->id]) }}"
+                                            <a href="{{ route('prescriptions.create', ['patient_id' => $patient_result->id]) }}"
                                                 class="btn btn-success btn-sm action-btn-create-prescription px-3">
                                                 <i class="fas fa-file-signature me-1"></i> إنشاء وصفة
                                             </a>

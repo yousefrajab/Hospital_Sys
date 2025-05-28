@@ -382,6 +382,8 @@
                                                         {{ trans('signinn.Choose account type.') }}..</option>
                                                     <option value="admin">{{ trans('signinn.System Manager') }}</option>
                                                      <option value="pharmacy_manager">{{ trans('signinn.Pharmacy Manager') }}</option>
+                                                     <option value="pharmacy_employee">
+                                                        {{ trans('signinn.pharmacy_employee') }}</option>
                                                     <option value="doctor">{{ trans('signinn.Doctor') }}</option>
                                                     <option value="ray_employee">{{ trans('signinn.Radiological staff') }}
                                                     </option>
@@ -389,8 +391,7 @@
                                                         {{ trans('signinn.laboratory staff') }}</option>
                                                     <option value="patient">{{ trans('signinn.patient') }}</option>
 
-                                                    <option value="pharmacy_employee">
-                                                        {{ trans('signinn.pharmacy_employee') }}</option>
+
                                                 </select>
                                             </div>
 

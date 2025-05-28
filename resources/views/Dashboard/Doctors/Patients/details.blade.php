@@ -189,7 +189,7 @@
                             @endif
                         </p>
                         <div class="profile-actions mt-3 no-print">
-                            <a href="{{ route('doctor.prescriptions.create', ['patient_id' => $patient->id]) }}" class="btn btn-success shadow-sm">
+                            <a href="{{ route('prescriptions.create', ['patient_id' => $patient->id]) }}" class="btn btn-success shadow-sm">
                                 <i class="fas fa-file-medical-alt me-2"></i>إنشاء وصفة طبية جديدة
                             </a>
                         </div>
@@ -206,7 +206,7 @@
                             <li class="list-group-item"><span class="icon-label"><i class="fas fa-id-badge"></i><strong>رقم الهوية:</strong></span> <span>{{ $patient->national_id ?? '-' }}</span></li>
                             <li class="list-group-item"><span class="icon-label"><i class="fas fa-envelope"></i><strong>البريد:</strong></span> <span class="text-truncate" style="max-width: 180px;">{{ $patient->email ?? '-' }}</span></li>
                             <li class="list-group-item"><span class="icon-label"><i class="fas fa-phone"></i><strong>الهاتف:</strong></span> <span>{{ $patient->Phone ?? '-' }}</span></li>
-                            <li class="list-group-item"><span class="icon-label"><i class="fas fa-map-marker-alt"></i><strong>العنوان:</strong></span> <span class="text-truncate" style="max-width: 180px;">{{ $patient->getTranslation('Address', 'ar') ?: 'غير محدد' }}</span></li>
+                            <li class="list-group-item"><span class="icon-label"><i class="fas fa-map-marker-alt"></i><strong>العنوان:</strong></span> <span class="text-truncate" style="max-width: 180px;">{{ $patient->Address ?: 'غير محدد' }}</span></li>
                              <li class="list-group-item"><span class="icon-label"><i class="fas fa-calendar-plus"></i><strong>تسجيل:</strong></span> <span>{{ $patient->created_at ? $patient->created_at->translatedFormat('j M Y') : '-' }}</span></li>
                         </ul>
                     </div>
@@ -343,7 +343,7 @@
                                                 <tbody>
                                                     @foreach($patient->prescriptions->sortByDesc('prescription_date') as $pr)
                                                     <tr>
-                                                        <td><a href="{{ route('doctor.prescriptions.show', $pr->id) }}" data-toggle="tooltip" title="عرض تفاصيل الوصفة رقم {{ $pr->prescription_number }}">{{ $pr->prescription_number }}</a></td>
+                                                        <td><a href="{{ route('prescriptions.show', $pr->id) }}" data-toggle="tooltip" title="عرض تفاصيل الوصفة رقم {{ $pr->prescription_number }}">{{ $pr->prescription_number }}</a></td>
                                                         <td>{{ $pr->prescription_date ? $pr->prescription_date->translatedFormat('d M Y') : '-' }}</td>
                                                         <td>{{ $pr->doctor->name ?? '-' }}</td>
                                                         <td class="text-center">
@@ -359,7 +359,7 @@
                                                             <span class="status-badge-sm {{ $sClass }}">{{ $sText }}</span>
                                                         </td>
                                                         <td class="text-center no-print">
-                                                            <a href="{{ route('doctor.prescriptions.show', $pr->id) }}" class="btn btn-xs btn-outline-info px-2 py-1" data-toggle="tooltip" title="عرض الوصفة"><i class="fas fa-eye fa-fw"></i></a>
+                                                            <a href="{{ route('prescriptions.show', $pr->id) }}" class="btn btn-xs btn-outline-info px-2 py-1" data-toggle="tooltip" title="عرض الوصفة"><i class="fas fa-eye fa-fw"></i></a>
                                                         </td>
                                                     </tr>
                                                     @endforeach

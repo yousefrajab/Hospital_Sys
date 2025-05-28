@@ -120,13 +120,13 @@
                                     <th>#</th>
                                     <th><input name="select_all" type="checkbox" id="example-select-all"></th>
                                     <th>{{ trans('doctors.name') }}</th>
-                                    <th>{{ trans('doctors.national_id') }}</th> {{-- تم إخفاءه لتوفير مساحة --}}
+                                    <th>{{ trans('doctors.national_id') }}</th> 
                                     <th>{{ trans('doctors.img') }}</th>
                                     <th>{{ trans('doctors.email') }}</th>
                                     <th>{{ trans('doctors.section') }}</th>
                                     <th>{{ trans('doctors.phone') }}</th>
                                     <th>{{ trans('doctors.number_of_statements') }}</th>
-                                    <th>ساعات العمل</th> {{-- *** عنوان العمود الجديد *** --}}
+                                    <th>ساعات العمل</th>
                                     <th>{{ trans('doctors.Status') }}</th>
                                     {{-- <th>{{ trans('doctors.created_at') }}</th> --}}
                                     <th>{{ trans('doctors.Processes') }}</th>
