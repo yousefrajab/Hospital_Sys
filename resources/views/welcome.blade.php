@@ -1,5 +1,5 @@
 @extends('WebSite.layouts.master')
-
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 @section('content')
     <!-- Main Slider Three -->
     <section class="main-slider-three">
@@ -99,13 +99,14 @@
                                         الطبي بكل يسر وأمان.
                                     </div>
                                     <div class="btn-box">
-                                        <a href="{{ route('website.my.invoices') }}"
-                                            class="theme-btn appointment-btn"><i class="fas fa-file-invoice-dollar me-2"></i> <span>الفواتير</span></a>
-                                        <a href="{{ route('website.my.account') }}"
-                                            class="theme-btn services-btn"><i class="fas fa-user-cog me-2"></i> <span>كشف الحساب</span></a>
+                                        <a href="{{ route('website.my.invoices') }}" class="theme-btn appointment-btn"><i
+                                                class="fas fa-file-invoice-dollar me-2"></i> <span>الفواتير</span></a>
+                                        <a href="{{ route('website.my.account') }}" class="theme-btn services-btn"><i
+                                                class="fas fa-user-cog me-2"></i> <span>كشف الحساب</span></a>
                                         <div class="btn-box">
                                             <a href="{{ route('website.my.appointments') }}"
-                                                class="theme-btn appointment-btn"><i class="fas fa-calendar-check me-2"></i> <span>المواعيد</span></a>
+                                                class="theme-btn appointment-btn"><i class="fas fa-calendar-check me-2"></i>
+                                                <span>المواعيد</span></a>
                                             {{-- <a href="{{ route('website.doctors.all') }}"
                                             class="theme-btn services-btn">الأطباء</a> --}}
                                         </div>
@@ -266,71 +267,57 @@
                                         </div>
 
                                         <div class="two-column row clearfix">
-                                            <div class="column col-lg-6 col-md-6 col-sm-12">
-                                                <h3>الخدمات الرئيسية</h3>
-                                                <div class="column-text">
-                                                    @if ($section->Service && count($section->Service) > 0)
-                                                        <ul class="service-list">
-                                                            @foreach ($section->Service as $service)
-                                                                <li>{{ $service->name }}</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @else
-                                                        <p>لا توجد خدمات مسجلة لهذا القسم</p>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="column col-lg-6 col-md-6 col-sm-12">
+                                            <div class="column col-lg-12 col-md-12 col-sm-12">
                                                 <h3 class="section-title">الأطباء المتخصصين</h3>
                                                 <div class="doctors-container">
                                                     @if ($section->doctors && count($section->doctors) > 0)
-                                                        <div class="doctors-grid">
-                                                            @foreach ($section->doctors as $doctor)
-                                                                <div class="doctor-profile-card">
-                                                                    <div class="doctor-avatar-container">
-                                                                        @if ($doctor->image)
-                                                                            <img src="{{ asset('Dashboard/img/doctors/' . $doctor->image->filename) }}"
-                                                                                alt="{{ $doctor->name }}"
-                                                                                class="doctor-avatar"
-                                                                                onerror="this.src='{{ asset('Dashboard/img/doctor_default.png') }}'">
-                                                                        @else
-                                                                            <img src="{{ asset('Dashboard/img/doctor_default.png') }}"
-                                                                                alt="صورة افتراضية" class="doctor-avatar">
-                                                                        @endif
-                                                                        <div
-                                                                            class="doctor-status-badge {{ $doctor->status ? 'active' : 'inactive' }}">
-                                                                            {{ $doctor->status ? 'متاح' : 'غير متاح' }}
+                                                        <div class="row">
+                                                            @foreach ($section->doctors->take(10) as $doctor)
+                                                                <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+                                                                    <div class="doctor-profile-card d-flex">
+                                                                        <div class="doctor-avatar-container me-3">
+                                                                            @if ($doctor->image)
+                                                                                <img src="{{ asset('Dashboard/img/doctors/' . $doctor->image->filename) }}"
+                                                                                    alt="{{ $doctor->name }}"
+                                                                                    class="doctor-avatar img-fluid rounded-circle"
+                                                                                    style="width: 100px; height: 100px; object-fit: cover;"
+                                                                                    onerror="this.src='{{ asset('Dashboard/img/doctor_default.png') }}'">
+                                                                            @else
+                                                                                <img src="{{ asset('Dashboard/img/doctor_default.png') }}"
+                                                                                    alt="صورة افتراضية"
+                                                                                    class="doctor-avatar img-fluid rounded-circle"
+                                                                                    style="width: 100px; height: 100px; object-fit: cover;">
+                                                                            @endif
+                                                                            <div
+                                                                                class="doctor-status-badge {{ $doctor->status ? 'active' : 'inactive' }}">
+                                                                                {{ $doctor->status ? 'متاح' : 'غير متاح' }}
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="doctor-details">
-                                                                        <h4 class="doctor-name">{{ $doctor->name }}</h4>
-                                                                        <p class="doctor-specialty">
-                                                                            {{ $doctor->specialization }}</p>
-
-
-                                                                        <button type="button"
-                                                                            class="btn btn-appointment book-doctor-btn"
-                                                                            {{-- الكلاس موجود بالفعل --}}
-                                                                            data-doctor-id="{{ $doctor->id }}"
-                                                                            {{-- نستخدم هذا --}}
-                                                                            data-doctor-name="{{ $doctor->name }}"
-                                                                            {{-- هذا للاحتياط أو العرض لاحقاً --}}
-                                                                            data-section-id="{{ $section->id }}"
-                                                                            {{-- نستخدم هذا --}}
-                                                                            data-section-name="{{ $section->name }}">
-                                                                            {{-- هذا للاحتياط أو العرض لاحقاً --}}
-                                                                            حجز موعد <i class="fas fa-calendar-check"></i>
-                                                                        </button>
-
+                                                                        <div class="doctor-details flex-grow-1">
+                                                                            <h4 class="doctor-name">{{ $doctor->name }}
+                                                                            </h4>
+                                                                            <p class="doctor-specialty">
+                                                                                {{ $doctor->specialization }}</p>
+                                                                            <button type="button"
+                                                                                class="btn btn-primary book-doctor-btn"
+                                                                                data-doctor-id="{{ $doctor->id }}"
+                                                                                data-doctor-name="{{ $doctor->name }}"
+                                                                                data-section-id="{{ $section->id }}"
+                                                                                data-section-name="{{ $section->name }}">
+                                                                                حجز موعد <i
+                                                                                    class="fas fa-calendar-check ms-1"></i>
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             @endforeach
                                                         </div>
                                                     @else
-                                                        <div class="no-doctors">
+                                                        <div class="no-doctors text-center py-5">
                                                             <img src="{{ asset('Dashboard/img/no-doctors.svg') }}"
-                                                                alt="لا يوجد أطباء">
-                                                            <p>لا يوجد أطباء مسجلين في هذا القسم</p>
+                                                                alt="لا يوجد أطباء" class="img-fluid mb-3"
+                                                                style="max-width: 200px;">
+                                                            <p class="text-muted">لا يوجد أطباء مسجلين في هذا القسم</p>
                                                         </div>
                                                     @endif
                                                 </div>
@@ -351,8 +338,198 @@
     </section>
     <!-- End Department Section -->
 
+    @if (isset($latestServices) && $latestServices->count() > 0)
+        <section class="services-slider-section py-5 bg-gradient-light">
+            <div class="container position-relative">
+                <div class="row justify-content-center mb-5">
+                    <div class="col-lg-8 text-center">
+                        <h2 class="display-5 fw-bold text-primary mb-3">أحدث خدماتنا الطبية المتميزة</h2>
+                        <div class="animated-separator mx-auto">
+                            <span class="animated-bar"></span>
+                        </div>
+                        <p class="text-muted mt-3">اكتشف مجموعة واسعة من الخدمات الطبية المتخصصة التي نقدمها بأعلى معايير
+                            الجودة</p>
+                    </div>
+                </div>
+
+                <!-- Swiper with 3D effect -->
+                <div class="swiper-container services-swiper-3d">
+                    <div class="swiper-wrapper">
+                        @foreach ($latestServices as $service)
+                            <div class="swiper-slide">
+                                <div class="service-card-3d">
+                                    <div class="card-face card-front">
+                                        <div class="service-icon-wrapper">
+                                            <i class="fas fa-heartbeat"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="service-title">{{ $service->name }}</h5>
+                                            @if ($service->doctor)
+                                                <div class="doctor-info">
+                                                    @if ($doctor->image)
+                                                        <img src="{{ asset('Dashboard/img/doctors/' . $doctor->image->filename) }}"
+                                                            alt="{{ $doctor->name }}"
+                                                            class="doctor-avatar img-fluid rounded-circle"
+                                                            style="width: 100px; height: 100px; object-fit: cover;"
+                                                            onerror="this.src='{{ asset('Dashboard/img/doctor_default.png') }}'">
+                                                    @else
+                                                        <img src="{{ asset('Dashboard/img/doctor_default.png') }}"
+                                                            alt="صورة افتراضية"
+                                                            class="doctor-avatar img-fluid rounded-circle"
+                                                            style="width: 100px; height: 100px; object-fit: cover;">
+                                                    @endif
+                                                    <div>
+                                                        <span class="doctor-name">{{ $service->doctor->name }}</span>
+                                                        @if ($service->doctor->section)
+                                                            <span
+                                                                class="doctor-specialty">{{ $service->doctor->section->name }}</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            <div class="service-excerpt">
+                                                {{ Str::limit(strip_tags($service->description ?? 'وصف مختصر للخدمة...'), 100) }}
+                                            </div>
+                                            <div class="flip-button">
+                                                <i class="fas fa-redo"></i> التفاصيل
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <div class="card-body">
+                                            <h5 class="service-title">{{ $service->name }}</h5>
+                                            <ul class="service-features">
+                                                <li><i class="fas fa-check-circle"></i> تشخيص دقيق</li>
+                                                <li><i class="fas fa-check-circle"></i> أحدث التقنيات</li>
+                                                <li><i class="fas fa-check-circle"></i> متابعة مستمرة</li>
+                                            </ul>
+                                            @if (isset($service->price) && is_numeric($service->price))
+                                                <div class="price-tag">
+                                                    {{ number_format($service->price, 2) }}
+                                                    <small>{{ config('app.currency_symbol', 'ر.س') }}</small>
+                                                </div>
+                                            @endif
+                                            <a href="#" class="btn btn-primary btn-book">
+                                                حجز الخدمة <i class="fas fa-calendar-check ms-1"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination services-swiper-pagination"></div>
+                </div>
+
+                <!-- Custom Navigation -->
+                <div class="swiper-nav-buttons">
+                    <button class="swiper-button-prev-custom">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="swiper-button-next-custom">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    @endif
+
+    @if (isset($latestGroupedServices) && $latestGroupedServices->count() > 0)
+        <section class="grouped-services-section py-5 bg-white">
+            <div class="container">
+                <div class="row justify-content-center mb-5">
+                    <div class="col-lg-8 text-center">
+                        <h2 class="display-5 fw-bold text-primary mb-3">باقاتنا الطبية الشاملة</h2>
+                        <div class="animated-separator mx-auto">
+                            <span class="animated-bar"></span>
+                        </div>
+                        <p class="text-muted mt-3">وفر وقتك ومالك مع باقاتنا المتكاملة المصممة خصيصًا لراحتك</p>
+                    </div>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+                    @foreach ($latestGroupedServices as $group)
+                        <div class="col-md-6 col-lg-4">
+                            <div class="package-card">
+                                <div class="package-header">
+                                    <h3 class="package-title">{{ $group->name }}</h3>
+                                    @if (isset($group->Total_with_tax))
+                                        <div class="package-price">
+                                            {{ number_format($group->Total_with_tax, 2) }}
+                                            <span>{{ config('app.currency_symbol', 'ر.س') }}</span>
+                                        </div>
+                                    @endif
+                                    <div class="package-savings">
+                                        متوفر حتى 25
+                                    </div>
+                                </div>
+                                <div class="package-body">
+                                    @if ($group->notes)
+                                        <p class="package-description">
+                                            {{ Str::limit(strip_tags($group->notes), 120) }}
+                                        </p>
+                                    @endif
+
+                                    <div class="package-features">
+                                        <h5>تشمل الباقة:</h5>
+                                        <ul>
+                                            @foreach ($group->service_group->take(4) as $service_item)
+                                                <li>
+                                                    <i class="fas fa-check"></i>
+                                                    {{ $service_item->name }}
+                                                    @if (isset($service_item->price))
+                                                        <span class="feature-price">
+                                                            {{ number_format($service_item->price, 2) }} ر.س
+                                                        </span>
+                                                    @endif
+                                                </li>
+                                            @endforeach
+                                            @if ($group->service_group->count() > 4)
+                                                <li class="more-features">
+                                                    + {{ $group->service_group->count() - 4 }} خدمات إضافية
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
+
+                                    <div class="package-total">
+                                        <span>القيمة الإجمالية:</span>
+                                        <span class="total-value">
+                                            @php
+                                                $totalValue = $group->service_group->sum('price');
+                                                echo number_format($totalValue, 2) .
+                                                    ' ' .
+                                                    config('app.currency_symbol', 'ر.س');
+                                            @endphp
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="package-footer">
+                                    {{-- <a href="#" class="btn btn-primary btn-package-details">
+                                        تفاصيل الباقة <i class="fas fa-arrow-left ms-2"></i>
+                                    </a> --}}
+                                    <a href="#" class="btn btn-outline-primary btn-package-book">
+                                        حجز الباقة <i class="fas fa-calendar-alt ms-2"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                {{-- <div class="text-center mt-5">
+                    <a href="#" class="btn btn-outline-primary btn-lg rounded-pill px-4">
+                        عرض جميع البackages <i class="fas fa-arrow-left ms-2"></i>
+                    </a>
+                </div> --}}
+            </div>
+        </section>
+    @endif
+    <!-- End Latest Single Services Section -->
+
     <!-- Team Section -->
-    <section class="team-section">
+    {{-- <section class="team-section">
         <div class="auto-container">
 
             <!-- Sec Title -->
@@ -458,9 +635,9 @@
             </div>
 
         </div>
-    </section>
+    </section> --}}
     <!-- End Team Section -->
-
+    <br>
     <!-- Video Section -->
     <section class="video-section" style="background-image:url(images/background/5.jpg)">
         <div class="auto-container">
@@ -487,19 +664,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-column col-lg-6 col-md-12 col-sm-12" id="appointment"> {{-- الـ ID هنا غير صحيح بسبب الـ # --}}
-                        <div class="inner-column">
-                            <!-- Sec Title -->
-                            <div class="sec-title">
-                                <h2>حجز موعد</h2>
-                                <div class="separator"></div>
-                            </div>
-                            <!-- Appointment Form -->
-                            <div class="appointment-form">
+
+                    <div class="container my-5" id="appointment">
+                        <div class="sec-title">
+                            <h2>حجز موعد</h2>
+                            <div class="separator"></div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-12"> {{-- This will make the component span the full width of the row --}}
                                 <livewire:appointments.create />
                             </div>
                         </div>
                     </div>
+
+
+                    {{--  --}}
 
                 </div>
             </div>
@@ -1080,9 +1260,9 @@
             }
 
             /* .doctor-avatar {
-                                        width: 50px;
-                                        height: 100px;
-                                    } */
+                                                                            width: 50px;
+                                                                            height: 100px;
+                                                                        } */
 
             .doctor-details {
                 padding: 15px;
@@ -1132,6 +1312,399 @@
             opacity: 1;
         }
     </style>
+
+    <style>
+        /* خدمات 3D بطاقات */
+        .services-slider-section {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9f5ff 100%);
+        }
+
+        .service-card-3d {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            transform-style: preserve-3d;
+            transition: all 0.8s ease;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .service-card-3d:hover {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-front {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            color: white;
+            transform: rotateY(180deg);
+            padding: 25px;
+        }
+
+        .service-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: rgba(58, 123, 213, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #3a7bd5;
+        }
+
+        .service-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .doctor-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.03);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .doctor-thumbnail {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            margin-left: 10px;
+        }
+
+        .doctor-name {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .doctor-specialty {
+            display: block;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .service-excerpt {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .flip-button {
+            background: rgba(58, 123, 213, 0.1);
+            color: #3a7bd5;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .flip-button i {
+            margin-left: 5px;
+            transition: all 0.3s;
+        }
+
+        .flip-button:hover {
+            background: #3a7bd5;
+            color: white;
+        }
+
+        /* Back card styles */
+        .card-back .service-title {
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .service-features {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .service-features li {
+            margin-bottom: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .service-features i {
+            margin-left: 8px;
+            font-size: 12px;
+        }
+
+        .price-tag {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .price-tag small {
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        .btn-book {
+            width: 100%;
+            border-radius: 30px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Swiper 3D modifications */
+        .services-swiper-3d {
+            padding: 30px 0;
+        }
+
+        .services-swiper-3d .swiper-slide {
+            transition: all 0.3s;
+            transform: scale(0.9);
+            opacity: 0.8;
+        }
+
+        .services-swiper-3d .swiper-slide-active {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* باقات بطاقات */
+        .package-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .package-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .package-header {
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .package-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+
+        .package-price {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .package-price span {
+            font-size: 1rem;
+            font-weight: normal;
+        }
+
+        .package-savings {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-size: 12px;
+        }
+
+        .package-body {
+            padding: 25px;
+            flex-grow: 1;
+        }
+
+        .package-description {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .package-features {
+            margin-bottom: 20px;
+        }
+
+        .package-features h5 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .package-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .package-features li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .package-features li i {
+            margin-left: 8px;
+            color: #3a7bd5;
+            font-size: 12px;
+        }
+
+        .feature-price {
+            margin-right: auto;
+            color: #3a7bd5;
+            font-weight: 600;
+        }
+
+        .more-features {
+            color: #7f8c8d;
+            font-style: italic;
+            font-size: 13px !important;
+        }
+
+        .package-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .package-total span:first-child {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .total-value {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .package-footer {
+            display: flex;
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-package-details {
+            flex: 1;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .btn-package-book {
+            flex: 1;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+
+        /* عناصر عامة */
+        .animated-separator {
+            width: 80px;
+            height: 3px;
+            background: rgba(58, 123, 213, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .animated-bar {
+            position: absolute;
+            width: 40px;
+            height: 100%;
+            background: #3a7bd5;
+            animation: separatorAnimation 3s infinite ease-in-out;
+        }
+
+        @keyframes separatorAnimation {
+            0% {
+                left: -40px;
+            }
+
+            50% {
+                left: 80px;
+            }
+
+            100% {
+                left: -40px;
+            }
+        }
+
+        .swiper-nav-buttons {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .swiper-button-prev-custom,
+        .swiper-button-next-custom {
+            pointer-events: all;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: none;
+            color: #3a7bd5;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .swiper-button-prev-custom:hover,
+        .swiper-button-next-custom:hover {
+            background: #3a7bd5;
+            color: white;
+        }
+    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // تفعيل نظام التبويب
@@ -1153,6 +1726,148 @@
                     // إظهار المحتوى المحدد
                     const tabId = this.getAttribute('data-tab');
                     document.querySelector(tabId).classList.add('active-tab');
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Swiper !== 'undefined') {
+                // Swiper for Single Services
+                if (document.querySelector('.services-swiper')) {
+                    var servicesSwiper = new Swiper('.services-swiper', {
+                        slidesPerView: 1,
+                        spaceBetween: 20,
+                        loop: false, // أو true إذا أردت تكرار لا نهائي
+                        grabCursor: true,
+                        pagination: {
+                            el: '.services-swiper-pagination',
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: '.services-swiper-button-next',
+                            prevEl: '.services-swiper-button-prev',
+                        },
+                        breakpoints: {
+                            // when window width is >= 576px
+                            576: {
+                                slidesPerView: 2,
+                                spaceBetween: 20
+                            },
+                            // when window width is >= 768px
+                            768: {
+                                slidesPerView: 3,
+                                spaceBetween: 25
+                            },
+                            // when window width is >= 992px
+                            992: {
+                                slidesPerView: 4, // يمكنك تعديل هذا الرقم
+                                spaceBetween: 30
+                            }
+                        }
+                    });
+                }
+
+                // Swiper for Grouped Services
+                if (document.querySelector('.grouped-services-swiper')) {
+                    var groupedServicesSwiper = new Swiper('.grouped-services-swiper', {
+                        slidesPerView: 1,
+                        spaceBetween: 20,
+                        loop: false,
+                        grabCursor: true,
+                        pagination: {
+                            el: '.grouped-services-swiper-pagination',
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: '.grouped-services-swiper-button-next',
+                            prevEl: '.grouped-services-swiper-button-prev',
+                        },
+                        breakpoints: {
+                            576: {
+                                slidesPerView: 2,
+                                spaceBetween: 20
+                            },
+                            768: {
+                                slidesPerView: 2, // الباقات قد تكون أعرض
+                                spaceBetween: 25
+                            },
+                            992: {
+                                slidesPerView: 3, // يمكنك تعديل هذا الرقم
+                                spaceBetween: 30
+                            }
+                        }
+                    });
+                }
+            } else {
+                console.error('SwiperJS is not loaded.');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize 3D Services Swiper
+            if (document.querySelector('.services-swiper-3d')) {
+                var servicesSwiper3D = new Swiper('.services-swiper-3d', {
+                    effect: 'coverflow',
+                    grabCursor: true,
+                    centeredSlides: true,
+                    slidesPerView: 'auto',
+                    coverflowEffect: {
+                        rotate: 0,
+                        stretch: 0,
+                        depth: 200,
+                        modifier: 1,
+                        slideShadows: false,
+                    },
+                    pagination: {
+                        el: '.services-swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next-custom',
+                        prevEl: '.swiper-button-prev-custom',
+                    },
+                    breakpoints: {
+                        768: {
+                            coverflowEffect: {
+                                rotate: 0,
+                                stretch: -50,
+                                depth: 300,
+                                modifier: 1,
+                            }
+                        },
+                        992: {
+                            coverflowEffect: {
+                                rotate: 0,
+                                stretch: -100,
+                                depth: 400,
+                                modifier: 1,
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Manual flip for touch devices
+            const serviceCards = document.querySelectorAll('.service-card-3d');
+            serviceCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    if (window.innerWidth < 992) {
+                        this.classList.toggle('flipped');
+                    }
+                });
+            });
+
+            // Package cards hover effect
+            const packageCards = document.querySelectorAll('.package-card');
+            packageCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.querySelector('.package-header').style.background =
+                        'linear-gradient(135deg, #3a7bd5 0%, #2980b9 100%)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.querySelector('.package-header').style.background =
+                        'linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%)';
                 });
             });
         });
@@ -1224,4 +1939,5 @@
 
         }); // نهاية document.addEventListener
     </script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 @endsection

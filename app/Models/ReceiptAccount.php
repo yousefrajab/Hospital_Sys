@@ -11,6 +11,16 @@ class ReceiptAccount extends Model
 
     public function patients()
     {
-        return $this->belongsTo(Patient::class,'patient_id');
+        return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class, 'group_id');
     }
 }

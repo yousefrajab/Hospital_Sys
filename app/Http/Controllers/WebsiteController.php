@@ -35,8 +35,46 @@ class WebsiteController extends Controller
             ->take(7)
             ->get();
 
+        $latestServices = Service::where('status', 1)
+            ->with([
+                // 'translations', // إذا كنت تستخدمها
+                'doctor' => function ($query) {
+                    $query->with([/*'translations',*/'section' /*=> function($q_section){
+                        $q_section->with('translations');
+                    }*/]); // تحميل ترجمات الطبيب والقسم
+                }
+            ])
+            ->latest() // لجلب الأحدث
+            ->take(6) // عدد الخدمات المراد عرضها في السلايدر
+            ->get();
 
-        return view('welcome', compact('sections', 'featuredDoctors'));
+        // جلب آخر 6 باقات خدمات نشطة
+        $latestGroupedServices = Group::with([
+            // 'translations',
+            'service_group' => function ($query) {
+                $query->with([
+                    // 'translations',
+                    'doctor' => function ($q_doctor) {
+                        $q_doctor->with([/*'translations',*/'section' /*=> function($q_section){
+                                $q_section->with('translations');
+                            }*/]);
+                    }
+                ])->where('status', 1);
+            }
+        ])
+            // ->where('status', 1) // إذا كان للباقة نفسها حقل حالة
+            ->latest()
+            ->take(6) // عدد الباقات المراد عرضها في السلايدر
+            ->get();
+
+        // // جلب الأقسام لعرضها في الصفحة الرئيسية (كما في الكود الذي أرسلته)
+        // $sections = Section::with(['doctors.image', /*'translations'*/])
+        //     ->where('status', 1) // فقط الأقسام المفعلة
+        //     ->orderBy('name') // أو أي ترتيب تفضله
+        //     ->get();
+
+
+        return view('welcome', compact('sections', 'featuredDoctors', 'latestServices', 'latestGroupedServices'));
     }
 
     public function showAllDepartments()
@@ -158,63 +196,85 @@ class WebsiteController extends Controller
     }
     public function showAllServices(Request $request)
     {
-        // جلب جميع الخدمات النشطة (status = 1) مع الترجمة
-        // يمكنك إضافة فلترة أو بحث إذا أردت لاحقًا
-        $services = Service::all(); // مثال: 9 خدمات في الصفحة (يمكنك تغيير هذا الرقم)
+        // جلب جميع الخدمات النشطة مع تحميل علاقات الطبيب وقسم الطبيب والترجمات
+        $services = Service::where('status', 1) // فقط الخدمات المفعلة
 
-        // يمكنك تمرير متغير $settings إذا كنت تستخدمه لتحديد الألوان في الـ CSS
-        // $settings = settings(); // افترض أن لديك دالة helper settings()
+            ->orderBy('created_at', 'desc') // أو أي ترتيب تفضله
+            ->paginate(9); // مثال: 9 خدمات في الصفحة
+
+        // جلب الإعدادات إذا كنت تستخدمها (مثال من كود Blade الخاص بك)
+        // تأكد أن دالة settings() أو موديل Setting موجود ويعمل
+        // $settings = Setting::first()->toArray(); // أو settings() إذا كانت دالة helper
 
         return view('WebSite.services.all_services_standalone', compact('services'));
     }
+
     public function showAllGroupServices(Request $request)
     {
-        $groupedServices = Group::all();
+        // جلب باقات الخدمات مع تحميل الخدمات المفردة داخلها،
+        // ومعلومات الطبيب والقسم لكل خدمة مفردة
+        $groupedServices = Group::with([
+            // إذا كنت تستخدمها لـ Group
+            'service_group' => function ($query) { // service_group هي علاقة الخدمات داخل الباقة
+                $query->with([
+                    // ترجمات الخدمة المفردة
+                    'doctor' => function ($q_doctor) {
+                        $q_doctor->with(['translations', 'section' => function ($q_section) {
+                            $q_section->with('translations');
+                        }]);
+                    }
+                ])->where('status', 1); // فقط الخدمات المفعلة داخل الباقة
+            }
+        ])
+            // يمكنك إضافة ->where('status', 1) إذا كان للباقة نفسها حقل حالة
+            ->orderBy('created_at', 'desc')
+            ->paginate(6); // مثال: 6 باقات في الصفحة
+
+        // $settings = Setting::first()->toArray(); // أو settings()
 
         return view('WebSite.services.all_group_services_standalone', compact('groupedServices'));
     }
 
-   public function myAppointments(Request $request)
-{
-    if (!Auth::guard('patient')->check()) {
-   
+    public function myAppointments(Request $request)
+    {
+        if (!Auth::guard('patient')->check()) {
+        }
+
+        $patient = Auth::guard('patient')->user();
+        $patientId = $patient->id; // احصل على ID المريض
+
+        // --- جلب المواعيد القادمة ---
+        $upcomingAppointments = Appointment::where('patient_id', $patientId) // <<< قيد إضافي هنا
+            ->where('appointment', '>=', now()->startOfDay())
+            ->whereIn('type', [
+                Appointment::STATUS_PENDING,
+                Appointment::STATUS_CONFIRMED
+            ])
+            ->with([ /* ... with clauses ... */])
+            ->orderBy('appointment', 'asc')
+            ->paginate(config('pagination.website_patient_appointments_upcoming', 6), ['*'], 'upcoming_page');
+
+        // --- جلب المواعيد السابقة ---
+        $pastAppointmentsQuery = Appointment::where('patient_id', $patientId) // <<< قيد إضافي هنا
+            ->where(function ($query) {
+                $query->where('appointment', '<', now()->startOfDay())
+                    ->orWhereIn('type', [
+                        Appointment::STATUS_COMPLETED,
+                        Appointment::STATUS_CANCELLED,
+                        Appointment::STATUS_LAPSED,
+                    ]);
+            })
+            ->with([ /* ... with clauses ... */])
+            ->orderBy('appointment', 'desc');
+
+        $pastAppointments = $pastAppointmentsQuery->paginate(config('pagination.website_patient_appointments_past', 6), ['*'], 'past_page');
+
+        return view('WebSite.appointments.my_appointments_standalone', compact(
+            'patient',
+            'upcomingAppointments',
+            'pastAppointments'
+        ));
     }
-
-    $patient = Auth::guard('patient')->user();
-    $patientId = $patient->id; // احصل على ID المريض
-
-    // --- جلب المواعيد القادمة ---
-    $upcomingAppointments = Appointment::where('patient_id', $patientId) // <<< قيد إضافي هنا
-        ->where('appointment', '>=', now()->startOfDay())
-        ->whereIn('type', [
-            Appointment::STATUS_PENDING,
-            Appointment::STATUS_CONFIRMED
-        ])
-        ->with([ /* ... with clauses ... */ ])
-        ->orderBy('appointment', 'asc')
-        ->paginate(config('pagination.website_patient_appointments_upcoming', 6), ['*'], 'upcoming_page');
-
-    // --- جلب المواعيد السابقة ---
-    $pastAppointmentsQuery = Appointment::where('patient_id', $patientId) // <<< قيد إضافي هنا
-        ->where(function ($query) {
-            $query->where('appointment', '<', now()->startOfDay())
-                ->orWhereIn('type', [
-                    Appointment::STATUS_COMPLETED,
-                    Appointment::STATUS_CANCELLED,
-                    Appointment::STATUS_LAPSED,
-                ]);
-        })
-        ->with([ /* ... with clauses ... */ ])
-        ->orderBy('appointment', 'desc');
-
-    $pastAppointments = $pastAppointmentsQuery->paginate(config('pagination.website_patient_appointments_past', 6), ['*'], 'past_page');
-
-    return view('WebSite.appointments.my_appointments_standalone', compact(
-        'patient',
-        'upcomingAppointments',
-        'pastAppointments'
-    ));
-}
 
     public function cancelAppointmentFromWebsite(Request $request, Appointment $appointment)
     {

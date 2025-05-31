@@ -10,6 +10,7 @@ use App\Http\Controllers\doctor\InvoiceController;
 use App\Http\Controllers\Dashboard\DoctorController;
 use App\Http\Controllers\Dashboard_Doctor\RayController;
 use App\Http\Controllers\Dashboard\PrescriptionController;
+use App\Http\Controllers\Doctor\ServiceManagementController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Dashboard\Doctors\ProfileController;
 use App\Http\Controllers\Dashboard_Doctor\DiagnosticController;
@@ -45,6 +46,21 @@ Route::group([
 
 
 
+        //############################# SERVICES MANAGEMENT BY DOCTOR #####################################
+        Route::prefix('services-management')->name('services_management.')->group(function () {
+            Route::get('/', [ServiceManagementController::class, 'index'])->name('index'); // عرض كل الخدمات (الخاصة به + التي يمكنه إضافتها)
+            Route::get('/create', [ServiceManagementController::class, 'create'])->name('create'); // فورم إنشاء خدمة جديدة
+            Route::post('/', [ServiceManagementController::class, 'store'])->name('store'); // حفظ الخدمة الجديدة
+            Route::get('/{service}/edit', [ServiceManagementController::class, 'edit'])->name('edit'); // فورم تعديل خدمة (يجب أن يكون الطبيب هو المنشئ أو لديه صلاحية)
+            Route::put('/{service}', [ServiceManagementController::class, 'update'])->name('update'); // تحديث الخدمة
+            Route::delete('/{service}', [ServiceManagementController::class, 'destroy'])->name('destroy'); // حذف خدمة (إذا كان هو المنشئ)
+
+            // لربط/فصل الخدمات العامة التي لم ينشئها هو
+            Route::post('/attach-existing', [ServiceManagementController::class, 'attachExistingService'])->name('attach_existing');
+            Route::delete('/detach-existing/{service}', [ServiceManagementController::class, 'detachExistingService'])->name('detach_existing');
+        });
+        //############################# END SERVICES MANAGEMENT BY DOCTOR #################################
+
         //############################# completed_invoices route ##########################################
 
         //############################# end invoices route ######################################
@@ -62,7 +78,7 @@ Route::group([
         //############################# end Diagnostics route ######################################
         // Route::resource('Doctors', DoctorController::class);
 
-          // إضافة مسار تعديل الجدول
+        // إضافة مسار تعديل الجدول
         // --- مسارات جدول العمل ---
         Route::get('/schedule', [DoctorController::class, 'showSchedule'])->name('schedule.show'); // <-- المسار الجديد لعرض الجدول
         Route::get('/schedule/edit/{id}', [DoctorController::class, 'editSchedule'])->name('schedule.edit');
@@ -116,8 +132,8 @@ Route::group([
     });
 
     Route::get('/profile', [ProfileController::class, 'showProfile'])->name('doctor.profile.show'); // <--- تغيير اسم الدالة إذا أردت
-        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('doctor.profile.edit'); // للتعديل
-        Route::put('/profile', [ProfileController::class, 'update'])->name('doctor.profile.update'); // لحفظ التعديل
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('doctor.profile.edit'); // للتعديل
+    Route::put('/profile', [ProfileController::class, 'update'])->name('doctor.profile.update'); // لحفظ التعديل
 
 
     Route::get('completed_invoices', [InvoiceController::class, 'completedInvoices'])->middleware(['auth:doctor', 'doctor.status'])->name('doctor.completedInvoices');

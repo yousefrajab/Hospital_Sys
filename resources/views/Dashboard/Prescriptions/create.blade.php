@@ -162,7 +162,7 @@
         @endif
 
         @if($patient)
-            <form action="{{ route('doctor.prescriptions.store') }}" method="POST" id="prescriptionForm" novalidate class="needs-validation">
+            <form action="{{ route('prescriptions.store') }}" method="POST" id="prescriptionForm" novalidate class="needs-validation">
                 @csrf
                 <input type="hidden" name="patient_id" value="{{ $patient->id }}">
 

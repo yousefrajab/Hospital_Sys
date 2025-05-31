@@ -37,87 +37,118 @@ class PatientController extends Controller
     /**
      * عرض لوحة التحكم الرئيسية للمريض مع ملخصات وتنبيهات.
      */
-    public function dashboard()
+   public function dashboard()
     {
         $patient = Auth::guard('patient')->user();
+        if (!$patient) {
+            // هذا لا ينبغي أن يحدث إذا كان الميدل وير يعمل بشكل صحيح
+            // ولكن كإجراء احترازي
+            session()->flash('error', 'حدث خطأ، يرجى تسجيل الدخول مرة أخرى.');
+            return redirect()->route('login'); // أو 'patient.login' حسب اسم الراوت
+        }
         $patientId = $patient->id;
-        $patientEmail = $patient->email; //  نحتاج إيميل المريض
+        $patientEmail = $patient->email;
 
         Log::info("Patient Dashboard: User {$patient->name} (ID: {$patientId}) accessed.");
 
         // --- حسابات البطاقات الإحصائية ---
+
+        // إجمالي الفواتير المستحقة (مفردة ومجمعة)
+        // نفترض أن invoice_status = 1 يعني فاتورة غير مدفوعة/مستحقة
         $totalDueInvoices = Invoice::where('patient_id', $patientId)
-            ->where('invoice_status', 1) // افترض أن 1 = مستحقة
-            ->sum(DB::raw('total_with_tax'));
+            
+            ->sum(DB::raw('total_with_tax')); // أو الحقل المناسب لإجمالي الفاتورة
+
+        // إجمالي المبالغ المدفوعة (لكشف الحساب)
+        $totalPaidByPatient = ReceiptAccount::where('patient_id', $patientId)
+            ->sum('amount'); // افترض أن حقل المبلغ هو 'amount'
 
         $upcomingAppointmentsCount = Appointment::where('patient_id', $patientId)
             ->where('appointment', '>=', now())
-            ->whereIn('type', ['مؤكد', 'غير مؤكد'])
+            ->whereIn('type', ['مؤكد', 'غير مؤكد']) // تأكد من أن هذه القيم صحيحة
             ->count();
 
         $readyPrescriptionsCount = Prescription::where('patient_id', $patientId)
-            ->where('status', \App\Models\Prescription::STATUS_READY_FOR_PICKUP) // تأكد من الثابت
+            ->where('status', \App\Models\Prescription::STATUS_READY_FOR_PICKUP)
             ->count();
 
-        // *** حساب عدد رسائل الدردشة الجديدة مباشرة من جدول messages ***
-        $unreadChatMessagesCount = Message::where('receiver_email', $patientEmail) // الرسائل الموجهة للمريض الحالي
-            ->where('read', false) // التي لم تُقرأ بعد
-            // (اختياري) يمكنك إضافة شرط للتأكد أن المرسل طبيب إذا أردت
-            // ->whereIn('sender_email', function($query){
-            //     $query->select('email')->from('doctors');
-            // })
+        $unreadChatMessagesCount = Message::where('receiver_email', $patientEmail)
+            ->where('read', false)
             ->count();
         Log::info("Patient Dashboard: Unread chat messages count for {$patientEmail}: {$unreadChatMessagesCount}");
-        // *** نهاية حساب رسائل الدردشة الجديدة ***
 
         // --- حسابات التنبيهات الهامة ---
         $upcomingChronicRefill = Prescription::where('patient_id', $patientId)
             ->where('is_chronic_prescription', true)
             ->whereNotNull('next_refill_due_date')
             ->whereBetween('next_refill_due_date', [Carbon::today(), Carbon::today()->addDays(7)])
-            ->whereNotIn('status', [Prescription::STATUS_REFILL_REQUESTED, Prescription::STATUS_CANCELLED_BY_DOCTOR, Prescription::STATUS_CANCELLED_BY_PATIENT, Prescription::STATUS_EXPIRED])
+            ->whereNotIn('status', [
+                Prescription::STATUS_REFILL_REQUESTED,
+                Prescription::STATUS_CANCELLED_BY_DOCTOR,
+                Prescription::STATUS_CANCELLED_BY_PATIENT,
+                Prescription::STATUS_EXPIRED,
+                // Prescription::STATUS_DELIVERED // يمكن إضافة حالات أخرى إذا لزم الأمر
+            ])
             ->orderBy('next_refill_due_date', 'asc')
             ->first();
 
         $imminentAppointment = Appointment::where('patient_id', $patientId)
-            ->where('type', 'مؤكد')
-            ->whereBetween('appointment', [Carbon::today()->startOfDay(), Carbon::tomorrow()->endOfDay()])
-            ->with('doctor:id')
+            ->where('type', 'مؤكد') // تأكد من القيمة
+            ->whereBetween('appointment', [Carbon::now()->startOfDay(), Carbon::tomorrow()->endOfDay()]) // من بداية اليوم الحالي حتى نهاية الغد
+            ->with('doctor:id') // جلب اسم الطبيب
             ->orderBy('appointment', 'asc')
             ->first();
+        // للتأكد من ترجمة اسم الطبيب إذا كنت تستخدم spatie/laravel-translatable
+        if($imminentAppointment && $imminentAppointment->doctor){
+            $imminentAppointment->doctor->unsetRelations(); // لإزالة أي علاقات أخرى قد تكون محملة
+            $imminentAppointment->doctor->load('translations');
+        }
+
 
         $hasImportantAlerts = $upcomingChronicRefill || ($readyPrescriptionsCount > 0) || $imminentAppointment || ($unreadChatMessagesCount > 0);
 
         // --- قوائم العرض المختصر ---
-        $latest_invoices = Invoice::with('Doctor:id')
-            ->where('patient_id', $patientId)
-            ->latest('invoice_date')
-            ->take(5)
-            ->get();
+        // أحدث الفواتير (يمكن إزالتها إذا لم تعد مستخدمة في الواجهة بعد التعديل)
+        // $latest_invoices = Invoice::with('Doctor:id')
+        //     ->where('patient_id', $patientId)
+        //     ->latest('invoice_date')
+        //     ->take(5)
+        //     ->get();
 
-        $upcoming_appointments_list = Appointment::with(['doctor:id', 'section:id'])
+        $upcoming_appointments_list = Appointment::with(['doctor:id', 'section:id']) // جلب الأسماء
             ->where('patient_id', $patientId)
             ->where('appointment', '>=', now())
             ->whereIn('type', ['مؤكد', 'غير مؤكد'])
             ->orderBy('appointment', 'asc')
             ->take(5)
             ->get();
+        // للتأكد من ترجمة أسماء الأطباء والأقسام
+        $upcoming_appointments_list->each(function ($appointment) {
+            if ($appointment->doctor) {
+                $appointment->doctor->unsetRelations();
+                $appointment->doctor->load('translations');
+            }
+            if ($appointment->section) {
+                $appointment->section->unsetRelations();
+                $appointment->section->load('translations');
+            }
+        });
+
 
         return view('Dashboard.dashboard_patient.dashboard', compact(
             'patient',
             'totalDueInvoices',
+            'totalPaidByPatient', //  <--- إضافة المتغير الجديد
             'upcomingAppointmentsCount',
             'readyPrescriptionsCount',
-            'unreadChatMessagesCount', //  <--- تمرير المتغير الجديد
+            'unreadChatMessagesCount',
             'upcomingChronicRefill',
             'imminentAppointment',
             'hasImportantAlerts',
-            'latest_invoices',
+            // 'latest_invoices', // يمكن إزالتها إذا لم تعد مستخدمة
             'upcoming_appointments_list'
         ));
     }
-
-
     public function invoices()
     {
         // استخدام auth()->id() أفضل إذا كنت تحتاج فقط الـ ID

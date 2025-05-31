@@ -425,38 +425,6 @@
 
         <form wire:submit.prevent="store" class="appointment-form">
             <div class="form-row">
-                <!-- قسم معلومات المريض -->
-                <div class="form-section patient-info">
-                    <div class="section-header"> <i class="fas fa-user-injured"></i>
-                        <h3>معلومات المريض</h3>
-                    </div>
-                    <div class="form-group"> <label for="name">الاسم الكامل</label>
-                        <div class="input-with-icon"> <input type="text" id="name" wire:model.defer="form.name"
-                                placeholder="أدخل اسمك الثلاثي" required> <i class="fas fa-user"></i> </div>
-                        @error('form.name')
-                            <span class="error-validation">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group"> <label for="email">البريد الإلكتروني</label>
-                        <div class="input-with-icon"> <input type="email" id="email" wire:model.defer="form.email"
-                                placeholder="example@domain.com" required> <i class="fas fa-envelope"></i> </div>
-                        @error('form.email')
-                            <span class="error-validation">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group"> <label for="phone">رقم الهاتف</label>
-                        <div class="input-with-icon"> <input type="tel" id="Phone" wire:model.defer="form.Phone"
-                                placeholder="05XXXXXXXX" required> <i class="fas fa-phone-alt"></i> </div>
-                        @error('form.Phone')
-                            <span class="error-validation">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group"> <label for="notes">ملاحظات إضافية (اختياري)</label>
-                        <textarea id="notes" wire:model.defer="notes" placeholder="أي معلومات إضافية تريد إضافتها..."></textarea> @error('notes')
-                            <span class="error-validation">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
 
                 <!-- قسم تفاصيل الموعد -->
                 <div class="form-section appointment-info">
@@ -522,6 +490,40 @@
                         @endif
                     </div>
                 </div>
+
+                <!-- قسم معلومات المريض -->
+                <div class="form-section patient-info">
+                    <div class="section-header"> <i class="fas fa-user-injured"></i>
+                        <h3>معلومات المريض</h3>
+                    </div>
+                    <div class="form-group"> <label for="name">الاسم الكامل</label>
+                        <div class="input-with-icon"> <input type="text" id="name" wire:model.defer="form.name"
+                                placeholder="أدخل اسمك الثلاثي" required> <i class="fas fa-user"></i> </div>
+                        @error('form.name')
+                            <span class="error-validation">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group"> <label for="email">البريد الإلكتروني</label>
+                        <div class="input-with-icon"> <input type="email" id="email" wire:model.defer="form.email"
+                                placeholder="example@domain.com" required> <i class="fas fa-envelope"></i> </div>
+                        @error('form.email')
+                            <span class="error-validation">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group"> <label for="phone">رقم الهاتف</label>
+                        <div class="input-with-icon"> <input type="tel" id="Phone" wire:model.defer="form.Phone"
+                                placeholder="05XXXXXXXX" required> <i class="fas fa-phone-alt"></i> </div>
+                        @error('form.Phone')
+                            <span class="error-validation">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group"> <label for="notes">ملاحظات إضافية (اختياري)</label>
+                        <textarea id="notes" wire:model.defer="notes" placeholder="أي معلومات إضافية تريد إضافتها..."></textarea> @error('notes')
+                            <span class="error-validation">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
             </div>
 
             {{-- زر الإرسال --}}

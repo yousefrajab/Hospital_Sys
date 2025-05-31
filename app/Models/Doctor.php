@@ -60,7 +60,7 @@ class Doctor extends Authenticatable implements TranslatableContract, CanResetPa
 
     public function doctorappointments()
     {
-        return $this->belongsToMany(Appointment::class,'appointment_doctor');
+        return $this->belongsToMany(Appointment::class, 'appointment_doctor');
     }
 
     public function sendPasswordResetNotification($token)
@@ -78,5 +78,10 @@ class Doctor extends Authenticatable implements TranslatableContract, CanResetPa
     public function PrescriptionItem()
     {
         return $this->belongsTo(PrescriptionItem::class);
+    }
+
+    public function services() // كان اسمها createdServices، يمكن أن يكون services الآن
+    {
+        return $this->hasMany(Service::class, 'doctor_id');
     }
 }
