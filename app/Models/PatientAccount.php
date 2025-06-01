@@ -24,4 +24,7 @@ class PatientAccount extends Model
     {
         return $this->belongsTo(PaymentAccount::class,'Payment_id');
     }
+
+    
+
 }

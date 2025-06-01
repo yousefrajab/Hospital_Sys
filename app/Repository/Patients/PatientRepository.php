@@ -2,20 +2,23 @@
 
 namespace App\Repository\Patients;
 
+use App\Models\Ray;
 use App\Models\Disease;
 use App\Models\Invoice;
 use App\Models\Patient;
+use App\Models\Laboratorie;
 use App\Traits\UploadTrait;
 use Illuminate\Support\Str;
 use App\Models\PatientAccount;
 use App\Models\ReceiptAccount;
 use App\Models\single_invoice;
+use Illuminate\Support\Carbon;
 use App\Models\PatientAdmission;
 use Illuminate\Support\Facades\DB;
+// use Illuminate\Database\Eloquent\Model; // ليس ضروريًا هنا
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-// use Illuminate\Database\Eloquent\Model; // ليس ضروريًا هنا
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use Illuminate\Http\Request; // تم إضافتها بشكل صحيح
@@ -181,7 +184,40 @@ class PatientRepository implements PatientRepositoryInterface
         $invoices = Invoice::where('patient_id', $id)->get();
         $receipt_accounts = ReceiptAccount::where('patient_id', $id)->get();
         $Patient_accounts = PatientAccount::where('patient_id', $id)->get();
-        return view('Dashboard.Patients.show', compact('Patient', 'invoices', 'receipt_accounts', 'Patient_accounts'));
+        $patient_rays = Ray::where('patient_id', $id)
+            ->with(['doctor', 'employee'])
+            ->orderBy('created_at', 'desc')->get();
+
+        $patient_Laboratories = Laboratorie::where('patient_id', $id)
+            ->with(['doctor', 'employee'])
+            ->orderBy('created_at', 'desc')->get();
+        $patient = Patient::with([
+            'image',
+            'diagnosedChronicDiseases',
+            'prescription' => function ($query) {
+                $query->with(['doctor'])
+                    ->orderBy('prescription_date', 'desc')->take(10);
+            },
+            'admissions' => function ($query) {
+                $query->with(['bed.room.section', 'doctor'])
+                    ->orderBy('admission_date', 'desc')->take(5);
+            }
+        ])->find($id);
+
+        if (!$patient) {
+            Log::error("PatientDetailsController@index: Patient with ID {$id} not found.");
+            abort(404, 'المريض المطلوب غير موجود.');
+        }
+
+        return view('Dashboard.Patients.show', compact(
+            'Patient',
+            'invoices',
+            'receipt_accounts',
+            'Patient_accounts',
+            'patient_rays',
+            'patient_Laboratories',
+            'patient',
+        ));
     }
     public function showQR($id = null)
     {

@@ -497,36 +497,52 @@
                             <a class="nav-link active" data-toggle="tab" href="#invoices-tab" role="tab"
                                 aria-controls="invoices-tab" aria-selected="true">
                                 <i class="fas fa-file-invoice-dollar mr-1"></i> الفواتير
+                                <span class="badge badge-pill badge-light ms-1">{{ $invoices->count() }}</span>
+
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#payments-tab" role="tab"
                                 aria-controls="payments-tab" aria-selected="false">
                                 <i class="fas fa-money-bill-wave mr-1"></i> المدفوعات
+                                <span class="badge badge-pill badge-light ms-1">{{ $invoices->count() }}</span>
+
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#account-tab" role="tab"
                                 aria-controls="account-tab" aria-selected="false">
                                 <i class="fas fa-calculator mr-1"></i> كشف حساب
+                                <span class="badge badge-pill badge-light ms-1">{{ $receipt_accounts->count() }}</span>
+
                             </a>
                         </li>
                         <li class="nav-item"> {{-- New Tab for Admissions --}}
                             <a class="nav-link" data-toggle="tab" href="#admissions-tab" role="tab"
                                 aria-controls="admissions-tab" aria-selected="false">
                                 <i class="fas fa-procedures mr-1"></i> سجل الدخول
+                                <span class="badge badge-pill badge-light ms-1">{{ $patient->admissions->count() }}</span>
+
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#radiology-tab" role="tab"
                                 aria-controls="radiology-tab" aria-selected="false">
                                 <i class="fas fa-x-ray mr-1"></i> الأشعة
+                                @if ($patient_rays)
+                                    <span class="badge badge-pill badge-light ms-1">{{ $patient_rays->count() }}</span>
+                                @endif
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#lab-tab" role="tab"
                                 aria-controls="lab-tab" aria-selected="false">
                                 <i class="fas fa-flask mr-1"></i> المختبر
+                                @if ($patient_Laboratories)
+                                    <span
+                                        class="badge badge-pill badge-light ms-1">{{ $patient_Laboratories->count() }}</span>
+                                @endif
+
                             </a>
                         </li>
                     </ul>
@@ -767,22 +783,144 @@
                     </div>
 
                     <!-- الأشعة -->
+                    <!-- الأشعة -->
                     <div class="tab-pane fade p-3" id="radiology-tab" role="tabpanel">
-                        <div class="empty-state">
-                            <div class="empty-state-icon"><i class="fas fa-x-ray"></i></div>
-                            <h4>قسم الأشعة قيد التطوير</h4>
-                            <p class="text-muted">سيتم إضافة وظائف الأشعة قريبًا في تحديثات النظام القادمة</p>
-                            <button class="btn btn-primary disabled"><i class="fas fa-clock"></i> قريبًا</button>
+                        <div class="info-section-card mb-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-x-ray me-2"></i>سجل الأشعة</span>
+                                <!-- تم تحديث المعرف هنا ليشير إلى حاوية هذا التبويب -->
+                                <button class="btn btn-sm btn-outline-secondary no-print"
+                                    onclick="printPatientSection(['#patientProfileHeaderSection', '#radiology-tab'])"><i
+                                        class="fas fa-print fa-sm"></i> طباعة هذا القسم</button>
+                            </div>
+                            <div class="card-body p-0">
+                                @if (isset($patient_rays) && $patient_rays->count() > 0)
+                                    <div class="table-responsive px-3 pt-3">
+                                        <table id="raysTable"
+                                            class="table table-records table-sm table-hover table-striped w-100">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>الوصف/الطلب</th>
+                                                    <th>الطبيب الطالب</th>
+                                                    <th>تاريخ الطلب</th>
+                                                    <th class="text-center">الحالة</th>
+                                                    <th class="text-center no-print">النتيجة</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($patient_rays as $index => $ray)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ Str::limit($ray->description, 35) }}</td>
+                                                        <td>{{ $ray->doctor->name ?? '-' }}</td>
+                                                        <td>{{ $ray->created_at ? $ray->created_at->translatedFormat('d M Y, H:i A') : '-' }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if ($ray->case == 1)
+                                                                <span
+                                                                    class="status-badge-sm status-completed">مكتملة</span>
+                                                            @else
+                                                                <span class="status-badge-sm status-pending">قيد
+                                                                    التنفيذ</span>
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-center no-print">
+                                                            @if ($ray->case == 1 && isset($ray->employee_id) && $ray->image && $ray->image->filename)
+                                                                {{-- افترض أن لديك مسار لتخزين صور الأشعة --}}
+                                                                <a href="{{ asset('ads/rays/' . $ray->image->filename) }}"
+                                                                    data-lightbox="ray-images-{{ $patient->id }}"
+                                                                    data-title="أشعة: {{ $ray->description }} - تاريخ: {{ $ray->created_at ? $ray->created_at->translatedFormat('d M Y') : '' }}"
+                                                                    class="btn btn-xs btn-outline-info px-2 py-1"
+                                                                    data-toggle="tooltip" title="عرض نتيجة الأشعة">
+                                                                    <i class="fas fa-file-image fa-fw"></i>
+                                                                </a>
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <div class="empty-state-compact p-3 m-3"><i class="fas fa-radiation"></i>
+                                        <p>لا توجد طلبات أشعة سابقة.</p>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
 
                     <!-- المختبر -->
+                    <!-- قسم المختبر -->
                     <div class="tab-pane fade p-3" id="lab-tab" role="tabpanel">
-                        <div class="empty-state">
-                            <div class="empty-state-icon"><i class="fas fa-flask"></i></div>
-                            <h4>قسم المختبر قيد التطوير</h4>
-                            <p class="text-muted">سيتم إضافة وظائف المختبر قريبًا في تحديثات النظام القادمة</p>
-                            <button class="btn btn-primary disabled"><i class="fas fa-clock"></i> قريبًا</button>
+                        <div class="info-section-card mb-0">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-flask-vial me-2"></i>سجل المختبر</span>
+                                <!-- تم تحديث المعرف هنا ليشير إلى حاوية هذا التبويب -->
+                                <button class="btn btn-sm btn-outline-secondary no-print"
+                                    onclick="printPatientSection(['#patientProfileHeaderSection', '#lab-tab'])"><i
+                                        class="fas fa-print fa-sm"></i> طباعة هذا القسم</button>
+                            </div>
+                            <div class="card-body p-0">
+                                @if (isset($patient_Laboratories) && $patient_Laboratories->count() > 0)
+                                    <div class="table-responsive px-3 pt-3">
+                                        <table id="labsTable"
+                                            class="table table-records table-sm table-hover table-striped w-100">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>الوصف/الطلب</th>
+                                                    <th>الطبيب الطالب</th>
+                                                    <th>تاريخ الطلب</th>
+                                                    <th class="text-center">الحالة</th>
+                                                    <th class="text-center no-print">النتيجة</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($patient_Laboratories as $lab)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ Str::limit($lab->description, 35) }}</td>
+                                                        <td>{{ $lab->doctor->name ?? '-' }}</td>
+                                                        <td>{{ $lab->created_at ? $lab->created_at->translatedFormat('d M Y, H:i A') : '-' }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if ($lab->case == 1)
+                                                                <span
+                                                                    class="status-badge-sm status-completed">مكتملة</span>
+                                                            @else
+                                                                <span class="status-badge-sm status-pending">قيد
+                                                                    التنفيذ</span>
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-center no-print">
+                                                            @if ($lab->case == 1 && isset($lab->employee_id) && $lab->image && $lab->image->filename)
+                                                                {{-- افترض أن لديك مسار لتخزين صور المختبر --}}
+                                                                <a href="{{ asset('Dashboard/img/laboratories/' . $lab->image->filename) }}"
+                                                                    data-lightbox="lab-images-{{ $patient->id }}"
+                                                                    data-title="تحليل: {{ $lab->description }} - تاريخ: {{ $lab->created_at ? $lab->created_at->translatedFormat('d M Y') : '' }}"
+                                                                    class="btn btn-xs btn-outline-info px-2 py-1"
+                                                                    data-toggle="tooltip" title="عرض نتيجة التحليل">
+                                                                    <i class="fas fa-file-alt fa-fw"></i>
+                                                                </a>
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <div class="empty-state-compact p-3 m-3"><i class="fas fa-vial-virus"></i>
+                                        <p>لا توجد طلبات مختبر سابقة.</p>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -874,7 +1012,9 @@
                 const DOMURL = window.URL || window.webkitURL || window;
 
                 const img = new Image();
-                const svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+                const svgBlob = new Blob([data], {
+                    type: 'image/svg+xml;charset=utf-8'
+                });
                 const url = DOMURL.createObjectURL(svgBlob);
 
                 img.onload = function() {
@@ -899,7 +1039,9 @@
             document.getElementById('downloadSVG').addEventListener('click', function(e) {
                 e.preventDefault();
                 const svg = document.querySelector('.qr-code-image svg').outerHTML;
-                const blob = new Blob([svg], {type: 'image/svg+xml'});
+                const blob = new Blob([svg], {
+                    type: 'image/svg+xml'
+                });
                 const url = URL.createObjectURL(blob);
                 const downloadLink = document.createElement('a');
                 downloadLink.href = url;
