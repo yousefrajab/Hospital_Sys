@@ -6,11 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreatePatientAdmissionsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('patient_admissions', function (Blueprint $table) {
@@ -29,7 +25,7 @@ class CreatePatientAdmissionsTable extends Migration
             $table->string('discharge_diagnosis')->nullable();
 
             $table->enum('status', ['admitted', 'discharged', 'transferred_out', 'transferred_in', 'cancelled'])
-                  ->default('admitted');
+                ->default('admitted');
 
             $table->text('notes')->nullable();
             $table->timestamps();
