@@ -100,4 +100,14 @@ class PatientAdmission extends Model
         ];
         return $statuses[$status] ?? 'غير معروف';
     }
+    public static function getAllStatusesArray(): array
+    {
+        return [
+            self::STATUS_ADMITTED => 'مقيم حاليًا',
+            self::STATUS_DISCHARGED => 'خرج من المستشفى',
+            self::STATUS_TRANSFERRED_OUT => 'تم نقله للخارج',
+            self::STATUS_TRANSFERRED_IN => 'تم نقله للداخل',
+            self::STATUS_CANCELLED => 'ملغى',
+        ];
+    }
 }

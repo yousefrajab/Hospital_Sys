@@ -1,6 +1,251 @@
 @extends('Dashboard.layouts.master')
 @section('title', 'إدارة سجلات دخول وخروج المرضى')
 
+@section('page-header')
+    <div class="breadcrumb-header justify-content-between">
+        <div class="my-auto">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-procedures fa-lg me-2" style="color: var(--admin-primary, #4f46e5);"></i>
+                <div>
+                    <h4 class="content-title mb-0 my-auto">إدارة المرضى</h4>
+                    <span class="text-muted mt-0 tx-13">/ سجلات الدخول والخروج</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex my-xl-auto right-content">
+            {{-- زر تسجيل دخول مريض جديد --}}
+            <a href="{{ route('admin.patient_admissions.create') }}" class="btn btn-primary ripple">
+                <i class="fas fa-user-plus me-1"></i> تسجيل دخول مريض جديد
+            </a>
+        </div>
+    </div>
+@endsection
+
+@section('content')
+    @include('Dashboard.messages_alert')
+
+    {{-- بطاقة الفلترة --}}
+    <div class="card mb-4 animate__animated animate__fadeIn">
+        <div class="card-header pb-0">
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة السجلات</h5>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('admin.patient_admissions.index') }}" method="GET">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="search_patient" class="form-label">بحث (اسم/هوية/إيميل المريض):</label>
+                        <input type="text" name="search_patient" id="search_patient" class="form-control"
+                            placeholder="ابحث..." value="{{ $request->search_patient }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="current_status_filter" class="form-label">حالة الإقامة:</label>
+                        <select name="current_status" id="current_status_filter" class="form-select select2"
+                            data-placeholder="الكل">
+                            <option value="">الكل</option>
+                            @foreach ($admissionStatuses as $key => $value)
+                                <option value="{{ $key }}"
+                                    {{ $request->current_status == $key ? 'selected' : '' }}>{{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="section_id_filter" class="form-label">القسم:</label>
+                        <select name="section_id_filter" id="section_id_filter" class="form-select select2"
+                            data-placeholder="الكل">
+                            <option value="">الكل</option>
+                            @foreach ($sections as $section)
+                                <option value="{{ $section->id }}"
+                                    {{ $request->section_id_filter == $section->id ? 'selected' : '' }}>{{ $section->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="doctor_id_filter" class="form-label">الطبيب المسؤول:</label>
+                        <select name="doctor_id_filter" id="doctor_id_filter" class="form-select select2"
+                            data-placeholder="الكل">
+                            <option value="">الكل</option>
+                            @foreach ($doctors as $doctor)
+                                <option value="{{ $doctor->id }}"
+                                    {{ $request->doctor_id_filter == $doctor->id ? 'selected' : '' }}>{{ $doctor->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3 mt-3">
+                        <label for="admission_date_from" class="form-label">تاريخ الدخول (من):</label>
+                        <input type="date" name="admission_date_from" id="admission_date_from"
+                            class="form-control flatpickr-date" value="{{ $request->admission_date_from }}">
+                    </div>
+                    <div class="col-md-3 mt-3">
+                        <label for="admission_date_to" class="form-label">تاريخ الدخول (إلى):</label>
+                        <input type="date" name="admission_date_to" id="admission_date_to"
+                            class="form-control flatpickr-date" value="{{ $request->admission_date_to }}">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search me-1"></i> تطبيق
+                            الفلتر</button>
+                        @if (request()->hasAny([
+                                'search_patient',
+                                'current_status',
+                                'section_id_filter',
+                                'doctor_id_filter',
+                                'admission_date_from',
+                                'admission_date_to',
+                            ]))
+                            <a href="{{ route('admin.patient_admissions.index') }}" class="btn btn-outline-secondary"><i
+                                    class="fas fa-eraser me-1"></i> مسح الفلتر</a>
+                        @endif
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- بطاقة جدول سجلات الدخول --}}
+    <div class="card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+        <div class="card-header pb-0">
+            <h5 class="card-title mb-0"><i class="fas fa-clipboard-list me-2"></i>سجلات دخول وخروج المرضى
+                ({{ $admissions->total() }})</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>المريض</th>
+                            <th>القسم</th>
+                            <th>الغرفة - السرير</th>
+                            <th>الطبيب المسؤول</th>
+                            <th>تاريخ الدخول</th>
+                            <th>تاريخ الخروج</th>
+                            <th>الحالة</th>
+                            <th class="text-center">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($admissions as $index => $admission)
+                            <tr>
+                                <td>{{ $admissions->firstItem() + $index }}</td>
+                                <td>
+                                    @if ($admission->patient)
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ $admission->patient->image ? asset('Dashboard/img/patients/' . $admission->patient->image->filename) : asset('Dashboard/img/doctor_default.png') }}"
+                                                alt="{{ $admission->patient->name }}" class="patient-avatar-sm">
+                                            <div>
+                                                {{-- ***** تعديل هنا ***** --}}
+                                                <a
+                                                    href="{{ route('admin.Patients.show', ['Patient' => $admission->patient->id]) }}">
+
+                                                    {{ $admission->patient->name }}
+                                                </a>
+                                                <small class="text-muted d-block">هوية:
+                                                    {{ $admission->patient->national_id }}</small>
+                                            </div>
+
+                                        </div>
+                                    @else
+                                        <span class="text-muted">غير محدد</span>
+                                    @endif
+                                </td>
+                                <td>{{ $admission->section->name ?? ($admission->bed->room->section->name ?? 'N/A') }}</td>
+                                <td>
+                                    @if ($admission->bed)
+                                        {{ $admission->bed->room->room_number ?? 'N/A' }} -
+                                        {{ $admission->bed->bed_number ?? 'N/A' }}
+                                    @else
+                                        <span class="text-muted">لم يخصص سرير</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($admission->doctor)
+                                        <a href="#">{{-- رابط لملف الطبيب --}}
+                                            {{ $admission->doctor->name }}
+                                        </a>
+                                    @else
+                                        <span class="text-muted">غير محدد</span>
+                                    @endif
+                                </td>
+                                <td>{{ $admission->admission_date->translatedFormat('Y/m/d H:i A') }}</td>
+                                <td>{{ $admission->discharge_date ? $admission->discharge_date->translatedFormat('Y/m/d H:i A') : '-' }}
+                                </td>
+                                <td>
+                                    @php
+                                        $statusText = $admissionStatuses[$admission->status] ?? $admission->status;
+                                        $statusBadgeClass = 'bg-info-soft'; // افتراضي
+                                        if ($admission->status == \App\Models\PatientAdmission::STATUS_ADMITTED) {
+                                            $statusBadgeClass = 'status-admitted';
+                                        } elseif (
+                                            $admission->status == \App\Models\PatientAdmission::STATUS_DISCHARGED
+                                        ) {
+                                            $statusBadgeClass = 'status-discharged';
+                                        } elseif (
+                                            $admission->status == \App\Models\PatientAdmission::STATUS_CANCELLED
+                                        ) {
+                                            $statusBadgeClass = 'status-cancelled';
+                                        }
+                                    @endphp
+                                    <span class="badge {{ $statusBadgeClass }}">{{ $statusText }}</span>
+                                </td>
+                                <td class="text-center action-buttons">
+                                    <a href="{{ route('admin.patient_admissions.show', $admission->id) }}"
+                                        class="btn btn-sm btn-outline-success" title="عرض التفاصيل"><i
+                                            class="fas fa-eye"></i></a>
+                                    @if ($admission->status == \App\Models\PatientAdmission::STATUS_ADMITTED && !$admission->discharge_date)
+                                        {{-- زر تعديل بيانات الدخول (مثل تغيير السرير، الطبيب) --}}
+                                        <a href="{{ route('admin.patient_admissions.edit', $admission->id) }}"
+                                            class="btn btn-sm btn-outline-primary" title="تعديل بيانات الدخول"><i
+                                                class="fas fa-edit"></i></a>
+                                        {{-- زر لتسجيل الخروج (يفتح مودال أو صفحة) --}}
+                                        {{-- <button type="button" class="btn btn-sm btn-outline-warning" title="تسجيل خروج المريض"> <i class="fas fa-procedures"></i></button> --}}
+                                    @endif
+                                    {{-- زر حذف سجل الدخول (بحذر شديد!) --}}
+                                    {{-- <form action="{{ route('admin.patient_admissions.destroy', $admission->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا السجل؟');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="حذف السجل"><i class="fas fa-trash-alt"></i></button>
+                                    </form> --}}
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="9" class="text-center py-4">
+                                    <i class="fas fa-folder-open fa-2x text-muted mb-2"></i><br>
+                                    لا توجد سجلات دخول وخروج حاليًا.
+                                    @if (
+                                        !request()->hasAny([
+                                            'search_patient',
+                                            'current_status',
+                                            'section_id_filter',
+                                            'doctor_id_filter',
+                                            'admission_date_from',
+                                            'admission_date_to',
+                                        ]))
+                                        <br> <a href="{{ route('admin.patient_admissions.create') }}"
+                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-user-plus"></i> تسجيل
+                                            دخول مريض جديد</a>
+                                    @else
+                                        <br> <span class="text-muted">حاول تعديل معايير الفلترة.</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            @if ($admissions->hasPages())
+                <div class="mt-3 d-flex justify-content-center pagination-container">
+                    {{ $admissions->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
+        </div>
+    </div>
+@endsection
+
 @section('css')
     @parent
     <link href="{{ URL::asset('Dashboard/plugins/select2/css/select2.min.css') }}" rel="stylesheet" />
@@ -664,251 +909,6 @@
             color: #721c24;
         }
     </style>
-@endsection
-
-@section('page-header')
-    <div class="breadcrumb-header justify-content-between">
-        <div class="my-auto">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-procedures fa-lg me-2" style="color: var(--admin-primary, #4f46e5);"></i>
-                <div>
-                    <h4 class="content-title mb-0 my-auto">إدارة المرضى</h4>
-                    <span class="text-muted mt-0 tx-13">/ سجلات الدخول والخروج</span>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex my-xl-auto right-content">
-            {{-- زر تسجيل دخول مريض جديد --}}
-            <a href="{{ route('admin.patient_admissions.create') }}" class="btn btn-primary ripple">
-                <i class="fas fa-user-plus me-1"></i> تسجيل دخول مريض جديد
-            </a>
-        </div>
-    </div>
-@endsection
-
-@section('content')
-    @include('Dashboard.messages_alert')
-
-    {{-- بطاقة الفلترة --}}
-    <div class="card mb-4 animate__animated animate__fadeIn">
-        <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة السجلات</h5>
-        </div>
-        <div class="card-body">
-            <form action="{{ route('admin.patient_admissions.index') }}" method="GET">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <label for="search_patient" class="form-label">بحث (اسم/هوية/إيميل المريض):</label>
-                        <input type="text" name="search_patient" id="search_patient" class="form-control"
-                            placeholder="ابحث..." value="{{ $request->search_patient }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="current_status_filter" class="form-label">حالة الإقامة:</label>
-                        <select name="current_status" id="current_status_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
-                            @foreach ($admissionStatuses as $key => $value)
-                                <option value="{{ $key }}"
-                                    {{ $request->current_status == $key ? 'selected' : '' }}>{{ $value }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="section_id_filter" class="form-label">القسم:</label>
-                        <select name="section_id_filter" id="section_id_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
-                            @foreach ($sections as $section)
-                                <option value="{{ $section->id }}"
-                                    {{ $request->section_id_filter == $section->id ? 'selected' : '' }}>{{ $section->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="doctor_id_filter" class="form-label">الطبيب المسؤول:</label>
-                        <select name="doctor_id_filter" id="doctor_id_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
-                            @foreach ($doctors as $doctor)
-                                <option value="{{ $doctor->id }}"
-                                    {{ $request->doctor_id_filter == $doctor->id ? 'selected' : '' }}>{{ $doctor->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3 mt-3">
-                        <label for="admission_date_from" class="form-label">تاريخ الدخول (من):</label>
-                        <input type="date" name="admission_date_from" id="admission_date_from"
-                            class="form-control flatpickr-date" value="{{ $request->admission_date_from }}">
-                    </div>
-                    <div class="col-md-3 mt-3">
-                        <label for="admission_date_to" class="form-label">تاريخ الدخول (إلى):</label>
-                        <input type="date" name="admission_date_to" id="admission_date_to"
-                            class="form-control flatpickr-date" value="{{ $request->admission_date_to }}">
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-12 text-center">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-search me-1"></i> تطبيق
-                            الفلتر</button>
-                        @if (request()->hasAny([
-                                'search_patient',
-                                'current_status',
-                                'section_id_filter',
-                                'doctor_id_filter',
-                                'admission_date_from',
-                                'admission_date_to',
-                            ]))
-                            <a href="{{ route('admin.patient_admissions.index') }}" class="btn btn-outline-secondary"><i
-                                    class="fas fa-eraser me-1"></i> مسح الفلتر</a>
-                        @endif
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- بطاقة جدول سجلات الدخول --}}
-    <div class="card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
-        <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-clipboard-list me-2"></i>سجلات دخول وخروج المرضى
-                ({{ $admissions->total() }})</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover table-striped">
-                    <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>المريض</th>
-                            <th>القسم</th>
-                            <th>الغرفة - السرير</th>
-                            <th>الطبيب المسؤول</th>
-                            <th>تاريخ الدخول</th>
-                            <th>تاريخ الخروج</th>
-                            <th>الحالة</th>
-                            <th class="text-center">إجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($admissions as $index => $admission)
-                            <tr>
-                                <td>{{ $admissions->firstItem() + $index }}</td>
-                                <td>
-                                    @if ($admission->patient)
-                                        <div class="d-flex align-items-center">
-                                            <img src="{{ $admission->patient->image ? asset('Dashboard/img/patients/' . $admission->patient->image->filename) : asset('Dashboard/img/doctor_default.png') }}"
-                                                alt="{{ $admission->patient->name }}" class="patient-avatar-sm">
-                                            <div>
-                                                {{-- ***** تعديل هنا ***** --}}
-                                                <a
-                                                    href="{{ route('admin.Patients.show', ['Patient' => $admission->patient->id]) }}">
-
-                                                    {{ $admission->patient->name }}
-                                                </a>
-                                                <small class="text-muted d-block">هوية:
-                                                    {{ $admission->patient->national_id }}</small>
-                                            </div>
-
-                                        </div>
-                                    @else
-                                        <span class="text-muted">غير محدد</span>
-                                    @endif
-                                </td>
-                                <td>{{ $admission->section->name ?? ($admission->bed->room->section->name ?? 'N/A') }}</td>
-                                <td>
-                                    @if ($admission->bed)
-                                        {{ $admission->bed->room->room_number ?? 'N/A' }} -
-                                        {{ $admission->bed->bed_number ?? 'N/A' }}
-                                    @else
-                                        <span class="text-muted">لم يخصص سرير</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($admission->doctor)
-                                        <a href="#">{{-- رابط لملف الطبيب --}}
-                                            {{ $admission->doctor->name }}
-                                        </a>
-                                    @else
-                                        <span class="text-muted">غير محدد</span>
-                                    @endif
-                                </td>
-                                <td>{{ $admission->admission_date->translatedFormat('Y/m/d H:i A') }}</td>
-                                <td>{{ $admission->discharge_date ? $admission->discharge_date->translatedFormat('Y/m/d H:i A') : '-' }}
-                                </td>
-                                <td>
-                                    @php
-                                        $statusText = $admissionStatuses[$admission->status] ?? $admission->status;
-                                        $statusBadgeClass = 'bg-info-soft'; // افتراضي
-                                        if ($admission->status == \App\Models\PatientAdmission::STATUS_ADMITTED) {
-                                            $statusBadgeClass = 'status-admitted';
-                                        } elseif (
-                                            $admission->status == \App\Models\PatientAdmission::STATUS_DISCHARGED
-                                        ) {
-                                            $statusBadgeClass = 'status-discharged';
-                                        } elseif (
-                                            $admission->status == \App\Models\PatientAdmission::STATUS_CANCELLED
-                                        ) {
-                                            $statusBadgeClass = 'status-cancelled';
-                                        }
-                                    @endphp
-                                    <span class="badge {{ $statusBadgeClass }}">{{ $statusText }}</span>
-                                </td>
-                                <td class="text-center action-buttons">
-                                    <a href="{{ route('admin.patient_admissions.show', $admission->id) }}"
-                                        class="btn btn-sm btn-outline-success" title="عرض التفاصيل"><i
-                                            class="fas fa-eye"></i></a>
-                                    @if ($admission->status == \App\Models\PatientAdmission::STATUS_ADMITTED && !$admission->discharge_date)
-                                        {{-- زر تعديل بيانات الدخول (مثل تغيير السرير، الطبيب) --}}
-                                        <a href="{{ route('admin.patient_admissions.edit', $admission->id) }}"
-                                            class="btn btn-sm btn-outline-primary" title="تعديل بيانات الدخول"><i
-                                                class="fas fa-edit"></i></a>
-                                        {{-- زر لتسجيل الخروج (يفتح مودال أو صفحة) --}}
-                                        {{-- <button type="button" class="btn btn-sm btn-outline-warning" title="تسجيل خروج المريض"> <i class="fas fa-procedures"></i></button> --}}
-                                    @endif
-                                    {{-- زر حذف سجل الدخول (بحذر شديد!) --}}
-                                    {{-- <form action="{{ route('admin.patient_admissions.destroy', $admission->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا السجل؟');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="حذف السجل"><i class="fas fa-trash-alt"></i></button>
-                                    </form> --}}
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="9" class="text-center py-4">
-                                    <i class="fas fa-folder-open fa-2x text-muted mb-2"></i><br>
-                                    لا توجد سجلات دخول وخروج حاليًا.
-                                    @if (
-                                        !request()->hasAny([
-                                            'search_patient',
-                                            'current_status',
-                                            'section_id_filter',
-                                            'doctor_id_filter',
-                                            'admission_date_from',
-                                            'admission_date_to',
-                                        ]))
-                                        <br> <a href="{{ route('admin.patient_admissions.create') }}"
-                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-user-plus"></i> تسجيل
-                                            دخول مريض جديد</a>
-                                    @else
-                                        <br> <span class="text-muted">حاول تعديل معايير الفلترة.</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            @if ($admissions->hasPages())
-                <div class="mt-3 d-flex justify-content-center pagination-container">
-                    {{ $admissions->links('pagination::bootstrap-5') }}
-                </div>
-            @endif
-        </div>
-    </div>
 @endsection
 
 @section('js')

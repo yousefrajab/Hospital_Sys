@@ -3,67 +3,102 @@
 namespace App\Http\Requests\Dashboard\PatientAdmission;
 
 use App\Models\PatientAdmission;
-use App\Models\Bed; // لاستخدامه في التحقق من السرير
+use App\Models\Bed;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
+// لا حاجة لـ use Illuminate\Contracts\Validation\Validator; أو use Illuminate\Support\Facades\Validator; هنا
 
 class UpdatePatientAdmissionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // افترض أن الأدمن مصرح له
+        return true;
     }
 
     public function rules(): array
     {
-        $admissionId = $this->route('patient_admission')->id; // أو $this->patient_admission->id
-        $admission = PatientAdmission::find($admissionId); // جلب سجل الدخول الحالي
+        /** @var PatientAdmission $admission */
+        $admission = $this->route('patient_admission');
+        $isDischargingProcess = $this->input('status') === PatientAdmission::STATUS_DISCHARGED;
 
         return [
-            // لا يتم تعديل patient_id عادةً في سجل دخول قائم
-            'doctor_id' => 'nullable|exists:doctors,id',
-            'section_id' => 'nullable|exists:sections,id',
+            // ... (نفس القواعد) ...
+            'doctor_id' => 'sometimes|nullable|exists:doctors,id',
+            'section_id' => 'sometimes|nullable|exists:sections,id',
             'bed_id' => [
+                'sometimes',
                 'nullable',
                 'exists:beds,id',
-                // تحقق من أن السرير متاح أو هو السرير الحالي للمريض
                 Rule::exists('beds', 'id')->where(function ($query) use ($admission) {
                     $query->where('status', Bed::STATUS_AVAILABLE)
-                        ->orWhere('id', $admission->bed_id); // السماح باختيار السرير الحالي مرة أخرى
+                          ->orWhere('id', $admission->bed_id);
                 }),
             ],
-            'admission_date' => 'required|date|before_or_equal:now', // تاريخ الدخول يجب أن يكون قبل أو يساوي تاريخ اليوم
-            'discharge_date' => 'nullable|date|after_or_equal:admission_date',
-            'discharge_date' => 'nullable|date|after_or_equal:admission_date', // تاريخ الخروج يجب أن يكون بعد أو يساوي تاريخ الدخول
-            'reason_for_admission' => 'nullable|string|max:1000',
-            'admitting_diagnosis' => 'nullable|string|max:500',
+            'admission_date' => [
+                'sometimes',
+                'required',
+                'date',
+                'before_or_equal:now'
+            ],
+            'reason_for_admission' => 'sometimes|nullable|string|max:1000',
+            'admitting_diagnosis' => 'sometimes|nullable|string|max:500',
+            'discharge_date' => [
+                Rule::requiredIf($isDischargingProcess),
+                'nullable',
+                'date_format:Y-m-d\TH:i',
+                function ($attribute, $value, $fail) use ($admission) {
+                    if ($value) {
+                        $admissionDateInput = $this->input('admission_date');
+                        $admissionDate = $admissionDateInput ? Carbon::parse($admissionDateInput) : $admission->admission_date;
+                        if (Carbon::parse($value)->lt($admissionDate)) {
+                            $fail('تاريخ الخروج يجب أن يكون بعد أو يساوي تاريخ الدخول.');
+                        }
+                    }
+                },
+            ],
             'discharge_reason' => 'nullable|string|max:1000',
             'discharge_diagnosis' => 'nullable|string|max:500',
-            'status' => ['required', Rule::in(array_keys([ // استخدام كل الحالات الممكنة
-                PatientAdmission::STATUS_ADMITTED => 'مقيم حاليًا',
-                PatientAdmission::STATUS_DISCHARGED => 'خرج',
-                PatientAdmission::STATUS_TRANSFERRED_OUT => 'منقول للخارج',
-                PatientAdmission::STATUS_TRANSFERRED_IN => 'منقول للداخل',
-                PatientAdmission::STATUS_CANCELLED => 'ملغى'
-            ]))],
-            'notes' => 'nullable|string|max:1000',
+            'status' => [
+                'required',
+                Rule::in(array_keys(PatientAdmission::getAllStatusesArray()))
+            ],
+            'notes' => 'nullable|string|max:2000',
         ];
     }
 
     public function messages(): array
     {
         return [
+            // ... (نفس الرسائل) ...
             'doctor_id.exists' => 'الطبيب المختار غير صالح.',
             'section_id.exists' => 'القسم المختار غير صالح.',
             'bed_id.exists' => 'السرير المختار غير صالح أو غير موجود.',
-            // رسالة مخصصة لقاعدة Rule::exists مع where
-            // يمكنك تعريفها بشكل أفضل باستخدام Custom Rule إذا أردت رسالة أدق
             'admission_date.required' => 'تاريخ ووقت الدخول مطلوب.',
-            'admission_date.before_or_equal' => 'تاريخ الدخول يجب أن يكون قبل أو يساوي تاريخ الخروج وتاريخ اليوم.',
-            'discharge_date.after_or_equal' => 'تاريخ الخروج يجب أن يكون بعد أو يساوي تاريخ الدخول.',
+            'admission_date.date' => 'صيغة تاريخ الدخول غير صحيحة.',
+            'admission_date.before_or_equal' => 'تاريخ الدخول لا يمكن أن يكون في المستقبل.',
+            'discharge_date.required_if' => 'تاريخ ووقت الخروج مطلوب عند تسجيل خروج المريض.',
+            'discharge_date.date_format' => 'صيغة تاريخ الخروج غير صحيحة. يجب أن تكون Y-m-d\TH:i.',
             'status.required' => 'حالة سجل الدخول مطلوبة.',
             'status.in' => 'حالة سجل الدخول المختارة غير صالحة.',
-            // ... (أضف رسائل أخرى حسب الحاجة)
+            'reason_for_admission.max' => 'سبب الدخول طويل جدًا (بحد أقصى 1000 حرف).',
+            'admitting_diagnosis.max' => 'التشخيص عند الدخول طويل جدًا (بحد أقصى 500 حرف).',
+            'discharge_reason.max' => 'سبب الخروج طويل جدًا (بحد أقصى 1000 حرف).',
+            'discharge_diagnosis.max' => 'التشخيص عند الخروج طويل جدًا (بحد أقصى 500 حرف).',
+            'notes.max' => 'الملاحظات طويلة جدًا (بحد أقصى 2000 حرف).',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  mixed  $validator  <-- إزالة الـ type hint
+     * @return void
+     */
+    public function withValidator($validator): void // <-- إزالة الـ type hint
+    {
+        if ($this->route('patient_admission') && $this->input('status') === PatientAdmission::STATUS_DISCHARGED) {
+            $this->errorBag = 'dischargeFormBag' . $this->route('patient_admission')->id;
+        }
     }
 }
