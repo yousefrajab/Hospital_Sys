@@ -1,4 +1,4 @@
-<?php // app/Models/PatientAdmission.php
+<?php
 
 namespace App\Models;
 
@@ -35,7 +35,7 @@ class PatientAdmission extends Model
     public const STATUS_TRANSFERRED_IN = 'transferred_in';
     public const STATUS_CANCELLED = 'cancelled';
 
-
+    // علاقات الموديل
     public function patient()
     {
         return $this->belongsTo(Patient::class);
@@ -56,50 +56,54 @@ class PatientAdmission extends Model
         return $this->belongsTo(Section::class);
     }
 
-    /**
-     * عند إنشاء أو تحديث أو حذف سجل دخول، قم بتحديث حالة السرير والغرفة.
-     */
-    protected static function booted()
+    public function vitalSigns()
     {
-        static::saved(function (PatientAdmission $admission) {
-            if ($admission->bed) {
-                // إذا تم تغيير السرير أو حالة الدخول، أعد حساب حالة السرير ثم حالة الغرفة
-                $admission->bed->status = ($admission->status === self::STATUS_ADMITTED && !$admission->discharge_date)
-                    ? Bed::STATUS_OCCUPIED
-                    : Bed::STATUS_AVAILABLE;
-                $admission->bed->saveQuietly(); // لمنع حلقة لا نهائية إذا كان BedObserver يستمع لـ save
-                // بعد حفظ السرير، سيقوم BedObserver بتحديث حالة الغرفة
-            }
-
-            // إذا كان هناك سرير قديم وتم تغيير السرير
-            if ($admission->isDirty('bed_id') && $admission->getOriginal('bed_id')) {
-                $oldBed = Bed::find($admission->getOriginal('bed_id'));
-                if ($oldBed) {
-                    $oldBed->status = Bed::STATUS_AVAILABLE;
-                    $oldBed->saveQuietly();
-                    // بعد حفظ السرير القديم، سيقوم BedObserver بتحديث حالة الغرفة القديمة
-                }
-            }
-        });
-
-        static::deleted(function (PatientAdmission $admission) {
-            if ($admission->bed) {
-                $admission->bed->status = Bed::STATUS_AVAILABLE;
-                $admission->bed->saveQuietly();
-                // بعد حفظ السرير، سيقوم BedObserver بتحديث حالة الغرفة
-            }
-        });
+        return $this->hasMany(VitalSign::class)->orderBy('recorded_at', 'desc');
     }
 
-    public static function getAdmissionStatusText($status)
+    // دوال التحقق من الحالة
+    public function isAdmitted(): bool
     {
-        $statuses = [
-            self::STATUS_ADMITTED => 'مقيم',
-            self::STATUS_DISCHARGED => 'خروج',
-            // Add other statuses here
-        ];
-        return $statuses[$status] ?? 'غير معروف';
+        return $this->status === self::STATUS_ADMITTED && !$this->discharge_date;
     }
+
+    public function isDischarged(): bool
+    {
+        return $this->status === self::STATUS_DISCHARGED && $this->discharge_date;
+    }
+
+    // دوال مساعدة للحالة
+    public function getStatusClassAttribute(): string
+    {
+        return match($this->status) {
+            self::STATUS_ADMITTED => 'success',
+            self::STATUS_DISCHARGED => 'danger',
+            self::STATUS_CANCELLED => 'warning',
+            default => 'secondary'
+        };
+    }
+
+    public function getStatusIconAttribute(): string
+    {
+        return match($this->status) {
+            self::STATUS_ADMITTED => 'fa-bed',
+            self::STATUS_DISCHARGED => 'fa-user-check',
+            self::STATUS_CANCELLED => 'fa-times-circle',
+            default => 'fa-question-circle'
+        };
+    }
+
+    public function getStatusDisplayAttribute(): string
+    {
+        return self::getAllStatusesArray()[$this->status] ?? $this->status;
+    }
+
+    // دوال ثابتة
+    public static function getAdmissionStatusText($status): string
+    {
+        return self::getAllStatusesArray()[$status] ?? 'غير معروف';
+    }
+
     public static function getAllStatusesArray(): array
     {
         return [
@@ -109,5 +113,33 @@ class PatientAdmission extends Model
             self::STATUS_TRANSFERRED_IN => 'تم نقله للداخل',
             self::STATUS_CANCELLED => 'ملغى',
         ];
+    }
+
+    // Event handlers
+    protected static function booted()
+    {
+        static::saved(function (PatientAdmission $admission) {
+            if ($admission->bed) {
+                $admission->bed->status = ($admission->isAdmitted())
+                    ? Bed::STATUS_OCCUPIED
+                    : Bed::STATUS_AVAILABLE;
+                $admission->bed->saveQuietly();
+            }
+
+            if ($admission->isDirty('bed_id') && $admission->getOriginal('bed_id')) {
+                $oldBed = Bed::find($admission->getOriginal('bed_id'));
+                if ($oldBed) {
+                    $oldBed->status = Bed::STATUS_AVAILABLE;
+                    $oldBed->saveQuietly();
+                }
+            }
+        });
+
+        static::deleted(function (PatientAdmission $admission) {
+            if ($admission->bed) {
+                $admission->bed->status = Bed::STATUS_AVAILABLE;
+                $admission->bed->saveQuietly();
+            }
+        });
     }
 }

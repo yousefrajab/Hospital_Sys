@@ -220,41 +220,56 @@ class PatientAdmissionController extends Controller
 
     public function show(PatientAdmission $patientAdmission)
     {
-        Log::info("PatientAdmissionController@show: Displaying details for Admission ID: {$patientAdmission->id}");
-
-        // تحميل العلاقات اللازمة لعرض التفاصيل بشكل كامل
         $patientAdmission->load([
-            'patient' => function ($query) {
-                $query->with('image'); // تحميل صورة المريض
+            'patient' => function ($q) {
+                $q->with('image');
             },
-            'doctor' => function ($query) {
-                $query->with('image', 'section'); // تحميل صورة الطبيب وقسمه
+            'doctor' => function ($q) {
+                $q->with('image', 'section');
             },
-            'section', // القسم الذي تم فيه الدخول مباشرة (إذا كان مسجلاً)
-            'bed' => function ($query) {
-                $query->with(['room' => function ($q_room) {
-                    $q_room->with('section'); // تحميل قسم الغرفة
-                }]);
-            }
+            'section',
+            'bed.room.section',
+            'vitalSigns' => function ($query) { // تأكد من تحميل العلامات الحيوية بترتيب زمني تصاعدي للرسم البياني
+                $query->orderBy('recorded_at', 'asc'); // مهم للرسم البياني
+            },
+            'vitalSigns.recordedBy',
         ]);
 
-        // الحصول على القيم النصية للـ Enum لحالة سجل الدخول
-        $admissionStatuses = [
-            PatientAdmission::STATUS_ADMITTED => 'مقيم حاليًا',
-            PatientAdmission::STATUS_DISCHARGED => 'خرج من المستشفى',
-            PatientAdmission::STATUS_TRANSFERRED_OUT => 'تم نقله للخارج',
-            PatientAdmission::STATUS_TRANSFERRED_IN => 'تم نقله للداخل',
-            PatientAdmission::STATUS_CANCELLED => 'ملغى',
-        ];
-        $statusDisplay = $admissionStatuses[$patientAdmission->status] ?? $patientAdmission->status;
+        $statusDisplay = PatientAdmission::getAllStatusesArray()[$patientAdmission->status] ?? $patientAdmission->status;
+        $availableBeds = Bed::where('status', Bed::STATUS_AVAILABLE)->get(); // مثال، قد تكون لديك طريقة أفضل
 
-        // يمكنك أيضًا جلب قائمة بالأسرة المتاحة إذا كنت ستسمح بنقل المريض من هذه الصفحة
-        $availableBeds = Bed::where('status', Bed::STATUS_AVAILABLE)->get();
+        // --- تجهيز بيانات الرسوم البيانية ---
+        $vitalSignsDataForChart = [];
+        if ($patientAdmission->vitalSigns->isNotEmpty()) {
+            $labels = $patientAdmission->vitalSigns->map(function ($vital) {
+                return $vital->recorded_at->format('M d, H:i'); // صيغة مختصرة للوقت
+            });
+
+            $temperatureData = $patientAdmission->vitalSigns->pluck('temperature');
+            $heartRateData = $patientAdmission->vitalSigns->pluck('heart_rate');
+            $systolicBpData = $patientAdmission->vitalSigns->pluck('systolic_bp');
+            $diastolicBpData = $patientAdmission->vitalSigns->pluck('diastolic_bp');
+            $oxygenSaturationData = $patientAdmission->vitalSigns->pluck('oxygen_saturation');
+            $respiratoryRateData = $patientAdmission->vitalSigns->pluck('respiratory_rate');
+
+            $vitalSignsDataForChart = [
+                'labels' => $labels,
+                'temperature' => $temperatureData,
+                'heartRate' => $heartRateData,
+                'bloodPressure' => [ // سنرسم ضغط الدم كخطين
+                    'systolic' => $systolicBpData,
+                    'diastolic' => $diastolicBpData,
+                ],
+                'oxygenSaturation' => $oxygenSaturationData,
+                'respiratoryRate' => $respiratoryRateData,
+            ];
+        }
 
         return view('Dashboard.PatientAdmissions.show', compact(
             'patientAdmission',
             'statusDisplay',
-            'availableBeds' // إذا أردت تمريرها
+            'availableBeds',
+            'vitalSignsDataForChart' // تمرير البيانات المجهزة
         ));
     }
     public function edit(PatientAdmission $patientAdmission)
@@ -272,19 +287,19 @@ class PatientAdmissionController extends Controller
 
         // الأسرة المتاحة + السرير الحالي للمريض (إذا كان لا يزال متاحًا أو هو نفسه)
         $availableBeds = Bed::with('room.section')
-                            ->where('status', Bed::STATUS_AVAILABLE)
-                            ->orWhere('id', $patientAdmission->bed_id) // تضمين السرير الحالي حتى لو كان مشغولاً (بهذا المريض)
-                            ->orderBy('room_id')->orderBy('bed_number')->get()
-                            ->map(function($bed) use ($patientAdmission){
-                                $bed->display_name = $bed->bed_number .
-                                                    ($bed->room ? ' (غرفة: ' . $bed->room->room_number .
-                                                    ($bed->room->section ? ' - قسم: '.$bed->room->section->name : '') . ')' : '');
-                                // تمييز السرير الحالي
-                                if ($patientAdmission->bed_id == $bed->id) {
-                                    $bed->display_name .= " (السرير الحالي)";
-                                }
-                                return $bed;
-                            });
+            ->where('status', Bed::STATUS_AVAILABLE)
+            ->orWhere('id', $patientAdmission->bed_id) // تضمين السرير الحالي حتى لو كان مشغولاً (بهذا المريض)
+            ->orderBy('room_id')->orderBy('bed_number')->get()
+            ->map(function ($bed) use ($patientAdmission) {
+                $bed->display_name = $bed->bed_number .
+                    ($bed->room ? ' (غرفة: ' . $bed->room->room_number .
+                        ($bed->room->section ? ' - قسم: ' . $bed->room->section->name : '') . ')' : '');
+                // تمييز السرير الحالي
+                if ($patientAdmission->bed_id == $bed->id) {
+                    $bed->display_name .= " (السرير الحالي)";
+                }
+                return $bed;
+            });
 
         $admissionStatuses = [ // كل الحالات الممكنة للتعديل
             PatientAdmission::STATUS_ADMITTED => 'مقيم حاليًا',
@@ -304,13 +319,6 @@ class PatientAdmissionController extends Controller
         ));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\Dashboard\PatientAdmission\UpdatePatientAdmissionRequest  $request
-     * @param  \App\Models\PatientAdmission  $patientAdmission
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdatePatientAdmissionRequest $request, PatientAdmission $patientAdmission)
     {
         Log::info("PatientAdmissionController@update: Attempting to update Admission ID: {$patientAdmission->id}", $request->except('_token', '_method'));
@@ -348,8 +356,7 @@ class PatientAdmissionController extends Controller
 
             DB::commit();
             return redirect()->route('admin.patient_admissions.show', $patientAdmission->id) // توجيه لصفحة العرض بعد التعديل
-                             ->with('success', 'تم تحديث بيانات سجل الدخول بنجاح.');
-
+                ->with('success', 'تم تحديث بيانات سجل الدخول بنجاح.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             Log::error("PatientAdmissionController@update: Validation exception for Admission ID {$patientAdmission->id}.", ['errors' => $e->errors()]);
@@ -374,7 +381,7 @@ class PatientAdmissionController extends Controller
             if ($patientAdmission->status === PatientAdmission::STATUS_ADMITTED && is_null($patientAdmission->discharge_date)) {
                 Log::warning("Attempt to delete an active admission record (ID: {$patientAdmission->id}). Operation aborted.");
                 return redirect()->route('admin.patient_admissions.index')
-                                 ->with('error', 'لا يمكن حذف سجل دخول نشط. يجب تسجيل خروج المريض أولاً.');
+                    ->with('error', 'لا يمكن حذف سجل دخول نشط. يجب تسجيل خروج المريض أولاً.');
             }
 
             $patientName = $patientAdmission->patient->name ?? 'غير معروف';
@@ -386,15 +393,70 @@ class PatientAdmissionController extends Controller
             DB::commit();
             Log::info("Admission record ID: {$patientAdmission->id} for patient '{$patientName}' deleted successfully.");
             return redirect()->route('admin.patient_admissions.index')
-                             ->with('success', "تم حذف سجل الدخول للمريض '{$patientName}' (تاريخ الدخول: {$admissionDate}) بنجاح.");
-
+                ->with('success', "تم حذف سجل الدخول للمريض '{$patientName}' (تاريخ الدخول: {$admissionDate}) بنجاح.");
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("PatientAdmissionController@destroy: Error deleting Admission ID {$patientAdmission->id}: " . $e->getMessage(), [
                 'trace' => substr($e->getTraceAsString(), 0, 500)
             ]);
             return redirect()->route('admin.patient_admissions.index')
-                             ->with('error', 'حدث خطأ أثناء حذف سجل الدخول: ' . $e->getMessage());
+                ->with('error', 'حدث خطأ أثناء حذف سجل الدخول: ' . $e->getMessage());
         }
+    }
+
+
+    public function vitalSignsMonitoringSheet(PatientAdmission $patientAdmission)
+    {
+        // تحميل العلاقات الأساسية لسجل الدخول ومعلومات المريض
+        $patientAdmission->load([
+            'patient' => function ($query) {
+                $query->with('image'); // لتحميل صورة المريض إذا وجدت
+            },
+            'doctor' => function ($query) {
+                $query->with('image'); // لتحميل صورة الطبيب إذا وجدت
+            },
+            'bed.room.section', // معلومات السرير والغرفة والقسم
+            // تحميل العلامات الحيوية المرتبة تنازليًا لعرضها في الجدول (الأحدث أولاً)
+            'vitalSigns' => function ($query) {
+                $query->orderBy('recorded_at', 'desc');
+            },
+            'vitalSigns.recordedBy', // اسم المستخدم الذي سجل القراءة
+        ]);
+
+        // جلب العلامات الحيوية مرة أخرى مرتبة تصاعديًا خصيصًا للرسوم البيانية
+        $vitalSignsForChartQuery = $patientAdmission->vitalSigns()->orderBy('recorded_at', 'asc')->get();
+
+        $chartData = []; // تهيئة مصفوفة بيانات المخطط
+
+        // نتأكد من وجود أكثر من قراءة واحدة على الأقل لرسم المخططات
+        if ($vitalSignsForChartQuery->count() > 1) {
+            $labels = $vitalSignsForChartQuery->map(function ($vital) {
+                return $vital->recorded_at->format('M d, H:i A'); // صيغة عرض الوقت على المحور السيني
+            });
+
+            $temperatureData = $vitalSignsForChartQuery->pluck('temperature')->map(fn($value) => $value !== null ? (float)$value : null);
+            $heartRateData = $vitalSignsForChartQuery->pluck('heart_rate')->map(fn($value) => $value !== null ? (int)$value : null);
+            $systolicBpData = $vitalSignsForChartQuery->pluck('systolic_bp')->map(fn($value) => $value !== null ? (int)$value : null);
+            $diastolicBpData = $vitalSignsForChartQuery->pluck('diastolic_bp')->map(fn($value) => $value !== null ? (int)$value : null);
+            $oxygenSaturationData = $vitalSignsForChartQuery->pluck('oxygen_saturation')->map(fn($value) => $value !== null ? (float)$value : null);
+            $respiratoryRateData = $vitalSignsForChartQuery->pluck('respiratory_rate')->map(fn($value) => $value !== null ? (int)$value : null);
+
+            $chartData = [
+                'labels' => $labels,
+                'temperature' => $temperatureData,
+                'heartRate' => $heartRateData,
+                'bloodPressure' => [
+                    'systolic' => $systolicBpData,
+                    'diastolic' => $diastolicBpData,
+                ],
+                'oxygenSaturation' => $oxygenSaturationData,
+                'respiratoryRate' => $respiratoryRateData,
+            ];
+        }
+        
+        return view('Dashboard.PatientAdmissions.vital_signs_monitoring_sheet', compact(
+            'patientAdmission',
+            'chartData'
+        ));
     }
 }

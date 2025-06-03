@@ -199,15 +199,18 @@
                                         <a href="{{ route('admin.patient_admissions.edit', $admission->id) }}"
                                             class="btn btn-sm btn-outline-primary" title="تعديل بيانات الدخول"><i
                                                 class="fas fa-edit"></i></a>
+
                                         {{-- زر لتسجيل الخروج (يفتح مودال أو صفحة) --}}
                                         {{-- <button type="button" class="btn btn-sm btn-outline-warning" title="تسجيل خروج المريض"> <i class="fas fa-procedures"></i></button> --}}
                                     @endif
+
+                                    <a href="{{ route('admin.patient_admissions.vital_signs_sheet', $admission->id) }}" class="btn btn-sm btn-outline-success" title="مراقبة العلامات الحيوية"><i class="fas fa-heartbeat"></i></a>
                                     {{-- زر حذف سجل الدخول (بحذر شديد!) --}}
-                                    {{-- <form action="{{ route('admin.patient_admissions.destroy', $admission->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا السجل؟');">
+                                    <form action="{{ route('admin.patient_admissions.destroy', $admission->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا السجل؟');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger" title="حذف السجل"><i class="fas fa-trash-alt"></i></button>
-                                    </form> --}}
+                                    </form>
                                 </td>
                             </tr>
                         @empty

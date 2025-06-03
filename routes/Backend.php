@@ -14,6 +14,7 @@ use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\AmbulanceController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\InsuranceController;
+use App\Http\Controllers\Dashboard\VitalSignController;
 use App\Http\Controllers\Dashboard\MedicationController;
 use App\Http\Controllers\Dashboard\RayEmployeeController;
 use App\Http\Controllers\Dashboard\AdminProfileController;
@@ -50,7 +51,7 @@ Route::group(
         //     return view('Dashboard.Admin.dashboard');
         // })->middleware(['auth:admin'])->name('dashboard.admin');
 
-        Route::get('/dashboard/admin',[AdminProfileController::class, 'dashboard'])->middleware(['auth:admin'])->name('dashboard.admin');
+        Route::get('/dashboard/admin', [AdminProfileController::class, 'dashboard'])->middleware(['auth:admin'])->name('dashboard.admin');
 
         //################################ end dashboard admin ####################################
         Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -197,8 +198,17 @@ Route::group(
             Route::resource('medications', MedicationController::class);
 
 
-             Route::resource('pharmacy_manager', PharmacyManagercontroller::class);
+            Route::resource('pharmacy_manager', PharmacyManagercontroller::class);
             Route::get('/pharmacy_manager/{id}/edit', [PharmacyManagerController::class, 'edit'])->name('pharmacy_manager.edit');
+
+            Route::post('/patient-admissions/{patient_admission}/vital-signs', [VitalSignController::class, 'store'])->name('vital_signs.store');
+
+            Route::get('/patient-admissions/{patient_admission}/vital-signs-monitoring', [PatientAdmissionController::class, 'vitalSignsMonitoringSheet'])->name('patient_admissions.vital_signs_sheet');
+
+            // يمكنك إضافة مسارات أخرى لإدارة العلامات الحيوية لاحقاً
+            Route::delete('/vital-signs/{vital_sign}', [VitalSignController::class, 'destroy'])->name('vital_signs.destroy');
+            Route::get('/vital-signs/{vital_sign}/edit', [VitalSignController::class, 'edit'])->name('vital_signs.edit');
+            Route::put('/vital-signs/{vital_sign}', [VitalSignController::class, 'update'])->name('vital_signs.update');
 
         });
         require __DIR__ . '/auth.php';
