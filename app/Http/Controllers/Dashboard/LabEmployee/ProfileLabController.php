@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard\LabEmployee;
 
-use App\Models\LaboratorieEmployee;
+use App\Models\Laboratorie;
 use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\LaboratorieEmployee;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,49 @@ class ProfileLabController extends Controller // يمكنك تسميته Profile
     /**
      * عرض الملف الشخصي لموظف الأشعة المسجل.
      */
+    public function dashboard()
+    {
+        $employeeGuard = Auth::guard('laboratorie_employee'); // تحديد الحارس
+        $employeeName = $employeeGuard->user()->name ?? 'زائر';
+
+        // الإحصائيات الأساسية
+        $totalLabs = Laboratorie::count();
+        $pendingLabs = Laboratorie::where('case', 0)->count();
+        $completedLabs = Laboratorie::where('case', 1)->count();
+
+        // آخر 5 طلبات مختبر (يمكنك زيادة العدد)
+        $latestLabs = Laboratorie::with(['patient', 'doctor']) // Eager load relations
+            ->latest() // Order by created_at desc
+            ->take(5)
+            ->get();
+
+        // بيانات رسم بياني لعدد الطلبات شهريًا
+        $monthlyLabCounts = Laboratorie::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->whereYear('created_at', date('Y'))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count', 'month')
+            ->all();
+
+        $monthLabels = [];
+        $monthData = [];
+        $monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+
+        for ($m = 1; $m <= 12; $m++) {
+            $monthLabels[] = $monthNames[$m - 1];
+            $monthData[] = $monthlyLabCounts[$m] ?? 0;
+        }
+
+        return view('Dashboard.dashboard_LaboratorieEmployee.dashboard', compact(
+            'employeeName', // اسم الموظف المسجل
+            'totalLabs',
+            'pendingLabs',
+            'completedLabs',
+            'latestLabs',
+            'monthLabels',
+            'monthData'
+        ));
+    }
     public function showw()
     {
         $employee = Auth::guard('laboratorie_employee')->user();
@@ -79,8 +123,8 @@ class ProfileLabController extends Controller // يمكنك تسميته Profile
                 $employee->password = Hash::make($validatedData['password']);
                 Log::info("Password updated for LaboratorieEmployee ID: {$employee->id}");
             } elseif ($request->filled('password') && !$request->filled('current_password')) {
-                 DB::rollBack();
-                 throw ValidationException::withMessages([
+                DB::rollBack();
+                throw ValidationException::withMessages([
                     'current_password' => 'يجب إدخال كلمة المرور الحالية لتغيير كلمة المرور.',
                 ]);
             }
@@ -96,7 +140,7 @@ class ProfileLabController extends Controller // يمكنك تسميته Profile
                         $employee->id,
                         LaboratorieEmployee::class // FQCN للموديل
                     );
-                     Log::info("[LaboratorieEmployee Profile Update] Old image deleted for ID: {$employee->id}");
+                    Log::info("[LaboratorieEmployee Profile Update] Old image deleted for ID: {$employee->id}");
                 }
                 // رفع الصورة الجديدة
                 $this->verifyAndStoreImage(
@@ -107,7 +151,7 @@ class ProfileLabController extends Controller // يمكنك تسميته Profile
                     $employee->id,
                     LaboratorieEmployee::class // FQCN للموديل
                 );
-                 Log::info("[LaboratorieEmployee Profile Update] New image stored for ID: {$employee->id}");
+                Log::info("[LaboratorieEmployee Profile Update] New image stored for ID: {$employee->id}");
             }
 
             // حفظ كل التغييرات
@@ -117,8 +161,7 @@ class ProfileLabController extends Controller // يمكنك تسميته Profile
 
             // إعادة التوجيه مع رسالة نجاح
             return redirect()->route('laboratorie_employee.profile.show') // اسم route عرض الملف الشخصي
-                   ->with('success', 'تم تحديث الملف الشخصي بنجاح.');
-
+                ->with('success', 'تم تحديث الملف الشخصي بنجاح.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack(); // تراجع في حالة خطأ التحقق الداخلي (مثل كلمة المرور الحالية)
             Log::error("LaboratorieEmployee Profile Update Validation Error ID {$employee->id}: " . json_encode($e->errors()));

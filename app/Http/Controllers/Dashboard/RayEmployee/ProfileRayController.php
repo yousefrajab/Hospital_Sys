@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard\RayEmployee;
 
+use App\Models\Ray;
 use App\Models\RayEmployee;
 use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
@@ -18,8 +19,57 @@ class ProfileRayController extends Controller // يمكنك تسميته Profile
     use UploadTrait;
 
     /**
-     * عرض الملف الشخصي لموظف الأشعة المسجل.
+     * عرض الملف الشخصي لموظف الأشعة المسج
+     * ل.
      */
+
+    public function dashboard()
+    {
+        // الإحصائيات الأساسية (كما هي في الـ view الحالي)
+        $totalRays = Ray::count();
+        $pendingRays = Ray::where('case', 0)->count();
+        $completedRays = Ray::where('case', 1)->count();
+
+        // يمكن تخصيص هذه الإحصائيات لتكون خاصة بالموظف الحالي إذا أردت
+        // $employeeId = Auth::guard('ray_employee')->id();
+        // $myCompletedRays = Ray::where('case', 1)->where('employee_id', $employeeId)->count();
+
+        // آخر 5 طلبات أشعة (يمكنك زيادة العدد أو جعله قابل للتخصيص)
+        $latestRays = Ray::with(['patient', 'doctor']) // Eager load relations
+            ->latest() // Order by created_at desc
+            ->take(5)
+            ->get();
+
+        // يمكنك إضافة المزيد من البيانات هنا إذا احتجت (مثل رسوم بيانية أكثر تفصيلاً)
+        // مثال لبيانات رسم بياني لعدد الطلبات شهريًا (تحتاج لتعديل حسب احتياجك)
+        $monthlyRayCounts = Ray::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->whereYear('created_at', date('Y'))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count', 'month')
+            ->all();
+
+        // تحويل أرقام الشهور إلى أسمائها (مثال بسيط)
+        $monthLabels = [];
+        $monthData = [];
+        $monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+
+        for ($m = 1; $m <= 12; $m++) {
+            $monthLabels[] = $monthNames[$m - 1];
+            $monthData[] = $monthlyRayCounts[$m] ?? 0;
+        }
+
+
+        return view('Dashboard.dashboard_RayEmployee.dashboard', compact(
+            'totalRays',
+            'pendingRays',
+            'completedRays',
+            'latestRays',
+            'monthLabels',  // لإرسالها إلى الـ view للرسم البياني
+            'monthData'     // لإرسالها إلى الـ view للرسم البياني
+        ));
+    }
+
     public function show()
     {
         $employee = Auth::guard('ray_employee')->user();

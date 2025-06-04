@@ -201,18 +201,35 @@
                                                 class="fas fa-edit"></i></a>
 
                                         {{-- زر لتسجيل الخروج (يفتح مودال أو صفحة) --}}
-                                        {{-- <button type="button" class="btn btn-sm btn-outline-warning" title="تسجيل خروج المريض"> <i class="fas fa-procedures"></i></button> --}}
+                                        <button type="button" class="btn btn-sm btn-outline-warning"
+                                            title="تسجيل خروج المريض" data-toggle="modal" {{-- لـ Bootstrap 5 --}}
+                                            {{-- data-toggle="modal" --}} {{-- لـ Bootstrap 4 --}}
+                                            data-target="#dischargePatientModal{{ $admission->id }}">
+                                            {{-- لـ Bootstrap 5 --}}
+                                            {{-- data-target="#dischargePatientModal{{ $admission->id }}" --}} {{-- لـ Bootstrap 4 --}}
+                                            <i class="fas fa-user-check"></i> {{--  أيقونة أفضل لتسجيل الخروج من fas fa-procedures --}}
+                                        </button>
                                     @endif
 
-                                    <a href="{{ route('admin.patient_admissions.vital_signs_sheet', $admission->id) }}" class="btn btn-sm btn-outline-success" title="مراقبة العلامات الحيوية"><i class="fas fa-heartbeat"></i></a>
+                                    <a href="{{ route('admin.patient_admissions.vital_signs_sheet', $admission->id) }}"
+                                        class="btn btn-sm btn-outline-success" title="مراقبة العلامات الحيوية"><i
+                                            class="fas fa-heartbeat"></i></a>
                                     {{-- زر حذف سجل الدخول (بحذر شديد!) --}}
-                                    <form action="{{ route('admin.patient_admissions.destroy', $admission->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا السجل؟');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="حذف السجل"><i class="fas fa-trash-alt"></i></button>
-                                    </form>
+                                    @if ($admission->status !== \App\Models\PatientAdmission::STATUS_ADMITTED || !is_null($admission->discharge_date))
+                                        {{-- اسمح بالحذف فقط إذا لم يكن المريض مقيمًا حاليًا --}}
+                                        <form action="{{ route('admin.patient_admissions.destroy', $admission->id) }}"
+                                            method="POST" class="d-inline"
+                                            onsubmit="return confirm('هل أنت متأكد من حذف سجل الدخول هذا؟ لا يمكن التراجع عن هذا الإجراء.');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                title="حذف السجل"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    @endif
                                 </td>
+
                             </tr>
+
                         @empty
                             <tr>
                                 <td colspan="9" class="text-center py-4">
@@ -238,15 +255,28 @@
                         @endforelse
                     </tbody>
                 </table>
+
             </div>
+
+
+
 
             @if ($admissions->hasPages())
                 <div class="mt-3 d-flex justify-content-center pagination-container">
                     {{ $admissions->links('pagination::bootstrap-5') }}
                 </div>
             @endif
+
         </div>
     </div>
+    @foreach ($admissions as $index => $admission)
+        @if ($admission->status === \App\Models\PatientAdmission::STATUS_ADMITTED && is_null($admission->discharge_date))
+            @include('Dashboard.PatientAdmissions.modals._discharge_modal', [
+                'admission' => $admission,
+            ])
+        @endif
+    @endforeach
+
 @endsection
 
 @section('css')
@@ -965,4 +995,19 @@
             @endif
         });
     </script>
+
+    {{-- <script>
+        // كود إعادة فتح المودالات عند وجود أخطاء
+        @if ($errors->vitalStore->any())
+            var addVitalSignModalInstance = new bootstrap.Modal(document.getElementById('addVitalSignModal'));
+            if (addVitalSignModalInstance) addVitalSignModalInstance.show();
+        @endif
+
+        @if ($errors->{'dischargeFormBag' . $admission->id} && $errors->{'dischargeFormBag' . $admission->id}->any())
+            var dischargeModalInstance = new bootstrap.Modal(document.getElementById(
+                'dischargePatientModal{{ $admission->id }}'));
+            if (dischargeModalInstance) dischargeModalInstance.show();
+        @endif
+    </script> --}}
+
 @endsection

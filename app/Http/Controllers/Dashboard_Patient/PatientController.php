@@ -34,9 +34,7 @@ class PatientController extends Controller
         $this->middleware('auth:patient');
     }
 
-    /**
-     * عرض لوحة التحكم الرئيسية للمريض مع ملخصات وتنبيهات.
-     */
+    
    public function dashboard()
     {
         $patient = Auth::guard('patient')->user();
@@ -56,7 +54,7 @@ class PatientController extends Controller
         // إجمالي الفواتير المستحقة (مفردة ومجمعة)
         // نفترض أن invoice_status = 1 يعني فاتورة غير مدفوعة/مستحقة
         $totalDueInvoices = Invoice::where('patient_id', $patientId)
-            
+
             ->sum(DB::raw('total_with_tax')); // أو الحقل المناسب لإجمالي الفاتورة
 
         // إجمالي المبالغ المدفوعة (لكشف الحساب)

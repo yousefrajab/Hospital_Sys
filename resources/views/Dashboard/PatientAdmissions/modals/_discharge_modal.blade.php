@@ -48,29 +48,40 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="discharge_reason{{ $admission->id }}" class="form-label">سبب الخروج</label>
+                            <label for="discharge_reason_select{{ $admission->id }}" class="form-label">سبب
+                                الخروج</label>
                             <select
                                 class="form-select @error('discharge_reason', 'dischargeFormBag' . $admission->id) is-invalid @enderror"
                                 id="discharge_reason_select{{ $admission->id }}" name="discharge_reason_select">
-                                {{-- اسم مؤقت للـ select --}}
+                                {{-- اسم مؤقت للـ select، لن نعتمد عليه مباشرة في الحفظ --}}
                                 <option value="">-- اختر سبب الخروج --</option>
                                 <option value="تحسن الحالة"
-                                    {{ old('discharge_reason_select') == 'تحسن الحالة' ? 'selected' : '' }}>تحسن الحالة
+                                    {{ old('discharge_reason_select', $admission->discharge_reason) == 'تحسن الحالة' && !(old('discharge_reason_select') == 'other' || (!old('discharge_reason_select') && !in_array($admission->discharge_reason, ['تحسن الحالة', 'بناءً على طلب المريض', 'نقل إلى مستشفى آخر', 'وفاة']) && !empty($admission->discharge_reason))) ? 'selected' : '' }}>
+                                    تحسن الحالة
                                 </option>
                                 <option value="بناءً على طلب المريض"
-                                    {{ old('discharge_reason_select') == 'بناءً على طلب المريض' ? 'selected' : '' }}>
-                                    بناءً على طلب المريض</option>
+                                    {{ old('discharge_reason_select', $admission->discharge_reason) == 'بناءً على طلب المريض' && !(old('discharge_reason_select') == 'other' || (!old('discharge_reason_select') && !in_array($admission->discharge_reason, ['تحسن الحالة', 'بناءً على طلب المريض', 'نقل إلى مستشفى آخر', 'وفاة']) && !empty($admission->discharge_reason))) ? 'selected' : '' }}>
+                                    بناءً على طلب المريض
+                                </option>
                                 <option value="نقل إلى مستشفى آخر"
-                                    {{ old('discharge_reason_select') == 'نقل إلى مستشفى آخر' ? 'selected' : '' }}>نقل
-                                    إلى مستشفى آخر</option>
+                                    {{ old('discharge_reason_select', $admission->discharge_reason) == 'نقل إلى مستشفى آخر' && !(old('discharge_reason_select') == 'other' || (!old('discharge_reason_select') && !in_array($admission->discharge_reason, ['تحسن الحالة', 'بناءً على طلب المريض', 'نقل إلى مستشفى آخر', 'وفاة']) && !empty($admission->discharge_reason))) ? 'selected' : '' }}>
+                                    نقل إلى مستشفى آخر
+                                </option>
                                 <option value="وفاة"
-                                    {{ old('discharge_reason_select') == 'وفاة' ? 'selected' : '' }}>وفاة</option>
-                                <option value="other">سبب آخر (يرجى التحديد)</option>
+                                    {{ old('discharge_reason_select', $admission->discharge_reason) == 'وفاة' && !(old('discharge_reason_select') == 'other' || (!old('discharge_reason_select') && !in_array($admission->discharge_reason, ['تحسن الحالة', 'بناءً على طلب المريض', 'نقل إلى مستشفى آخر', 'وفاة']) && !empty($admission->discharge_reason))) ? 'selected' : '' }}>
+                                    وفاة
+                                </option>
+                                <option value="other"
+                                    {{ old('discharge_reason_select') == 'other' || (!old('discharge_reason_select') && !in_array($admission->discharge_reason, ['تحسن الحالة', 'بناءً على طلب المريض', 'نقل إلى مستشفى آخر', 'وفاة']) && !empty($admission->discharge_reason)) ? 'selected' : '' }}>
+                                    سبب آخر (يرجى التحديد)
+                                </option>
                             </select>
+
                             <textarea class="form-control mt-2 @error('discharge_reason', 'dischargeFormBag' . $admission->id) is-invalid @enderror"
-                                id="discharge_reason_text{{ $admission->id }}" name="discharge_reason" rows="2"
+                                id="discharge_reason_text{{ $admission->id }}" name="discharge_reason" {{-- هذا الحقل هو الذي سيُحفظ في الداتا بيز --}} rows="2"
                                 placeholder="إذا اخترت 'سبب آخر'، يرجى كتابة السبب هنا، أو أي تفاصيل إضافية"
                                 style="display: {{ old('discharge_reason_select') == 'other' || (!old('discharge_reason_select') && !in_array($admission->discharge_reason, ['تحسن الحالة', 'بناءً على طلب المريض', 'نقل إلى مستشفى آخر', 'وفاة']) && !empty($admission->discharge_reason)) ? 'block' : 'none' }};">{{ old('discharge_reason', $admission->discharge_reason) }}</textarea>
+
                             @error('discharge_reason', 'dischargeFormBag' . $admission->id)
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -100,7 +111,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
                     <button type="submit" class="btn btn-success">
                         <i class="fas fa-check-circle me-1"></i> تأكيد خروج المريض
                     </button>
@@ -110,7 +121,11 @@
     </div>
 </div>
 
-@push('js_after_modal')
+@section('js')
+    {{-- إذا كان لديك أي سكربتات إضافية تحتاجها في هذا المودال --}}
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const dischargeReasonSelect = document.getElementById('discharge_reason_select{{ $admission->id }}');
@@ -178,4 +193,48 @@
             }
         });
     </script>
-@endpush
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectElement = document.getElementById('discharge_reason_select{{ $admission->id }}');
+            const textElement = document.getElementById('discharge_reason_text{{ $admission->id }}');
+
+            // دالة لتحديث حالة حقل النص بناءً على القائمة المنسدلة
+            function updateDischargeReasonState() {
+                if (selectElement.value === 'other') {
+                    textElement.style.display = 'block';
+                    // إذا كان المستخدم يختار "سبب آخر" لأول مرة بعد تحميل الصفحة أو بعد اختيار سبب محدد،
+                    // قد ترغب في مسح القيمة الموجودة في textElement إذا لم تكن قيمة مخصصة بالفعل.
+                    // لكن الكود الحالي لـ old() يعالج هذا بشكل جيد.
+                    // إذا كان هناك نص قديم من `old('discharge_reason')` وهو مخصص، سيظل موجوداً.
+                    // إذا كان `old('discharge_reason_select')` هو 'other' ولم يكن هناك `old('discharge_reason')`، فسيكون فارغًا.
+                    // textElement.value = ''; // قم بإلغاء التعليق إذا كنت تريد مسح النص دائمًا عند اختيار "سبب آخر"
+                    textElement.focus();
+                } else if (selectElement.value === '') { // في حالة اختيار "-- اختر سبب الخروج --"
+                    textElement.style.display = 'none';
+                    textElement.value = ''; // مسح القيمة لضمان عدم إرسال قيمة قديمة إذا لم يتم الاختيار
+                } else {
+                    textElement.style.display = 'none';
+                    textElement.value = selectElement.value; // الأهم: نسخ قيمة الخيار المحدد إلى حقل النص
+                }
+            }
+
+            // استدعاء الدالة عند تغيير القائمة المنسدلة
+            selectElement.addEventListener('change', updateDischargeReasonState);
+
+            // استدعاء الدالة عند تحميل الصفحة لضمان الحالة الأولية الصحيحة
+            // (خاصة إذا كان هناك `old()` values وكان JavaScript ضروريًا لضبط `textarea.value`)
+            // الكود الحالي في Blade لـ `value` و `style` للـ textarea جيد ويغطي معظم الحالات الأولية.
+            // لكن, للتأكيد:
+            if (selectElement.value !== 'other' && selectElement.value !== '') {
+                textElement.value = selectElement.value;
+            }
+            // إذا كانت القيمة المحفوظة في الداتابيز هي قيمة مخصصة (ليست من الخيارات)
+            // و old('discharge_reason_select') ليس 'other' (يعني لم يحدث خطأ في الـ validation أعاد اختيار 'other')
+            // فإن selectElement.value سيكون 'other' (بفضل كود الـ Blade)
+            // و textElement.value سيكون القيمة المخصصة (بفضل كود الـ Blade)
+            // وحقل النص سيكون ظاهرًا (بفضل كود الـ Blade)
+            // لذلك، في هذه الحالة، لا نحتاج لفعل شيء إضافي هنا عند التحميل.
+        });
+    </script>
+@endsection

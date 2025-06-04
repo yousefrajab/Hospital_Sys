@@ -29,12 +29,13 @@ class PatientRepository implements PatientRepositoryInterface
 {
     use UploadTrait;
 
+
     public function index(Request $request)
     {
         $totalPatients = Patient::count();
         $admittedPatientsCount = PatientAdmission::where('status', PatientAdmission::STATUS_ADMITTED)
             ->whereNull('discharge_date')
-            ->distinct('patient_id')
+            ->distinct('patient_id') // تأكد أن هذا يعطي العدد الصحيح للمرضى المقيمين وليس عدد سجلات الدخول النشطة
             ->count('patient_id');
         $newPatientsThisMonth = Patient::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
@@ -43,7 +44,10 @@ class PatientRepository implements PatientRepositoryInterface
         $query = Patient::with([
             'image',
             'currentAdmission' => function ($q) {
-                $q->with(['bed.room.section']); // تحميل متداخل
+                // لا نحتاج لتحميل كل هذه العلاقات هنا إذا كان الهدف فقط معرفة ID الإقامة
+                // $q->with(['bed.room.section']);
+                // يكفي تحميل الـ ID أو حتى عدم تحميل أي شيء إذا كان hasOne يعمل بدون eager loading للشرط
+                $q->select('id', 'patient_id'); // تحميل ID الإقامة و patient_id فقط
             }
         ]);
 

@@ -814,7 +814,8 @@
                                                     ({{ $Patient->currentAdmission->bed->room->section->name ?? 'قسم' }} -
                                                     غ:
                                                     {{ $Patient->currentAdmission->bed->room->room_number }} - س:
-                                                    {{ $Patient->currentAdmission->bed->bed_number }})</small>
+                                                    {{ $Patient->currentAdmission->bed->bed_number }})
+                                                </small>
                                             @endif
                                         @else
                                             <i class="fas fa-user-check fa-fw me-1"></i> غير مقيم
@@ -856,17 +857,25 @@
 
                                         @if (!$Patient->currentAdmission)
                                             <a href="{{ route('admin.patient_admissions.create', ['patient_id' => $Patient->id]) }}"
-                                                class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip"
+                                                class="btn btn-sm btn-outline-info" data-toggle="tooltip"
                                                 data-bs-placement="top" title="تسجيل دخول (إقامة) للمريض">
                                                 <i class="fas fa-procedures"></i> {{-- Changed icon --}}
                                             </a>
                                         @else
                                             <a href="{{ route('admin.patient_admissions.edit', $Patient->currentAdmission->id) }}"
-                                                class="btn btn-sm btn-outline-warning" data-bs-toggle="tooltip"
+                                                class="btn btn-sm btn-outline-warning" data-toggle="tooltip"
                                                 data-bs-placement="top" title="تعديل الإقامة الحالية أو تسجيل خروج">
                                                 <i class="fas fa-file-medical-alt"></i>
                                             </a>
+
+                                            <a href="{{ route('admin.patient_admissions.vital_signs_sheet', $Patient->currentAdmission->id) }}"
+                                                class="btn btn-sm btn-outline-danger" data-toggle="tooltip"
+                                                {{-- اختر لوناً مناسباً مثلاً danger أو secondary --}} title="ورقة مراقبة العلامات الحيوية">
+                                                <i class="fas fa-heartbeat"></i>
+                                            </a>
                                         @endif
+
+
                                         <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
                                             data-target="#deletePatientModal{{ $Patient->id }}" data-placement="top"
                                             title="حذف المريض">
@@ -992,7 +1001,7 @@
                 @endforeach
                 errorMsg += "</ul>";
                 showNotif(errorMsg, "error", 'top-center', false, 0,
-                true); // autohide false, timeout 0 for persistent
+                    true); // autohide false, timeout 0 for persistent
             @endif
         });
     </script>

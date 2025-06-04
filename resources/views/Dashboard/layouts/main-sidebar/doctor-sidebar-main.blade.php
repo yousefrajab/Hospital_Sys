@@ -105,7 +105,7 @@
                         </a>
                     </li>
 
-                  
+
             </li>
         </ul>
         </li>
@@ -120,8 +120,8 @@
                 <span class="side-menu__label">الكشوفات</span>
                 <i class="angle fe fe-chevron-left"></i></a> {{-- تغيير اتجاه السهم --}}
             <ul class="slide-menu">
-                <li class="{{ request()->routeIs('invoices.index') ? 'current' : '' }}"><a class="slide-item"
-                        href="{{ route('invoices.index') }}">قائمة الكشوفات</a></li>
+                <li class="{{ request()->routeIs('doctor.invoices.index') ? 'current' : '' }}"><a class="slide-item"
+                        href="{{ route('doctor.invoices.index') }}">قائمة الكشوفات</a></li>
                 <li class="{{ request()->routeIs('completedInvoices') ? 'current' : '' }}"><a class="slide-item"
                         href="{{ route('doctor.completedInvoices') }}">الكشوفات المكتملة</a></li>
                 <li class="{{ request()->routeIs('reviewInvoices') ? 'current' : '' }}"><a class="slide-item"

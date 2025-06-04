@@ -24,19 +24,7 @@
          <textarea readonly class="form-control" id="exampleFormControlTextarea1" rows="3">{{$rays->description_employee}}</textarea>
      </div>
 
-     <!-- Gallery -->
-     <!-- Gallery -->
-    {{-- <div class="demo-gallery">
-        <ul id="lightgallery" class="gallery-grid">
-            @foreach($rays->images as $image)
-            <li class="gallery-item">
-                <a href="{{URL::asset('Dashboard/img/Rays/'.$image->filename)}}" data-lightbox="gallery">
-                    <img class="gallery-img" src="{{URL::asset('Dashboard/img/Rays/'.$image->filename)}}" alt="NoImg">
-                </a>
-            </li>
-            @endforeach
-        </ul>
-    </div> --}}
+ 
 
     <div class="demo-gallery">
         <ul id="lightgallery" class="list-unstyled row row-sm pr-0">

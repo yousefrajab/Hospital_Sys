@@ -35,16 +35,35 @@ class PatientDetailsController extends Controller
         }
 
         $patient_records = Diagnostic::where('patient_id', $id)
-                                     ->with(['doctor'])
-                                     ->orderBy('date', 'desc')->get();
+                                   ->with(['doctor'])
+                                   ->orderBy('date', 'desc')
+                                   ->get();
 
         $patient_rays = Ray::where('patient_id', $id)
-                             ->with(['doctor', 'employee'])
-                             ->orderBy('created_at', 'desc')->get();
+                         ->with(['doctor', 'employee'])
+                         ->orderBy('created_at', 'desc')
+                         ->get();
 
         $patient_Laboratories = Laboratorie::where('patient_id', $id)
                                          ->with(['doctor', 'employee'])
-                                         ->orderBy('created_at', 'desc')->get();
+                                         ->orderBy('created_at', 'desc')
+                                         ->get();
+
+        // Prepare data for charts
+        $diagnosisStats = [
+            'total' => $patient_records->count(),
+            'last_month' => $patient_records->where('date', '>=', now()->subMonth())->count(),
+        ];
+
+        $rayStats = [
+            'completed' => $patient_rays->where('case', 1)->count(),
+            'pending' => $patient_rays->where('case', 0)->count(),
+        ];
+
+        $labStats = [
+            'completed' => $patient_Laboratories->where('case', 1)->count(),
+            'pending' => $patient_Laboratories->where('case', 0)->count(),
+        ];
 
         Log::info("PatientDetailsController@index: Successfully loaded details for Patient ID: {$id}, Name: {$patient->name}");
 
@@ -52,7 +71,76 @@ class PatientDetailsController extends Controller
             'patient',
             'patient_records',
             'patient_rays',
-            'patient_Laboratories'
+            'patient_Laboratories',
+            'diagnosisStats',
+            'rayStats',
+            'labStats'
+        ));
+    }
+
+     public function indexx($id)
+    {
+        Log::info("PatientDetailsController@index: Attempting to load details for Patient ID: {$id}");
+
+        $patient = Patient::with([
+            'image',
+            'diagnosedChronicDiseases',
+            'prescription' => function ($query) {
+                $query->with(['doctor'])
+                      ->orderBy('prescription_date', 'desc')->take(10);
+            },
+            'admissions' => function ($query) {
+                $query->with(['bed.room.section', 'doctor'])
+                      ->orderBy('admission_date', 'desc')->take(5);
+            }
+        ])->find($id);
+
+        if (!$patient) {
+            Log::error("PatientDetailsController@index: Patient with ID {$id} not found.");
+            abort(404, 'المريض المطلوب غير موجود.');
+        }
+
+        $patient_records = Diagnostic::where('patient_id', $id)
+                                   ->with(['doctor'])
+                                   ->orderBy('date', 'desc')
+                                   ->get();
+
+        $patient_rays = Ray::where('patient_id', $id)
+                         ->with(['doctor', 'employee'])
+                         ->orderBy('created_at', 'desc')
+                         ->get();
+
+        $patient_Laboratories = Laboratorie::where('patient_id', $id)
+                                         ->with(['doctor', 'employee'])
+                                         ->orderBy('created_at', 'desc')
+                                         ->get();
+
+        // Prepare data for charts
+        $diagnosisStats = [
+            'total' => $patient_records->count(),
+            'last_month' => $patient_records->where('date', '>=', now()->subMonth())->count(),
+        ];
+
+        $rayStats = [
+            'completed' => $patient_rays->where('case', 1)->count(),
+            'pending' => $patient_rays->where('case', 0)->count(),
+        ];
+
+        $labStats = [
+            'completed' => $patient_Laboratories->where('case', 1)->count(),
+            'pending' => $patient_Laboratories->where('case', 0)->count(),
+        ];
+
+        Log::info("PatientDetailsController@index: Successfully loaded details for Patient ID: {$id}, Name: {$patient->name}");
+
+        return view('Dashboard.doctor.invoices.patient_details', compact(
+            'patient',
+            'patient_records',
+            'patient_rays',
+            'patient_Laboratories',
+            'diagnosisStats',
+            'rayStats',
+            'labStats'
         ));
     }
 }

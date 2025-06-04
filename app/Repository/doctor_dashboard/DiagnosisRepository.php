@@ -39,7 +39,7 @@
      public function show($id)
      {
          $patient_records = Diagnostic::where('patient_id',$id)->get();
-         return view('Dashboard.Doctor.invoices.patient_record',compact('patient_records'));
+         return view('Dashboard.doctor.invoices.patient_record',compact('patient_records'));
      }
 
      public function addReview($request)

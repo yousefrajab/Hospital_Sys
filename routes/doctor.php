@@ -111,7 +111,7 @@ Route::group([
 
         //############################# rays route ##########################################
 
-        Route::get('patient_details/{id}', [PatientDetailsController::class, 'index'])->name('patient_details');
+        Route::get('patient_details/{id}', [PatientDetailsController::class, 'indexx'])->name('patient_details');
 
         //############################# end rays route ######################################
 
@@ -125,6 +125,7 @@ Route::group([
         Route::post('prescriptions/{prescription}/approve-refill', [PrescriptionController::class, 'approveRefill'])->name('prescriptions.approveRefill');
         Route::post('prescriptions/{prescription}/deny-refill', [PrescriptionController::class, 'denyRefill'])->name('prescriptions.denyRefill');
         Route::get('prescriptions/adherence-dashboard', [PrescriptionController::class, 'adherenceDashboard'])->name('prescriptions.adherenceDashboard');
+        Route::resource('invoices', InvoiceController::class);
 
         Route::get('/404', function () {
             return view('Dashboard.404');
@@ -144,7 +145,6 @@ Route::group([
     //############################# end invoices route #############################################
 
     //############################# invoices route ##########################################
-    Route::resource('invoices', InvoiceController::class)->middleware(['auth:doctor', 'doctor.status']);
     // Route::get('invoices', [InvoiceController::class,'index'])->name('invoices.index');
 
 
