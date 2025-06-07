@@ -373,6 +373,6 @@
                 `;
                 previewContainer.appendChild(preview);
             });
-        }
+        }   
     }
 </script>

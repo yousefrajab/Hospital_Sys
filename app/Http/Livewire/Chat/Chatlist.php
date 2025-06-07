@@ -22,6 +22,7 @@ class Chatlist extends Component
     public ?Conversation $selected_conversation = null;
     public $auth_user_id;
     public $auth_user_guard;
+    public string $searchTerm = '';
 
     protected $listeners = ['chatUserSelected', 'refreshComponent' => '$refresh', 'messageSent' => '$refresh'];
 
@@ -39,6 +40,8 @@ class Chatlist extends Component
             Log::error("[Chatlist Mount] User not authenticated for any relevant guard.");
              abort(401, 'User not authenticated.');
         }
+
+
         $this->conversations = new Collection();
 
         if (Session::has('selected_conversation_id')) {
@@ -78,21 +81,7 @@ class Chatlist extends Component
     {
         if ($this->auth_user_id) {
             try {
-                // هذا يتطلب أنك تخزن conversation_id بطريقة ما في جدول notifications
-                // أو أن نص الإشعار يحتوي على شيء يمكن البحث به عن المحادثة
-                // إذا كنت تخزن conversation_id في عمود 'data' (JSON) في جدول Laravel الافتراضي:
-                // $updatedCount = \Illuminate\Notifications\DatabaseNotification::where('notifiable_id', $this->auth_user_id)
-                //                    ->where('notifiable_type', get_class(Auth::guard($this->auth_user_guard)->user()))
-                //                    ->whereNull('read_at')
-                //                    ->whereJsonContains('data->conversation_id', $conversationId)
-                //                    ->update(['read_at' => now()]);
-
-                // إذا كنت لا تخزن conversation_id في جدول notifications المخصص لك،
-                // يمكنك الاعتماد على markChatNotificationsAsReadGeneral() عند فتح صفحة المحادثات الرئيسية
-                // أو تعليم الرسائل الفعلية كمقروءة في جدول messages (وهو ما يتم في Chatbox).
-                // حالياً، سنفترض أن فتح أي محادثة يعلم *كل* إشعارات الرسائل كمقروءة إذا لم يكن هناك ربط مباشر.
-                // $this->markChatNotificationsAsReadGeneral(); //  أو اترك هذا للمستخدم بالنقر على "تعليم الكل كمقروء" في الهيدر
-
+  
                  Log::info("Attempting to mark specific notifications for conversation ID {$conversationId} as read (if applicable).");
 
             } catch(\Exception $e) {
