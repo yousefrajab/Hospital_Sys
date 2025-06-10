@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Password; // **استيراد Password rule**
+use Illuminate\Support\Facades\Auth; // لاستخدام Auth للوصول للمستخدم الحالي
+use Illuminate\Foundation\Http\FormRequest;
+use App\Models\GlobalEmail; // استيراد موديل GlobalEmail
+use App\Models\Admin; // استيراد موديل Admin (أو الموديل الذي يتم التحقق منه)
 
 class UpdateAdminProfileRequest extends FormRequest
 {
@@ -16,7 +17,8 @@ class UpdateAdminProfileRequest extends FormRequest
 
     public function rules(): array
     {
-        $adminId = Auth::guard('admin')->id();
+        $currentAdmin = Auth::guard('admin')->user(); // المستخدم الحالي الذي يتم تعديله
+        $adminId = $currentAdmin->id;
 
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -25,23 +27,30 @@ class UpdateAdminProfileRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('admins')->ignore($adminId),
+                Rule::unique('admins', 'email')->ignore($adminId), // 1. فريد في جدول admins
+                function ($attribute, $value, $fail) use ($currentAdmin) { // $currentAdmin هو المستخدم الذي يتم تعديله
+                    // تحقق فقط إذا تغير الإيميل عن الإيميل الأصلي
+                    if (strtolower($value) !== strtolower($currentAdmin->getOriginal('email'))) {
+                        // إذا تغير الإيميل، تحقق مما إذا كان الإيميل الجديد مستخدمًا في global_emails
+                        // من قبل أي شخص آخر (لا داعي لتجاهل السجل الحالي هنا لأننا بالفعل داخل if)
+                        $existsInGlobal = GlobalEmail::where('email', $value)->exists();
+                        if ($existsInGlobal) {
+                            $fail('هذا البريد الإلكتروني مستخدم بالفعل من قبل حساب آخر في النظام.');
+                        }
+                    }
+                },
             ],
             'phone' => [
                 'nullable',
                 'string',
-                // 'regex:/^05\d{8}$/', // يمكنك إبقاء هذا أو جعله أكثر عمومية
-                Rule::unique('admins', 'phone')->ignore($adminId), // تأكد من أن اسم العمود 'phone'
+                Rule::unique('admins', 'phone')->ignore($adminId),
+                // يمكنك إضافة قاعدة تحقق من التفرد للهاتف في global_emails بنفس الطريقة إذا أردت
             ],
-            // كلمة المرور الحالية مطلوبة فقط إذا تم إدخال كلمة مرور جديدة
             'current_password' => ['nullable', 'string', 'required_with:password'],
-            // كلمة المرور الجديدة اختيارية، ولكن إذا تم إدخالها، يجب تأكيدها وتلبية معايير القوة
-            // وتأكيد كلمة المرور يبحث عن حقل "password_confirmation"
-            'password' => ['nullable', 'string', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
-            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'], // 2MB
+            'password' => ['nullable', 'string', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)],
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
     }
-
     public function messages(): array
     {
         return [

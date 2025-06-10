@@ -1,26 +1,25 @@
-@extends('Dashboard.layouts.master')
+@extends('layouts.app') {{-- أو أي layout رئيسي تستخدمه --}}
 
-@section('css')
-    <!--- Internal Fontawesome css-->
-    <link href="{{ URL::asset('assets/plugins/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
-    <!---Ionicons css-->
-    <link href="{{ URL::asset('assets/plugins/ionicons/css/ionicons.min.css') }}" rel="stylesheet">
-    <!---Internal Typicons css-->
-    <link href="{{ URL::asset('assets/plugins/typicons.font/typicons.css') }}" rel="stylesheet">
-    <!---Internal Feather css-->
-    <link href="{{ URL::asset('assets/plugins/feather/feather.css') }}" rel="stylesheet">
-    <!---Internal Falg-icons css-->
-    <link href="{{ URL::asset('assets/plugins/flag-icon-css/css/flag-icon.min.css') }}" rel="stylesheet">
-@endsection
+@section('title', 'الصفحة غير موجودة')
+
 @section('content')
-    <!-- Main-error-wrapper -->
-    <div class="main-error-wrapper  page page-h ">
-        <img src="{{ URL::asset('Dashboard/img/media/404.png') }}" class="error-page" alt="error">
-        <h2>Oopps. The page you were looking for doesn't exist.</h2>
-        <h6>You may have mistyped the address or the page may have moved.</h6><a class="btn btn-outline-danger"
-            href="{{ url('/dashboard/admin') }}">Back to Home</a>
-    </div>
-    <!-- /Main-error-wrapper -->
-@endsection
-@section('js')
+<div class="container text-center py-5">
+    <h1 class="display-1 text-danger">404</h1>
+    <h2 class="mb-4">عفواً، الصفحة التي تبحث عنها غير موجودة!</h2>
+    <p class="lead mb-4">
+        ربما تم حذف الصفحة، أو تغيير اسمها، أو أنها غير متاحة مؤقتًا.
+    </p>
+    <a href="{{ url('/') }}" class="btn btn-primary btn-lg">
+        <i class="fas fa-home me-2"></i> العودة إلى الصفحة الرئيسية
+    </a>
+    {{-- يمكنك إضافة صورة أو تصميم إضافي هنا --}}
+</div>
+
+<style>
+    /* يمكنك إضافة بعض الأنماط هنا أو في ملف CSS عام */
+    .display-1 {
+        font-size: 8rem;
+        font-weight: bold;
+    }
+</style>
 @endsection

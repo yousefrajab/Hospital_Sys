@@ -42,6 +42,13 @@ class RedirectIfAuthenticated
             return redirect(RouteServiceProvider::PATIENT);
         }
 
+        if (auth('pharmacy_employee')->check()){
+            return redirect(RouteServiceProvider::PHARMACYEmployee);
+        }
+
+        if (auth('pharmacy_manager')->check()){
+            return redirect(RouteServiceProvider::PharmacyManager);
+        }
 
         return $next($request);
     }

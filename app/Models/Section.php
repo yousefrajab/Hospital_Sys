@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Section extends Model
 {
     use Translatable; // 2. To add translation methods
-    // protected $fillable =['name','description'];
+    protected $fillable =['name','description'];
     // 3. To define which attributes needs to be translated
     public $translatedAttributes = ['name','description'];
     use HasFactory;
@@ -20,4 +20,19 @@ class Section extends Model
     {
         return $this->hasMany(Doctor::class);
     }
+
+
+    /**
+     * الغرف التابعة لهذا القسم.
+     */
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
+    }
+
+    public function Service()
+    {
+        return $this->belongsTo(Service::class, 'Service_id');
+    }
+
 }

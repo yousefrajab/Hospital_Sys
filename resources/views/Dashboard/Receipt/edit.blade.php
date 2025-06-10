@@ -1,67 +1,80 @@
 @extends('Dashboard.layouts.master')
 @section('css')
-    <!-- Internal Select2 css -->
     <link href="{{URL::asset('dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
     <link href="{{URL::asset('Dashboard/plugins/select2/css/select2.min.css')}}" rel="stylesheet">
 @endsection
-
-@section('title')
-    تعديل سند قبض
-@stop
+@section('title', 'تعديل سند قبض')
 @section('page-header')
-    <!-- breadcrumb -->
     <div class="breadcrumb-header justify-content-between">
-        <div class="my-auto">
-            <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الحسابات</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل سند قبض </span>
-            </div>
-        </div>
+        <div class="my-auto"><div class="d-flex"><h4 class="content-title mb-0 my-auto">الحسابات</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل سند قبض</span></div></div>
     </div>
-    <!-- breadcrumb -->
 @endsection
 @section('content')
-
     @include('Dashboard.messages_alert')
-    <!-- row -->
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-body">
-                        <form action="{{ route('admin.Receipt.update', 'test') }}" method="post" autocomplete="off">
-                            {{ method_field('patch') }}
-                            {{ csrf_field() }}
+                    <form action="{{ route('admin.Receipt.update', $receipt_accounts->id) }}" method="post" autocomplete="off">
+                        @method('patch')
+                        @csrf
+                        <input value="{{$receipt_accounts->id}}" name="id" type="hidden">
                         <div class="pd-30 pd-sm-40 bg-gray-200">
-
                             <div class="row row-xs align-items-center mg-b-20">
-                                <div class="col-md-1">
-                                    <label>اسم المريض</label>
-                                    <input class="form-control" value="{{$receipt_accounts->id}}" name="id" type="hidden">
-
-                                </div>
-                                <div class="col-md-11 mg-t-5 mg-md-t-0">
-                                    <select name="patient_id" class="form-control select2" required>
+                                <div class="col-md-2"><label for="patient_id_edit">اسم المريض <span class="text-danger">*</span></label></div>
+                                <div class="col-md-10 mg-t-5 mg-md-t-0">
+                                    <select name="patient_id" id="patient_id_edit" class="form-control select2 @error('patient_id') is-invalid @enderror" required>
                                         @foreach($Patients as $Patient)
-                                            <option value="{{$Patient->id}}" {{$receipt_accounts->patient_id == $Patient->id ? 'selected':''}} >{{$Patient->name}}</option>
+                                            <option value="{{$Patient->id}}" {{ old('patient_id', $receipt_accounts->patient_id) == $Patient->id ? 'selected':'' }} >{{$Patient->name}}</option>
                                         @endforeach
                                     </select>
+                                    @error('patient_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
                             <div class="row row-xs align-items-center mg-b-20">
-                                <div class="col-md-1">
-                                    <label>المبلغ</label>
+                                <div class="col-md-2">
+                                    <label for="item_type_id_edit">الخدمة / الباقة (اختياري)</label>
                                 </div>
-                                <div class="col-md-11 mg-t-5 mg-md-t-0">
-                                    <input class="form-control" value="{{$receipt_accounts->Debit}}" name="Debit" type="number">
+                                <div class="col-md-10 mg-t-5 mg-md-t-0">
+                                   <select name="item_type_id" id="item_type_id_edit" class="form-control select2 @error('item_type_id') is-invalid @enderror">
+                                        <option value="" data-price="0" data-name="">{{ trans('forms.select_option_optional') }}</option>
+                                        @if(isset($Services) && $Services->count() > 0)
+                                            <optgroup label="الخدمات المفردة">
+                                                @foreach($Services as $Service)
+                                                   <option value="service_{{$Service->id}}" data-price="{{$Service->price}}" data-name="{{$Service->name}}" {{ old('item_type_id', ($receipt_accounts->service_id == $Service->id ? 'service_'.$Service->id : '')) == 'service_'.$Service->id ? 'selected' : '' }}>
+                                                       {{$Service->name}} ({{number_format($Service->price, 2)}} {{ config('app.currency_symbol', 'ر.س') }})
+                                                   </option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endif
+                                        @if(isset($GroupedServices) && $GroupedServices->count() > 0)
+                                            <optgroup label="الباقات المجمعة">
+                                                @foreach($GroupedServices as $Group)
+                                                   <option value="group_{{$Group->id}}" data-price="{{$Group->Total_with_tax ?? 0}}" data-name="{{$Group->name}}" {{ old('item_type_id', ($receipt_accounts->group_id == $Group->id ? 'group_'.$Group->id : '')) == 'group_'.$Group->id ? 'selected' : '' }}>
+                                                       باقة: {{$Group->name}} ({{number_format($Group->Total_with_tax ?? 0, 2)}} {{ config('app.currency_symbol', 'ر.س') }})
+                                                   </option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endif
+                                    </select>
+                                    @error('item_type_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
                             <div class="row row-xs align-items-center mg-b-20">
-                                <div class="col-md-1">
-                                    <label>البيان</label>
+                                <div class="col-md-2"><label for="Debit_edit">المبلغ <span class="text-danger">*</span></label></div>
+                                <div class="col-md-10 mg-t-5 mg-md-t-0">
+                                    <input class="form-control @error('Debit') is-invalid @enderror" id="Debit_edit" value="{{ old('Debit', $receipt_accounts->amount) }}" name="Debit" type="number" step="0.01" required>
+                                    @error('Debit') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
-                                <div class="col-md-11 mg-t-5 mg-md-t-0">
-                                    <textarea class="form-control" name="description" rows="3">{{$receipt_accounts->description}}</textarea>
+                            </div>
+
+                            <div class="row row-xs align-items-center mg-b-20">
+                                <div class="col-md-2"><label for="description_edit">البيان</label></div>
+                                <div class="col-md-10 mg-t-5 mg-md-t-0">
+                                    <textarea class="form-control @error('description') is-invalid @enderror" id="description_edit" name="description" rows="3">{{ old('description', $receipt_accounts->description) }}</textarea>
+                                    @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
@@ -72,32 +85,41 @@
             </div>
         </div>
     </div>
-    <!-- row closed -->
-    </div>
-    <!-- Container closed -->
-    </div>
-    <!-- main-content closed -->
 @endsection
 @section('js')
-
-    <!--Internal  Notify js -->
     <script src="{{URL::asset('dashboard/plugins/notify/js/notifIt.js')}}"></script>
-    <script src="{{URL::asset('/plugins/notify/js/notifit-custom.js')}}"></script>
-
-    <!--Internal  Datepicker js -->
-    <script src="{{URL::asset('Dashboard/plugins/jquery-ui/ui/widgets/datepicker.js')}}"></script>
-    <!--Internal  jquery.maskedinput js -->
-    <script src="{{URL::asset('Dashboard/plugins/jquery.maskedinput/jquery.maskedinput.js')}}"></script>
-    <!--Internal  spectrum-colorpicker js -->
-    <script src="{{URL::asset('Dashboard/plugins/spectrum-colorpicker/spectrum.js')}}"></script>
-    <!-- Internal Select2.min js -->
+    <script src="{{URL::asset('dashboard/plugins/notify/js/notifit-custom.js')}}"></script>
     <script src="{{URL::asset('Dashboard/plugins/select2/js/select2.min.js')}}"></script>
-    <!--Internal Ion.rangeSlider.min js -->
-    <script src="{{URL::asset('Dashboard/plugins/ion-rangeslider/js/ion.rangeSlider.min.js')}}"></script>
-    <!--Internal  jquery-simple-datetimepicker js -->
-    <script src="{{URL::asset('Dashboard/plugins/amazeui-datetimepicker/js/amazeui.datetimepicker.min.js')}}"></script>
-    <!-- Ionicons js -->
-    <script src="{{URL::asset('Dashboard/plugins/jquery-simple-datetimepicker/jquery.simple-dtpicker.js')}}"></script>
-    <!-- Internal form-elements js -->
-    <script src="{{URL::asset('Dashboard/js/form-elements.js')}}"></script>
+    <script src="{{URL::asset('dashboard/js/form-elements.js')}}"></script>
+    <script>
+        $(document).ready(function() {
+            if ($.fn.select2) {
+                $('.select2').select2({
+                    placeholder: "{{ trans('forms.select_option') }}",
+                    allowClear: true
+                });
+            }
+
+            $('#item_type_id_edit').on('change', function() {
+                var selectedOption = $(this).find('option:selected');
+                var price = selectedOption.data('price');
+                var itemName = selectedOption.data('name');
+                var currentDescription = $('#description_edit').val();
+                var itemValue = $(this).val();
+
+                if (price !== undefined && itemValue !== "") {
+                    $('#Debit_edit').val(parseFloat(price).toFixed(2));
+                } else if (itemValue === "") {
+                    // $('#Debit_edit').val(''); // اتركه أو امسحه حسب الرغبة
+                }
+
+                if (itemName !== undefined && itemValue !== "" && (currentDescription === "" || currentDescription.startsWith("رسوم خدمة:") || currentDescription.startsWith("رسوم باقة:"))) {
+                    var prefix = itemValue.startsWith("service_") ? "رسوم خدمة: " : (itemValue.startsWith("group_") ? "رسوم باقة: " : "");
+                    $('#description_edit').val(prefix + itemName);
+                } else if (itemValue === "" && (currentDescription.startsWith("رسوم خدمة:") || currentDescription.startsWith("رسوم باقة:"))) {
+                    // $('#description_edit').val('');
+                }
+            });
+        });
+    </script>
 @endsection

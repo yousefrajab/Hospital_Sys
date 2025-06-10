@@ -32,8 +32,8 @@
             </div>
 
             <!-- Modal Body -->
-            <form action="{{ route('admin.Service.update', 'test') }}" method="post" class="needs-validation" novalidate
-                autocomplete="off">
+            <form action="{{ route('admin.Service.update', 'test') }}" method="post" class="needs-validation"
+                novalidate autocomplete="off">
                 @csrf
                 @method('patch')
                 <input type="hidden" name="id" value="{{ $service->id }}">
@@ -68,6 +68,25 @@
                         <div class="invalid-feedback animated fadeIn">
                             {{ trans('validation.min.numeric', ['attribute' => trans('Services.price'), 'min' => 0]) }}
                         </div>
+                    </div>
+
+                    <!-- Doctor Selection (Standard Select) -->
+                    <div class="form-group floating-label-group mt-4">
+                        <label for="doctor_id_edit_{{ $service->id }}" class="floating-label active">
+                            <i class="fas fa-user-md mr-2"></i>{{ trans('doctors.Doctor') }}
+                        </label>
+                        <select name="doctor_id" id="doctor_id_edit_{{ $service->id }}"
+                            class="form-control custom-select floating-input"> {{-- Use form-control or custom-select for Bootstrap styling --}}
+                            <option value="">{{ trans('doctors.select_doctor_optional') }}</option>
+                            @php $allDoctorsCollection = collect($doctors ?? []); @endphp
+                            @foreach ($allDoctorsCollection as $doctor)
+                                <option value="{{ $doctor->id }}"
+                                    {{ $service->doctor_id == $doctor->id ? 'selected' : '' }}>
+                                    {{ $doctor->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        {{-- You can add validation for doctor_id if it's required --}}
                     </div>
 
                     <!-- Description -->

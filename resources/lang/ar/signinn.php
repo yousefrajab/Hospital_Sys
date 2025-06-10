@@ -35,8 +35,18 @@ return array(
     'Laboratory Staff Login' => 'تسجيل دخول فني المختبر',
     'Patient Login' => 'تسجيل دخول المريض',
     'Don\'t have an account?' => 'لا تمتلك حساب؟',
-    'Create new account' => 'إنشاء حساب جديد'
-    // 'Radiological Officer'=>'Radiological Officer',
-    // 'Radiological Officer'=>'Radiological Officer',
+    'Create new account' => 'إنشاء حساب جديد',
+    'pharmacy Staff Login'=>'تسجيل دخول الصيدلي',
+    'pharmacy_employee'=>'موظف صيدلية',
+    'Pharmacy Manager'=>'مدير صيدلية',
+    'Pharmacy Manager Login'=>'تسجيل دخول مدير صيدلية',
+    'Pharmacy Employees Login'=>'تسجيل دخول موظف صيدلية',
+
+
+
+
+
+
+
 
 );

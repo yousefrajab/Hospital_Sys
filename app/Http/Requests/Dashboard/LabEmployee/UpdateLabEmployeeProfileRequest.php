@@ -2,74 +2,89 @@
 
 namespace App\Http\Requests\Dashboard\LabEmployee;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\GlobalEmail;        // للإيميل
+use App\Models\GlobalIdentifier;  // ** لرقم الهوية **
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Foundation\Http\FormRequest;
+use App\Models\LaboratorieEmployee; // ** استيراد موديل الموظف الحالي **
 
 class UpdateLabEmployeeProfileRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize(): bool
     {
-        // التأكد من أن المستخدم المسجل هو موظف أشعة
         return Auth::guard('laboratorie_employee')->check();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
-        $employeeId = Auth::guard('laboratorie_employee')->id();
+        /** @var \App\Models\LaboratorieEmployee $currentEmployee */ // توضيح نوع المتغير
+        $currentEmployee = Auth::guard('laboratorie_employee')->user();
+        $employeeId = $currentEmployee->id;
 
         return [
             'name' => ['required', 'string', 'max:255'],
+            'national_id' => [
+                'required', // افترض أنه مطلوب دائمًا
+                'string',
+                'digits:9', // أو الطول المناسب لرقم الهوية
+                Rule::unique('laboratorie_employees', 'national_id')->ignore($employeeId), // 1. فريد في جدول الموظفين
+                function ($attribute, $value, $fail) use ($currentEmployee) { // 2. فريد في global_identifiers إذا تغير
+                    if ($currentEmployee && $value !== $currentEmployee->getOriginal('national_id')) {
+                        // تحقق من جدول global_identifiers باستخدام عمود national_id
+                        if (GlobalIdentifier::where('national_id', $value)->exists()) {
+                            $fail('رقم الهوية هذا مستخدم بالفعل من قبل حساب آخر في النظام.');
+                        }
+                    }
+                },
+            ],
             'email' => [
                 'required',
-                'string',
                 'email',
-                'max:255',
-                Rule::unique('laboratorie_employees')->ignore($employeeId), // فريد باستثناء الموظف الحالي
+                Rule::unique('laboratorie_employees', 'email')->ignore($employeeId), // 1. فريد في جدول الموظفين
+                function ($attribute, $value, $fail) use ($currentEmployee) { // 2. فريد في global_emails إذا تغير
+                    if ($currentEmployee && strtolower($value) !== strtolower($currentEmployee->getOriginal('email'))) {
+                        if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                            $fail('هذا البريد الإلكتروني مستخدم بالفعل من قبل حساب آخر في النظام.');
+                        }
+                    }
+                },
             ],
             'phone' => [
-                'nullable', // اجعله اختياريًا أو required حسب الحاجة
+                'nullable', // أو 'required' حسب الحاجة
                 'string',
-                'regex:/^05\d{8}$/', // مثال للجوال السعودي
-                Rule::unique('laboratorie_employees')->ignore($employeeId),
+                'regex:/^05\d{8}$/',
+                Rule::unique('laboratorie_employees', 'phone')->ignore($employeeId), // ** تم تعديل هنا ليكون اسم الجدول صحيحًا **
             ],
-            // كلمة المرور الحالية مطلوبة فقط إذا تم إدخال كلمة مرور جديدة
             'current_password' => ['nullable', 'string', 'required_with:password'],
-            // كلمة المرور الجديدة اختيارية، وتتطلب تأكيدًا وقواعد قوة
             'password' => ['nullable', 'string', 'confirmed', Password::min(8)->mixedCase()->numbers()],
-            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'], // 2MB
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'], // ** تم إضافة حقل الصورة هنا **
         ];
     }
 
-    /**
-     * رسائل التحقق المخصصة (اختياري).
-     *
-     * @return array
-     */
     public function messages(): array
     {
         return [
             'name.required' => 'حقل الاسم مطلوب.',
+            'national_id.required' => 'رقم الهوية مطلوب.',
+            'national_id.string' => 'رقم الهوية يجب أن يكون نصًا.',
+            'national_id.max' => 'رقم الهوية طويل جدًا.',
+            'national_id.unique' => 'رقم الهوية هذا مستخدم بالفعل من قبل موظف آخر.',
+            // رسالة GlobalIdentifier لـ national_id تأتي من الـ closure
             'email.required' => 'حقل البريد الإلكتروني مطلوب.',
-            'email.email' => 'صيغة البريد الإلكتروني غير صحيحة.',
-            'email.unique' => 'البريد الإلكتروني مستخدم بالفعل.',
+            'email.email' => 'صيغة البريد الإلكتروني غير صالحة.',
+            'email.unique' => 'البريد الإلكتروني مستخدم بالفعل من قبل موظف آخر.',
+            // رسالة GlobalEmail لـ email تأتي من الـ closure
+            'phone.string' => 'رقم الهاتف يجب أن يكون نصيًا.',
             'phone.regex' => 'صيغة رقم الهاتف غير صحيحة (مثال: 05xxxxxxxx).',
-            'phone.unique' => 'رقم الهاتف مستخدم بالفعل.',
+            'phone.unique' => 'رقم الهاتف مستخدم بالفعل من قبل موظف آخر.',
             'current_password.required_with' => 'يجب إدخال كلمة المرور الحالية لتغيير كلمة المرور.',
             'password.confirmed' => 'تأكيد كلمة المرور الجديدة غير متطابق.',
             'password.min' => 'كلمة المرور الجديدة يجب أن لا تقل عن 8 أحرف.',
-            'photo.*' => 'خطأ في تحميل الصورة (تأكد من النوع والحجم).',
+            'photo.image' => 'الملف المرفوع يجب أن يكون صورة.',
+            'photo.mimes' => 'صيغ الصور المسموح بها هي: jpeg, png, jpg, gif, svg, webp.',
+            'photo.max' => 'حجم الصورة يجب ألا يتجاوز 2 ميجابايت.',
         ];
     }
 }

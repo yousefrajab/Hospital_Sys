@@ -27,11 +27,11 @@
                          @method('PUT')
                          <div class="form-group">
                              <label for="exampleFormControlTextarea1">التشخيص</label>
-                             <textarea class="form-control" id="exampleFormControlTextarea1" name="description_employee" rows="3"></textarea>
+                             <textarea class="form-control" id="exampleFormControlTextarea1" name="description_employee" rows="3" required></textarea>
                          </div>
                          <div class="form-group">
                              <label for="exampleFormControlTextarea1">المرفقات</label>
-                             <input type="file" name="photos[]" accept="image/*" multiple>
+                             <input type="file" name="photos[]" accept="image/*" multiple  required>
                          </div>
                          <button type="submit" class="btn btn-primary">تاكيد</button>
                      </form>

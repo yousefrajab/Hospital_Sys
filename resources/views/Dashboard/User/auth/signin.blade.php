@@ -381,12 +381,17 @@
                                                     <option value="" selected disabled>
                                                         {{ trans('signinn.Choose account type.') }}..</option>
                                                     <option value="admin">{{ trans('signinn.System Manager') }}</option>
+                                                     <option value="pharmacy_manager">{{ trans('signinn.Pharmacy Manager') }}</option>
+                                                     <option value="pharmacy_employee">
+                                                        {{ trans('signinn.pharmacy_employee') }}</option>
                                                     <option value="doctor">{{ trans('signinn.Doctor') }}</option>
                                                     <option value="ray_employee">{{ trans('signinn.Radiological staff') }}
                                                     </option>
                                                     <option value="laboratorie_employee">
                                                         {{ trans('signinn.laboratory staff') }}</option>
                                                     <option value="patient">{{ trans('signinn.patient') }}</option>
+
+
                                                 </select>
                                             </div>
 
@@ -428,7 +433,7 @@
                                                 </form>
                                                 <div class="main-signin-footer mt-4 text-center">
                                                     <p class="mb-2"><a
-                                                            href="{{ route('password.request') }}">{{ trans('signinn.forgot password') }}</a>
+                                                            href="{{ route('admin.password.request') }}">{{ trans('signinn.forgot password') }}</a>
                                                     </p>
                                                     <p class="mb-0">{{ trans('signinn.Having trouble getting in?') }}<a
                                                             href="#">{{ trans('signinn.Contact Technical Support') }}</a>
@@ -475,7 +480,7 @@
                                                 </form>
                                                 <div class="main-signin-footer mt-4 text-center">
                                                     <p class="mb-2"><a
-                                                            href="{{ route('password.request') }}">{{ trans('signinn.forgot password') }}</a>
+                                                            href="{{ route('doctor.password.request') }}">{{ trans('signinn.forgot password') }}</a>
                                                     </p>
                                                     <p class="mb-0">{{ trans('signinn.Having trouble getting in?') }} <a
                                                             href="#">{{ trans('signinn.Contact Technical Support') }}</a>
@@ -522,7 +527,7 @@
                                                 </form>
                                                 <div class="main-signin-footer mt-4 text-center">
                                                     <p class="mb-2"><a
-                                                            href="{{ route('password.request') }}">{{ trans('signinn.forgot password') }}</a>
+                                                            href="{{ route('ray_employee.password.request') }}">{{ trans('signinn.forgot password') }}</a>
                                                     </p>
                                                     <p class="mb-0">{{ trans('signinn.Having trouble getting in?') }} <a
                                                             href="#">{{ trans('signinn.Contact Technical Support') }}</a>
@@ -569,13 +574,62 @@
                                                 </form>
                                                 <div class="main-signin-footer mt-4 text-center">
                                                     <p class="mb-2"><a
-                                                            href="{{ route('password.request') }}">{{ trans('signinn.forgot password') }}</a>
+                                                            href="{{ route('laboratorie_employee.password.request') }}">{{ trans('signinn.forgot password') }}</a>
                                                     </p>
                                                     <p class="mb-0">{{ trans('signinn.Having trouble getting in?') }} <a
                                                             href="#">{{ trans('signinn.Contact Technical Support') }}</a>
                                                     </p>
                                                 </div>
                                             </div>
+
+
+                                            <!-- pharmacy_employee Panel -->
+                                            <div class="panel" id="pharmacy_employee">
+                                                <h4 class="text-center mb-4">{{ trans('signinn.pharmacy Staff Login') }}
+                                                </h4>
+                                                <form method="POST" action="{{ route('login.pharmacy_employee') }}">
+                                                    @csrf
+                                                    <div class="form-group">
+                                                        <label>{{ trans('signinn.email') }}</label>
+                                                        <input class="form-control"
+                                                            placeholder="{{ trans('signinn.enter your email') }}"
+                                                            type="email" name="email" value="{{ old('email') }}"
+                                                            required autofocus>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>{{ trans('signinn.password') }}</label>
+                                                        <div class="input-group">
+                                                            <input class="form-control"
+                                                                placeholder="{{ trans('signinn.enter your password') }}"
+                                                                type="password" name="password" id="pharmacypassword"
+                                                                required>
+                                                            <span class="input-group-text toggle-password"
+                                                                data-target="#pharmacypassword">
+                                                                <i class="fas fa-eye"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group form-check mt-3">
+                                                        <input type="checkbox" class="form-check-input" id="pharmacyRemember">
+                                                        <label class="form-check-label"
+                                                            for="pharmacyRemember">{{ trans('signinn.remember me') }}</label>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-hospital btn-block mt-4"
+                                                        style="color: white">
+                                                        <i class="fas fa-flask mr-2" style="color: white"></i>
+                                                        {{ trans('signinn.login') }}
+                                                    </button>
+                                                </form>
+                                                <div class="main-signin-footer mt-4 text-center">
+                                                    <p class="mb-2"><a
+                                                            href="#">{{ trans('signinn.forgot password') }}</a>
+                                                    </p>
+                                                    <p class="mb-0">{{ trans('signinn.Having trouble getting in?') }} <a
+                                                            href="#">{{ trans('signinn.Contact Technical Support') }}</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+
 
                                             <!-- Patient Panel -->
                                             <div class="panel" id="patient">
@@ -616,13 +670,63 @@
                                                 </form>
                                                 <div class="main-signin-footer mt-4 text-center">
                                                     <p class="mb-2"><a
-                                                            href="{{ route('password.request') }}">{{ trans('signinn.forgot password') }}</a>
+                                                            href="{{ route('patient.password.request') }}">{{ trans('signinn.forgot password') }}</a>
                                                     </p>
                                                     <p class="mb-0">{{ trans('signinn.Don\'t have an account?') }} <a
                                                             href="{{ route('register.patient') }}">{{ trans('signinn.Create new account') }}</a>
                                                     </p>
                                                 </div>
                                             </div>
+
+                                            <!-- pharmacy_manager Panel -->
+                                            <div class="panel" id="pharmacy_manager">
+                                                <h4 class="text-center mb-4">{{ trans('signinn.Pharmacy Manager Login') }}
+                                                </h4>
+                                                <form method="POST" action="{{ route('login.pharmacy_manager') }}">
+                                                    @csrf
+                                                    <div class="form-group">
+                                                        <label>{{ trans('signinn.email') }}</label>
+                                                        <input class="form-control"
+                                                            placeholder="{{ trans('signinn.enter your email') }}"
+                                                            type="email" name="email" value="{{ old('email') }}"
+                                                            required autofocus>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>{{ trans('signinn.password') }}</label>
+                                                        <div class="input-group">
+                                                            <input class="form-control"
+                                                                placeholder="{{ trans('signinn.enter your password') }}"
+                                                                type="password" name="password" id="pharmacypassword"
+                                                                required>
+                                                            <span class="input-group-text toggle-password"
+                                                                data-target="#pharmacypassword">
+                                                                <i class="fas fa-eye"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group form-check mt-3">
+                                                        <input type="checkbox" class="form-check-input" id="pharmacyRemember">
+                                                        <label class="form-check-label"
+                                                            for="pharmacyRemember">{{ trans('signinn.remember me') }}</label>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-hospital btn-block mt-4"
+                                                        style="color: white">
+                                                        <i class="fas fa-flask mr-2" style="color: white"></i>
+                                                        {{ trans('signinn.login') }}
+                                                    </button>
+                                                </form>
+                                                <div class="main-signin-footer mt-4 text-center">
+                                                    <p class="mb-2"><a
+                                                            href="#">{{ trans('signinn.forgot password') }}</a>
+                                                    </p>
+                                                    <p class="mb-0">{{ trans('signinn.Having trouble getting in?') }} <a
+                                                            href="#">{{ trans('signinn.Contact Technical Support') }}</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -929,4 +1033,3 @@
         });
     </script>
 @endsection
-

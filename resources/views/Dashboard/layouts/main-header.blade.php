@@ -190,9 +190,9 @@
                                 <span class="badge badge-pill badge-warning mr-auto my-auto float-left">Mark All
                                     Read</span>
                             </div>
-                            <p data-count="{{ App\Models\Notification::CountNotification(auth()->user()->id)->count() }}"
+                            <p data-count="{{ App\Models\Notification::CountNotification(auth()->user())->count() }}"
                                 class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 notif-count">
-                                {{ App\Models\Notification::CountNotification(auth()->user()->id)->count() }}</p>
+                                {{ App\Models\Notification::CountNotification(auth()->user())->count() }}</p>
                         </div>
                         <div class="main-notification-list Notification-scroll">
 
@@ -211,7 +211,7 @@
                                 </a>
                             </div>
 
-                            @foreach (App\Models\Notification::where('user_id', auth()->user()->id)->where('reader_status', 0)->get() as $notification)
+                            @foreach (App\Models\Notification::where('user_id', auth()->user())->where('reader_status', 0)->get() as $notification)
                                 <a class="d-flex p-3 border-bottom" href="#">
                                     <div class="notifyimg bg-pink">
                                         <i class="la la-file-alt text-white"></i>
@@ -257,7 +257,7 @@
                             if ($user->image) {
                                 $imagePath = asset('Dashboard/img/admin_photos/' . $user->image->filename); // مسار صور الأدمن
                             } else {
-                                $imagePath = asset('Dashboard/img/default_admin_avatar.png'); // صورة أدمن افتراضية
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة أدمن افتراضية
                             }
                         } elseif (Auth::guard('doctor')->check()) {
                             $user = Auth::guard('doctor')->user();
@@ -275,7 +275,7 @@
                             if ($user->image) {
                                 $imagePath = asset('Dashboard/img/rayEmployees/' . $user->image->filename); // مسار صور موظفي الأشعة
                             } else {
-                                $imagePath = asset('Dashboard/img/default_ray_employee_avatar.png'); // صورة موظف أشعة افتراضية
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة موظف أشعة افتراضية
                             }
                         } elseif (Auth::guard('laboratorie_employee')->check()) {
                             $user = Auth::guard('laboratorie_employee')->user();
@@ -284,7 +284,7 @@
                             if ($user->image) {
                                 $imagePath = asset('Dashboard/img/laboratorieEmployees/' . $user->image->filename); // مسار صور موظفي المختبر
                             } else {
-                                $imagePath = asset('Dashboard/img/default_lab_employee_avatar.png'); // صورة موظف مختبر افتراضية
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة موظف مختبر افتراضية
                             }
                         } elseif (Auth::guard('patient')->check()) {
                             // افترض أن لديك guard وموديل للمرضى
@@ -294,7 +294,27 @@
                             if ($user->image) {
                                 $imagePath = asset('Dashboard/img/patients/' . $user->image->filename); // مسار صور المرضى
                             } else {
-                                $imagePath = asset('Dashboard/img/default_patient_avatar.png'); // صورة مريض افتراضية
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مريض افتراضية
+                            }
+                        } elseif (Auth::guard('pharmacy_employee')->check()) {
+                            // افترض أن لديك guard وموديل للمرضى
+                            $user = Auth::guard('pharmacy_employee')->user();
+                            $userName = $user->name;
+                            $userEmail = $user->email;
+                            if ($user->image) {
+                                $imagePath = asset('Dashboard/img/pharmacyEmployees/' . $user->image->filename); // مسار صور المرضى
+                            } else {
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مريض افتراضية
+                            }
+                        } elseif (Auth::guard('pharmacy_manager')->check()) {
+                            // افترض أن لديك guard وموديل للمرضى
+                            $user = Auth::guard('pharmacy_manager')->user();
+                            $userName = $user->name;
+                            $userEmail = $user->email;
+                            if ($user->image) {
+                                $imagePath = asset('Dashboard/img/pharmacy_managers/' . $user->image->filename); // مسار صور المرضى
+                            } else {
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مريض افتراضية
                             }
                         } elseif (Auth::guard('web')->check()) {
                             // للمستخدم العادي (إذا كان لديك)
@@ -305,9 +325,10 @@
                                 // افترض أن المستخدم العادي لديه علاقة صورة أيضًا
                                 $imagePath = asset('Dashboard/img/user_photos/' . $user->image->filename); // مسار صور المستخدمين
                             } else {
-                                $imagePath = asset('Dashboard/img/default_user_avatar.png'); // صورة مستخدم افتراضية
+                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مستخدم افتراضية
                             }
                         }
+
                     @endphp
 
                     <a class="profile-user d-flex" href="#">
@@ -332,6 +353,7 @@
                         @php
                             $profileShowRoute = '#'; // قيمة افتراضية
                             $profileEditRoute = '#'; // قيمة افتراضية
+                            $webEditRoute = '#'; // قيمة افتراضية
 
                             if (Auth::guard('admin')->check()) {
                                 $profileShowRoute = route('admin.profile.show');
@@ -341,17 +363,29 @@
                                 $profileEditRoute = route('doctor.profile.edit'); // تأكد من وجود هذا الـ route
                             } elseif (Auth::guard('ray_employee')->check()) {
                                 $profileShowRoute = route('ray_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                // $profileEditRoute = route('ray_employee.profile.edit');
+                                $profileEditRoute = route('ray_employee.profile.edit');
                             } elseif (Auth::guard('laboratorie_employee')->check()) {
-                                // $profileShowRoute = route('laboratorie_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                // $profileEditRoute = route('laboratorie_employee.profile.edit');
+                                $profileShowRoute = route('laboratorie_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                $profileEditRoute = route('laboratorie_employee.profile.edit');
                             } elseif (Auth::guard('patient')->check()) {
-                                // $profileShowRoute = route('patient.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                // $profileEditRoute = route('patient.profile.edit');
+                                $webEditRoute = url('/home');
+                                $profileShowRoute = route('profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                $profileEditRoute = route('profile.edit');
+                            } elseif (Auth::guard('pharmacy_employee')->check()) {
+                                $profileShowRoute = route('pharmacy_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                $profileEditRoute = route('pharmacy_employee.profile.edit');
+                            } elseif (Auth::guard('pharmacy_manager')->check()) {
+                                $profileShowRoute = route('pharmacy_manager.profile.show'); // ستحتاج لإنشاء هذه الـ routes
+                                $profileEditRoute = route('pharmacy_manager.profile.edit');
                             }
                             // يمكنك إضافة المزيد من الشروط لأنواع المستخدمين الأخرى
                         @endphp
-
+                        @if ($webEditRoute !== '#')
+                            <a class="dropdown-item" href="{{ $webEditRoute }}"
+                                class="btn btn-outline-secondary ripple" target="_blank" ;>
+                                <i class="fas fa-home me-1"></i> الموقع الخارجي
+                            </a>
+                        @endif
                         @if ($profileShowRoute !== '#')
                             <a class="dropdown-item" href="{{ $profileShowRoute }}">
                                 <i class="bx bx-user-circle"></i>الملف الشخصي
@@ -363,6 +397,8 @@
                                 <i class="bx bx-cog"></i>تعديل الملف الشخصي
                             </a>
                         @endif
+
+
 
                         {{-- قسم تسجيل الخروج --}}
                         @php
@@ -379,6 +415,10 @@
                                 $logoutRoute = route('logout.laboratorie_employee');
                             } elseif (Auth::guard('patient')->check()) {
                                 $logoutRoute = route('logout.patient');
+                            } elseif (Auth::guard('pharmacy_employee')->check()) {
+                                $logoutRoute = route('logout.pharmacy_employee');
+                            } elseif (Auth::guard('pharmacy_manager')->check()) {
+                                $logoutRoute = route('logout.pharmacy_manager');
                             }
                         @endphp
 
@@ -424,7 +464,7 @@
     var new_message = notificationsWrapper.find('.new_message');
     new_message.hide();
 
-    Echo.private('create-invoice.{{ auth()->user()->id }}').listen('.create-invoice', (data) => {
+    Echo.private('create-invoice.{{ auth()->user() }}').listen('.create-invoice', (data) => {
         var newNotificationHtml = `
        <h4 class="notification-label mb-1">` + data.message + data.patient + `</h4>
        <div class="notification-subtext">` + data.created_at + `</div>`;

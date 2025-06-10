@@ -19,7 +19,6 @@ class LaboratorieEmployeeTableSeeder extends Seeder
 
         $lab_employee->name = 'سمير احمد ';
         $lab_employee->national_id = '401234567';
-
          $lab_employee->email = 'Lab@gmail.com';
          $lab_employee->phone = '0592612643';
          $lab_employee->status = 1;

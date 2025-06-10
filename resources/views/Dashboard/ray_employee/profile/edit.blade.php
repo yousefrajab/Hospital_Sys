@@ -284,7 +284,7 @@
                             <label for="rayPhotoInputEdit" class="ray-upload-btn">
                                 <i class="fas fa-upload me-1"></i> اختيار صورة
                             </label>
-                            <input type="file" name="photo" id="rayPhotoInputEdit" accept="image/*,image/webp"
+                            <input type="file" name="photo" id="rayPhotoInputEdit"
                                    onchange="rayDisplayFileNameAndPreview(this)">
                             <span id="rayFileNameDisplayEdit" class="ray-file-name">لم يتم اختيار ملف</span>
                             @error('photo') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -329,7 +329,7 @@
                         <div class="ray-form-group">
                             <label for="rayNationalIdEdit" class="ray-form-label">رقم الهوية</label>
                             <input type="text" id="rayNationalIdEdit" name="national_id" class="ray-form-control @error('national_id') is-invalid @enderror"
-                                   value="{{ old('national_id', $employee->national_id) }}" pattern="[0-9]{9,10}" maxlength="10" placeholder="9 أو 10 أرقام">
+                                   value="{{ old('national_id', $employee->national_id) }}"  maxlength="9" placeholder="9   أرقام">
                             @error('national_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>

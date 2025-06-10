@@ -17,17 +17,13 @@
                 <div class="user-avatar-wrapper">
                     <img alt="user-img" class="avatar avatar-lg rounded-circle user-avatar"
                         src="{{ Auth::guard('doctor')->user()->image ? asset('Dashboard/img/doctors/' . Auth::guard('doctor')->user()->image->filename) : asset('Dashboard/img/doctor_default.png') }}">
-                    <span class="avatar-status-indicator {{ Auth::guard('doctor')->user()->status ? 'online' : 'offline' }}"></span>
-
-                        {{-- <span class="avatar-status profile-status bg-green"></span> --}}
-
-                </div>
-                <div class="user-info">
+                    <span
+                        class="avatar-status-indicator {{ Auth::guard('doctor')->user()->status ? 'online' : 'offline' }}"></span><br>
                     <h6 class="font-weight-semibold user-name mb-1">{{ Auth::guard('doctor')->user()->name }}</h6>
-                    <span class="text-muted user-email d-block">{{ Auth::guard('doctor')->user()->email }}</span>
+                    <span class="text-muted user-email d-block">{{ Auth::guard('doctor')->user()->email }}</span><br>
                 </div>
+
             </a>
-            {{-- زر تسجيل الخروج يمكن وضعه هنا أو في الأسفل --}}
         </div>
 
         <ul class="side-menu">
@@ -39,80 +35,155 @@
                 </a>
             </li>
 
-            {{-- 2. الكشوفات --}}
-            <li class="side-item side-item-category">الإدارة الطبية</li>
+
+
+            <li class="side-item side-item-category">إدارة الوصفات الطبية</li>
             <li
-                class="slide {{ request()->routeIs(['invoices.*', 'completedInvoices', 'reviewInvoices']) ? 'open active' : '' }}">
-                {{-- 'open' للحفاظ على الفتح --}}
+                class="slide {{ request()->routeIs(['doctor.prescriptions.*', 'doctor.patients.search_for_prescription']) ? 'open active' : '' }}">
                 <a class="side-menu__item" data-toggle="slide" href="#">
-                    <i class="side-menu__icon fas fa-notes-medical"></i> {{-- أيقونة طبية --}}
-                    <span class="side-menu__label">الكشوفات</span>
-                    <i class="angle fe fe-chevron-left"></i></a> {{-- تغيير اتجاه السهم --}}
+                    <i class="side-menu__icon fas fa-file-medical-alt"></i> {{-- أيقونة للوصفات --}}
+                    <span class="side-menu__label">الوصفات الطبية</span>
+                    <i class="angle fe fe-chevron-left"></i>
+                </a>
                 <ul class="slide-menu">
-                    <li class="{{ request()->routeIs('invoices.index') ? 'current' : '' }}"><a class="slide-item"
-                            href="{{ route('doctor.invoices.index') }}">قائمة الكشوفات</a></li>
-                    <li class="{{ request()->routeIs('completedInvoices') ? 'current' : '' }}"><a class="slide-item"
-                            href="{{ route('doctor.completedInvoices') }}">الكشوفات المكتملة</a></li>
-                    <li class="{{ request()->routeIs('reviewInvoices') ? 'current' : '' }}"><a class="slide-item"
-                            href="{{ route('doctor.reviewInvoices') }}">المراجعات</a></li>
+                    {{-- الرابط لإنشاء وصفة جديدة (سيوجه لصفحة البحث عن مريض أولاً) --}}
+                    <li class="{{ request()->routeIs('doctor.patients.search_for_prescription') ? 'current' : '' }}">
+                        <a class="slide-item" href="{{ route('doctor.patients.search_for_prescription') }}">
+                            <i class="fas fa-plus-circle fa-xs me-2"></i>إنشاء وصفة جديدة
+                        </a>
+                    </li>
+                    {{-- الرابط لقائمة الوصفات التي أنشأها الطبيب --}}
+                    <li class="{{ request()->routeIs('prescriptions.index') ? 'current' : '' }}">
+                        <a class="slide-item" href="{{ route('prescriptions.index') }}">
+                            <i class="fas fa-list-ul fa-xs me-2"></i>قائمة وصفاتي
+                        </a>
+                    </li>
+                    <li class="{{ request()->routeIs('doctor.prescriptions.approvalRequests') ? 'current' : '' }}">
+                        <a class="slide-item" href="{{ route('doctor.prescriptions.approvalRequests') }}">
+                            <i class="fas fa-user-nurse fa-xs me-2 text-warning"></i>طلبات تجديد للموافقة
+                            {{-- يمكن إضافة عداد هنا إذا كان لديك طريقة سهلة لحساب عدد هذه الطلبات --}}
+                            {{-- @php $pendingApprovalCount = \App\Models\Prescription::getPendingDoctorApprovalCount(Auth::id()); @endphp
+                            @if ($pendingApprovalCount > 0)
+                        <span class="badge bg-warning-transparent text-warning float-end">{{ $pendingApprovalCount }}</span>
+                              @endif --}}
+                        </a>
+                    </li>
+                    <li
+                        class="{{ request()->routeIs('doctor.prescriptions.adherenceDashboard') ? 'active is-expanded' : '' }}">
+                        <a class="slide-item" href="{{ route('doctor.prescriptions.adherenceDashboard') }}">
+                            <i class="fas fa-chart-line fa-xs me-2"></i>متابعة التزام المرضى
+                        </a>
+                    </li>
+
+                    {{-- (اختياري) يمكنك إضافة روابط أخرى هنا لاحقًا --}}
+                    {{--
+        <li class="{{ request()->routeIs('doctor.prescriptions.pending_review') ? 'current' : '' }}">
+            <a class="slide-item" href="#">
+                <i class="fas fa-hourglass-half fa-xs me-2"></i>وصفات تحتاج مراجعة
+            </a>
+        </li>
+        --}}
                 </ul>
             </li>
 
-            {{-- 3. المحادثات --}}
-            <li class="slide {{ request()->routeIs(['list.patients', 'chat.patients']) ? 'open active' : '' }}">
+            {{-- إدارة الخدمات بواسطة الطبيب --}}
+            <li class="side-item side-item-category">إدارة الخدمات</li> {{-- يمكنك تغيير هذا العنوان إذا أردت --}}
+            <li class="slide {{ request()->routeIs(['doctor.services_management.*']) ? 'open active' : '' }}">
                 <a class="side-menu__item" data-toggle="slide" href="#">
-                    <i class="side-menu__icon fas fa-headset"></i> {{-- أيقونة تواصل --}}
-                    <span class="side-menu__label">التواصل مع المرضى</span>
+                    <i class="side-menu__icon fas fa-concierge-bell"></i> {{-- أيقونة للخدمات --}}
+                    <span class="side-menu__label">خدماتي</span> {{-- أو "إدارة الخدمات" --}}
                     <i class="angle fe fe-chevron-left"></i></a>
                 <ul class="slide-menu">
-                    <li class="{{ request()->routeIs('list.patients') ? 'current' : '' }}"><a class="slide-item"
-                            href="{{ route('doctor.list.patients') }}">قائمة المرضى</a></li>
-                    <li class="{{ request()->routeIs('chat.patients') ? 'current' : '' }}"><a class="slide-item"
-                            href="{{ route('doctor.chat.patients') }}">صندوق الوارد</a></li>
-                </ul>
-            </li>
-            <li class="side-item side-item-category">إدارة المواعيد</li> {{-- أو اسم فئة أنسب --}}
-            <li class="slide {{ request()->routeIs('doctor.appointments') ? 'active' : '' }}"> {{-- التحقق من المسار النشط --}}
-                <a class="side-menu__item" href="{{ route('doctor.appointments') }}"> {{-- استخدام اسم المسار الجديد --}}
-                    <i class="side-menu__icon fas fa-calendar-check"></i> {{-- أيقونة مناسبة --}}
-                    <span class="side-menu__label">مواعيـدي</span> {{-- اسم الرابط --}}
-                </a>
-            </li>
+                    <li class="{{ request()->routeIs('doctor.services_management.index') ? 'current' : '' }}">
+                        <a class="slide-item" href="{{ route('doctor.services_management.index') }}">
+                            عرض وإدارة الخدمات
+                        </a>
+                    </li>
+                    <li class="{{ request()->routeIs('doctor.services_management.create') ? 'current' : '' }}">
+                        <a class="slide-item" href="{{ route('doctor.services_management.create') }}">
+                            إنشاء خدمة جديدة
+                        </a>
+                    </li>
 
-            {{-- 4. إدارة الجدول (مقترح) --}}
-            <li class="side-item side-item-category">الإعدادات الشخصية</li>
-            <li class="slide {{ request()->routeIs('doctor.schedule.show') ? 'open active' : '' }}">
-                <a class="side-menu__item" data-toggle="slide" href="#">
-                    <i class="side-menu__icon fas fa-calendar-check"></i> {{-- أيقونة جدول --}}
-                    <span class="side-menu__label">إدارة جدولي</span>
-                    <i class="angle fe fe-chevron-left"></i></a>
-                <ul class="slide-menu">
-                    <li><a class="slide-item" href="{{ route('doctor.schedule.show') }}">عرض الجدول الأسبوعي</a></li>
-                    <li><a class="slide-item" href="#">إدارة الاستراحات</a></li>
-                    <li><a class="slide-item" href="#">تحديد إجازة/عدم توفر</a></li>
-                </ul>
-            </li>
-            {{-- 5. الملف الشخصي (رابط مباشر) --}}
-            <li class="slide {{ request()->routeIs('doctor.profile.show') ? 'active' : '' }}">
-                <a class="side-menu__item" href="{{ route('doctor.profile.show') }}">
-                    <i class="side-menu__icon fas fa-user-cog"></i> {{-- أيقونة إعدادات المستخدم --}}
-                    <span class="side-menu__label">الملف الشخصي</span>
-                </a>
-            </li>
 
-            {{-- 6. تسجيل الخروج --}}
-            <li class="side-item side-item-category">الحساب</li>
-            <li class="slide">
-                @php $logoutRoute = route('logout.doctor'); /* تبسيط للمثال */ @endphp
-                <form method="POST" action="{{ $logoutRoute }}" id="logout-form-sidebar-pro">
-                    @csrf
-                    <a class="side-menu__item logout-link" href="{{ $logoutRoute }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form-sidebar-pro').submit();">
-                        <i class="side-menu__icon fas fa-sign-out-alt"></i>
-                        <span class="side-menu__label">تسجيل الخروج</span>
-                    </a>
-                </form>
             </li>
+        </ul>
+        </li>
+
+        {{-- 2. الكشوفات --}}
+        <li class="side-item side-item-category">الإدارة الطبية</li>
+        <li
+            class="slide {{ request()->routeIs(['invoices.*', 'completedInvoices', 'reviewInvoices']) ? 'open active' : '' }}">
+            {{-- 'open' للحفاظ على الفتح --}}
+            <a class="side-menu__item" data-toggle="slide" href="#">
+                <i class="side-menu__icon fas fa-notes-medical"></i> {{-- أيقونة طبية --}}
+                <span class="side-menu__label">الكشوفات</span>
+                <i class="angle fe fe-chevron-left"></i></a> {{-- تغيير اتجاه السهم --}}
+            <ul class="slide-menu">
+                <li class="{{ request()->routeIs('doctor.invoices.index') ? 'current' : '' }}"><a class="slide-item"
+                        href="{{ route('doctor.invoices.index') }}">قائمة الكشوفات</a></li>
+                <li class="{{ request()->routeIs('completedInvoices') ? 'current' : '' }}"><a class="slide-item"
+                        href="{{ route('doctor.completedInvoices') }}">الكشوفات المكتملة</a></li>
+                <li class="{{ request()->routeIs('reviewInvoices') ? 'current' : '' }}"><a class="slide-item"
+                        href="{{ route('doctor.reviewInvoices') }}">المراجعات</a></li>
+            </ul>
+        </li>
+
+        {{-- 3. المحادثات --}}
+        <li class="slide {{ request()->routeIs(['list.patients', 'chat.patients']) ? 'open active' : '' }}">
+            <a class="side-menu__item" data-toggle="slide" href="#">
+                <i class="side-menu__icon fas fa-headset"></i> {{-- أيقونة تواصل --}}
+                <span class="side-menu__label">التواصل مع المرضى</span>
+                <i class="angle fe fe-chevron-left"></i></a>
+            <ul class="slide-menu">
+                <li class="{{ request()->routeIs('list.patients') ? 'current' : '' }}"><a class="slide-item"
+                        href="{{ route('doctor.list.patients') }}">قائمة المرضى</a></li>
+                <li class="{{ request()->routeIs('chat.patients') ? 'current' : '' }}"><a class="slide-item"
+                        href="{{ route('doctor.chat.patients') }}">صندوق الوارد</a></li>
+            </ul>
+        </li>
+        <li class="side-item side-item-category">إدارة المواعيد</li> {{-- أو اسم فئة أنسب --}}
+        <li class="slide {{ request()->routeIs('doctor.appointments') ? 'active' : '' }}"> {{-- التحقق من المسار النشط --}}
+            <a class="side-menu__item" href="{{ route('doctor.appointments') }}"> {{-- استخدام اسم المسار الجديد --}}
+                <i class="side-menu__icon fas fa-calendar-check"></i> {{-- أيقونة مناسبة --}}
+                <span class="side-menu__label">مواعيـدي</span> {{-- اسم الرابط --}}
+            </a>
+        </li>
+
+        {{-- 4. إدارة الجدول (مقترح) --}}
+        <li class="side-item side-item-category">الإعدادات الشخصية</li>
+        <li class="slide {{ request()->routeIs('doctor.schedule.show') ? 'open active' : '' }}">
+            <a class="side-menu__item" data-toggle="slide" href="#">
+                <i class="side-menu__icon fas fa-calendar-check"></i> {{-- أيقونة جدول --}}
+                <span class="side-menu__label">إدارة جدولي</span>
+                <i class="angle fe fe-chevron-left"></i></a>
+            <ul class="slide-menu">
+                <li><a class="slide-item" href="{{ route('doctor.schedule.show') }}">عرض الجدول الأسبوعي</a></li>
+                <li><a class="slide-item" href="#">إدارة الاستراحات</a></li>
+                <li><a class="slide-item" href="#">تحديد إجازة/عدم توفر</a></li>
+            </ul>
+        </li>
+        {{-- 5. الملف الشخصي (رابط مباشر) --}}
+        <li class="slide {{ request()->routeIs('doctor.profile.show') ? 'active' : '' }}">
+            <a class="side-menu__item" href="{{ route('doctor.profile.show') }}">
+                <i class="side-menu__icon fas fa-user-cog"></i> {{-- أيقونة إعدادات المستخدم --}}
+                <span class="side-menu__label">الملف الشخصي</span>
+            </a>
+        </li>
+
+        {{-- 6. تسجيل الخروج --}}
+        <li class="side-item side-item-category">الحساب</li>
+        <li class="slide">
+            @php $logoutRoute = route('logout.doctor'); /* تبسيط للمثال */ @endphp
+            <form method="POST" action="{{ $logoutRoute }}" id="logout-form-sidebar-pro">
+                @csrf
+                <a class="side-menu__item logout-link" href="{{ $logoutRoute }}"
+                    onclick="event.preventDefault(); document.getElementById('logout-form-sidebar-pro').submit();">
+                    <i class="side-menu__icon fas fa-sign-out-alt"></i>
+                    <span class="side-menu__label">تسجيل الخروج</span>
+                </a>
+            </form>
+        </li>
 
         </ul>
     </div>

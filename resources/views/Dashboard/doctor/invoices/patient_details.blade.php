@@ -10,7 +10,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">Pages</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ Empty</span>
+                <h4 class="content-title mb-0 my-auto">بيانات المريض </h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ $patient->name }}</span>
             </div>
         </div>
     </div>
@@ -56,7 +56,7 @@
                                                         </div>
                                                         <div class="timeline-panel">
                                                             <div class="timeline-heading">
-                                                                <h6 class="timeline-title">Art Ramadani posted a status
+                                                                <h6 class="timeline-title">status
                                                                     update</h6>
                                                             </div>
                                                             <div class="timeline-body">
@@ -158,7 +158,7 @@
                                                             <th>#</th>
                                                             <th>اسم الخدمه</th>
                                                             <th>اسم الدكتور</th>
-                                                            {{-- <th> موظف مختبر</th> --}}
+                                                            <th> موظف مختبر</th>
 
                                                             <th>العمليات</th>
                                                         </tr>
@@ -169,23 +169,25 @@
                                                                 <td>{{ $loop->iteration }}</td>
                                                                 <td>{{ $patient_Laboratorie->description }}</td>
                                                                 <td>{{ $patient_Laboratorie->doctor->name }}</td>
+                                                                <td>{{ $patient_Laboratorie->employee->name ?? 'لا يوجد موظف' }}
+                                                                </td>
+
                                                                 @if ($patient_Laboratorie->doctor_id == auth()->user()->id)
                                                                     @if ($patient_Laboratorie->case == 0)
                                                                         <td>
                                                                             <a class="modal-effect btn btn-sm btn-primary"
                                                                                 data-effect="effect-scale"
                                                                                 data-toggle="modal"
-                                                                                href="#edit_xray_conversion{{ $patient_Laboratorie->id }}"><i
+                                                                                href="#edit_laboratorie_conversion{{ $patient_Laboratorie->id }}"><i
                                                                                     class="fas fa-edit"></i></a>
                                                                             <a class="modal-effect btn btn-sm btn-danger"
                                                                                 data-effect="effect-scale"
                                                                                 data-toggle="modal"
-                                                                                href="#delete{{ $patient_Laboratorie->id }}"><i
+                                                                                href="#deleted_laboratorie{{ $patient_Laboratorie->id }}"><i
                                                                                     class="las la-trash"></i></a>
                                                                         </td>
+                                                                        </td>
                                                                     @else
-
-
                                                                         <td>
                                                                             <a class="modal-effect btn btn-sm btn-warning"
                                                                                 href="{{ route('doctor.show.laboratorie', $patient_Laboratorie->id) }}"><i
@@ -193,7 +195,7 @@
                                                                         </td>
                                                                     @endif
                                                                 @endif
-                                                                {{-- <td>{{ $patient_ray->lab_employee->name }}</td> --}}
+
 
                                                             </tr>
                                                             @include('Dashboard.doctor.invoices.edit_laboratorie_conversion')

@@ -37,7 +37,7 @@
                                     <th>اسم الدكتور</th>
                                     <th>المطلوب</th>
                                     <th>حالة الفاتورة</th>
-                                    <th>العمليات</th>
+                                    {{-- <th>العمليات</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -56,7 +56,7 @@
                                             @endif
                                         </td>
 
-                                        <td>
+                                        {{-- <td>
                                             <div class="dropdown">
                                                 <button aria-expanded="false" aria-haspopup="true"
                                                     class="btn ripple btn-outline-primary btn-sm" data-toggle="dropdown"
@@ -69,7 +69,7 @@
                                                         تشخيص </a>
                                                 </div>
                                             </div>
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>

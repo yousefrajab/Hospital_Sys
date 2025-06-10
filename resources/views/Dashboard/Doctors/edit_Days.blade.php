@@ -191,7 +191,7 @@
                             <div class="day-row {{ $isActive ? 'active' : 'inactive' }} animate__animated animate__fadeInUp" style="animation-delay: {{ $loop->index * 0.05 }}s;" id="day-{{ $day }}">
                                 <div class="day-label">
                                     <span class="day-icon"><i class="fas {{ $dayIcons[strtolower($day)] ?? 'fa-calendar' }}"></i></span>
-                                    <span>{{ trans('doctors.days.' . strtolower($day)) ?? $day }}</span>
+                                    <span>{{ trans('doctors.' .$day) ?? $day }}</span>
                                 </div>
 
                                 <div class="time-inputs">

@@ -3,6 +3,8 @@
 use App\Models\Doctor;
 use App\Models\Section;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WebsiteController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,12 +23,14 @@ Route::group(
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'auth']
     ],
     function () {
+       
+        //################################ dashboard patient ########################################
 
-        Route::get('/', function () {
-            // $sections = Section::with('doctors')->get();
-            return view('welcome');
-        });
+       
+        //################################ end dashboard patient #####################################
     }
-
-
 );
+
+
+
+            // Routes الجديدة للأقسام

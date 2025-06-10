@@ -1,216 +1,45 @@
-<div wire:ignore>
-    <div class="row row-sm">
-        <div class="col-xl-12">
-            <div class="card custom-card shadow">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-users mr-2"></i>قائمة الدكاترة</h5>
-                    <div class="search-box" style="width: 300px;">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-light border-0"><i class="fas fa-search"></i></span>
+{{-- resources/views/livewire/chat/createchat.blade.php --}}
+<div>
+    <div class="container-fluid users-list-container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="mb-0"><i class="fas fa-user-md me-2"></i>اختر طبيبًا لبدء محادثة</h4>
+            <input type="text" wire:model.debounce.300ms="searchDoctors" class="form-control form-control-sm w-25" placeholder="بحث عن طبيب بالاسم أو التخصص...">
+        </div>
+
+        @if($users && $users->count() > 0)
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                @foreach ($users as $doctor) {{-- المتغير هنا هو $users الذي يمثل الأطباء --}}
+                    <div class="col">
+                        <div class="card user-card-item h-100 shadow-hover" wire:click="createConversation('{{ $doctor->email }}')" title="بدء محادثة مع د. {{ $doctor->name }}">
+                            <div class="card-body text-center">
+                                <img src="{{ $doctor->image ? asset('Dashboard/img/doctors/' . $doctor->image->filename) : asset('Dashboard/img/faces/doctor_default.png') }}"
+                                     alt="صورة د. {{ $doctor->name }}" class="rounded-circle mb-3" width="80" height="80" style="object-fit: cover; border: 3px solid #e9ecef;">
+                                <h6 class="card-title mb-1 fw-bold">د. {{ $doctor->name }}</h6>
+                                <p class="card-text text-muted small mb-1">{{ $doctor->section->name ?? 'تخصص عام' }}</p>
+                                <p class="card-text text-muted small mb-2">{{ $doctor->email }}</p>
+                                <button class="btn btn-sm btn-outline-primary rounded-pill">
+                                    <i class="fas fa-comments me-1"></i> بدء محادثة
+                                </button>
                             </div>
-                            <input type="text" class="form-control border-0" placeholder="ابحث عن دكتور..."
-                                id="searchInput">
                         </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-striped" id="doctorsTable">
-                            <thead class="bg-primary text-white">
-                                <tr>
-                                    <th class="text-center">#</th>
-                                    <th class="text-center">اسم الدكتور</th>
-                                    <th class="text-center">التخصص</th>
-                                    <th class="text-center">حالة الحساب</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($users as $user)
-                                    <tr>
-                                        <td class="text-center align-middle">{{ $loop->iteration }}</td>
-                                        <td class="text-center align-middle">
-                                            <div class="d-flex align-items-center">
-                                                <div class="mr-3">
-                                                    @if ($user->image)
-                                                        <img src="{{ asset('Dashboard/img/doctors/' . $user->image->filename) }}"
-                                                            height="50px" width="50px"
-                                                            class="rounded-circle border shadow-sm" alt="صورة الطبيب">
-                                                    @else
-                                                        <img src="{{ asset('Dashboard/img/faces/doctor_default.png') }}"
-                                                            height="50px" width="50px"
-                                                            class="rounded-circle border shadow-sm"
-                                                            alt="الصورة الافتراضية">
-                                                    @endif
-                                                </div>
-                                                <div>
-                                                    <button wire:click="createConversation('{{ $user->email }}')"
-                                                        class="btn btn-link text-dark font-weight-bold p-0 chat-btn"
-                                                        data-doctor-id="{{ $user->id }}"
-                                                        title="محادثة مع {{ $user->name }}">
-                                                        {{ $user->name }}
-                                                        <i class="fas fa-comment-dots text-primary ml-2"></i>
-                                                    </button>
-                                                    <span class="d-block text-muted small">{{ $user->email }}</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            <span
-                                                class="badge badge-info p-2">{{ $user->section->name ?? 'عام' }}</span>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            <span
-                                                class="badge {{ $user->status ? 'badge-success' : 'badge-danger' }} p-2">
-                                                {{ $user->status ? 'نشط' : 'غير نشط' }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                @endforeach
             </div>
+            {{-- {{ $users->links() }} --}}
+        @else
+            <div class="text-center text-muted p-5">
+                <i class="fas fa-user-md fa-3x mb-3"></i>
+                <p>لا يوجد أطباء متاحون حاليًا لبدء محادثة معهم.</p>
+            </div>
+        @endif
+         <div wire:loading wire:target="searchDoctors" class="text-center p-3 text-muted">
+            <i class="fas fa-spinner fa-spin me-2"></i>جاري البحث...
         </div>
     </div>
 </div>
-
+@push('css')
 <style>
-    .chat-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s;
-        text-decoration: none !important;
-    }
-
-    .chat-btn:hover {
-        color: #007bff !important;
-        transform: translateX(3px);
-    }
-
-    .chat-container {
-        height: 300px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .chat-messages {
-        flex-grow: 1;
-        overflow-y: auto;
-        padding: 10px;
-        border: 1px solid #eee;
-        border-radius: 5px;
-        margin-bottom: 10px;
-    }
-
-    .message.received {
-        text-align: right;
-    }
-
-    .message.sent .message-content {
-        background-color: #e3f2fd;
-    }
-
-    .message-time {
-        font-size: 0.75rem;
-    }
-
-    .chat-btn:active {
-        transform: scale(0.95);
-    }
-
-    #sendMessageBtn {
-        transition: all 0.2s;
-    }
-
-    #sendMessageBtn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
+.shadow-hover:hover { box-shadow: 0 .5rem 1rem rgba(0,0,0,.1)!important; transform: translateY(-2px); }
+.users-list-container .card-title { font-size: 1rem; }
 </style>
-<script>
-    $(document).ready(function() {
-        $('[data-toggle="tooltip"]').tooltip();
-
-        $("#searchInput").on("keyup", function() {
-            const value = $(this).val().toLowerCase();
-            $("#doctorsTable tbody tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-            });
-        });
-
-        $('#doctorsTable').DataTable({
-            responsive: true,
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Arabic.json'
-            },
-            dom: '<"top"f>rt<"bottom"lip><"clear">',
-            pageLength: 10
-        });
-
-        $('.chat-btn').click(function() {
-            const doctorId = $(this).data('doctor-id');
-            const doctorName = $(this).text().trim();
-
-            $('#doctorName').text(doctorName);
-
-            // جلب رسائل المحادثة السابقة عبر AJAX
-            loadChatMessages(doctorId);
-
-            $('#chatModal').modal('show');
-        });
-
-        $('#sendMessageBtn').click(function() {
-            const message = $('#messageInput').val().trim();
-            if (message) {
-                const doctorId = $('.chat-btn').data('doctor-id');
-
-                // إرسال الرسالة عبر AJAX
-                sendMessage(doctorId, message);
-
-                // إضافة الرسالة إلى العرض (مؤقتاً)
-                $('#chatMessages').append(`
-                <div class="message sent mb-2">
-                    <div class="message-content bg-light p-2 rounded">
-                        ${message}
-                        <div class="message-time small text-muted text-left">الآن</div>
-                    </div>
-                </div>
-            `);
-
-                $('#messageInput').val('');
-                $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
-            }
-        });
-    });
-
-    function loadChatMessages(doctorId) {
-        $.ajax({
-            url: '/get-messages/' + doctorId,
-            method: 'GET',
-            success: function(response) {
-                $('#chatMessages').html('');
-                response.messages.forEach(function(message) {
-                    // إضافة الرسائل إلى العرض
-                });
-            }
-        });
-    }
-
-    function sendMessage(doctorId, message) {
-        $.ajax({
-            url: '/send-message',
-            method: 'POST',
-            data: {
-                doctor_id: doctorId,
-                message: message,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                // معالجة الاستجابة
-            }
-        });
-    }
-</script>
+@endpush

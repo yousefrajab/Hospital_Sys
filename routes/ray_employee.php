@@ -32,9 +32,12 @@ Route::group(
 
         //################################ dashboard ray_employee ########################################
 
-        Route::get('/dashboard/ray_employee', function () {
-            return view('Dashboard.dashboard_RayEmployee.dashboard');
-        })->middleware(['auth:ray_employee'])->name('dashboard.ray_employee');
+        // Route::get('/dashboard/ray_employee', function () {
+        //     return view('Dashboard.dashboard_RayEmployee.dashboard');
+        // })->middleware(['auth:ray_employee'])->name('dashboard.ray_employee');
+
+            Route::get('/dashboard/ray_employee', [ProfileRayController::class, 'dashboard'])->middleware(['auth:ray_employee'])->name('dashboard.ray_employee');
+
         //################################ end dashboard ray_employee #####################################
 
         Route::middleware(['auth:ray_employee'])->prefix('ray_employee')->name('ray_employee.')->group(function () {

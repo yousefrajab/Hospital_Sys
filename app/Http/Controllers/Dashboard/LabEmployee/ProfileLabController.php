@@ -1,12 +1,12 @@
 <?php
 
-// تأكد من أن المسار صحيح (قد يكون App\Http\Controllers\Dashboard\RayEmployee)
-namespace App\Http\Controllers\Dashboard\RayEmployee;
+namespace App\Http\Controllers\Dashboard\LabEmployee;
 
-use App\Models\RayEmployee;
+use App\Models\Laboratorie;
 use App\Traits\UploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\LaboratorieEmployee;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -14,14 +14,57 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\Dashboard\LabEmployee\UpdateLabEmployeeProfileRequest;
 
-class ProfileLabController extends Controller // يمكنك تسميته ProfileController داخل مجلد RayEmployee
+class ProfileLabController extends Controller // يمكنك تسميته ProfileController داخل مجلد LaboratorieEmployee
 {
     use UploadTrait;
 
     /**
      * عرض الملف الشخصي لموظف الأشعة المسجل.
      */
-    public function show()
+    public function dashboard()
+    {
+        $employeeGuard = Auth::guard('laboratorie_employee'); // تحديد الحارس
+        $employeeName = $employeeGuard->user()->name ?? 'زائر';
+
+        // الإحصائيات الأساسية
+        $totalLabs = Laboratorie::count();
+        $pendingLabs = Laboratorie::where('case', 0)->count();
+        $completedLabs = Laboratorie::where('case', 1)->count();
+
+        // آخر 5 طلبات مختبر (يمكنك زيادة العدد)
+        $latestLabs = Laboratorie::with(['patient', 'doctor']) // Eager load relations
+            ->latest() // Order by created_at desc
+            ->take(5)
+            ->get();
+
+        // بيانات رسم بياني لعدد الطلبات شهريًا
+        $monthlyLabCounts = Laboratorie::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->whereYear('created_at', date('Y'))
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count', 'month')
+            ->all();
+
+        $monthLabels = [];
+        $monthData = [];
+        $monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+
+        for ($m = 1; $m <= 12; $m++) {
+            $monthLabels[] = $monthNames[$m - 1];
+            $monthData[] = $monthlyLabCounts[$m] ?? 0;
+        }
+
+        return view('Dashboard.dashboard_LaboratorieEmployee.dashboard', compact(
+            'employeeName', // اسم الموظف المسجل
+            'totalLabs',
+            'pendingLabs',
+            'completedLabs',
+            'latestLabs',
+            'monthLabels',
+            'monthData'
+        ));
+    }
+    public function showw()
     {
         $employee = Auth::guard('laboratorie_employee')->user();
         if (!$employee) {
@@ -36,7 +79,7 @@ class ProfileLabController extends Controller // يمكنك تسميته Profile
     /**
      * عرض فورم تعديل الملف الشخصي.
      */
-    public function edit()
+    public function editt()
     {
         $employee = Auth::guard('laboratorie_employee')->user();
         if (!$employee) {
@@ -49,7 +92,7 @@ class ProfileLabController extends Controller // يمكنك تسميته Profile
     /**
      * تحديث الملف الشخصي لموظف الأشعة.
      */
-    public function update(UpdateLabEmployeeProfileRequest $request)
+    public function updatee(UpdateLabEmployeeProfileRequest $request)
     {
         $employee = Auth::guard('laboratorie_employee')->user();
         if (!$employee) {
@@ -57,13 +100,14 @@ class ProfileLabController extends Controller // يمكنك تسميته Profile
         }
 
         $validatedData = $request->validated();
-        Log::info("Attempting profile update for RayEmployee ID: {$employee->id}");
+        Log::info("Attempting profile update for LaboratorieEmployee ID: {$employee->id}");
         DB::beginTransaction();
 
         try {
             // تحديث البيانات الأساسية
             $employee->name = $validatedData['name'];
             $employee->email = $validatedData['email'];
+            $employee->national_id = $validatedData['national_id'];
             if (isset($validatedData['phone'])) {
                 $employee->phone = $validatedData['phone'];
             }
@@ -77,51 +121,50 @@ class ProfileLabController extends Controller // يمكنك تسميته Profile
                     ]);
                 }
                 $employee->password = Hash::make($validatedData['password']);
-                Log::info("Password updated for RayEmployee ID: {$employee->id}");
+                Log::info("Password updated for LaboratorieEmployee ID: {$employee->id}");
             } elseif ($request->filled('password') && !$request->filled('current_password')) {
-                 DB::rollBack();
-                 throw ValidationException::withMessages([
+                DB::rollBack();
+                throw ValidationException::withMessages([
                     'current_password' => 'يجب إدخال كلمة المرور الحالية لتغيير كلمة المرور.',
                 ]);
             }
 
             // التعامل مع رفع الصورة
             if ($request->hasFile('photo')) {
-                Log::info("[RayEmployee Profile Update] Image file detected for ID: {$employee->id}");
+                Log::info("[LaboratorieEmployee Profile Update] Image file detected for ID: {$employee->id}");
                 // حذف الصورة القديمة إذا كانت موجودة
                 if ($employee->image) {
                     $this->Delete_attachment(
                         'upload_image', // اسم القرص
-                        'rayEmployees/' . $employee->image->filename, // المسار (تأكد من صحته)
+                        'laboratorieEmployees/' . $employee->image->filename, // المسار (تأكد من صحته)
                         $employee->id,
-                        RayEmployee::class // FQCN للموديل
+                        LaboratorieEmployee::class // FQCN للموديل
                     );
-                     Log::info("[RayEmployee Profile Update] Old image deleted for ID: {$employee->id}");
+                    Log::info("[LaboratorieEmployee Profile Update] Old image deleted for ID: {$employee->id}");
                 }
                 // رفع الصورة الجديدة
                 $this->verifyAndStoreImage(
                     $request, // كائن الطلب
                     'photo',   // اسم الحقل
-                    'rayEmployees', // اسم المجلد
+                    'laboratorieEmployees', // اسم المجلد
                     'upload_image', // اسم القرص
                     $employee->id,
-                    RayEmployee::class // FQCN للموديل
+                    LaboratorieEmployee::class // FQCN للموديل
                 );
-                 Log::info("[RayEmployee Profile Update] New image stored for ID: {$employee->id}");
+                Log::info("[LaboratorieEmployee Profile Update] New image stored for ID: {$employee->id}");
             }
 
             // حفظ كل التغييرات
             $employee->save();
             DB::commit();
-            Log::info("Profile update committed successfully for RayEmployee ID {$employee->id}");
+            Log::info("Profile update committed successfully for LaboratorieEmployee ID {$employee->id}");
 
             // إعادة التوجيه مع رسالة نجاح
             return redirect()->route('laboratorie_employee.profile.show') // اسم route عرض الملف الشخصي
-                   ->with('success', 'تم تحديث الملف الشخصي بنجاح.');
-
+                ->with('success', 'تم تحديث الملف الشخصي بنجاح.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack(); // تراجع في حالة خطأ التحقق الداخلي (مثل كلمة المرور الحالية)
-            Log::error("RayEmployee Profile Update Validation Error ID {$employee->id}: " . json_encode($e->errors()));
+            Log::error("LaboratorieEmployee Profile Update Validation Error ID {$employee->id}: " . json_encode($e->errors()));
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             DB::rollback();

@@ -5,12 +5,17 @@ use App\Events\MyEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminController;
+use App\Http\Controllers\Dashboard\BedController;
+use App\Http\Controllers\Dashboard\RoomController;
 use App\Http\Controllers\Dashboard\DoctorController;
+use App\Http\Controllers\Dashboard\DiseaseController;
 use App\Http\Controllers\Dashboard\PatientController;
 use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\AmbulanceController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\InsuranceController;
+use App\Http\Controllers\Dashboard\VitalSignController;
+use App\Http\Controllers\Dashboard\MedicationController;
 use App\Http\Controllers\Dashboard\RayEmployeeController;
 use App\Http\Controllers\Dashboard\AdminProfileController;
 use App\Http\Controllers\Dashboard\SingleServiceController;
@@ -18,9 +23,11 @@ use App\Http\Controllers\Dashboard\Admin\UserRoleController;
 use App\Http\Controllers\Dashboard\PaymentAccountController;
 use App\Http\Controllers\Dashboard\ReceiptAccountController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use App\Http\Controllers\Dashboard\PharmacyManagercontroller;
+use App\Http\Controllers\Dashboard\PatientAdmissionController;
+use App\Http\Controllers\Dashboard\PharmacyEmployeeController;
 use App\Http\Controllers\Dashboard\LaboratorieEmployeeController;
 use App\Http\Controllers\Dashboard\appointments\AppointmentController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -40,9 +47,11 @@ Route::group(
     ],
     function () {
         //################################ dashboard admin ########################################
-        Route::get('/dashboard/admin', function () {
-            return view('Dashboard.Admin.dashboard');
-        })->middleware(['auth:admin'])->name('dashboard.admin');
+        // Route::get('/dashboard/admin', function () {
+        //     return view('Dashboard.Admin.dashboard');
+        // })->middleware(['auth:admin'])->name('dashboard.admin');
+
+        Route::get('/dashboard/admin', [AdminProfileController::class, 'dashboard'])->middleware(['auth:admin'])->name('dashboard.admin');
 
         //################################ end dashboard admin ####################################
         Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -57,7 +66,6 @@ Route::group(
             //############################# sections route ##########################################
 
             Route::resource('Sections', SectionController::class);
-            // Route::post('update_status', [SectionController::class, 'update_status'])->name('update_status');
 
             //############################# end sections route ######################################
 
@@ -103,6 +111,7 @@ Route::group(
             //############################# Patients route ##########################################
 
             Route::resource('Patients', PatientController::class);
+            Route::get('/QR/patient/{id}/showQR', [PatientController::class, 'showQR'])->name('showQR');
 
             //############################# end Patients route ######################################
 
@@ -163,6 +172,7 @@ Route::group(
             Route::get('/completed', [AppointmentController::class, 'indexCompleted'])->name('completed'); // منتهية
             Route::get('/cancelled', [AppointmentController::class, 'indexCancelled'])->name('cancelled'); // ملغاة
             Route::patch('/admin-cancel/{appointment}', [AppointmentController::class, 'adminCancelAppointment'])->name('admin_cancel');
+            Route::get('appointments/lapsed', [AppointmentController::class, 'lapsedAppointments'])->name('appointments.lapsed');
             // استخدمنا {appointment} للاستفادة من Route Model Binding
 
             // (اختياري) مسار الحذف النهائي (قد يكون موجوداً ضمن destroy في Route::resource)
@@ -174,6 +184,32 @@ Route::group(
             Route::get('/users-roles/{role_key}/{id}/edit', [UserRoleController::class, 'editUser'])->name('users.roles.edit');
             // Route لتحديث بيانات المستخدم
             Route::match(['put', 'patch'], '/users-roles/{role_key}/{id}', [UserRoleController::class, 'updateUser'])->name('users.roles.update');
+
+            Route::resource('rooms', RoomController::class);
+            Route::resource('beds', BedController::class);
+            Route::resource('patient-admissions', PatientAdmissionController::class)->names('patient_admissions');
+
+
+            Route::resource('diseases', DiseaseController::class)->names('diseases');
+
+            Route::resource('pharmacy_employee', PharmacyEmployeeController::class);
+            Route::get('/pharmacy_employee/{id}/edit', [PharmacyEmployeeController::class, 'edit'])->name('pharmacy_employee.edit');
+
+            Route::resource('medications', MedicationController::class);
+
+
+            Route::resource('pharmacy_manager', PharmacyManagercontroller::class);
+            Route::get('/pharmacy_manager/{id}/edit', [PharmacyManagerController::class, 'edit'])->name('pharmacy_manager.edit');
+
+            Route::post('/patient-admissions/{patient_admission}/vital-signs', [VitalSignController::class, 'store'])->name('vital_signs.store');
+
+            Route::get('/patient-admissions/{patient_admission}/vital-signs-monitoring', [PatientAdmissionController::class, 'vitalSignsMonitoringSheet'])->name('patient_admissions.vital_signs_sheet');
+
+            // يمكنك إضافة مسارات أخرى لإدارة العلامات الحيوية لاحقاً
+            Route::delete('/vital-signs/{vital_sign}', [VitalSignController::class, 'destroy'])->name('vital_signs.destroy');
+            Route::get('/vital-signs/{vital_sign}/edit', [VitalSignController::class, 'edit'])->name('vital_signs.edit');
+            Route::put('/vital-signs/{vital_sign}', [VitalSignController::class, 'update'])->name('vital_signs.update');
+
         });
         require __DIR__ . '/auth.php';
     }

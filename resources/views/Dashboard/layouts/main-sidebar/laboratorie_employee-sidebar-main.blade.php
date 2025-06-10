@@ -40,6 +40,31 @@
                     </svg><span class="side-menu__label">{{ trans('main-sidebar_trans.index') }}</a>
             </li>
 
+
+            <li class="slide">
+                <a class="side-menu__item" data-toggle="slide" href="#">
+                    <!-- أيقونة Font Awesome مصححة -->
+                    <i class="side-menu__icon fa fa-user-cog"></i>
+                    <span class="side-menu__label">الملف الشخصي</span>
+                    <!-- أيقونة السهم بمحاذاة صحيحة -->
+                    <i class="angle fa fa-chevron-down"></i>
+                </a>
+
+                <ul class="slide-menu">
+                    <li>
+                        <a class="slide-item" href="{{ route('laboratorie_employee.profile.show') }}">
+                            <i class="fa fa-eye mr-2"></i> عرض الملف الشخصي
+                        </a>
+                    </li>
+                    <li>
+                        <a class="slide-item" href="{{ route('laboratorie_employee.profile.edit') }}">
+                            <i class="fa fa-edit mr-2"></i> تعديل الملف الشخصي
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
             <li class="slide">
                 <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}"><svg
                         xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
@@ -50,9 +75,11 @@
                     </svg><span class="side-menu__label">كشوفات المختبر </span><i
                         class="angle fe fe-chevron-down"></i></a>
                 <ul class="slide-menu">
-                    <li><a class="slide-item" href="{{ route('laboratorie_employee.invoices_laboratorie_employee.index') }}">قائمة
+                    <li><a class="slide-item"
+                            href="{{ route('laboratorie_employee.invoices_laboratorie_employee.index') }}">قائمة
                             الكشوفات</a></li>
-                    <li><a class="slide-item" href="{{ route('laboratorie_employee.completed_invoicess') }}">قائمة الكشوفات المكتملة</a>
+                    <li><a class="slide-item" href="{{ route('laboratorie_employee.completed_invoicess') }}">قائمة
+                            الكشوفات المكتملة</a>
                     </li>
                 </ul>
             </li>

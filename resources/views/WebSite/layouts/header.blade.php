@@ -1,8 +1,9 @@
+{{-- WebSite/layouts/header.blade.php --}}
 <div class="nav-outer clearfix">
-    {{-- تم حذف الـ div الذي يحتوي على نص الترحيب من هنا --}}
 
     <!--Mobile Navigation Toggler For Mobile-->
     <div class="mobile-nav-toggler"><span class="icon flaticon-menu"></span></div>
+
     <nav class="main-menu navbar-expand-md navbar-light">
         <div class="navbar-header">
             <!-- Toggle Button -->
@@ -14,88 +15,45 @@
 
         <div class="collapse navbar-collapse clearfix" id="navbarSupportedContent">
             <ul class="navigation clearfix">
-                <li class="current dropdown"><a href="#">الرئيسية</a>
+                <li class="current"><a href="{{ url('/') }}">الرئيسية</a></li> {{-- افترض أن لديك route اسمه home --}}
+                <li>
+                    <a title="لوحة التحكم" href="{{ route('dashboard.patient') }}">
+                        <span class="fas fa-user-cog"></span> لوحة التحكم
+                    </a>
+                </li>
 
-                </li>
-                <li class="dropdown"><a href="#">من نحن</a>
+                <li class="dropdown"><a href="{{ route('website.doctors.all') }}">الاطباء</a>
                     <ul>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="team.html">Our Team</a></li>
-                        <li><a href="faq.html">Faq</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="gallery.html">Gallery</a></li>
-                        <li><a href="comming-soon.html">Comming Soon</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown has-mega-menu"><a href="#">الصفحات</a>
-                    <div class="mega-menu">
-                        <div class="mega-menu-bar row clearfix">
-                            <div class="column col-md-3 col-xs-12">
-                                <h3>About Us</h3>
-                                <ul>
-                                    <li><a href="about.html">About Us</a></li>
-                                    <li><a href="team.html">Our Team</a></li>
-                                    <li><a href="faq.html">Faq</a></li>
-                                    <li><a href="services.html">Services</a></li>
-                                </ul>
-                            </div>
-                            <div class="column col-md-3 col-xs-12">
-                                <h3>Doctors</h3>
-                                <ul>
-                                    <li><a href="doctors.html">Doctors</a></li>
-                                    <li><a href="doctors-detail.html">Doctors Detail</a></li>
-                                </ul>
-                            </div>
-                            <div class="column col-md-3 col-xs-12">
-                                <h3>Blog</h3>
-                                <ul>
-                                    <li><a href="blog.html">Our Blog</a></li>
-                                    <li><a href="blog-classic.html">Blog Classic</a></li>
-                                    <li><a href="blog-detail.html">Blog Detail</a></li>
-                                </ul>
-                            </div>
-                            <div class="column col-md-3 col-xs-12">
-                                <h3>Shops</h3>
-                                <ul>
-                                    <li><a href="shop.html">Shop</a></li>
-                                    <li><a href="shop-single.html">Shop Details</a></li>
-                                    <li><a href="shoping-cart.html">Cart Page</a></li>
-                                    <li><a href="checkout.html">Checkout Page</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li class="dropdown"><a href="#">الاطباء</a>
-                    <ul>
-                        <li><a href="doctors.html">Doctors</a></li>
-                        <li><a href="doctors-detail.html">Doctors Detail</a></li>
+                        <li><a href="{{ route('website.doctors.all') }}">Doctors</a></li>
                     </ul>
                 </li>
                 <li class="dropdown"><a href="#">الاقسام</a>
                     <ul>
-                        <li><a href="department.html">Department</a></li>
-                        <li><a href="department-detail.html">Department Detail</a></li>
+                        <li><a href="{{ route('website.departments.all') }}">Sections</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#">المقالات</a>
+                <li class="dropdown"><a href="#">الخدمات</a>
                     <ul>
-                        <li><a href="blog.html">Our Blog</a></li>
-                        <li><a href="blog-classic.html">Blog Classic</a></li>
-                        <li><a href="blog-detail.html">Blog Detail</a></li>
+                        <li><a href="{{ route('website.services.all') }}">الخدمات المفردة</a></li>
+
+                        <li><a href="{{ route('website.group_services.all') }}">الخدمات المجمعة</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#">المتجر</a>
+                <li class="dropdown"><a href="#">المواعيد</a>
                     <ul>
-                        <li><a href="shop.html">Shop</a></li>
-                        <li><a href="shop-single.html">Shop Details</a></li>
-                        <li><a href="shoping-cart.html">Cart Page</a></li>
-                        <li><a href="checkout.html">Checkout Page</a></li>
+                        <li><a href="{{ route('website.my.appointments') }}">مواعيدي</a></li>
                     </ul>
                 </li>
-
-                <li><a href="contact.html">تواصل معانا</a></li>
-
+                <li class="dropdown"><a href="#">الفواتير</a>
+                    <ul>
+                        <li><a href="{{ route('website.my.invoices') }}">فواتيري</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a href="#"> الحسابات </a>
+                    <ul>
+                        <li><a href="{{ route('website.my.account') }}">كشف حساباتي</a></li>
+                    </ul>
+                </li>
                 <li class="dropdown"><a href="#">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>
                     <ul>
                         @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
@@ -110,85 +68,238 @@
                 </li>
             </ul>
         </div>
-
     </nav>
     <!-- Main Menu End-->
 
-    <!-- Main Menu End-->
     <div class="outer-box clearfix">
+        @php
+            $authenticatedUser = null;
+            $userGuard = null;
+            $logoutRoute = null;
+            $userImage = asset('Dashboard/img/patient_default.png'); // صورة افتراضية عامة
 
-        {{-- ** هذا هو المكان الجديد لنص الترحيب ** --}}
-        {{-- نستخدم div ونعطيه كلاس للتنسيق --}}
-        <div class="welcome-text">
-            مرحبا بعودتك {{ Auth::user()->name }}
-            <form method="POST" action="{{ route('logout.patient') }}">
-                @csrf
-                <a class="dropdown-item" style="color: white" href="#"
-                    onclick="event.preventDefault();
-                                this.closest('form').submit();">
-                                <i
-                        class="bx bx-log-out" style="color: white"></i>تسجيل الخروج</a>
-            </form>
-        </div>
-        {{-- ** نهاية المكان الجديد ** --}}
+            if (Auth::guard('patient')->check()) {
+                $authenticatedUser = Auth::guard('patient')->user();
+                $userGuard = 'patient';
+                $logoutRoute = route('logout.patient');
+                if ($authenticatedUser->image && $authenticatedUser->image->filename) {
+                    $userImage = asset('Dashboard/img/patients/' . $authenticatedUser->image->filename);
+                }
+            }
 
+            // يمكنك إضافة المزيد من الـ else if لباقي الـ guards (ray_employee, laboratorie_employee) بنفس الطريقة
+            // وتحديد مسارات صورهم ومسارات تسجيل الخروج الخاصة بهم.
 
-        <!-- Main Menu End-->
+        @endphp
+
+        @if ($authenticatedUser)
+            <div class="user-profile-card">
+                <div class="user-avatar-container">
+                    <img alt="{{ $authenticatedUser->name }}" class="user-avatar" src="{{ $userImage }}"
+                        onerror="this.src='{{ asset('Dashboard/img/patient_default.png') }}';"> {{-- Fallback image --}}
+                </div>
+                <div class="user-info-dropdown">
+                    <div class="user-name-email">
+                        <h4 class="user-name">{{ $authenticatedUser->name }}</h4>
+                        <span class="user-email">{{ $authenticatedUser->email }}</span>
+                    </div>
+                    @if ($logoutRoute)
+                        <form method="POST" action="{{ $logoutRoute }}" class="logout-form">
+                            @csrf
+                            <button type="submit" class="btn-logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                تسجيل الخروج
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+        @endif
+
+        <!-- Nav Toggler -->
         <div class="nav-box">
-            <div class="nav-btn nav-toggler navSidebar-button"><span class="icon flaticon-menu-1"></span></div>
+            <button class="nav-toggler navSidebar-button"><span class="icon flaticon-menu-1"></span></button>
         </div>
+
         <!-- Social Box -->
-        <ul class="social-box clearfix">
-            <li><a href="#"><span class="fab fa-facebook-f"></span></a></li>
-            <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-            <li><a href="#"><span class="fab fa-linkedin-in"></span></a></li>
-            {{-- <li><a title="تسجيل دخول" href="{{route('dashboard.patient.home')}}"><span class="fas fa-user"></span></a> --}}
-            <li>
-                <a title="لوحة التحكم"
-                    href="@auth
-@if (auth()->guard('patient')->check())
-                            {{ route('dashboard.patient') }}
-                        @elseif(auth()->guard('doctor')->check())
-                            {{ route('dashboard.doctor') }}
-                        @elseif(auth()->guard('admin')->check())
-                            {{ route('dashboard.admin') }}
-                        @elseif(auth()->guard('ray_employee')->check())
-                            {{ route('dashboard.ray_employee') }}
-                        @elseif(auth()->guard('laboratorie_employee')->check())
-                            {{ route('dashboard.laboratorie_employee') }}
-                        @else
-                            {{ route('login') }} {{-- إذا لم يكن أي نوع معروف --}}
-                        @endif
-                    @else
-                        {{ route('login') }} {{-- إذا لم يكن مسجل دخول --}} @endauth">
-                    <span class="fas fa-user"></span>
-                </a>
-            </li>
-            </li>
-
-
+        <ul class="header-social-icons clearfix">
+            <li><a href="#" aria-label="Facebook"><span class="fab fa-facebook-f"></span></a></li>
+            <li><a href="#" aria-label="Twitter"><span class="fab fa-twitter"></span></a></li>
+            <li><a href="#" aria-label="LinkedIn"><span class="fab fa-linkedin-in"></span></a></li>
         </ul>
 
         <!-- Search Btn -->
-        <div class="search-box-btn"><span class="icon flaticon-search"></span></div>
-
+        {{-- <div class="search-box-btn"><span class="icon flaticon-search"></span></div> --}}
     </div>
 </div>
+
 <style>
-    .outer-box {
+    /* Styles for WebSite/layouts/header.blade.php */
+    /* You can move these styles to an external CSS file later */
+
+    .main-menu .navigation>li>a.header-login-link,
+    .main-menu .navigation>li>a.header-dashboard-link {
+        color: #ffffff;
+        /* أو اللون الذي تفضله لروابط الهيدر */
+        padding: 20px 15px;
+        /* تعديل الحشوة حسب الحاجة */
+    }
+
+    .main-menu .navigation>li>a.header-login-link:hover,
+    .main-menu .navigation>li>a.header-dashboard-link:hover {
+        color: #f0f0f0;
+        /* لون عند التحويم */
+    }
+
+    .main-menu .navigation>li>a .fas {
+        margin-right: 8px;
+        /* مسافة بين الأيقونة والنص */
+    }
+
+    .nav-outer .outer-box {
         display: flex;
         align-items: center;
+        gap: 15px;
+        /* مسافة بين العناصر في الـ outer-box */
     }
 
-    .welcome-text {
-        font-size: 16px;
+    /* User Profile Card Styles */
+    .user-profile-card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .user-avatar-container .user-avatar {
+        width: 40px;
+        /* حجم أصغر للأفاتار في الهيدر */
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #fff;
+        /* إطار أبيض حول الصورة */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+    }
+
+    .user-profile-card:hover .user-avatar {
+        transform: scale(1.1);
+    }
+
+    .user-info-dropdown {
+        display: none;
+        /* مخفية بشكل افتراضي */
+        position: absolute;
+        top: 100%;
+        /* تظهر أسفل الأفاتار */
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 10px;
+        /* مسافة بسيطة من الأعلى */
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        padding: 15px;
+        min-width: 220px;
+        z-index: 100;
+        text-align: center;
+    }
+
+    /* في حالة RTL */
+    .rtl .user-info-dropdown {
+        left: auto;
+        right: 50%;
+        transform: translateX(50%);
+    }
+
+
+    .user-profile-card:hover .user-info-dropdown {
+        display: block;
+        /* تظهر عند التحويم على الكرت بالكامل */
+    }
+
+    .user-info-dropdown .user-name-email {
+        margin-bottom: 12px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+
+    .user-info-dropdown .user-name {
+        margin: 0 0 5px 0;
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .user-info-dropdown .user-email {
+        font-size: 0.9em;
+        color: #777;
+        display: block;
+        word-break: break-all;
+    }
+
+    .user-info-dropdown .btn-logout {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        justify-content: center;
+        font-size: 0.95em;
+    }
+
+    .user-info-dropdown .btn-logout:hover {
+        background-color: #c0392b;
+    }
+
+    .user-info-dropdown .btn-logout .fas {
+        font-size: 0.9em;
+    }
+
+
+    /* Social Icons in Header */
+    .header-social-icons {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        /* مسافة بين أيقونات التواصل */
+    }
+
+    .header-social-icons li a {
         color: #fff;
-        margin-right: 15px;
-        margin-top: 0;
-        margin-bottom: 0;
+        /* لون أيقونات التواصل الاجتماعي */
+        font-size: 16px;
+        transition: color 0.3s ease;
     }
 
-    .social-box {
-        margin-right: 10px;
+    .header-social-icons li a:hover {
+        color: #ecf0f1;
+        /* لون عند التحويم */
+    }
+
+    /* Nav Toggler & Search Btn - افترض أن هذه الستايلات موجودة في ملف الستايل الرئيسي للقالب */
+    .nav-box .nav-toggler,
+    .search-box-btn {
+        color: #fff;
+        /* تأكد أن لونها مناسب لخلفية الهيدر */
+        /* قد تحتاج لتعديل الـ padding أو الـ margin إذا لزم الأمر */
+    }
+
+    /* لضمان أن القائمة المنسدلة للمستخدم لا تقطعها عناصر أخرى */
+    .nav-outer {
+        position: relative;
+        z-index: 99;
+        /* أو قيمة أعلى إذا لزم الأمر */
     }
 </style>

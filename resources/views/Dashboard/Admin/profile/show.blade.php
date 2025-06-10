@@ -463,6 +463,23 @@
                     <p>عرض وإدارة جميع المواعيد المحجوزة.</p>
                 </a>
                 @endif
+
+                 @if(Route::has('admin.rooms.index'))
+                <a href="{{ route('admin.rooms.index') }}" class="action-card">
+                    <span class="action-icon"><i class="side-menu__icon fas fa-door-open"></i></span>
+                    <h5>إدارة الغرف</h5>
+                    <p>عرض وإدارة جميع الغرف .</p>
+                </a>
+                @endif
+
+                 @if(Route::has('admin.beds.index'))
+                <a href="{{ route('admin.beds.index') }}" class="action-card">
+                    <span class="action-icon"><i class="side-menu__icon fas fa-bed"></i></span>
+                    <h5>إدارة الأسرة</h5>
+                    <p>عرض وإدارة جميع الأسرة</p>
+                </a>
+                @endif
+
             </div>
         </div>
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\GlobalEmail;
 use Illuminate\Validation\Rule;
+use App\Models\GlobalIdentifier;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreDoctorsRequest extends FormRequest
@@ -25,11 +27,28 @@ class StoreDoctorsRequest extends FormRequest
     public function rules()
     {
         return [
-            "national_id" => 'required|string|digits:9|unique:doctors,national_id,' . $this->id,
+            // "national_id" => 'required|string|digits:9|unique:doctors,national_id,' . $this->id,
+            'national_id' => [
+                'required',
+                'string',
+                'digits:9',
+                Rule::unique('doctors', 'national_id'), // 1. فريد في جدول doctors
+                function ($attribute, $value, $fail) { // 2. فريد في global_national_ids
+                    if (GlobalIdentifier::where('national_id', strtolower($value))->exists()) {
+                        $fail('هذا الرقم مستخدم بالفعل في النظام.');
+                    }
+                },
+            ],
+
             'email' => [
                 'required',
                 'email',
-                Rule::unique('doctors', 'email')->ignore($this->id),
+                Rule::unique('doctors', 'email'), // 1. فريد في جدول doctors
+                function ($attribute, $value, $fail) { // 2. فريد في global_emails
+                    if (GlobalEmail::where('email', strtolower($value))->exists()) {
+                        $fail('هذا البريد الإلكتروني مستخدم بالفعل في النظام.');
+                    }
+                },
             ],
             "password" => [
                 'required',

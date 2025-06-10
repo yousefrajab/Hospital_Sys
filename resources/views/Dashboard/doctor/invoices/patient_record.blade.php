@@ -26,7 +26,7 @@
                                 <div class="timeline-badge"><i class="las la-check-circle"></i></div>
                                 <div class="timeline-panel">
                                     <div class="timeline-heading">
-                                        <h6 class="timeline-title">Art Ramadani posted a status update</h6>
+                                        <h6 class="timeline-title">status update</h6>
                                     </div>
                                     <div class="timeline-body">
                                         <p>{{$patient_record->diagnosis}}</p>

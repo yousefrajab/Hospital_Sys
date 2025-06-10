@@ -104,7 +104,7 @@ class DoctorRepository implements DoctorRepositoryInterface
             if ($request->has('photo')) {
                 if ($doctor->image) {
                     $old_img = $doctor->image->filename;
-                    $this->Delete_attachment('upload_image', 'doctors/' . $old_img, $request->id);
+                    $this->Delete_attachment('upload_image', 'doctors/' . $old_img, $request->id, 'App\Models\Doctor');
                 }
                 $this->verifyAndStoreImage($request, 'photo', 'doctors', 'upload_image', $request->id, 'App\Models\Doctor');
             }
@@ -289,7 +289,7 @@ class DoctorRepository implements DoctorRepositoryInterface
             // إزالة رسالة الخطأ القديمة إذا كانت العملية ناجحة
             session()->forget('error'); // مسح أي رسالة خطأ سابقة
             session()->flash('success', 'تم تحديث جدول ساعات العمل بنجاح.');
-            return true; // إرجاع true للإشارة للنجاح
+           return redirect()->route('admin.Doctors.index'); // إرجاع true للإشارة للنجاح
 
         } catch (\Exception $e) {
             Log::error("--- Rolling Back Transaction for Doctor ID: {$doctorId}. Error: " . $e->getMessage() . " at Line: " . $e->getLine() . " ---");

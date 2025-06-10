@@ -37,7 +37,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
             //abort(404);
             return redirect()->route('404');
         }
-        return view('Dashboard.Doctor.invoices.view_rays', compact('rays'));
+        return view('Dashboard.doctor.invoices.view_rays', compact('rays'));
     }
     public function showLaboratorie($id)
      {
@@ -46,7 +46,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
              //abort(404);
              return redirect()->route('404');
          }
-         return view('Dashboard.Doctor.invoices.view_laboratories', compact('laboratories'));
+         return view('Dashboard.doctor.invoices.view_laboratories', compact('laboratories'));
      }
 
 }

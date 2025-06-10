@@ -33,5 +33,13 @@
         @include('Dashboard.layouts.main-sidebar.patient-sidebar-main')
     @endif
 
+    @if (\Auth::guard('pharmacy_employee')->check())
+        @include('Dashboard.layouts.main-sidebar.pharmacy_employee-sidebar-main')
+    @endif
+
+
+    @if (\Auth::guard('pharmacy_manager')->check())
+        @include('Dashboard.layouts.main-sidebar.pharmacy_manager-sidebar-main')
+    @endif
 </aside>
 <!-- main-sidebar -->

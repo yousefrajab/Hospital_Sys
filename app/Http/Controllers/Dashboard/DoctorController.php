@@ -3,19 +3,23 @@
 namespace App\Http\Controllers\Dashboard; // أو Namespace الخاص بـ Controller الطبيب
 
 use App\Models\Doctor;
+use App\Models\Invoice;
+use App\Models\Message;
+use App\Models\Patient;
 use Twilio\Rest\Client;
 use App\Models\Appointment;
 use App\Models\DoctorBreak;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use App\Models\DoctorWorkingDay;
-use App\Mail\AppointmentCompleted;
+use App\Models\Prescription;
 
 // --- استيرادات الإشعارات ---
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 // *** إنشاء Mailable جديد أو استخدام نفس Mailable الإلغاء مع تعديل النص ***
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
 // use App\Mail\AppointmentCancelled; // أو استخدام الموجود
+use App\Models\DoctorWorkingDay;
+use App\Mail\AppointmentCompleted;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -38,6 +42,82 @@ class DoctorController extends Controller
     }
 
 
+    public function dashboard(Request $request)
+    {
+        $doctor = Auth::guard('doctor')->user();
+        $doctorId = $doctor->id;
+        $doctorEmail = $doctor->email;
+
+        Log::info("Doctor Dashboard: User {$doctor->name} (ID: {$doctorId}) accessed.");
+
+        // --- 1. إحصائيات البطاقات العلوية ---
+        $totalInvoicesByDoctor = Invoice::where('doctor_id', $doctorId)->count();
+
+        $todayConfirmedAppointmentsCount = Appointment::where('doctor_id', $doctorId)
+            ->whereDate('appointment', Carbon::today())
+            ->where('type', Appointment::STATUS_CONFIRMED)
+            ->count();
+
+        // ... (باقي إحصائياتك الأخرى)
+        $prescriptionsThisMonthCount = Prescription::where('doctor_id', $doctorId)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->count();
+        $unreadMessagesFromPatientsCount = Message::where('receiver_email', $doctorEmail)
+            ->where('read', false)
+            ->count();
+        $prescriptionApprovalRequestsCount = Prescription::where('doctor_id', $doctorId)
+            ->where('status', Prescription::STATUS_REFILL_REQUESTED)
+            ->count();
+
+        // *** هنا نقوم بحساب العدد الإجمالي للمواعيد المؤكدة والقادمة ***
+        $allUpcomingConfirmedAppointmentsTotalCount = Appointment::where('doctor_id', $doctorId)
+            ->where('type', Appointment::STATUS_CONFIRMED)
+            ->where('appointment', '>=', Carbon::now())
+            ->count(); //  <--- استخدمنا count() هنا لحساب العدد
+        // *** نهاية حساب العدد ***
+
+        $hasImportantDoctorAlerts = ($prescriptionApprovalRequestsCount > 0) || ($unreadMessagesFromPatientsCount > 0);
+
+        // --- 2. قوائم العرض في الداش بورد ---
+        // قائمة جميع المواعيد المؤكدة والقادمة (للعرض في جدول إذا أردت)
+        $allUpcomingConfirmedAppointments = Appointment::where('doctor_id', $doctorId)
+            ->where('type', Appointment::STATUS_CONFIRMED)
+            ->where('appointment', '>=', Carbon::now())
+            ->with(['patient:id', 'section:id']) //  جلب الأسماء إذا كنت ستعرضها
+            ->orderBy('appointment', 'asc')
+            ->take(5) //  نأخذ أول 5 فقط لعرضها كملخص في الداش بورد
+            ->get();
+
+        // مواعيد اليوم المؤكدة
+        $todayAppointmentsList = Appointment::where('doctor_id', $doctorId)
+            ->where('type', Appointment::STATUS_CONFIRMED)
+            ->whereDate('appointment', Carbon::today())
+            ->with(['patient:id', 'section:id']) // جلب الأسماء
+            ->orderBy('appointment', 'asc')
+            ->get();
+
+        $recentPrescriptionsList = Prescription::where('doctor_id', $doctorId)
+            ->with('patient:id') // جلب اسم المريض
+            ->latest('updated_at')
+            ->take(5)
+            ->get();
+
+        return view('Dashboard.doctor.dashboard', compact(
+            'doctor',
+            'totalInvoicesByDoctor',
+            'todayConfirmedAppointmentsCount',
+            'prescriptionsThisMonthCount',
+            'unreadMessagesFromPatientsCount',
+            'prescriptionApprovalRequestsCount',
+            'hasImportantDoctorAlerts',
+            'allUpcomingConfirmedAppointments',
+            'allUpcomingConfirmedAppointmentsTotalCount', //  <--- *** تمرير العداد الجديد للـ view ***
+            'todayAppointmentsList',
+            'recentPrescriptionsList',
+            'request'
+        ));
+    }
     public function index()
     {
         return $this->Doctors->index();
@@ -254,7 +334,6 @@ class DoctorController extends Controller
                         // هذا لا يجب أن يحدث لأننا نتحقق من allowedActiveDays، لكنه تحذير جيد
                         Log::warning("Attempted to update non-existent or inactive working day '{$day}' for Doctor ID {$doctor->id}. This shouldn't happen.");
                     }
-
                 }
             }
 
@@ -273,42 +352,6 @@ class DoctorController extends Controller
         }
     }
 
-    // protected function syncBreaks(DoctorBreak $workingDay, array $breaksData)
-    // {
-    //     Log::debug("Syncing breaks for Working Day ID: {$workingDay->id}");
-    //     // 1. حذف جميع الاستراحات الحالية لهذا اليوم
-    //     $workingDay->breaks()->delete();
-    //     Log::debug("Deleted existing breaks for Working Day ID: {$workingDay->id}");
-
-    //     // 2. إضافة الاستراحات الجديدة من البيانات المرسلة
-    //     $newBreaks = [];
-    //     foreach ($breaksData as $index => $break) {
-    //         if (!empty($break['start_time']) && !empty($break['end_time'])) {
-    //             // (اختياري) تحقق إضافي أن النهاية بعد البداية قبل الحفظ
-    //             if (strtotime($break['end_time'] . ':00') > strtotime($break['start_time'] . ':00')) {
-    //                 $newBreaks[] = new DoctorBreak([ // تأكد من اسم الموديل الصحيح
-    //                     'start_time' => $break['start_time'] . ':00',
-    //                     'end_time' => $break['end_time'] . ':00',
-    //                     'reason' => $break['reason'] ?? null,
-    //                     // doctor_working_day_id سيتم تعيينه تلقائيًا بواسطة العلاقة
-    //                 ]);
-    //                 Log::debug("Prepared new break #{$index}: {$break['start_time']} - {$break['end_time']}");
-    //             } else {
-    //                 Log::warning("Skipped invalid break #{$index} for Working Day ID {$workingDay->id}: End time not after start time.");
-    //             }
-    //         } else {
-    //             Log::debug("Skipped empty break data at index #{$index}");
-    //         }
-    //     }
-
-    //     // 3. حفظ الاستراحات الجديدة دفعة واحدة إذا وجدت
-    //     if (!empty($newBreaks)) {
-    //         $workingDay->breaks()->saveMany($newBreaks);
-    //         Log::info("Saved " . count($newBreaks) . " new breaks for Working Day ID: {$workingDay->id}");
-    //     } else {
-    //         Log::info("No new valid breaks to save for Working Day ID: {$workingDay->id}");
-    //     }
-    // }
 
 
 
@@ -366,14 +409,18 @@ class DoctorController extends Controller
     }
     public function myAppointments(Request $request)
     {
+        // Debugging: عرض جميع البيانات الواردة في الطلب
         $doctorId = Auth::guard('doctor')->id();
+        // هذه الدالة تعرض "مواعيدي" - القائمة التفصيلية مع pagination
+        // يمكن أن تبقى كما هي لتعرض المواعيد المؤكدة والقادمة
         $query = Appointment::where('doctor_id', $doctorId)
-            ->where('type', 'مؤكد')
-            ->where('appointment', '>=', now())
-            ->with('section') // قد تحتاج 'patient' إذا أردت عرض بياناته هنا
+            ->where('type', Appointment::STATUS_CONFIRMED) // 'مؤكد'
+            ->where('appointment', '>=', Carbon::now()) // القادمة
+            ->with(['patient:id,phone', 'section:id']) // جلب العلاقات اللازمة
             ->orderBy('appointment', 'asc');
 
-        $appointments = $query->paginate(12);
+        $appointments = $query->paginate(config('pagination.doctor_my_appointments', 10))->appends($request->query()); // pagination مع appends
+
         return view('Dashboard.Doctors.appointments.my_appointments', compact('appointments'));
     }
 
@@ -568,5 +615,38 @@ class DoctorController extends Controller
             Log::error("General Exception sending Twilio SMS for {$context} - Appt ID: {$appointmentId} - Error: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function searchPatientsForPrescription(Request $request)
+    {
+        $doctorId = Auth::guard('doctor')->id();
+        Log::info("Doctor ID {$doctorId} is searching for a patient to create a prescription.");
+
+        $query = Patient::with([
+            'image',
+            'diagnosedChronicDiseases',
+            'currentAdmission' => function ($q_admission) {
+                $q_admission->with(['bed.room.section']);
+            }
+        ]);
+
+        if ($request->filled('search_term')) {
+            $term = $request->search_term;
+            Log::info("Search term provided: {$term}");
+            $query->where(function ($q) use ($term) {
+                $q->whereTranslationLike('name', "%{$term}%")
+                    ->orWhere('national_id', 'like', "%{$term}%")
+                    ->orWhere('email', 'like', "%{$term}%")
+                    ->orWhere('Phone', 'like', "%{$term}%");
+            });
+        }
+
+        // ... (أي فلاتر صلاحيات إضافية) ...
+
+        $patients = $query->orderByTranslation('name', 'asc')
+            ->paginate(10)
+            ->appends($request->query());
+
+        return view('Dashboard.Doctors.Patients.search_for_prescription', compact('patients', 'request'));
     }
 } // نهاية الكلاس DoctorController
