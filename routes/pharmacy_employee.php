@@ -51,10 +51,10 @@ Route::group(
 
 
             Route::get('/prescriptions', [PharmacyEmployeePrescriptionController::class, 'index'])->name('prescriptions.index');
-            Route::get('/prescriptions/{prescription}/dispense', [App\Http\Controllers\Dashboard\PharmacyEmployee\PharmacyEmployeePrescriptionController::class, 'showDispenseForm'])->name('prescriptions.dispense.form');
-            Route::post('/prescriptions/{prescription}/dispense', [App\Http\Controllers\Dashboard\PharmacyEmployee\PharmacyEmployeePrescriptionController::class, 'processDispense'])->name('prescriptions.dispense.process');
-            Route::get('/prescriptions/dispensed', [App\Http\Controllers\Dashboard\PharmacyEmployee\PharmacyEmployeePrescriptionController::class, 'dispensedPrescriptions'])->name('prescriptions.dispensed'); // *** جديد: الوصفات المصروفة ***
-            Route::get('/prescriptions/on-hold', [App\Http\Controllers\Dashboard\PharmacyEmployee\PharmacyEmployeePrescriptionController::class, 'onHoldPrescriptions'])->name('prescriptions.on_hold');       // *** جديد: وصفات قيد الانتظار ***
+            Route::get('/prescriptions/{prescription}/dispense', [PharmacyEmployeePrescriptionController::class, 'showDispenseForm'])->name('prescriptions.dispense.form');
+            Route::post('/prescriptions/{prescription}/dispense', [PharmacyEmployeePrescriptionController::class, 'processDispense'])->name('prescriptions.dispense.process');
+            Route::get('/prescriptions/dispensed', [PharmacyEmployeePrescriptionController::class, 'dispensedPrescriptions'])->name('prescriptions.dispensed'); // *** جديد: الوصفات المصروفة ***
+            Route::get('/prescriptions/on-hold', [PharmacyEmployeePrescriptionController::class, 'onHoldPrescriptions'])->name('prescriptions.on_hold');       // *** جديد: وصفات قيد الانتظار ***
             //     // مسارات البحث عن الأدوية (يمكن أن تشير إلى MedicationController مع صلاحيات محدودة)
             Route::get('/medications/search', [App\Http\Controllers\Dashboard\MedicationController::class, 'searchIndexForPharmacy'])->name('medications.search');
             Route::get('/medications/{medication}/stocks', [PharmacyStockController::class, 'index'])->name('medications.stocks.index');

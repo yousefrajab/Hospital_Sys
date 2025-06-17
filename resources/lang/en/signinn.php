@@ -21,24 +21,28 @@ return array(
     'forgot password' => 'Forgot password !',
     'Having trouble getting in?' => 'Having trouble getting in?',
     'Contact Technical Support' => 'Contact Technical Support',
-    'Radiological staff' => 'Radiological staff',
-    'laboratory staff' => 'laboratory staff',
+    'Radiological staff' => 'Ray Employee',
+    'laboratory staff' => 'Laboratory Employee',
     'patient' => 'Patient',
 
     'Doctor Login' => 'Doctor Login',
-    'Radiology Staff Login' => 'Radiology Staff Login',
-    'Laboratory Staff Login' => 'Laboratory Staff Login',
+    'Radiology Staff Login' => 'Ray Employee Login',
+    'Laboratory Staff Login' => 'Laboratory Employee Login',
     'Patient Login' => 'Patient Login',
     'Don\'t have an account?' => 'Don\'t have an account?',
     'Create new account' => 'Create new account',
 
-    'pharmacy Staff Login' => 'pharmacy Staff Login',
-    'pharmacy_employee'=>'pharmacy_employee',
 
 
-    // 'Radiological Officer'=>'Radiological Officer',
-    // 'Radiological Officer'=>'Radiological Officer',
-    // 'Radiological Officer'=>'Radiological Officer',
+    'pharmacy Staff Login' => 'Pharmacy Employee Login',
+    'pharmacy_employee'=>'Pharmacy Employee',
+
+
+    'Pharmacy Manager'=>'Pharmacy Manager',
+    'Pharmacy Manager Login'=>'Pharmacy Manager Login',
+    'Pharmacy Employees Login'=>'Pharmacy Employees Login',
+
+   
 
 
 

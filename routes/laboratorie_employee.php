@@ -26,10 +26,10 @@ Route::group(
 
 
         //################################ dashboard doctor ########################################
+ // Route::get('/dashboard/laboratorie_employee', function () {
+        //     return view('Dashboard.dashboard_LaboratorieEmployee.dashboard');
+        // })->middleware(['auth:laboratorie_employee'])->name('dashboard.laboratorie_employee');
 
-        Route::get('/dashboard/laboratorie_employee', function () {
-            return view('Dashboard.dashboard_LaboratorieEmployee.dashboard');
-        })->middleware(['auth:laboratorie_employee'])->name('dashboard.laboratorie_employee');
 
         Route::get('/dashboard/laboratorie_employee', [ProfileLabController::class, 'dashboard'])->middleware(['auth:laboratorie_employee'])->name('dashboard.laboratorie_employee');
 

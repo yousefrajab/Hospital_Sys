@@ -113,7 +113,7 @@ class PharmacyManagercontroller extends Controller
             abort(404, 'الموظف غير موجود.');
         }
         // *** تعديل هنا: عرض صفحة التعديل الكاملة ***
-        return view('Dashboard.pharmacy_manager.edit', compact('pharmacy_manager'));
+        return view('Dashboard.PharmacyManager.edit', compact('pharmacy_manager'));
     }
 
 

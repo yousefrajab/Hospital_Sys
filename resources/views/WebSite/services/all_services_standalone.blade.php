@@ -163,9 +163,7 @@
                                     {{ number_format($service->price, 2) }} <small>{{ config('app.currency', 'ر.س') }}</small>
                                 </span>
                             @endif
-                             <a href="{{-- route('website.appointments.book') --}}?service_id={{$service->id}}" class="btn-details-service">
-                                طلب الخدمة <i class="fas fa-calendar-check"></i>
-                            </a>
+                             {{--  --}}
                         </div>
                     </div>
                 </div>

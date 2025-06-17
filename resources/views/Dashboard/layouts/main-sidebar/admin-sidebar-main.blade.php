@@ -347,6 +347,22 @@
             </ul>
         </li>
 
+<li class="nav-item {{ request()->routeIs('admin.testimonials.*') ? 'menu-open' : '' }}">
+    <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}">
+        <i class="nav-icon far fa-comments"></i>
+        <p>
+            آراء المرضى
+            {{-- يمكنك إضافة عدد التعليقات قيد المراجعة هنا --}}
+            @php
+                $pendingCount = \App\Models\Testimonial::where('status', 'pending')->count();
+            @endphp
+            @if ($pendingCount > 0)
+                <span class="badge badge-warning right">{{ $pendingCount }}</span>
+            @endif
+        </p>
+    </a>
+</li>
+
 
         <li class="side-item side-item-category">Pages</li> {{-- يمكنك إزالة هذا إذا لم يكن له معنى كبير --}}
     </ul>

@@ -150,11 +150,7 @@
                                 <p class="text-muted small mt-2">لا توجد تفاصيل للخدمات المتضمنة في هذه الباقة حالياً.</p>
                             @endif
                         </div>
-                        <div class="card-footer-block">
-                            <a href="{{-- route('website.group_service.details', $group->id) --}}" class="btn-view-details">
-                                طلب الباقة أو معرفة المزيد
-                            </a>
-                        </div>
+                       
                     </div>
                 </div>
             @empty

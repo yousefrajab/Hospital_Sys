@@ -10,7 +10,7 @@
 
     <style>
         /* --- المتغيرات الأساسية (Globals & Dark Mode) --- */
-        :root {
+        :root {ض
             --admin-primary: #4f46e5; /* Indigo-600 */
             --admin-primary-dark: #4338ca; /* Indigo-700 */
             --admin-secondary: #10b981; /* Emerald-500 */

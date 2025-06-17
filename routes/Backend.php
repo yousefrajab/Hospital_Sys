@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Dashboard\BedController;
 use App\Http\Controllers\Dashboard\RoomController;
 use App\Http\Controllers\Dashboard\DoctorController;
+use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Dashboard\DiseaseController;
 use App\Http\Controllers\Dashboard\PatientController;
 use App\Http\Controllers\Dashboard\SectionController;
@@ -210,6 +211,9 @@ Route::group(
             Route::get('/vital-signs/{vital_sign}/edit', [VitalSignController::class, 'edit'])->name('vital_signs.edit');
             Route::put('/vital-signs/{vital_sign}', [VitalSignController::class, 'update'])->name('vital_signs.update');
 
+            Route::resource('testimonials', TestimonialController::class)->except(['show']); // لا نحتاج show عادة
+            Route::patch('testimonials/{testimonial}/approve', [TestimonialController::class, 'approve'])->name('testimonials.approve');
+            Route::patch('testimonials/{testimonial}/reject', [TestimonialController::class, 'reject'])->name('testimonials.reject');
         });
         require __DIR__ . '/auth.php';
     }

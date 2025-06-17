@@ -46,7 +46,8 @@ class Create extends Component
     // المستمعات لأحداث Livewire / JavaScript
     protected $listeners = [
         'setSelectedDoctor',    // حدث من زر "حجز موعد" بجانب الطبيب
-        'dateSelected'          // حدث من تقويم JavaScript عند اختيار تاريخ
+        'dateSelected',
+        'setServiceDetails'          // حدث من تقويم JavaScript عند اختيار تاريخ
     ];
 
     // --- التهيئة ---
@@ -91,6 +92,45 @@ class Create extends Component
             // تحميل التواريخ المتاحة للطبيب المختار حديثاً
             $this->loadAvailableDatesForDoctor($doctorId);
         }
+    }
+
+
+  public function setServiceDetails($serviceName, $sectionId = null, $doctorId = null, $serviceType = 'service') // << إضافة serviceType
+    {
+        // 1. تعبئة حقل الملاحظات
+        if ($serviceType === 'package') {
+            $this->notes = "طلب حجز للباقة: " . trim($serviceName);
+            // يمكنك إضافة المزيد من التفاصيل إذا أردت، مثل:
+            // $groupModel = GroupedService::where('name', $serviceName)->first(); // ستحتاج لجلب النموذج
+            // if ($groupModel) {
+            //     $this->notes .= "\n" . Str::limit(strip_tags($groupModel->notes), 150);
+            // }
+        } else {
+            $this->notes = "الخدمة المطلوبة: " . trim($serviceName);
+        }
+
+        // 2. إذا تم تمرير معرّف القسم والطبيب (ينطبق على الخدمات المفردة المرتبطة بطبيب)
+        if ($sectionId && $doctorId) {
+            $this->setSelectedDoctor($sectionId, $doctorId);
+        }
+        // 3. إذا لم يتم تمرير قسم أو طبيب (ينطبق على الباقات أو الخدمات العامة)
+        else {
+            // لا نغير القسم أو الطبيب المختار حاليًا.
+            // إذا كنت تريد مسح اختيار القسم والطبيب عند حجز باقة، يمكنك فعل ذلك هنا:
+            // if ($serviceType === 'package') {
+            //     $this->section = null;
+            //     $this->doctors = collect();
+            //     $this->doctor = null;
+            //     $this->resetAvailability();
+            //     // وإعادة تعيين التقويم
+            //     $this->dispatchBrowserEvent('reset-calendar');
+            // }
+            // لكن غالبًا من الأفضل ترك الخيارات السابقة للمستخدم إذا كان قد اختارها بالفعل،
+            // إلا إذا كان منطق العمل يتطلب إعادة التعيين الكامل.
+            // للتبسيط الآن، لن نعيد تعيينهم تلقائيًا.
+        }
+
+        // اسم المريض يتم تعبئته تلقائيًا في دالة mount إذا كان مسجلاً.
     }
 
     // --- الاستجابة للأحداث ---
@@ -465,9 +505,9 @@ class Create extends Component
     // --- العرض ---
 
     public function render()
-{
-    // لا حاجة لجلب الأقسام أو تمريرها يدوياً هنا
-    // لأن $this->sections متاحة تلقائياً في الـ view
-    return view('livewire.appointments.create');
-}
+    {
+        // لا حاجة لجلب الأقسام أو تمريرها يدوياً هنا
+        // لأن $this->sections متاحة تلقائياً في الـ view
+        return view('livewire.appointments.create');
+    }
 }

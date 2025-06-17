@@ -286,7 +286,7 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
             ->orWhereIn('type', [             // ** استخدام 'type' **
                 Appointment::STATUS_COMPLETED,
                 Appointment::STATUS_CANCELLED, // افترض أن لديك حالة إلغاء عامة
-                
+
             ])
             ->orderBy('appointment', 'desc');    // ** استخدام 'appointment' **
     }
@@ -306,5 +306,9 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
     public function PrescriptionItem()
     {
         return $this->belongsTo(PrescriptionItem::class);
+    }
+    public function testimonials()
+    {
+        return $this->hasMany(Testimonial::class, 'patient_id');
     }
 }

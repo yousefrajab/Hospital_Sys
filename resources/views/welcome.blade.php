@@ -155,7 +155,8 @@
                             <div class="text">أين أنت في قلب مهمتنا. نأمل أن تعتبرنا منزلك الطبي - المكان الذي تشعر فيه
                                 بالأمان والراحة والرعاية. كمجموعة طبية متعددة التخصصات
                             </div>
-                            <a href="about.html" class="theme-btn btn-style-one"><span class="txt">المزيد عنا</span></a>
+                            <a href="{{ route('home') }}" class="theme-btn btn-style-one"><span class="txt">المزيد
+                                    عنا</span></a>
                         </div>
                     </div>
 
@@ -184,10 +185,14 @@
                 <div class="feature-block col-lg-3 col-md-6 col-sm-12">
                     <div class="inner-box wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
                         <div class="upper-box">
-                            <div class="icon flaticon-doctor-stethoscope"></div>
-                            <h3><a href="#">العلاج الطبي</a></h3>
+                            <div class="icon fas fa-briefcase-medical fa-3x">
+                                {{-- <i class="fas fa-briefcase-medical fa-3x text-warning"></i> <!-- أيقونة مناسبة للخدمات المجمعة/الباقات --> --}}
+                            </div>
+                            <h3><a href="#group_service">الخدمات المجمعة</a></h3>
                         </div>
-                        <div class="text">سواء أكنت تتخذ خطواتك الأولى ، أو مجرد إيجاد خطوتك</div>
+                        <div class="text">
+                            استفد من باقاتنا الصحية الشاملة التي توفر لك رعاية متكاملة بأسعار تنافسية.
+                        </div>
                     </div>
                 </div>
 
@@ -195,10 +200,11 @@
                 <div class="feature-block col-lg-3 col-md-6 col-sm-12">
                     <div class="inner-box wow fadeInLeft" data-wow-delay="250ms" data-wow-duration="1500ms">
                         <div class="upper-box">
-                            <div class="icon flaticon-ambulance-side-view"></div>
-                            <h3><a href="#">مساعدة الطوارئ</a></h3>
+                            <div class="icon fas fa-syringe fa-3x"></div>
+                            <h3><a href="#single_service">الخدمات المفردة</a></h3>
                         </div>
-                        <div class="text">سواء أكنت تتخذ خطواتك الأولى ، أو مجرد إيجاد خطوتك</div>
+                        <div class="text">احصل على خدمات طبية محددة مثل الفحوصات، التحاليل، أو استشارات متخصصة حسب حاجتك.
+                        </div>
                     </div>
                 </div>
 
@@ -207,9 +213,10 @@
                     <div class="inner-box wow fadeInLeft" data-wow-delay="500ms" data-wow-duration="1500ms">
                         <div class="upper-box">
                             <div class="icon fas fa-user-md"></div>
-                            <h3><a href="#">أطباء مؤهلين</a></h3>
+                            <h3><a href="{{ route('website.doctors.all') }}">أطباء مؤهلين</a></h3>
                         </div>
-                        <div class="text">سواء أكنت تتخذ خطواتك الأولى ، أو مجرد إيجاد خطوتك</div>
+                        <div class="text">
+                            تعرّف على نخبة من الأطباء المؤهلين لتقديم أفضل استشارة ورعاية صحية.</div>
                     </div>
                 </div>
 
@@ -217,10 +224,11 @@
                 <div class="feature-block col-lg-3 col-md-6 col-sm-12">
                     <div class="inner-box wow fadeInLeft" data-wow-delay="750ms" data-wow-duration="1500ms">
                         <div class="upper-box">
-                            <div class="icon fas fa-briefcase-medical"></div>
-                            <h3><a href="#">محترفين طبيا</a></h3>
+                            <div class="icon fas fa-hospital-alt fa-3x"></div>
+                            <h3><a href="{{ route('website.departments.all') }}">الأقسام</a></h3>
                         </div>
-                        <div class="text">سواء أكنت تتخذ خطواتك الأولى ، أو مجرد إيجاد خطوتك</div>
+                        <div class="text">
+                            اكتشف أقسامنا الطبية المتنوعة والمجهزة بأحدث التقنيات لتقديم رعاية متخصصة لك.</div>
                     </div>
                 </div>
 
@@ -338,9 +346,70 @@
     </section>
     <!-- End Department Section -->
 
+    <!-- Hospital Management System Banner Section - Bootstrap Enhanced -->
+    <section class="hospital-management-banner-section py-5 bg-light">
+        <!-- py-5 للتباعد العمودي, bg-light لخلفية خفيفة (اختياري) -->
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- align-items-center لمحاذاة العناصر عمودياً في حال اختلاف ارتفاع الأعمدة -->
+
+                <!-- Content Column -->
+                <div class="col-lg-7 col-md-12 order-lg-1 order-2 mb-4 mb-lg-0">
+                    <!-- order للتحكم بترتيب الظهور على الشاشات المختلفة, mb للتباعد السفلي -->
+                    <div class="content-inner p-lg-4"> <!-- p-lg-4 لإضافة padding داخلي على الشاشات الكبيرة -->
+                        <!-- ممكن نضيف خط فاصل هنا باستخدام بوتستراب إذا أردت -->
+                        <!-- <hr class="border-primary border-2 opacity-50" style="width: 50px;"> -->
+
+                        <h2 class="display-5 fw-bold mb-3">
+                            <!-- display-5 لكبر الخط, fw-bold للخط العريض, mb-3 للتباعد السفلي -->
+                            نظام إدارة المستشفيات <br class="d-none d-md-block">
+                            <!-- d-none d-md-block لإظهار الـ br فقط على شاشات متوسطة فأكبر -->
+                            <span class="text-primary">نحو رعاية صحية متطورة</span>
+                            <!-- text-primary لتلوين جزء من النص بلون البوتستراب الأساسي -->
+                        </h2>
+                        <hr class="w-25 my-4 border-2">
+                        <!-- فاصل بوتستراب: w-25 لعرض 25%, my-4 للتباعد العمودي, border-2 لسمك الخط -->
+                        <p class="lead mb-4"> <!-- lead لجعل النص أكبر قليلاً وأكثر بروزاً, mb-4 للتباعد السفلي -->
+                            نقدم حلولاً برمجية متكاملة لإدارة المستشفيات والمراكز الطبية بكفاءة عالية. نظامنا يهدف إلى تبسيط
+                            العمليات، تحسين تجربة المرضى، وتمكين الكوادر الطبية من تقديم أفضل رعاية ممكنة.
+                        </p>
+                        <a href="{{ route('home') }}" class="btn btn-primary btn-lg px-4">
+                            <!-- btn, btn-primary, btn-lg كلاسات بوتستراب للزر, px-4 لتباعد أفقي داخلي -->
+                            <span class="txt">اكتشف النظام</span>
+                            <i class="fas fa-arrow-left ms-2"></i>
+                            <!-- مثال لإضافة أيقونة (إذا كنت تستخدم Font Awesome), ms-2 للتباعد الأيسر -->
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Image Column -->
+                <div class="col-lg-5 col-md-12 order-lg-2 order-1"> <!-- order للتحكم بترتيب الظهور -->
+                    <div class="image-inner wow fadeInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
+                        <!--  !!! مهم: غيّر مسار الصورة واسمها لتناسب مشروعك !!! -->
+                        <img src="{{ URL::asset('Dashboard/img/media/hsptl.jpg') }}"
+                            alt="نظام إدارة المستشفيات - واجهة حديثة" class="img-fluid rounded shadow-sm" />
+                        <!--
+                                    img-fluid: لجعل الصورة متجاوبة
+                                    rounded: لحواف دائرية خفيفة
+                                    shadow-sm: لظل خفيف
+                                    اقترح صورة تعبر عن التكنولوجيا في المستشفى، مثل شاشة كمبيوتر تعرض واجهة نظام، أو طبيب يستخدم تابلت،
+                                    أو رسم توضيحي يمثل تدفق البيانات في النظام.
+                                    يفضل استخدام صيغة .webp للصور لكونها أخف وأفضل أداءً.
+                                -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- End Hospital Management System Banner Section -->
+
+    <br style="border: 1px solid #e0e0e0; margin: 40px 0;">
+
+
     @if (isset($latestServices) && $latestServices->count() > 0)
-        <section class="services-slider-section py-5 bg-gradient-light">
-            <div class="container position-relative">
+        <section class="grouped-services-section py-5 bg-white" id="single_service">
+            <div class="container">
                 <div class="row justify-content-center mb-5">
                     <div class="col-lg-8 text-center">
                         <h2 class="display-5 fw-bold text-primary mb-3">أحدث خدماتنا الطبية المتميزة</h2>
@@ -352,91 +421,84 @@
                     </div>
                 </div>
 
-                <!-- Swiper with 3D effect -->
-                <div class="swiper-container services-swiper-3d">
-                    <div class="swiper-wrapper">
-                        @foreach ($latestServices as $service)
-                            <div class="swiper-slide">
-                                <div class="service-card-3d">
-                                    <div class="card-face card-front">
-                                        <div class="service-icon-wrapper">
-                                            <i class="fas fa-heartbeat"></i>
+                <div class="row g-4 justify-content-center">
+                    @foreach ($latestServices as $service)
+                        <div class="col-md-6 col-lg-4">
+                            <div class="package-card">
+                                <div class="package-header">
+                                    <h3 class="package-title">{{ $service->name }}</h3>
+                                    @if (isset($service->price) && is_numeric($service->price))
+                                        <div class="package-price">
+                                            {{ number_format($service->price, 2) }}
+                                            <span>{{ config('app.currency_symbol', 'ر.س') }}</span>
                                         </div>
-                                        <div class="card-body">
-                                            <h5 class="service-title">{{ $service->name }}</h5>
-                                            @if ($service->doctor)
-                                                <div class="doctor-info">
-                                                    @if ($doctor->image)
-                                                        <img src="{{ asset('Dashboard/img/doctors/' . $doctor->image->filename) }}"
-                                                            alt="{{ $doctor->name }}"
-                                                            class="doctor-avatar img-fluid rounded-circle"
-                                                            style="width: 100px; height: 100px; object-fit: cover;"
-                                                            onerror="this.src='{{ asset('Dashboard/img/doctor_default.png') }}'">
-                                                    @else
-                                                        <img src="{{ asset('Dashboard/img/doctor_default.png') }}"
-                                                            alt="صورة افتراضية"
-                                                            class="doctor-avatar img-fluid rounded-circle"
-                                                            style="width: 100px; height: 100px; object-fit: cover;">
-                                                    @endif
-                                                    <div>
-                                                        <span class="doctor-name">{{ $service->doctor->name }}</span>
-                                                        @if ($service->doctor->section)
-                                                            <span
-                                                                class="doctor-specialty">{{ $service->doctor->section->name }}</span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            @endif
-                                            <div class="service-excerpt">
-                                                {{ Str::limit(strip_tags($service->description ?? 'وصف مختصر للخدمة...'), 100) }}
-                                            </div>
-                                            <div class="flip-button">
-                                                <i class="fas fa-redo"></i> التفاصيل
-                                            </div>
-                                        </div>
+                                    @endif
+                                </div>
+                                <div class="package-body">
+                                    <div class="service-excerpt mb-3">
+                                        {{ Str::limit(strip_tags($service->description ?? 'وصف مختصر للخدمة...'), 100) }}
                                     </div>
-                                    <div class="card-face card-back">
-                                        <div class="card-body">
-                                            <h5 class="service-title">{{ $service->name }}</h5>
-                                            <ul class="service-features">
-                                                <li><i class="fas fa-check-circle"></i> تشخيص دقيق</li>
-                                                <li><i class="fas fa-check-circle"></i> أحدث التقنيات</li>
-                                                <li><i class="fas fa-check-circle"></i> متابعة مستمرة</li>
-                                            </ul>
-                                            @if (isset($service->price) && is_numeric($service->price))
-                                                <div class="price-tag">
-                                                    {{ number_format($service->price, 2) }}
-                                                    <small>{{ config('app.currency_symbol', 'ر.س') }}</small>
-                                                </div>
+
+                                    {{-- تصحيح: يجب استخدام $service->doctor هنا وليس $doctor --}}
+                                    @if ($service->doctor)
+                                        <div class="doctor-info mb-3 d-flex align-items-center"> {{-- Added d-flex and align-items-center --}}
+                                            @if ($service->doctor->image)
+                                                {{-- Corrected: $service->doctor --}}
+                                                <img src="{{ asset('Dashboard/img/doctors/' . $service->doctor->image->filename) }}"
+                                                    alt="{{ $service->doctor->name }}"
+                                                    class="doctor-avatar img-fluid rounded-circle me-2"
+                                                    {{-- Added me-2 for margin --}}
+                                                    style="width: 60px; height: 60px; object-fit: cover;"
+                                                    onerror="this.src='{{ asset('Dashboard/img/doctor_default.png') }}'">
+                                            @else
+                                                <img src="{{ asset('Dashboard/img/doctor_default.png') }}"
+                                                    alt="صورة افتراضية"
+                                                    class="doctor-avatar img-fluid rounded-circle me-2"
+                                                    {{-- Added me-2 for margin --}}
+                                                    style="width: 60px; height: 60px; object-fit: cover;">
                                             @endif
-                                            <a href="#" class="btn btn-primary btn-book">
-                                                حجز الخدمة <i class="fas fa-calendar-check ms-1"></i>
-                                            </a>
+                                            <div class="ms-1"> {{-- Adjusted margin --}}
+                                                <div class="doctor-name fw-bold">{{ $service->doctor->name }}</div>
+                                                @if ($service->doctor->section)
+                                                    <div class="doctor-specialty text-muted small">
+                                                        {{ $service->doctor->section->name }}</div>
+                                                @endif
+                                            </div>
                                         </div>
+                                    @endif
+
+                                    <div class="package-features">
+                                        <ul>
+                                            <li><i class="fas fa-check text-success"></i> تشخيص دقيق</li>
+                                            <li><i class="fas fa-check text-success"></i> أحدث التقنيات</li>
+                                            <li><i class="fas fa-check text-success"></i> متابعة مستمرة</li>
+                                        </ul>
                                     </div>
                                 </div>
+                                <div class="package-footer">
+                                    {{-- ======== بداية التعديل على الزر ======== --}}
+                                    <button type="button" {{-- تغيير a إلى button لعدم الحاجة لـ href --}}
+                                        class="btn btn-outline-primary btn-package-book book-service-trigger"
+                                        {{-- إضافة كلاس book-service-trigger --}} data-service-name="{{ $service->name }}"
+                                        @if ($service->doctor) data-doctor-id="{{ $service->doctor->id }}"
+                                        @if ($service->doctor->section)
+                                            data-section-id="{{ $service->doctor->section->id }}" @endif
+                                        @endif
+                                        >
+                                        حجز الخدمة <i class="fas fa-calendar-alt ms-2"></i>
+                                    </button>
+                                    {{-- ======== نهاية التعديل على الزر ======== --}}
+                                </div>
                             </div>
-                        @endforeach
-                    </div>
-                    <!-- Add Pagination -->
-                    <div class="swiper-pagination services-swiper-pagination"></div>
-                </div>
-
-                <!-- Custom Navigation -->
-                <div class="swiper-nav-buttons">
-                    <button class="swiper-button-prev-custom">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <button class="swiper-button-next-custom">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </section>
     @endif
 
     @if (isset($latestGroupedServices) && $latestGroupedServices->count() > 0)
-        <section class="grouped-services-section py-5 bg-white">
+        <section class="grouped-services-section py-5 bg-white" id="group_service">
             <div class="container">
                 <div class="row justify-content-center mb-5">
                     <div class="col-lg-8 text-center">
@@ -450,8 +512,8 @@
 
                 <div class="row g-4 justify-content-center">
                     @foreach ($latestGroupedServices as $group)
-                        <div class="col-md-6 col-lg-4">
-                            <div class="package-card">
+                        <div class="col-md-6 col-lg-4 d-flex"> {{-- Added d-flex --}}
+                            <div class="package-card h-100 d-flex flex-column">
                                 <div class="package-header">
                                     <h3 class="package-title">{{ $group->name }}</h3>
                                     @if (isset($group->Total_with_tax))
@@ -460,183 +522,73 @@
                                             <span>{{ config('app.currency_symbol', 'ر.س') }}</span>
                                         </div>
                                     @endif
-                                    <div class="package-savings">
-                                        متوفر حتى 25
-                                    </div>
                                 </div>
-                                <div class="package-body">
+                                <div class="package-body flex-grow-1">
                                     @if ($group->notes)
                                         <p class="package-description">
-                                            {{ Str::limit(strip_tags($group->notes), 120) }}
+                                            {{ Str::limit(strip_tags($group->notes), 100) }}
                                         </p>
                                     @endif
 
-                                    <div class="package-features">
-                                        <h5>تشمل الباقة:</h5>
-                                        <ul>
-                                            @foreach ($group->service_group->take(4) as $service_item)
-                                                <li>
-                                                    <i class="fas fa-check"></i>
-                                                    {{ $service_item->name }}
-                                                    @if (isset($service_item->price))
-                                                        <span class="feature-price">
-                                                            {{ number_format($service_item->price, 2) }} ر.س
-                                                        </span>
-                                                    @endif
-                                                </li>
-                                            @endforeach
-                                            @if ($group->service_group->count() > 4)
-                                                <li class="more-features">
-                                                    + {{ $group->service_group->count() - 4 }} خدمات إضافية
-                                                </li>
-                                            @endif
-                                        </ul>
-                                    </div>
+                                    {{-- عرض الطبيب الرئيسي للباقة إذا كان موجودًا --}}
+                                    @if ($group->doctor)
+                                        <div class="alert alert-soft-primary py-2 px-3 mb-2" style="font-size: 0.85em;">
+                                            <i class="fas fa-user-shield me-1"></i>
+                                            <small>
+                                                <strong>مقدمة بواسطة:</strong> {{ $group->doctor->name }}
+                                                @if ($group->doctor->section)
+                                                    ({{ $group->doctor->section->name }})
+                                                @endif
+                                            </small>
+                                        </div>
+                                    @endif
 
-                                    <div class="package-total">
-                                        <span>القيمة الإجمالية:</span>
-                                        <span class="total-value">
-                                            @php
-                                                $totalValue = $group->service_group->sum('price');
-                                                echo number_format($totalValue, 2) .
-                                                    ' ' .
-                                                    config('app.currency_symbol', 'ر.س');
-                                            @endphp
-                                        </span>
-                                    </div>
+                                    @if($group->service_group->isNotEmpty())
+                                        <div class="package-features">
+                                            <h6 class="mb-2" style="font-size: 0.9em;">تشمل الباقة:</h6>
+                                            <ul class="list-unstyled" style="font-size: 0.85em;">
+                                                @foreach ($group->service_group->take(3) as $service_item)
+                                                    <li class="mb-1">
+                                                        <i class="fas fa-check-circle text-success me-1"></i>
+                                                        {{ Str::limit($service_item->name, 25) }}
+                                                    </li>
+                                                @endforeach
+                                                @if ($group->service_group->count() > 3)
+                                                    <li class="text-muted">
+                                                        <i class="fas fa-plus-circle me-1"></i>
+                                                        + {{ $group->service_group->count() - 3 }} خدمات أخرى
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    @endif
                                 </div>
-                                <div class="package-footer">
-                                    {{-- <a href="#" class="btn btn-primary btn-package-details">
-                                        تفاصيل الباقة <i class="fas fa-arrow-left ms-2"></i>
-                                    </a> --}}
-                                    <a href="#" class="btn btn-outline-primary btn-package-book">
+                                <div class="package-footer mt-auto">
+                                    {{-- ======== بداية التعديل على الزر ======== --}}
+                                    <a href="{{ route('home') }}#appointment" {{-- رابط إلى صفحة الحجز --}}
+                                        class="btn btn-primary btn-block btn-package-book book-service-trigger"
+                                        data-service-name="{{ $group->name }}"
+                                        data-service-type="package"
+                                        @if ($group->doctor) {{-- إذا كانت الباقة مرتبطة بطبيب --}}
+                                            data-doctor-id="{{ $group->doctor->id }}"
+                                            @if ($group->doctor->section) {{-- وإذا كان للطبيب قسم --}}
+                                                data-section-id="{{ $group->doctor->section->id }}"
+                                            @endif
+                                        @endif
+                                        data-action="fillAppointmentForm" {{-- علامة للـ JavaScript في صفحة الحجز --}}
+                                        >
                                         حجز الباقة <i class="fas fa-calendar-alt ms-2"></i>
                                     </a>
+                                    {{-- ======== نهاية التعديل على الزر ======== --}}
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
-
-                {{-- <div class="text-center mt-5">
-                    <a href="#" class="btn btn-outline-primary btn-lg rounded-pill px-4">
-                        عرض جميع البackages <i class="fas fa-arrow-left ms-2"></i>
-                    </a>
-                </div> --}}
             </div>
         </section>
     @endif
-    <!-- End Latest Single Services Section -->
 
-    <!-- Team Section -->
-    {{-- <section class="team-section">
-        <div class="auto-container">
-
-            <!-- Sec Title -->
-            <div class="sec-title centered">
-                <h2>الأخصائيون الطبيون</h2>
-                <div class="separator"></div>
-            </div>
-
-            <div class="row clearfix">
-
-                <!-- Team Block -->
-                <div class="team-block col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                    <div class="inner-box wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
-                        <div class="image">
-                            <img src="images/resource/team-1.jpg" alt="" />
-                            <div class="overlay-box">
-                                <ul class="social-icons">
-                                    <li><a href="#"><span class="fab fa-facebook-f"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-google"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-skype"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-linkedin-in"></span></a></li>
-                                </ul>
-                                <a href="#" class="appointment">Make Appointment</a>
-                            </div>
-                        </div>
-                        <div class="lower-content">
-                            <h3><a href="#">الدكتورة أندريا جونيا</a></h3>
-                            <div class="designation">أخصائي السرطان</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Team Block -->
-                <div class="team-block col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                    <div class="inner-box wow fadeInLeft" data-wow-delay="250ms" data-wow-duration="1500ms">
-                        <div class="image">
-                            <img src="images/resource/team-2.jpg" alt="" />
-                            <div class="overlay-box">
-                                <ul class="social-icons">
-                                    <li><a href="#"><span class="fab fa-facebook-f"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-google"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-skype"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-linkedin-in"></span></a></li>
-                                </ul>
-                                <a href="#" class="appointment">Make Appointment</a>
-                            </div>
-                        </div>
-                        <div class="lower-content">
-                            <h3><a href="#">د. روبت سميث</a></h3>
-                            <div class="designation">جراح قلب</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Team Block -->
-                <div class="team-block col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                    <div class="inner-box wow fadeInLeft" data-wow-delay="500ms" data-wow-duration="1500ms">
-                        <div class="image">
-                            <img src="images/resource/team-3.jpg" alt="" />
-                            <div class="overlay-box">
-                                <ul class="social-icons">
-                                    <li><a href="#"><span class="fab fa-facebook-f"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-google"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-skype"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-linkedin-in"></span></a></li>
-                                </ul>
-                                <a href="#" class="appointment">Make Appointment</a>
-                            </div>
-                        </div>
-                        <div class="lower-content">
-                            <h3><a href="#">دكتور ويل لورا</a></h3>
-                            <div class="designation">طبيب الأسرة</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Team Block -->
-                <div class="team-block col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                    <div class="inner-box wow fadeInLeft" data-wow-delay="750ms" data-wow-duration="1500ms">
-                        <div class="image">
-                            <img src="images/resource/team-4.jpg" alt="" />
-                            <div class="overlay-box">
-                                <ul class="social-icons">
-                                    <li><a href="#"><span class="fab fa-facebook-f"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-google"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-skype"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-linkedin-in"></span></a></li>
-                                </ul>
-                                <a href="#" class="appointment">Make Appointment</a>
-                            </div>
-                        </div>
-                        <div class="lower-content">
-                            <h3><a href="#">الدكتور أليكس فورغسين</a></h3>
-                            <div class="designation">أخصائي تقويم العظام</div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    </section> --}}
-    <!-- End Team Section -->
     <br>
     <!-- Video Section -->
     <section class="video-section" style="background-image:url(images/background/5.jpg)">
@@ -691,126 +643,44 @@
         <div class="auto-container">
             <!-- Sec Title -->
             <div class="sec-title centered">
-                <h2>ماذا يقول المرضى</h2>
+                <h2>ماذا يقول مرضانا</h2>
                 <div class="separator"></div>
             </div>
-            <div class="testimonial-carousel owl-carousel owl-theme">
 
-                <!-- Tesimonial Block Two -->
-                <div class="testimonial-block-two">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="images/resource/author-4.jpg" alt="" />
-                        </div>
-                        <div class="text">
-                            يعد المركز الطبي مكانًا رائعًا للحصول على جميع احتياجاتك الطبية. دخلت
-                            لإجراء فحص ولم تنتظر أكثر من 5 دقائق قبل رؤيتي. يمكنني أن أتصور
-                            نوع الخدمة التي تحصل عليها في حالة المشكلات الأكثر خطورة. شكرًا!
-                        </div>
-                        <div class="lower-box">
-                            <div class="clearfix">
-
-                                <div class="pull-left">
-                                    <div class="quote-icon flaticon-quote"></div>
+            @if (isset($testimonials))
+                <div class="testimonial-carousel owl-carousel owl-theme">
+                    @foreach ($testimonials as $testimonial)
+                        <div class="testimonial-block-two">
+                            <div class="inner-box">
+                                <div class="text">
+                                    {{ $testimonial->comment }}
                                 </div>
-                                <div class="pull-right">
-                                    <div class="author-info">
-                                        <h3>ماكس وينشستر</h3>
-                                        <div class="author">مريض الكلى</div>
+                                <div class="lower-box">
+                                    <div class="clearfix">
+                                        <div class="pull-left">
+                                            <div class="quote-icon flaticon-quote"></div>
+                                        </div>
+                                        <div class="pull-right">
+                                            <div class="author-info">
+                                                <h3>{{ $testimonial->patient_name }}</h3>
+                                                <br>
+
+                                                <div class="author"> مرضانا الكرام</div>
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
-
-                <!-- Tesimonial Block Two -->
-                <div class="testimonial-block-two">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="images/resource/author-5.jpg" alt="" />
-                        </div>
-                        <div class="text">
-                            يعد المركز الطبي مكانًا رائعًا للحصول على جميع احتياجاتك الطبية. دخلت
-                            لإجراء فحص ولم تنتظر أكثر من 5 دقائق قبل رؤيتي. يمكنني أن أتصور
-                            نوع الخدمة التي تحصل عليها في حالة المشكلات الأكثر خطورة. شكرًا!
-                        </div>
-                        <div class="lower-box">
-                            <div class="clearfix">
-
-                                <div class="pull-left">
-                                    <div class="quote-icon flaticon-quote"></div>
-                                </div>
-                                <div class="pull-right">
-                                    <div class="author-info">
-                                        <h3>جاك مونيتا</h3>
-                                        <div class="author">مريض الكلى</div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
+            @else
+                <div class="no-testimonials text-center" style="padding: 20px 0;">
+                    {{-- يمكنك وضع رسالة أو تصميم بديل هنا إذا لم تكن هناك آراء --}}
+                    <p>لا توجد آراء من المرضى لعرضها حاليًا.</p>
                 </div>
-
-                <!-- Tesimonial Block Two -->
-                <div class="testimonial-block-two">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="images/resource/author-4.jpg" alt="" />
-                        </div>
-                        <div class="text">Medical Centre is a great place to get all of your medical needs. I came in
-                            for a check up and did not wait more than 5 minutes before I was seen. I can only imagine
-                            the type of service you get for more serious issues. Thanks!
-                        </div>
-                        <div class="lower-box">
-                            <div class="clearfix">
-
-                                <div class="pull-left">
-                                    <div class="quote-icon flaticon-quote"></div>
-                                </div>
-                                <div class="pull-right">
-                                    <div class="author-info">
-                                        <h3>Max Winchester</h3>
-                                        <div class="author">Kidny Patient</div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tesimonial Block Two -->
-                <div class="testimonial-block-two">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="images/resource/author-5.jpg" alt="" />
-                        </div>
-                        <div class="text">Medical Centre is a great place to get all of your medical needs. I came in
-                            for a check up and did not wait more than 5 minutes before I was seen. I can only imagine
-                            the type of service you get for more serious issues. Thanks!
-                        </div>
-                        <div class="lower-box">
-                            <div class="clearfix">
-
-                                <div class="pull-left">
-                                    <div class="quote-icon flaticon-quote"></div>
-                                </div>
-                                <div class="pull-right">
-                                    <div class="author-info">
-                                        <h3>Jack Monita</h3>
-                                        <div class="author">Kidny Patient</div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            @endif
         </div>
     </section>
     <!-- End Testimonial Section Two -->
@@ -829,7 +699,9 @@
                             <div class="content">
                                 <div class="icon flaticon-logout"></div>
                                 <div class="count-outer count-box">
-                                    <span class="count-text" data-speed="2500" data-stop="2350">0</span>
+                                    +<span class="count-text" data-speed="2500"
+                                        data-stop="{{ $patientsCount ?? 0 }}">0</span>
+                                    {{-- <span class="count-text" data-speed="2500" data-stop="2350">0</span> --}}
                                 </div>
                                 <h4 class="counter-title">مرضى راضون</h4>
                             </div>
@@ -842,7 +714,9 @@
                             <div class="content">
                                 <div class="icon flaticon-logout"></div>
                                 <div class="count-outer count-box alternate">
-                                    +<span class="count-text" data-speed="3000" data-stop="350">0</span>
+                                    +<span class="count-text" data-speed="3000"
+                                        data-stop="{{ $doctorsCount ?? 0 }}">0</span>
+                                    {{-- +<span class="count-text" data-speed="3000" data-stop="350">0</span> --}}
                                 </div>
                                 <h4 class="counter-title">فريق الطبيب</h4>
                             </div>
@@ -855,9 +729,11 @@
                             <div class="content">
                                 <div class="icon flaticon-logout"></div>
                                 <div class="count-outer count-box">
-                                    <span class="count-text" data-speed="3000" data-stop="2150">0</span>
+                                    +<span class="count-text" data-speed="3000"
+                                        data-stop="{{ $appointmentCount ?? 0 }}">0</span>
+                                    {{-- <span class="count-text" data-speed="3000" data-stop="2150">0</span> --}}
                                 </div>
-                                <h4 class="counter-title">مهمة النجاح</h4>
+                                <h4 class="counter-title">الاستشارات </h4>
                             </div>
                         </div>
                     </div>
@@ -868,9 +744,11 @@
                             <div class="content">
                                 <div class="icon flaticon-logout"></div>
                                 <div class="count-outer count-box">
-                                    +<span class="count-text" data-speed="2500" data-stop="225">0</span>
+                                    +<span class="count-text" data-speed="2500"
+                                        data-stop="{{ $successfulSurgeriesCount ?? 0 }}">0</span>
+                                    {{-- +<span class="count-text" data-speed="2500" data-stop="225">0</span> --}}
                                 </div>
-                                <h4 class="counter-title">جراحات ناجحة</h4>
+                                <h4 class="counter-title">الاستشارات ناجحة</h4>
                             </div>
                         </div>
                     </div>
@@ -898,7 +776,10 @@
                                 <li>الأحد<span>9:00am–3:00pm</span></li>
                             </ul>
                             <h4>حالات الطوارئ</h4>
-                            <div class="phone">اتصل بنا ! <strong>+898 68679 575 09</strong></div>
+                            <div class="phone">
+                                اتصل بنا ! <a href="tel:+970567077179"
+                                    style="text-decoration: none; color: inherit;"><strong>+970567077179</strong></a></div>
+                            {{-- <div class="phone">اتصل بنا ! <strong>+970567077179</strong></div> --}}
                         </div>
                     </div>
 
@@ -934,7 +815,7 @@
     <!-- End Doctor Info Section -->
 
     <!-- News Section Two -->
-    <section class="news-section-two">
+    {{-- <section class="news-section-two">
         <div class="auto-container">
             <!-- Sec Title -->
             <div class="sec-title centered">
@@ -1004,7 +885,7 @@
 
                 </div>
             </div>
-    </section>
+    </section> --}}
 
     <!--Clients Section-->
     <section class="clients-section">
@@ -1260,9 +1141,9 @@
             }
 
             /* .doctor-avatar {
-                                                                            width: 50px;
-                                                                            height: 100px;
-                                                                        } */
+                                                                                        width: 50px;
+                                                                                        height: 100px;
+                                                                                    } */
 
             .doctor-details {
                 padding: 15px;
@@ -1938,6 +1819,168 @@
             // ----- نهاية كود التحقق من التاريخ -----
 
         }); // نهاية document.addEventListener
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // --- المعالج الجديد لأزرار "حجز الخدمة" ---
+            document.body.addEventListener('click', function(event) {
+                // استخدام closest للتأكد من أننا نلتقط الزر حتى لو كان بداخله أيقونة أو نص
+                const serviceButton = event.target.closest('.book-service-trigger');
+
+                if (serviceButton) {
+                    event.preventDefault(); // منع أي سلوك افتراضي للزر
+
+                    const serviceName = serviceButton.dataset.serviceName;
+                    const sectionId = serviceButton.dataset.sectionId ||
+                        null; // سيكون null إذا لم يكن موجودًا
+                    const doctorId = serviceButton.dataset.doctorId ||
+                        null; // سيكون null إذا لم يكن موجودًا
+
+                    console.log('Booking service:', serviceName, 'Section:', sectionId, 'Doctor:',
+                        doctorId); // For debugging
+
+                    if (serviceName && typeof Livewire !== 'undefined') {
+                        // إرسال الحدث إلى مكون Livewire
+                        // 'appointments.create' هو اسم مكون Livewire
+                        Livewire.emitTo('appointments.create', 'setServiceDetails', serviceName, sectionId,
+                            doctorId);
+
+                        // التمرير إلى قسم فورم الحجز
+                        // افترض أن فورم الحجز موجود داخل عنصر له ID 'appointment'
+                        const appointmentFormSection = document.getElementById('appointment');
+                        if (appointmentFormSection) {
+                            appointmentFormSection.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        } else {
+                            console.warn(
+                                'Appointment form section with ID "appointment" not found for scrolling.'
+                            );
+                        }
+                    } else {
+                        if (!serviceName) console.warn('Service name not found on button:', serviceButton);
+                        if (typeof Livewire === 'undefined') console.error(
+                            'Livewire is not defined. Cannot emit event.');
+                    }
+                }
+            });
+
+            // --- الكود الخاص بأزرار حجز الأطباء من قائمة الأقسام (book-doctor-btn) ---
+            // إذا كان هذا الكود موجودًا لديك بالفعل ويعمل، يمكنك تركه كما هو.
+            // أو إذا كنت تريد توحيد السلوك، يمكن تعديله ليشبه معالج book-service-trigger
+            const doctorButtons = document.querySelectorAll('.book-doctor-btn'); // الكلاس من كود الأقسام لديك
+            doctorButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const doctorId = this.dataset.doctorId;
+                    const sectionId = this.dataset.sectionId;
+                    const doctorName = this.dataset.doctorName || 'المختار';
+                    // const serviceNote = "استشارة مع الدكتور " + doctorName; // يمكنك إعداد ملاحظة هنا
+
+                    if (typeof Livewire !== 'undefined') {
+                        // الخيار أ: إذا كنت تريد أن يقوم هذا الزر بتعبئة الملاحظات أيضًا
+                        // Livewire.emitTo('appointments.create', 'setServiceDetails', serviceNote, sectionId, doctorId);
+
+                        // الخيار ب: إذا كان سيعتمد فقط على setSelectedDoctor (والتي قد تعبئ الملاحظات افتراضيًا إذا عدلتها)
+                        Livewire.emitTo('appointments.create', 'setSelectedDoctor', sectionId,
+                            doctorId);
+                    }
+
+                    const appointmentFormSection = document.getElementById('appointment');
+                    if (appointmentFormSection) {
+                        appointmentFormSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // ... (بقية كود JS الخاص بك لـ flatpickr وغيرها) ...
+            // تأكد أن هذا الجزء من الكود لا يتعارض مع كود flatpickr الموجود بالفعل
+            // الكود الخاص بـ flatpickr يجب أن يكون داخل document.addEventListener('alpine:init', () => { ... });
+            // أو Livewire.hook إذا كان يعتمد على تحديثات Livewire.
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // --- المعالج الموحد لأزرار "حجز الخدمة" و "حجز الباقة" ---
+            document.body.addEventListener('click', function(event) {
+                const triggerButton = event.target.closest(
+                    '.book-service-trigger'); // يستهدف أي زر بهذا الكلاس
+
+                if (triggerButton) {
+                    event.preventDefault();
+
+                    const serviceName = triggerButton.dataset.serviceName;
+                    const sectionId = triggerButton.dataset.sectionId || null;
+                    const doctorId = triggerButton.dataset.doctorId || null;
+                    const serviceType = triggerButton.dataset.serviceType || 'service'; // << قراءة النوع
+
+                    console.log('Booking triggered:', serviceName, 'Type:', serviceType, 'Section:',
+                        sectionId, 'Doctor:', doctorId);
+
+                    if (serviceName && typeof Livewire !== 'undefined') {
+                        Livewire.emitTo(
+                            'appointments.create',
+                            'setServiceDetails',
+                            serviceName,
+                            sectionId,
+                            doctorId,
+                            serviceType // << تمرير النوع
+                        );
+
+                        const appointmentFormSection = document.getElementById('appointment');
+                        if (appointmentFormSection) {
+                            appointmentFormSection.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        } else {
+                            console.warn(
+                                'Appointment form section with ID "appointment" not found for scrolling.'
+                            );
+                        }
+                    } else {
+                        if (!serviceName) console.warn('Service name not found on button:', triggerButton);
+                        if (typeof Livewire === 'undefined') console.error(
+                            'Livewire is not defined. Cannot emit event.');
+                    }
+                }
+            });
+
+            // --- الكود الخاص بأزرار حجز الأطباء من قائمة الأقسام (book-doctor-btn) ---
+            // (اتركه كما هو إذا كان يعمل بشكل جيد، أو عدله ليتناسب مع setServiceDetails إذا أردت توحيد السلوك)
+            const doctorButtons = document.querySelectorAll('.book-doctor-btn');
+            doctorButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const doctorId = this.dataset.doctorId;
+                    const sectionId = this.dataset.sectionId;
+                    // const doctorName = this.dataset.doctorName || 'المختار';
+                    // const serviceNote = "استشارة مع الدكتور " + doctorName;
+
+                    if (typeof Livewire !== 'undefined') {
+                        // الخيار 1: إرسال كخدمة افتراضية مع تحديد الطبيب والقسم
+                        // Livewire.emitTo('appointments.create', 'setServiceDetails', serviceNote, sectionId, doctorId, 'service');
+
+                        // الخيار 2: استخدام setSelectedDoctor مباشرة (كما كان)
+                        Livewire.emitTo('appointments.create', 'setSelectedDoctor', sectionId,
+                            doctorId);
+                    }
+
+                    const appointmentFormSection = document.getElementById('appointment');
+                    if (appointmentFormSection) {
+                        appointmentFormSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // ... (بقية كود JS الخاص بك لـ flatpickr وغيرها) ...
+        });
     </script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 @endsection

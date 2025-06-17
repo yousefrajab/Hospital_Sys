@@ -17,14 +17,21 @@ class Group extends Model
         'discount_value',
         'Total_after_discount',
         'tax_rate',
-        'Total_with_tax'
+        'Total_with_tax',
+        'doctor_id', // إذا كانت المجموعة مرتبطة بطبيب معين
+
     ];
     public function service_group()
     {
-        
+
         return $this->belongsToMany(Service::class, 'service_group', 'group_id', 'service_id')
             ->withPivot('quantity') // لجلب الكمية من الجدول الوسيط
             ->withTimestamps(); // إذا كان الجدول الوسيط يحتوي على created_at و updated_at
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class, 'doctor_id');
     }
 
     // يمكنك إضافة Accessor لعرض الطبيب/القسم إذا كانت المجموعة مرتبطة بطبيب/قسم معين

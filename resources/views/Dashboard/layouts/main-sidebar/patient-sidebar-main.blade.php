@@ -176,6 +176,14 @@
                 </ul>
             </li>
 
+
+            <li class="slide {{ request()->routeIs('patient.testimonials.create') ? 'active' : '' }}">
+                <a class="side-menu__item" href="{{ route('patient.testimonials.create') }}">
+                    <i class="side-menu__icon fas fa-pencil-alt"></i> {{-- أيقونة قلم أو تعليق --}}
+                    <span class="side-menu__label">إضافة رأيك/تعليقك</span>
+                </a>
+            </li>
+
             {{-- زر تسجيل الخروج --}}
             <li class="slide">
                 <a class="side-menu__item" href="javascript:void(0);"
@@ -188,6 +196,7 @@
                     @csrf
                 </form>
             </li>
+
 
         </ul>
     </div>

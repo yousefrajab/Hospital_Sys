@@ -10,7 +10,7 @@ class AuthenticateAllRoutes
 {
     public function handle(Request $request, Closure $next)
     {
-        $guards = ['web', 'admin', 'doctor', 'ray_employee', 'laboratorie_employee', 'patient'];
+        $guards = ['web', 'admin', 'doctor', 'ray_employee', 'laboratorie_employee', 'patient', 'pharmacy_employee', 'pharmacy_manager'];
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {

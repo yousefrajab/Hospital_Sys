@@ -3,13 +3,18 @@
 namespace App\Http\Livewire;
 
 use App\Models\Group;
+use App\Models\Doctor;
 use App\Models\Service;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 
 class CreateGroupServices extends Component
 {
+
+    public $group_doctor_id = null; // <<<<<<<< خاصية جديدة للطبيب المرتبط بالباقة
+    public $availableDoctors = []; // <<<<<<<< قائمة الأطباء المتاحين للباقات
+
     public $GroupsItems = [];
     public $allServices = [];
     // public $availableDoctors = []; // لم تعد مستخدمة بهذا الشكل
@@ -29,6 +34,9 @@ class CreateGroupServices extends Component
         $this->allServices = Service::where('status', 1) // فقط الخدمات المفعلة
 
             ->get();
+
+        $this->allServices = Service::where('status', 1)->get();
+        $this->availableDoctors = Doctor::where('status', 1)->orderByTranslation('name')->get();
     }
 
     public function render()
@@ -43,10 +51,13 @@ class CreateGroupServices extends Component
         // تحميل ترجمات المجموعات للعرض في الجدول
         $groups = Group::orderBy('created_at', 'desc')->get();
 
+
+
         return view('livewire.GroupServices.create-group-services', [
             'groups' => $groups,
             'subtotal' => $Total_after_discount = $total - ((is_numeric($this->discount_value) ? $this->discount_value : 0)),
-            'total' => $Total_after_discount * (1 + (is_numeric($this->taxes) ? $this->taxes : 0) / 100)
+            'total' => $Total_after_discount * (1 + (is_numeric($this->taxes) ? $this->taxes : 0) / 100),
+            'availableDoctorsForGroup' => $this->availableDoctors
         ]);
     }
 

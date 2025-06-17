@@ -127,6 +127,9 @@ Route::group(
         Route::get('/refill-requests/pending', [PatientPharmacyController::class, 'pendingRefillRequests'])
             ->name('patient.pharmacy.refill-requests.pending');
 
+        Route::get('/testimonials/create', [App\Http\Controllers\Dashboard_Patient\PatientController::class, 'createTestimonial'])->name('patient.testimonials.create');
+        Route::post('/testimonials', [App\Http\Controllers\Dashboard_Patient\PatientController::class, 'storeTestimonial'])->name('patient.testimonials.store');
+
 
 
         require __DIR__ . '/auth.php';

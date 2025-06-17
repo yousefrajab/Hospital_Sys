@@ -22,6 +22,22 @@
                 <textarea wire:model="notes" name="notes" class="form-control" rows="5"></textarea>
             </div>
 
+            <div class="form-group">
+                <label for="group_doctor_id_field">الطبيب المسؤول عن الباقة (اختياري)</label>
+                <select wire:model.defer="group_doctor_id" id="group_doctor_id_field"
+                    class="form-control @error('group_doctor_id') is-invalid @enderror">
+                    <option value="">-- اختر طبيبًا للباقة --</option>
+                    @if (isset($availableDoctorsForGroup))
+                        @foreach ($availableDoctorsForGroup as $doc)
+                            <option value="{{ $doc->id }}">{{ $doc->name }}</option>
+                        @endforeach
+                    @endif
+                </select>
+                @error('group_doctor_id')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+
             <div class="card mt-4">
                 <div class="card-header">
                     <div class="col-md-12">

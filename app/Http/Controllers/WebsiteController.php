@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Service;
 use App\Models\Appointment;
+use App\Models\Testimonial;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ReceiptAccount;
@@ -72,9 +73,17 @@ class WebsiteController extends Controller
         //     ->where('status', 1) // فقط الأقسام المفعلة
         //     ->orderBy('name') // أو أي ترتيب تفضله
         //     ->get();
+            $patientsCount = Patient::count();
+            $doctorsCount = Doctor::count();
+            $appointmentCount = Appointment::count();
+            $successfulSurgeriesCount = Appointment::where('type', Appointment::STATUS_COMPLETED)->count(); // أو أي حالة تعبر عن العمليات الناجحة
 
+          $testimonials = Testimonial::with(['patient.image'])
+                           ->approved()
+                           ->latest('approved_at')
+                           ->get(); // أو ->take(عدد معين)
 
-        return view('welcome', compact('sections', 'featuredDoctors', 'latestServices', 'latestGroupedServices'));
+        return view('welcome', compact('sections', 'featuredDoctors', 'latestServices', 'latestGroupedServices', 'patientsCount', 'doctorsCount', 'appointmentCount', 'testimonials'));
     }
 
     public function showAllDepartments()
@@ -194,43 +203,43 @@ class WebsiteController extends Controller
             // 'specializations' //  مررها للـ view عندما تكون جاهزة
         ));
     }
-    public function showAllServices(Request $request)
-    {
-        // جلب جميع الخدمات النشطة مع تحميل علاقات الطبيب وقسم الطبيب والترجمات
-        $services = Service::where('status', 1) // فقط الخدمات المفعلة
+   public function showAllServices(Request $request)
+{
+    $services = Service::where('status', 1)
+        ->with([ // Eager load relationships
+            'doctor' => function ($query) {
+                $query->with('section'); // And the doctor's section
+            }
+        ])
+        ->orderBy('created_at', 'desc')
+        ->paginate(9);
 
-            ->orderBy('created_at', 'desc') // أو أي ترتيب تفضله
-            ->paginate(9); // مثال: 9 خدمات في الصفحة
-
-        // جلب الإعدادات إذا كنت تستخدمها (مثال من كود Blade الخاص بك)
-        // تأكد أن دالة settings() أو موديل Setting موجود ويعمل
-        // $settings = Setting::first()->toArray(); // أو settings() إذا كانت دالة helper
-
-        return view('WebSite.services.all_services_standalone', compact('services'));
-    }
+    return view('WebSite.services.all_services_standalone', compact('services'));
+}
 
     public function showAllGroupServices(Request $request)
     {
-        // جلب باقات الخدمات مع تحميل الخدمات المفردة داخلها،
-        // ومعلومات الطبيب والقسم لكل خدمة مفردة
+        // جلب باقات الخدمات
         $groupedServices = Group::with([
-            // إذا كنت تستخدمها لـ Group
-            'service_group' => function ($query) { // service_group هي علاقة الخدمات داخل الباقة
-                $query->with([
-                    // ترجمات الخدمة المفردة
-                    'doctor' => function ($q_doctor) {
-                        $q_doctor->with(['translations', 'section' => function ($q_section) {
-                            $q_section->with('translations');
-                        }]);
-                    }
-                ])->where('status', 1); // فقط الخدمات المفعلة داخل الباقة
+            // 1. تحميل الطبيب الرئيسي المرتبط بالباقة نفسها (وقسمه)
+            'doctor' => function ($query) {
+                $query->with('section'); // يفترض أن موديل Doctor له علاقة section
+            },
+            // 2. تحميل الخدمات المفردة داخل الباقة وتفاصيلها (للعرض داخل تفاصيل الباقة)
+            'service_group' => function ($query) {
+                $query->where('status', 1) // فقط الخدمات المفعلة داخل الباقة
+                      ->with([
+                          'doctor' => function ($q_doctor) {
+                              $q_doctor->with('section'); // طبيب الخدمة المفردة وقسمه
+                          }
+                      ]);
             }
         ])
-            // يمكنك إضافة ->where('status', 1) إذا كان للباقة نفسها حقل حالة
-            ->orderBy('created_at', 'desc')
-            ->paginate(6); // مثال: 6 باقات في الصفحة
+        // يمكنك إضافة ->where('status', 1) إذا كان للباقة نفسها حقل حالة
+        ->orderBy('created_at', 'desc')
+        ->paginate(6);
 
-        // $settings = Setting::first()->toArray(); // أو settings()
+        // $settings = Setting::first();
 
         return view('WebSite.services.all_group_services_standalone', compact('groupedServices'));
     }

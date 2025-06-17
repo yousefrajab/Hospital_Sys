@@ -9,16 +9,17 @@ use App\Models\Message;
 use App\Models\Section;
 use App\Models\Appointment;
 use App\Models\Laboratorie;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use App\Models\PatientAccount;
 use App\Models\ReceiptAccount;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 // use App\Models\DoctorWorkingDay; // غير مستخدم في هذا الكنترولر حالياً
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 // use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Notification as CustomNotification;
 use App\Models\Patient; // لا تنسَ هذا إذا لم يكن مُستورداً
@@ -34,8 +35,8 @@ class PatientController extends Controller
         $this->middleware('auth:patient');
     }
 
-    
-   public function dashboard()
+
+    public function dashboard()
     {
         $patient = Auth::guard('patient')->user();
         if (!$patient) {
@@ -97,7 +98,7 @@ class PatientController extends Controller
             ->orderBy('appointment', 'asc')
             ->first();
         // للتأكد من ترجمة اسم الطبيب إذا كنت تستخدم spatie/laravel-translatable
-        if($imminentAppointment && $imminentAppointment->doctor){
+        if ($imminentAppointment && $imminentAppointment->doctor) {
             $imminentAppointment->doctor->unsetRelations(); // لإزالة أي علاقات أخرى قد تكون محملة
             $imminentAppointment->doctor->load('translations');
         }
@@ -392,5 +393,56 @@ class PatientController extends Controller
                 ->withInput() // لإعادة ملء الفورم
                 ->with('error', 'حدث خطأ أثناء حجز الموعد: ' . $e->getMessage());
         }
+    }
+
+
+
+    public function createTestimonial()
+    {
+        // يمكنك هنا التحقق إذا كان المريض قد أضاف تعليقًا مؤخرًا ولم تتم الموافقة عليه بعد،
+        // لمنعه من إضافة تعليقات كثيرة (اختياري)
+        $existingPendingTestimonial = Testimonial::where('patient_id', Auth::id()) // ستحتاج لإضافة patient_id لجدول testimonials
+                                                ->where('status', 'pending')
+                                                ->exists();
+        if($existingPendingTestimonial){
+            return redirect()->route('dashboard.patient')->with('warning', 'لديك تعليق سابق قيد المراجعة.');
+        }
+
+
+        return view('Dashboard.dashboard_patient.testimonials.create');
+    }
+
+    /**
+     * حفظ التعليق الجديد من المريض.
+     * POST /patient/testimonials
+     */
+    public function storeTestimonial(Request $request)
+    {
+        $patient = Auth::guard('patient')->user(); // الحصول على المريض المسجل دخوله
+
+        $request->validate([
+            'comment' => 'required|string|min:10|max:1000', // تعديل الحدود حسب الحاجة
+        ], [
+            'comment.required' => 'حقل التعليق مطلوب.',
+            'comment.min' => 'يجب أن يحتوي التعليق على 10 أحرف على الأقل.',
+            'comment.max' => 'التعليق طويل جدًا، الحد الأقصى 1000 حرف.',
+        ]);
+
+        // **ملاحظة هامة:** جدول testimonials الحالي لا يحتوي على patient_id.
+        // لعرض اسم المريض، نستخدم اسمه من جلسة المريض.
+        // إذا أردت ربط التعليق بالمريض بشكل مباشر في قاعدة البيانات، ستحتاج لإضافة عمود `patient_id`
+        // إلى جدول `testimonials` وعمل migration.
+
+        Testimonial::create([
+            'patient_id' => $patient->id, //  <--- إضافة
+            'patient_name' => $patient->name,
+            'comment' => $request->comment,
+            'status' => 'pending',
+        ]);
+
+        // رسالة نجاح
+        session()->flash('success', 'تم إرسال تعليقك بنجاح! سيتم مراجعته من قبل الإدارة قريبًا.');
+
+        return redirect()->route('dashboard.patient'); // أو إلى صفحة "تعليقاتي" إذا أنشأتها
     }
 }

@@ -649,13 +649,7 @@ class PrescriptionController extends Controller
             return redirect()->back()->with('error', 'حدث خطأ فني أثناء الموافقة على تجديد الوصفة. يرجى المحاولة مرة أخرى.');
         }
     }
-    /**
-     * رفض طلب تجديد/إعادة صرف وصفة.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Prescription  $prescription
-     * @return \Illuminate\Http\RedirectResponse
-     */
+  
     public function denyRefill(Request $request, Prescription $prescription)
     {
         $doctor = Auth::guard('doctor')->user();
