@@ -1,0 +1,98 @@
+Users Table (users)
+id | name | email | password | email_verified_at | remember_token | created_at | updated_at
+Admins Table (admins)
+id | name | email | phone | password | created_at | updated_at
+Doctors Table (doctors)
+id | national_id | email | password | section_id (FK) | phone | status | number_of_statements | created_at | updated_at
+Translations: doctor_translations (doctor_id, locale, name)
+Patients Table (patients)
+id | national_id | email | password | Date_Birth | Phone | Gender | Blood_Group | created_at | updated_at
+Translations: patient_translations (patient_id, locale, name, Address)
+Ray Employees Table (ray_employees)
+id | national_id | name | email | phone | password | status | created_at | updated_at
+Laboratorie Employees Table (laboratorie_employees)
+id | national_id | name | email | phone | password | status | created_at | updated_at
+Sections Table (sections)
+id | created_at | updated_at
+Translations: section_translations (section_id, locale, name, description)
+Services Table (Services)
+id | price | description | status | created_at | updated_at
+Translations: Service_translations (Service_id, locale, name)
+Groups Table (Service Groups) (groups)
+id | Total_before_discount | discount_value | Total_after_discount | tax_rate | Total_with_tax | created_at | updated_at
+Translations: group_translations (Group_id, locale, name, notes)
+Pivot: Service_Group (links groups and Services with quantity)
+Appointments Table (appointments)
+id | doctor_id (FK) | section_id (FK) | patient_id (FK) | name (patient name) | email (patient email) | phone (patient phone) | type (enum: غير مؤكد, مؤكد, منتهي, ملغي) | appointment (datetime) | notes | created_at | updated_at
+Translations: appointment_translations (appointment_id, locale, name)
+Pivot (Optional): appointment_doctor (potentially for multiple doctors per appointment, or historical reasons)
+Invoices Table (invoices)
+id | invoice_type (1: single, 2: group) | invoice_date | patient_id (FK) | doctor_id (FK) | section_id (FK) | Group_id (FK, nullable) | Service_id (FK, nullable) | price | discount_value | tax_rate | tax_value | total_with_tax | type (payment type: 1 cash, 2 credit) | invoice_status | created_at | updated_at
+(Note: single_invoices and group_invoices tables also exist, likely for older structure or specific reporting, but invoices seems to be the consolidated one).
+Financial Accounts Tables:
+receipt_accounts: id | date | patient_id (FK) | amount | description
+payment_accounts: id | date | patient_id (FK) | amount | description
+fund_accounts: id | date | invoice_id (FK) | receipt_id (FK) | Payment_id (FK) | Debit | credit
+patient_accounts: id | date | patient_id (FK) | invoice_id (FK) | receipt_id (FK) | Payment_id (FK) | Debit | credit
+Medical Records Tables:
+diagnostics: id | date | review_date | diagnosis | medicine | invoice_id (FK) | patient_id (FK) | doctor_id (FK)
+rays: id | description | invoice_id (FK) | patient_id (FK) | doctor_id (FK) | employee_id (FK to ray_employees) | description_employee | case
+laboratories: id | description | invoice_id (FK) | patient_id (FK) | doctor_id (FK) | employee_id (FK to laboratorie_employees) | description_employee | case
+diseases: id | name | description | is_chronic
+Pivot: disease_patient (links diseases and patients)
+Supporting Tables:
+images: id | filename | imageable_id | imageable_type (Polymorphic)
+insurances: id | insurance_code | discount_percentage | Company_rate | status (+translations)
+ambulances: id | car_number | car_model | driver_license_number | driver_phone | is_available | car_type (+translations)
+doctor_working_days: id | doctor_id (FK) | day | start_time | end_time | appointment_duration | active
+doctor_breaks: id | doctor_working_day_id (FK) | start_time | end_time | reason
+notifications: id | reader_status | user_id | message
+conversations: id | sender_email | receiver_email | last_time_message
+messages: id | conversation_id (FK) | sender_email | receiver_email | read | body | type
+
+*************************************************************************************************
+
+Create Users Table
+Fields: id, name, email, email_verified_at, password, remember_token, created_at, updated_at
+Create Password Resets Table
+Fields: email, token, created_at
+Create Failed Jobs Table
+Fields: id, uuid, connection, queue, payload, exception, failed_at
+Create Personal Access Tokens Table
+Fields: id, tokenable_type, tokenable_id, name, token, abilities, last_used_at, created_at, updated_at
+Create Admins Table
+Fields: id, name, email, phone, email_verified_at, password, remember_token, created_at, updated_at
+Create Sections Table
+Fields: id, name, created_at, updated_at
+Create Section Translations Table
+Fields: id, locale, name, section_id, created_at, updated_at
+Create Doctors Table
+Fields: id, name, specialization, created_at, updated_at
+Create Doctor Translations Table
+Fields: id, locale, name, doctor_id, created_at, updated_at
+Create Images Table
+Fields: id, url, created_at, updated_at
+Create Patients Table
+Fields: id, name, email, phone, created_at, updated_at
+Create Patient Translations Table
+Fields: id, locale, name, patient_id, created_at, updated_at
+Create Appointments Table
+Fields: id, patient_id, doctor_id, appointment_time, created_at, updated_at
+Create Appointment Translations Table
+Fields: id, locale, notes, appointment_id, created_at, updated_at
+Create Appointment Doctor Table
+Fields: id, appointment_id, doctor_id
+Create Services Table
+Fields: id, name, created_at, updated_at
+Create Service Translations Table
+Fields: id, locale, name, service_id, created_at, updated_at
+Create Groups Table
+Fields: id, name, created_at, updated_at
+Create Group Translations Table
+Fields: id, locale, name, group_id, created_at, updated_at
+Create Pivot Service Group Table
+Fields: id, service_id, group_id
+Create Insurances Table
+Fields: id, name, created_at, updated_at
+Create Insurance Translations Table
+Fields: id, locale, name, notes, insurance_id, created_at, updated_at

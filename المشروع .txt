@@ -1,0 +1,122 @@
+1. دور المسؤول (Admin):
+Dashboard (لوحة التحكم): واجهة الأدمن الرئيسية، تعرض إحصائيات عامة (عدد الأطباء، المرضى، الحجوزات، إلخ).
+Profile Management (إدارة الملف الشخصي): تمكن المسؤول من عرض وتحديث بيانات ملفه الشخصي.
+Sections Management (إدارة الأقسام): إضافة، عرض، تعديل، وحذف الأقسام الطبية في المستشفى.
+Doctors Management (إدارة الأطباء): إدارة كاملة لحسابات الأطباء (إضافة، عرض، تعديل، حذف، كلمة المرور، الحالة، جداول العمل).
+Patients Management (إدارة المرضى): إدارة كاملة لحسابات المرضى (إضافة، عرض، تعديل، حذف).
+Ray Employees Management (إدارة موظفي الأشعة): إدارة كاملة لحسابات موظفي قسم الأشعة.
+Laboratory Employees Management (إدارة موظفي المختبر): إدارة كاملة لحسابات موظفي قسم المختبر.
+Single Services Management (إدارة الخدمات المفردة): إضافة، عرض، تعديل، وحذف الخدمات الطبية الفردية وأسعارها.
+Group Services Management (إدارة مجموعات الخدمات): إنشاء وعرض وتعديل وحذف باقات الخدمات وتحديد محتوياتها.
+----------------------------------------- تم حذفها مؤقتاَ ----------------------------------------------------
+Insurance Companies Management (إدارة شركات التأمين): إدارة بيانات شركات التأمين المتعاقد معها ونسب الخصم.
+Ambulances Management (إدارة سيارات الإسعاف): إدارة بيانات سيارات الإسعاف والسائقين وحالة التوفر.
+--------------------------------------------------------------------------------
+Appointments Management (إدارة المواعيد): عرض جميع أنواع المواعيد (معلقة، مؤكدة، مكتملة، ملغاة)، وتأكيد وإلغاء وحذف المواعيد.
+----------------------------------------- تم حذفها مؤقتاَ ----------------------------------------------------
+Single Invoices Management (إدارة الفواتير المفردة): إنشاء، عرض، تعديل، حذف، وطباعة فواتير الخدمات الفردية.
+Group Invoices Management (إدارة الفواتير المجمعة): إنشاء، عرض، تعديل، حذف، وطباعة فواتير باقات الخدمات.
+Receipt Accounts Management (إدارة سندات القبض): إنشاء، عرض، تعديل، وحذف سندات قبض المبالغ من المرضى.
+Payment Accounts Management (إدارة سندات الصرف): إنشاء، عرض، تعديل، وحذف سندات المصروفات الخاصة بالمستشفى.
+---------------------------------------------------------------------------------------------
+User Roles & Permissions Management (إدارة الأدوار والصلاحيات): إنشاء وتعديل الأدوار المختلفة في النظام وتحديد صلاحيات كل دور.
+
+2. دور الطبيب (Doctor):
+Dashboard (لوحة التحكم): واجهة الطبيب الرئيسية، تعرض ملخصاً لعمله ومواعيده.
+Profile Management (إدارة الملف الشخصي): تمكن الطبيب من عرض وتحديث بيانات ملفه الشخصي وجداول عمله.
+Appointments Management (إدارة المواعيد): عرض مواعيد الطبيب الخاصة، وتأكيدها، أو إلغائها، أو تحديد اكتمالها.
+Diagnostics Management (إدارة التشخيصات): إضافة تشخيص جديد لمريض، وعرض التشخيصات السابقة، وطلب فحوصات.
+Invoices Management (إدارة الفواتير): إنشاء ومراجعة فواتير الخدمات التي قدمها الطبيب للمرضى.
+Radiology Requests (Rays) (طلبات الأشعة): إنشاء طلبات فحوصات أشعة للمرضى.
+Laboratory Requests (Laboratories) (طلبات المختبر): إنشاء طلبات تحاليل مخبرية للمرضى.
+Patient Details (تفاصيل المرضى): الوصول لملفات المرضى المرتبطين به وعرض تاريخهم المرضي ونتائج فحوصاتهم.
+Chat/Messaging (المحادثات): التواصل المباشر مع المرضى عبر الرسائل للاستشارات والمتابعة.
+Notifications (الإشعارات): استقبال تنبيهات حول المواعيد والرسائل الجديدة.
+
+3. دور المريض (Patient):
+Dashboard/Home (لوحة التحكم/الرئيسية): واجهة المريض الرئيسية، تعرض ملخصاً لمواعيده وإشعاراته.
+Profile Management (إدارة الملف الشخصي): تمكن المريض من عرض وتحديث بيانات ملفه الشخصي.
+Appointments Management (إدارة المواعيد): حجز مواعيد جديدة مع الأطباء، وعرض المواعيد الخاصة به، وإمكانية إلغائها.
+View Medical Information (عرض المعلومات الطبية): الاطلاع على الفواتير ونتائج التحاليل والأشعة الخاصة به.
+Chat/Messaging (المحادثات): التواصل المباشر مع الأطباء عبر الرسائل للاستشارات.
+Notifications (الإشعارات): استقبال تنبيهات حول المواعيد والرسائل ونتائج الفحوصات.
+
+4. دور موظف الأشعة (Ray Employee):
+Dashboard (لوحة التحكم): واجهة موظف الأشعة الرئيسية، تعرض ملخصاً لطلبات الأشعة.
+Profile Management (إدارة الملف الشخصي): تمكن موظف الأشعة من عرض وتحديث بيانات ملفه الشخصي.
+Radiology Requests/Records Management (إدارة طلبات وسجلات الأشعة): استقبال طلبات الأشعة، تحديث حالتها، وإدخال نتائج وصور الأشعة.
+Notifications (الإشعارات): استقبال تنبيهات حول طلبات الأشعة الجديدة.
+
+5. دور موظف المختبر (Laboratory Employee):
+Dashboard (لوحة التحكم): واجهة موظف المختبر الرئيسية، تعرض ملخصاً لطلبات التحاليل.
+Profile Management (إدارة الملف الشخصي): تمكن موظف المختبر من عرض وتحديث بيانات ملفه الشخصي.
+Laboratory Requests/Records Management (إدارة طلبات وسجلات المختبر): استقبال طلبات التحاليل، تحديث حالتها، وإدخال نتائج التحاليل.
+Notifications (الإشعارات): استقبال تنبيهات حول طلبات التحاليل الجديدة.
+
+
+***********************************************************************************************
+                                      هذا بالانجليزي للمثقفين انجليزي
+*******************************************************************************************************
+
+
+1. دور المسؤول (Admin) - Backend.php Routes & Controllers:
+Dashboard: Main admin dashboard (likely showing statistics - DashboardController).
+Profile Management: View & Update Admin's own profile (AdminProfileController).
+Sections Management: CRUD operations for hospital departments (SectionController).
+Doctors Management: CRUD operations for doctors, update password, update status, manage working schedules (DoctorController).
+Patients Management: CRUD operations for patients (PatientController).
+Ray Employees Management: CRUD operations for radiology employees (RayEmployeeController).
+Laboratory Employees Management: CRUD operations for laboratory employees (LaboratorieEmployeeController).
+Single Services Management: CRUD operations for individual medical services (SingleServiceController).
+Group Services (Service Packages) Management: CRUD operations for service groups (Livewire component CreateGroupServices.php, likely managed via Admin routes).
+Insurance Companies Management: CRUD operations for insurance companies (InsuranceController).
+Ambulances Management: CRUD operations for ambulances (AmbulanceController).
+Appointments Management: View all appointments (pending, confirmed, completed, cancelled), Approve pending, Cancel confirmed, Delete (AppointmentController).
+Single Invoices Management: CRUD operations, Print (Livewire component SingleInvoices.php).
+Group Invoices Management: CRUD operations, Print (Livewire component GroupInvoices.php).
+Receipt Accounts Management (Patient Payments): CRUD operations, Print (ReceiptAccountController).
+Payment Accounts Management (Hospital Expenses): CRUD operations, Print (PaymentAccountController).
+(Implicit): Fund Accounts & Patient Accounts are managed indirectly through invoice/receipt/payment operations.
+User Roles & Permissions Management: CRUD operations for roles and assigning permissions (UserRoleController).
+(Implicit): Overseeing Diagnostics, Radiology Records, Laboratory Records (likely view/manage access).
+
+2. دور الطبيب (Doctor) - doctor.php Routes & Controllers:
+Dashboard: Doctor's specific dashboard (/dashboard/doctor).
+Profile Management: View & Update Doctor's own profile, manage working schedule (ProfileController in Doctors dashboard, DoctorController for schedule).
+Appointments Management: View own appointments, Confirm, Cancel, Complete appointments (DoctorController).
+Diagnostics Management: Add new diagnosis for a patient, view previous diagnoses, add review (DiagnosticController).
+Invoices Management (for own services): Create invoices for services rendered, view completed/review invoices (InvoiceController in Doctor's dashboard).
+Radiology Requests (Rays): Create radiology requests for patients (RayController).
+Laboratory Requests (Laboratories): Create laboratory requests for patients (LaboratorieController).
+Patient Details: View patient records, including diagnostics, rays, and lab results (PatientDetailsController).
+Chat/Messaging: List patients, initiate/continue chat with patients (Livewire components ChatWindow.php, Main.php).
+Notifications: Receive system notifications.
+3. دور المريض (Patient) - patient.php Routes & Controllers:
+Dashboard/Home: Patient's specific dashboard/home page (/dashboard/patient, /home).
+Profile Management: View & Update Patient's own profile (PatientProfileController).
+Appointments: Book new appointments (likely via Livewire component Create.php for appointments), View own appointments.
+View Medical Information:
+View Invoices (PatientController in Patient's dashboard).
+View Laboratory Results (PatientController).
+View Radiology Results (PatientController).
+View Payments (PatientController).
+Chat/Messaging: List doctors, initiate/continue chat with doctors (Livewire components Createchat.php, Main.php).
+Notifications: Receive system notifications.
+4. دور موظف الأشعة (Ray Employee) - ray_employee.php Routes & Controllers:
+Dashboard: Ray Employee's specific dashboard (/dashboard/ray_employee).
+Profile Management: View & Update Ray Employee's own profile (ProfileRayController).
+Radiology Invoices/Requests Management:
+View pending radiology requests/invoices.
+Add diagnosis/results to radiology records (InvoiceController in Ray Employee's dashboard - note: "Invoice" here likely refers to the service request/record).
+View completed radiology records.
+View patient details related to a ray request.
+Notifications: Receive system notifications.
+5. دور موظف المختبر (Laboratory Employee) - laboratorie_employee.php Routes & Controllers:
+Dashboard: Laboratory Employee's specific dashboard (/dashboard/laboratorie_employee).
+Profile Management: (Likely exists, similar to Ray Employee - ProfileLabController.php was provided).
+Laboratory Invoices/Requests Management:
+View pending laboratory requests/invoices.
+Add results to laboratory records (InvoiceController in Laboratory Employee's dashboard).
+View completed laboratory records.
+View patient details related to a lab request.
+Notifications: Receive system notifications.

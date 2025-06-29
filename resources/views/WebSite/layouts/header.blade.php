@@ -24,12 +24,12 @@
 
                 <li class="dropdown"><a href="{{ route('website.doctors.all') }}">الاطباء</a>
                     <ul>
-                        <li><a href="{{ route('website.doctors.all') }}">Doctors</a></li>
+                        <li><a href="{{ route('website.doctors.all') }}">عرض الأطباء</a></li>
                     </ul>
                 </li>
                 <li class="dropdown"><a href="#">الاقسام</a>
                     <ul>
-                        <li><a href="{{ route('website.departments.all') }}">Sections</a></li>
+                        <li><a href="{{ route('website.departments.all') }}">عرض الأقسام</a></li>
                     </ul>
                 </li>
                 <li class="dropdown"><a href="#">الخدمات</a>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ LaravelLocalization::getCurrentLocaleDirection() }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -11,13 +12,16 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- CSS Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/choices.js/public/assets/styles/choices.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/choices.js/public/assets/styles/choices.min.css" />
 
     <!-- Custom Styles -->
     <style>
@@ -39,7 +43,8 @@
             --docpage-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -50,7 +55,9 @@
             scroll-behavior: smooth;
         }
 
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: inherit;
         }
 
@@ -221,7 +228,8 @@
             color: var(--docpage-heading-color);
         }
 
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
             border: 1px solid var(--docpage-border-color);
             border-radius: calc(var(--docpage-radius) - 2px);
             font-size: 1rem;
@@ -231,7 +239,8 @@
             width: 100%;
         }
 
-        .form-control:focus, .form-select:focus {
+        .form-control:focus,
+        .form-select:focus {
             border-color: var(--docpage-primary-color);
             box-shadow: 0 0 0 0.2rem rgba(var(--docpage-primary-color-rgb), 0.15);
         }
@@ -330,6 +339,7 @@
             margin-bottom: 40px;
         }
 
+        /*  *********************************************** */
         .doctor-card-standalone {
             background-color: var(--docpage-card-bg);
             border-radius: var(--docpage-radius);
@@ -523,6 +533,7 @@
             left: 100%;
         }
 
+        /* **************************************** */
         /* No Results */
         .no-results-standalone {
             padding: 60px 20px;
@@ -651,14 +662,29 @@
 
         /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         .pulse-animation {
@@ -697,8 +723,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Responsive Adjustments */
@@ -769,6 +800,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Loading Overlay -->
@@ -797,9 +829,9 @@
                 استخدم الفلاتر المتقدمة للعثور على الأخصائي المناسب لاحتياجاتك الصحية من بين نخبة أطبائنا المعتمدين.
             </p>
 
-            @if(request()->hasAny(['doctor_name', 'section_id', 'rating', 'gender', 'available_today']))
+            @if (request()->hasAny(['doctor_name', 'section_id', 'rating', 'gender', 'available_today']))
                 <div class="search-tags animate__animated animate__fadeIn">
-                    @if(request('doctor_name'))
+                    @if (request('doctor_name'))
                         <div class="search-tag">
                             <span>الاسم: {{ request('doctor_name') }}</span>
                             <a href="{{ remove_query_param('doctor_name') }}" class="remove-tag">
@@ -808,7 +840,7 @@
                         </div>
                     @endif
 
-                    @if(request('section_id') && $selectedSection = $sectionsForFilter->where('id', request('section_id'))->first())
+                    @if (request('section_id') && ($selectedSection = $sectionsForFilter->where('id', request('section_id'))->first()))
                         <div class="search-tag">
                             <span>القسم: {{ $selectedSection->name }}</span>
                             <a href="{{ remove_query_param('section_id') }}" class="remove-tag">
@@ -817,7 +849,7 @@
                         </div>
                     @endif
 
-                    @if(request('rating'))
+                    @if (request('rating'))
                         <div class="search-tag">
                             <span>التقييم: {{ request('rating') }} <i class="fas fa-star"></i></span>
                             <a href="{{ remove_query_param('rating') }}" class="remove-tag">
@@ -826,7 +858,7 @@
                         </div>
                     @endif
 
-                    @if(request('gender'))
+                    @if (request('gender'))
                         <div class="search-tag">
                             <span>الجنس: {{ request('gender') == 'male' ? 'ذكر' : 'أنثى' }}</span>
                             <a href="{{ remove_query_param('gender') }}" class="remove-tag">
@@ -835,7 +867,7 @@
                         </div>
                     @endif
 
-                    @if(request('available_today'))
+                    @if (request('available_today'))
                         <div class="search-tag">
                             <span>متاح اليوم</span>
                             <a href="{{ remove_query_param('available_today') }}" class="remove-tag">
@@ -862,7 +894,7 @@
                         <div class="filter-group">
                             <label for="docNameFilterStandalone" class="filter-label">اسم الطبيب</label>
                             <input type="text" class="form-control" id="docNameFilterStandalone" name="doctor_name"
-                                   value="{{ request('doctor_name') }}" placeholder="ابحث باسم الطبيب...">
+                                value="{{ request('doctor_name') }}" placeholder="ابحث باسم الطبيب...">
                         </div>
                     </div>
 
@@ -887,9 +919,9 @@
                             <input type="hidden" id="ratingInput" name="rating" value="{{ request('rating') }}">
                             <div class="rating-filter">
                                 <div class="star-rating" id="starRating">
-                                    @for($i = 5; $i >= 1; $i--)
+                                    @for ($i = 5; $i >= 1; $i--)
                                         <i class="fas fa-star {{ request('rating') == $i ? 'active' : '' }}"
-                                           data-rating="{{ $i }}"></i>
+                                            data-rating="{{ $i }}"></i>
                                     @endfor
                                 </div>
                             </div>
@@ -904,7 +936,8 @@
                 </div>
 
                 <!-- Advanced Filters -->
-                <div class="advanced-filters {{ request()->hasAny(['gender', 'available_today', 'experience']) ? 'show' : '' }}" id="advancedFilters">
+                <div class="advanced-filters {{ request()->hasAny(['gender', 'available_today', 'experience']) ? 'show' : '' }}"
+                    id="advancedFilters">
                     <div class="row g-3">
                         <div class="col-md-4">
                             <div class="filter-group">
@@ -912,17 +945,19 @@
                                 <div class="d-flex gap-3">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="gender" id="genderAll"
-                                               value="" {{ !request('gender') ? 'checked' : '' }}>
+                                            value="" {{ !request('gender') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="genderAll">الكل</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="genderMale"
-                                               value="male" {{ request('gender') == 'male' ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="radio" name="gender"
+                                            id="genderMale" value="male"
+                                            {{ request('gender') == 'male' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="genderMale">ذكر</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="genderFemale"
-                                               value="female" {{ request('gender') == 'female' ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="radio" name="gender"
+                                            id="genderFemale" value="female"
+                                            {{ request('gender') == 'female' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="genderFemale">أنثى</label>
                                     </div>
                                 </div>
@@ -934,10 +969,14 @@
                                 <label for="experienceFilter" class="filter-label">سنوات الخبرة</label>
                                 <select class="form-select" id="experienceFilter" name="experience">
                                     <option value="">أي خبرة</option>
-                                    <option value="5" {{ request('experience') == '5' ? 'selected' : '' }}>5+ سنوات</option>
-                                    <option value="10" {{ request('experience') == '10' ? 'selected' : '' }}>10+ سنوات</option>
-                                    <option value="15" {{ request('experience') == '15' ? 'selected' : '' }}>15+ سنوات</option>
-                                    <option value="20" {{ request('experience') == '20' ? 'selected' : '' }}>20+ سنوات</option>
+                                    <option value="5" {{ request('experience') == '5' ? 'selected' : '' }}>5+
+                                        سنوات</option>
+                                    <option value="10" {{ request('experience') == '10' ? 'selected' : '' }}>10+
+                                        سنوات</option>
+                                    <option value="15" {{ request('experience') == '15' ? 'selected' : '' }}>15+
+                                        سنوات</option>
+                                    <option value="20" {{ request('experience') == '20' ? 'selected' : '' }}>20+
+                                        سنوات</option>
                                 </select>
                             </div>
                         </div>
@@ -946,13 +985,14 @@
                             <div class="filter-group">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="availableToday"
-                                           name="available_today" value="1" {{ request('available_today') ? 'checked' : '' }}>
+                                        name="available_today" value="1"
+                                        {{ request('available_today') ? 'checked' : '' }}>
                                     <label class="form-check-label" for="availableToday">متاح اليوم فقط</label>
                                 </div>
 
                                 <div class="form-check mt-2">
                                     <input class="form-check-input" type="checkbox" id="featuredDoctors"
-                                           name="featured" value="1" {{ request('featured') ? 'checked' : '' }}>
+                                        name="featured" value="1" {{ request('featured') ? 'checked' : '' }}>
                                     <label class="form-check-label" for="featuredDoctors">الأطباء المميزين فقط</label>
                                 </div>
                             </div>
@@ -973,7 +1013,7 @@
             <div class="doctors-grid">
                 @foreach ($doctors as $doctor)
                     <div class="doctor-card-standalone animate__animated animate__fadeInUp"
-                         data-wow-delay="{{ ($loop->index % 6) * 0.1 + 0.2 }}s">
+                        data-wow-delay="{{ ($loop->index % 6) * 0.1 + 0.2 }}s">
                         <div class="image-wrapper-standalone">
                             <a href="{{ route('website.doctor.details', $doctor->id) }}">
                                 <img src="{{ $doctor->image_url ?? ($doctor->image && $doctor->image->filename ? asset('Dashboard/img/doctors/' . $doctor->image->filename) : asset('WebSite/images/resource/doctor-placeholder.png')) }}"
@@ -982,12 +1022,13 @@
                             </a>
 
                             <div class="card-badges">
-                                <span class="availability-badge-standalone {{ $doctor->status ? 'status-available' : 'status-unavailable' }}">
+                                <span
+                                    class="availability-badge-standalone {{ $doctor->status ? 'status-available' : 'status-unavailable' }}">
                                     <i class="fas fa-{{ $doctor->status ? 'check-circle' : 'times-circle' }}"></i>
                                     {{ $doctor->status ? 'متاح' : 'غير متاح' }}
                                 </span>
 
-                                @if($doctor->is_featured)
+                                @if ($doctor->is_featured)
                                     <span class="availability-badge-standalone featured-badge">
                                         <i class="fas fa-star"></i> مميز
                                     </span>
@@ -1000,7 +1041,7 @@
                                 <a href="{{ route('website.doctor.details', $doctor->id) }}">{{ $doctor->name }}</a>
                             </h4>
 
-                            @if($doctor->title)
+                            @if ($doctor->title)
                                 <p class="doctor-title">{{ $doctor->title }}</p>
                             @endif
 
@@ -1015,8 +1056,9 @@
                         </div>
 
                         <div class="action-footer-standalone">
-                            <a href="{{ route('website.doctor.details', $doctor->id) }}" class="btn btn-outline-primary view-profile-btn">
-                               <i class="fas fa-id-badge"></i> عرض الملف الشخصي
+                            <a href="{{ route('website.doctor.details', $doctor->id) }}"
+                                class="btn btn-outline-primary view-profile-btn">
+                                <i class="fas fa-id-badge"></i> عرض الملف الشخصي
                             </a>
                         </div>
                     </div>
@@ -1028,12 +1070,12 @@
                     {{ $doctors->appends(request()->query())->onEachSide(1)->links() }}
                 </nav>
             @endif
-
         @else
             <div class="no-results-standalone animate__animated animate__fadeIn">
                 <img src="{{ asset('WebSite/images/icons/search-not-found.svg') }}" alt="لا يوجد أطباء">
                 <h3>لم يتم العثور على أطباء</h3>
-                <p>عذرًا، لا يوجد أطباء يطابقون معايير البحث الحالية. حاول تعديل الفلاتر أو <a href="{{ route('website.doctors.all') }}">عرض كل الأطباء</a>.</p>
+                <p>عذرًا، لا يوجد أطباء يطابقون معايير البحث الحالية. حاول تعديل الفلاتر أو <a
+                        href="{{ route('website.doctors.all') }}">عرض كل الأطباء</a>.</p>
                 <a href="{{ route('website.doctors.all') }}" class="btn btn-primary">
                     <i class="fas fa-undo-alt"></i> إعادة تعيين الفلاتر
                 </a>
@@ -1058,7 +1100,14 @@
                     <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
                 </div>
 
-                <p class="copyright">© {{ date('Y') }} جميع الحقوق محفوظة - {{ config('app.name') }}</p>
+                <p style="margin: 0; font-size: 14px;">© حقوق النشر {{ date('Y') }} ، جميع الحقوق محفوظة لـ <a
+                        href="{{ route('home') }}" style="color: #00bcd4; text-decoration: none;">نظام إدارة
+                        المستشفيات</a>.
+                    <br class="d-sm-none"> <!-- فاصل سطر على الشاشات الصغيرة فقط -->
+                    تصميم وتطوير <a href="https://www.facebook.com/Momensarsour" target="_blank"
+                        style="color: #00bcd4; text-decoration: none;">Mo'men Sarsour & Yousef Rajab</a>
+                </p>
+
             </div>
         </div>
     </footer>
@@ -1150,7 +1199,8 @@
                     const windowHeight = window.innerHeight;
 
                     if (elementPosition < windowHeight - 100) {
-                        const animationClass = element.classList.contains('animate__fadeInUp') ? 'animate__fadeInUp' : 'animate__fadeIn';
+                        const animationClass = element.classList.contains('animate__fadeInUp') ?
+                            'animate__fadeInUp' : 'animate__fadeIn';
                         element.style.opacity = '1';
                         element.classList.add(animationClass);
                     }
@@ -1170,4 +1220,5 @@
         }
     </script>
 </body>
+
 </html>

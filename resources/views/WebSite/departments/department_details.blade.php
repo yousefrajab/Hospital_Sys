@@ -560,14 +560,14 @@
                             <p class="text-contact opacity-90">فريقنا جاهز لخدمتك. يمكنك التواصل معنا عبر المعلومات
                                 التالية أو زيارتنا مباشرة.</p>
                             <div class="contact-info-item">
-                                <a href="tel:{{ $settings['hospital_phone'] ?? '+1234567890' }}"><i
+                                <a href="tel:{{ $settings['hospital_phone'] ?? '+970567077179' }}"><i
                                         class="fas fa-phone-alt"></i>
-                                    {{ $settings['hospital_phone'] ?? '(123) 456-7890' }}</a>
+                                    {{ $settings['hospital_phone'] ?? '+970567077179' }}</a>
                             </div>
                             <div class="contact-info-item">
-                                <a href="mailto:{{ $settings['hospital_email'] ?? 'info@example.com' }}"><i
+                                <a href="mailto:{{ $settings['hospital_email'] ?? 'momensarsour5@gmail.com' }}"><i
                                         class="fas fa-envelope"></i>
-                                    {{ $settings['hospital_email'] ?? 'info@example.com' }}</a>
+                                    {{ $settings['hospital_email'] ?? 'momensarsour5@gmail.com' }}</a>
                             </div>
                             {{-- Add address or link to contact page if available --}}
                             {{-- <a href="{{route('contact')}}" class="btn btn-light btn-sm mt-3">صفحة التواصل الكاملة</a> --}}
@@ -579,7 +579,14 @@
     </main>
 
     <footer class="standalone-detail-footer">
-        <p>© {{ date('Y') }} جميع الحقوق محفوظة - {{ config('app.name', 'منصتنا الطبية') }}.</p>
+        {{-- <p>© {{ date('Y') }} جميع الحقوق محفوظة - {{ config('app.name', 'منصتنا الطبية') }}.</p> --}}
+        <p style="margin: 0; font-size: 14px;">© حقوق النشر {{ date('Y') }} ، جميع الحقوق محفوظة لـ <a
+                href="{{ route('home') }}" style="color: #00bcd4; text-decoration: none;">نظام إدارة
+                المستشفيات</a>.
+            <br class="d-sm-none"> <!-- فاصل سطر على الشاشات الصغيرة فقط -->
+            تصميم وتطوير <a href="https://www.facebook.com/Momensarsour" target="_blank"
+                style="color: #00bcd4; text-decoration: none;">Mo'men Sarsour & Yousef Rajab</a>
+        </p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

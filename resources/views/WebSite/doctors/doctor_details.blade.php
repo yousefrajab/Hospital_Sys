@@ -550,6 +550,242 @@
             font-size: 0.9rem;
             color: var(--docprofile-light-text);
         }
+
+        .doctor-card-standalone {
+            background-color: var(--docpage-card-bg);
+            border-radius: var(--docpage-radius);
+            box-shadow: var(--docpage-shadow);
+            transition: var(--docpage-transition);
+            overflow: hidden;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--docpage-border-color);
+            position: relative;
+        }
+
+        .doctor-card-standalone:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--docpage-shadow-hover);
+        }
+
+        .image-wrapper-standalone {
+            position: relative;
+            background-color: #f1f5f9;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .image-wrapper-standalone img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+        }
+
+        .card-badges {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .rtl .card-badges {
+            right: auto;
+            left: 10px;
+            align-items: flex-start;
+        }
+
+        .availability-badge-standalone {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-available {
+            background-color: var(--docpage-secondary-color);
+        }
+
+        .status-unavailable {
+            background-color: #94a3b8;
+        }
+
+        .featured-badge {
+            background-color: var(--docpage-accent-color);
+            color: #4a3500;
+        }
+
+        .info-content-standalone {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doctor-name-standalone a {
+            font-family: var(--docpage-font-secondary);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--docpage-heading-color);
+            margin-bottom: 8px;
+            display: block;
+            text-decoration: none;
+            transition: var(--docpage-transition);
+        }
+
+        .doctor-name-standalone a:hover {
+            color: var(--docpage-primary-color);
+        }
+
+        .doctor-title {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .doctor-department-standalone,
+        .doctor-department-standalone a {
+            font-size: 0.95rem;
+            color: var(--docpage-primary-color);
+            font-weight: 500;
+            margin-bottom: 12px;
+            display: block;
+            text-decoration: none;
+        }
+
+        .doctor-department-standalone a:hover {
+            text-decoration: underline;
+        }
+
+        .doctor-department-standalone i {
+            margin-inline-end: 6px;
+        }
+
+        .doctor-meta {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .doctor-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .doctor-rating {
+            display: flex;
+            justify-content: center;
+            gap: 3px;
+            margin: 10px 0;
+        }
+
+        .doctor-rating i {
+            color: var(--docpage-accent-color);
+            font-size: 0.9rem;
+        }
+
+        .rating-count {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .action-footer-standalone {
+            padding: 0 20px 20px;
+            margin-top: auto;
+        }
+
+        .action-footer-standalone .btn {
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .action-footer-standalone .btn-outline-primary {
+            border-color: var(--docpage-primary-color);
+            color: var(--docpage-primary-color);
+        }
+
+        .action-footer-standalone .btn-outline-primary:hover {
+            background-color: var(--docpage-primary-color);
+            color: var(--docpage-card-bg);
+        }
+
+        .view-profile-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .view-profile-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--docpage-transition);
+        }
+
+        .view-profile-btn:hover::after {
+            left: 100%;
+        }
+
+        .rating-filter {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 3px;
+        }
+
+        .star-rating i {
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: var(--docpage-transition);
+        }
+
+        .star-rating i.active {
+            color: var(--docpage-accent-color);
+        }
+
+        .reset-filters {
+            color: var(--docpage-primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .reset-filters:hover {
+            text-decoration: underline;
+        }
+
+        /* Doctors Grid */
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
     </style>
 </head>
 
@@ -732,8 +968,7 @@
                                     @php $activeDaysFound = true; @endphp
                                     <li
                                         class="{{ \Carbon\Carbon::now()->englishDayOfWeek == $day ? 'is-today' : '' }}">
-                                        <span
-                                            class="day-name">{{ trans('doctors.'.$day  ) ?? $day }}</span>
+                                        <span class="day-name">{{ trans('doctors.' . $day) ?? $day }}</span>
                                         <span class="day-time">{{ $data['start_time'] }} -
                                             {{ $data['end_time'] }}</span>
                                     </li>
@@ -775,39 +1010,58 @@
                     <h2>أطباء مشابهون في نفس التخصص</h2>
                     <div class="separator-line"></div>
                 </div>
-                <div class="row g-4">
+                <div class="doctors-grid">
                     @foreach ($relatedDoctors as $rdoctor)
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                            {{-- Re-use the doctor card structure from the all_doctors_standalone page, slightly simplified --}}
-                            <div class="doctor-card-standalone">
-                                <div class="image-wrapper-standalone" style="height: 200px;"> {{-- Slightly smaller image for related --}}
-                                    <a href="{{ route('website.doctor.details', $rdoctor->id) }}"
-                                        title="{{ $rdoctor->name }}">
-                                        <img src="{{ $rdoctor->image_url_or_placeholder }}"
-                                            alt="{{ $rdoctor->name }}"
-                                            onerror="this.onerror=null; this.src='{{ asset('WebSite/images/resource/doctor-placeholder.png') }}';">
-                                    </a>
-                                    @if ($rdoctor->status)
-                                        <span class="availability-badge-standalone status-available"><i
-                                                class="fas fa-check-circle"></i> متاح</span>
+                        <div class="doctor-card-standalone animate__animated animate__fadeInUp"
+                            data-wow-delay="{{ ($loop->index % 6) * 0.1 + 0.2 }}s">
+                            <div class="image-wrapper-standalone">
+                                <a href="{{ route('website.doctor.details', $rdoctor->id) }}">
+                                    <img src="{{ $rdoctor->image_url ?? ($rdoctor->image && $rdoctor->image->filename ? asset('Dashboard/img/doctors/' . $rdoctor->image->filename) : asset('WebSite/images/resource/doctor-placeholder.png')) }}"
+                                        alt="{{ $rdoctor->name }}"
+                                        onerror="this.onerror=null; this.src='{{ asset('Dashboard/img/doctor_default.png') }}';">
+                                </a>
+
+                                <div class="card-badges">
+                                    <span
+                                        class="availability-badge-standalone {{ $rdoctor->status ? 'status-available' : 'status-unavailable' }}">
+                                        <i
+                                            class="fas fa-{{ $rdoctor->status ? 'check-circle' : 'times-circle' }}"></i>
+                                        {{ $rdoctor->status ? 'متاح' : 'غير متاح' }}
+                                    </span>
+
+                                    @if ($rdoctor->is_featured)
+                                        <span class="availability-badge-standalone featured-badge">
+                                            <i class="fas fa-star"></i> مميز
+                                        </span>
                                     @endif
                                 </div>
-                                <div class="info-content-standalone pt-3">
-                                    <h5 class="doctor-name-standalone mb-1"><a
-                                            href="{{ route('website.doctor.details', $rdoctor->id) }}">{{ $rdoctor->name }}</a>
-                                    </h5>
-                                    @if ($rdoctor->section)
-                                        <p class="doctor-department-standalone small mb-2"><a
-                                                href="{{ route('website.department.details', $rdoctor->section->id) }}"><i
-                                                    class="fas fa-briefcase-medical"></i>
-                                                {{ $rdoctor->section->name }}</a></p>
-                                    @endif
-                                </div>
-                                <div class="action-footer-standalone pb-3">
-                                    <a href="{{ route('website.doctor.details', $rdoctor->id) }}"
-                                        class="btn btn-sm btn-outline-primary"><i class="fas fa-user-tag"></i> عرض
-                                        الملف</a>
-                                </div>
+                            </div>
+
+                            <div class="info-content-standalone">
+                                <h4 class="doctor-name-standalone">
+                                    <a
+                                        href="{{ route('website.doctor.details', $rdoctor->id) }}">{{ $rdoctor->name }}</a>
+                                </h4>
+
+                                @if ($rdoctor->title)
+                                    <p class="doctor-title">{{ $rdoctor->title }}</p>
+                                @endif
+
+                                @if ($rdoctor->section)
+                                    <p class="doctor-department-standalone">
+                                        <a href="{{ route('website.department.details', $rdoctor->section->id) }}">
+                                            <i class="fas fa-stethoscope"></i>
+                                            {{ $rdoctor->section->name }}
+                                        </a>
+                                    </p>
+                                @endif
+                            </div>
+
+                            <div class="action-footer-standalone">
+                                <a href="{{ route('website.doctor.details', $rdoctor->id) }}"
+                                    class="btn btn-outline-primary view-profile-btn">
+                                    <i class="fas fa-id-badge"></i> عرض الملف الشخصي
+                                </a>
                             </div>
                         </div>
                     @endforeach
@@ -818,7 +1072,13 @@
     </main>
 
     <footer class="standalone-profile-footer">
-        <p>© {{ date('Y') }} جميع الحقوق محفوظة - {{ config('app.name', 'منصتنا الطبية') }}.</p>
+        <p style="margin: 0; font-size: 14px;">© حقوق النشر {{ date('Y') }} ، جميع الحقوق محفوظة لـ <a
+                href="{{ route('home') }}" style="color: #00bcd4; text-decoration: none;">نظام إدارة
+                المستشفيات</a>.
+            <br class="d-sm-none"> <!-- فاصل سطر على الشاشات الصغيرة فقط -->
+            تصميم وتطوير <a href="https://www.facebook.com/Momensarsour" target="_blank"
+                style="color: #00bcd4; text-decoration: none;">Mo'men Sarsour & Yousef Rajab</a>
+        </p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

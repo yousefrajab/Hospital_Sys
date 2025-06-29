@@ -651,7 +651,7 @@
                 <div class="testimonial-carousel owl-carousel owl-theme">
                     @foreach ($testimonials as $testimonial)
                         <div class="testimonial-block-two">
-                            <div class="inner-box">
+                            <div class="inner-box" style="height: 15rem;">
                                 <div class="text">
                                     {{ $testimonial->comment }}
                                 </div>
