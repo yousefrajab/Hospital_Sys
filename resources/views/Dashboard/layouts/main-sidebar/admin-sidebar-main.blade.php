@@ -26,23 +26,22 @@
                 <span class="side-menu__label">{{ trans('main-sidebar_trans.index') }}</span>
             </a>
         </li>
-        <li class="side-item side-item-category">General</li>
+        <li class="side-item side-item-category">{{ trans('AdminSb.General') }}</li>
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
                 <i class="side-menu__icon fas fa-user-cog"></i> {{-- أيقونة لإعدادات الملف الشخصي --}}
-                <span class="side-menu__label">الملف الشخصي</span>
+                <span class="side-menu__label">{{ trans('AdminSb.Profile') }}</span>
                 <i class="angle fa fa-chevron-down"></i> {{-- Font Awesome الأصلي للسهم هنا جيد --}}
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.profile.show') }}">
-                        <i class="fas fa-eye me-2"></i> عرض الملف الشخصي
-                    </a>
+                            <i class="fas fa-eye me-2"></i> {{ trans('AdminSb.ViewProfile') }}</a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.profile.edit') }}">
-                        <i class="fas fa-edit me-2"></i> تعديل الملف الشخصي
+                        <i class="fas fa-edit me-2"></i> {{ trans('AdminSb.EditProfile') }}
                     </a>
                 </li>
             </ul>
@@ -58,13 +57,13 @@
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
-                <span class="side-menu__label">المستخدمين والأدوار</span>
+                <span class="side-menu__label">{{ trans('AdminSb.UsersAndRoles') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.users.roles.index') }}">
-                        <i class="fas fa-list-ul me-2"></i> عرض الكل
+                        <i class="fas fa-list-ul me-2"></i>{{ trans('AdminSb.ViewAll') }}
                     </a>
                 </li>
                 {{-- <li><a class="slide-item" href="#"><i class="fas fa-plus-circle me-2"></i> إضافة دور جديد (مثال)</a></li> --}}

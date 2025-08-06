@@ -112,6 +112,7 @@ Route::group(
             //############################# Patients route ##########################################
 
             Route::resource('Patients', PatientController::class);
+            Route::delete('/patients/{patient}', [PatientController::class, 'destroy'])->name('admin.Patients.destroy');
             Route::get('/QR/patient/{id}/showQR', [PatientController::class, 'showQR'])->name('showQR');
 
             //############################# end Patients route ######################################

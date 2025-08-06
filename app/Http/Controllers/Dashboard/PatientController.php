@@ -27,7 +27,7 @@ class PatientController extends Controller
     {
         $this->Patient = $Patient;
     }
-    
+
     public function index(Request $request)
     {
         return $this->Patient->index($request);
@@ -68,8 +68,8 @@ class PatientController extends Controller
     }
 
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        return $this->Patient->destroy($request);
+        return $this->Patient->destroy($id);
     }
 }

@@ -2,15 +2,7 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Insurance Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used for the insurance companies section.
-    | You are free to modify these language lines according to your needs.
-    |
-    */
+
 
     "Insurance" => 'Insurance Companies',
     "Add_Insurance" => 'Add Insurance Company',

@@ -162,7 +162,7 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-shield-alt fa-2x text-primary me-3"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">{{ trans('Admin.Dashboard') }} :: لوحة التحكم الرئيسية</h4>
+                    <h4 class="content-title mb-0 my-auto"> لوحة التحكم الرئيسية</h4>
                     <span class="text-muted mt-0 tx-13 op-8">نظرة شاملة على أداء وفعاليات النظام.</span>
                 </div>
             </div>

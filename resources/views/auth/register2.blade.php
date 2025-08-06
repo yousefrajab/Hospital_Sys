@@ -1,24 +1,17 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+@extends('Dashboard.layouts.master3')
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة المرضى - تسجيل مريض جديد</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Tajawal Font -->
+    <title>{{ trans('register.Patient Management System - New Patient Registration') }}</title>
+\    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <!-- Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <!-- Select2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-    <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <!-- Notify CSS (If you use it on this page) -->
-    <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
 
 
     <style>
@@ -789,16 +782,15 @@
 
 <body>
     <div class="registration-container">
-        <div class="form-header">
-            <i class="fas fa-user-plus header-icon"></i>
-            <h3>نظام إدارة المرضى - تسجيل جديد</h3>
-            <p class="mb-0">نظام متكامل لإدارة سجلات المرضى وتقديم الرعاية الصحية الذكية.</p>
-            <p class="mt-2"><small>لديك حساب بالفعل؟ <a href="#"
-                        style="color: black; font-weight:bold;">تسجيل الدخول</a></small></p>
+        <div class="form-header" >
+            <i class="fas fa-user-plus header-icon" style="color: white"></i>
+            <h3>{{ trans('register.Patient Management System - New Patient Registration') }}</h3>
+            <p class="mb-0">{{ trans('register.An integrated system for managing patient records and providing smart healthcare') }}</p>
+            <p class="mt-2"><small>{{ trans('register.Already have an account?') }} <a href="{{ route('login') }}"
+                        style="color: black; font-weight:bold;">{{ trans('register.login') }}</a></small></p>
         </div>
 
         <div class="form-section">
-            <!-- رسائل التنبيه -->
             <div id="successAlert" class="alert-message alert-success"></div>
             <div id="errorAlert" class="alert-message alert-error"></div>
             @if (session('status_success'))
@@ -820,7 +812,7 @@
                 <div class="avatar-upload-container">
                     <div class="avatar-upload">
                         <img id="output_register" src="{{ URL::asset('Dashboard/img/default_patient_avatar.png') }}"
-                            alt="الصورة الشخصية">
+                            alt="{{ trans('register.profile picture') }}">
                         <label for="avatar_upload_input_register"><i class="fas fa-camera"></i></label>
                         <input id="avatar_upload_input_register" type="file" accept="image/*" name="photo"
                             onchange="loadFile(event, 'output_register')">
@@ -831,13 +823,13 @@
                 @enderror
 
 
-                <h5 class="section-title"><i class="fas fa-user-circle"></i> المعلومات الأساسية</h5>
+                <h5 class="section-title"><i class="fas fa-user-circle"></i> {{ trans('register.Basic information') }}</h5>
                 <div class="paired-fields">
                     <div class="field-row">
                         <div class="field-group">
-                            <label for="name_register" class="form-label required">الاسم الكامل للمريض</label>
+                            <label for="name_register" class="form-label required">{{ trans('register.Patient\'s full name') }}</label>
                             <input type="text" id="name_register" name="name" value="{{ old('name') }}"
-                                class="form-control @error('name') is-invalid @enderror" placeholder="الاسم رباعي"
+                                class="form-control @error('name') is-invalid @enderror" placeholder="{{ trans('register.Enter full name') }}"
                                 required pattern="^([\u0600-\u06FF\s]{10,}|[A-Za-z\s\-']{10,})$">
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -846,7 +838,7 @@
                             @enderror
                         </div>
                         <div class="field-group">
-                            <label for="email_register" class="form-label required">البريد الإلكتروني</label>
+                            <label for="email_register" class="form-label required">{{ trans('register.Email Address') }}</label>
                             <input type="email" id="email_register" name="email" value="{{ old('email') }}"
                                 class="form-control @error('email') is-invalid @enderror"
                                 placeholder="example@domain.com" required>
@@ -859,7 +851,7 @@
                     </div>
                     <div class="field-row">
                         <div class="field-group">
-                            <label for="Date_Birth_register" class="form-label required">تاريخ الميلاد</label>
+                            <label for="Date_Birth_register" class="form-label required">{{ trans('register.Date of Birth') }}</label>
                             <input class="form-control flatpickr-date @error('Date_Birth') is-invalid @enderror"
                                 id="Date_Birth_register" name="Date_Birth" value="{{ old('Date_Birth') }}"
                                 placeholder="YYYY-MM-DD" type="text" autocomplete="off" required>
@@ -870,7 +862,7 @@
                             @enderror
                         </div>
                         <div class="field-group">
-                            <label for="Phone_register" class="form-label required">رقم الجوال</label>
+                            <label for="Phone_register" class="form-label required">{{ trans('register.Phone Number') }}</label>
                             <input type="tel" id="Phone_register" name="Phone" value="{{ old('Phone') }}"
                                 class="form-control @error('Phone') is-invalid @enderror" placeholder="05xxxxxxxx"
                                 maxlength="10" required pattern="^(05\d{8})$"
@@ -884,11 +876,11 @@
                     </div>
                     <div class="field-row">
                         <div class="field-group">
-                            <label for="password_register" class="form-label required">كلمة المرور</label>
+                            <label for="password_register" class="form-label required">{{ trans('register.Password') }}</label>
                             <div class="input-group password-toggle-group"> {{-- استخدام input-group لتنسيق أفضل --}}
                                 <input type="password" id="password_register" name="password"
                                     class="form-control @error('password') is-invalid @enderror"
-                                    placeholder="8 أحرف (حروف وأرقام)" required minlength="8"
+                                    placeholder="{{ trans('register.Password') }}" required minlength="8"
                                     pattern="^(?=.*[A-Za-z])(?=.*\d).{8,}$" title="يجب أن تحتوي على حروف وأرقام">
                                 <button class="btn toggle-password" type="button" data-target="password_register"
                                     tabindex="-1"><i class="fas fa-eye"></i></button>
@@ -900,12 +892,11 @@
                             @enderror
                         </div>
                         <div class="field-group">
-                            <label for="password_confirmation_register" class="form-label required">تأكيد كلمة
-                                المرور</label>
+                            <label for="password_confirmation_register" class="form-label required">{{ trans('register.Confirm Password') }}</label>
                             <div class="input-group password-toggle-group">
                                 <input type="password" id="password_confirmation_register"
                                     name="password_confirmation" class="form-control"
-                                    placeholder="أعد إدخال كلمة المرور" required>
+                                    placeholder="{{ trans('register.Confirm Password') }}" required>
                                 <button class="btn toggle-password" type="button"
                                     data-target="password_confirmation_register" tabindex="-1"><i
                                         class="fas fa-eye"></i></button>
@@ -920,14 +911,13 @@
                 </div>
 
                 <div class="medical-info-wrapper">
-                    <h5 class="section-title"><i class="fas fa-notes-medical"></i> المعلومات الطبية</h5>
+                    <h5 class="section-title"><i class="fas fa-notes-medical"></i> {{ trans('register.Medical Information') }}</h5>
                     <div class="paired-fields">
                         <div class="field-row">
                             <div class="field-group">
-                                <label for="national_id_register" class="form-label required">رقم الهوية
-                                    الوطنية</label>
+                                <label for="national_id_register" class="form-label required">{{ trans('register.National ID') }}</label>
                                 <input class="form-control @error('national_id') is-invalid @enderror"
-                                    id="national_id_register" name="national_id" placeholder="9 أرقام"
+                                    id="national_id_register" name="national_id" placeholder="{{ trans('register.9 numbers') }}"
                                     type="text" pattern="[0-9]{9}" value="{{ old('national_id') }}"
                                     title="يجب أن يتكون رقم الهوية من 9 أرقام" maxlength="9" required
                                     oninput="this.value = this.value.replace(/[^0-9]/g, '')">
@@ -938,10 +928,10 @@
                                 @enderror
                             </div>
                             <div class="field-group">
-                                <label for="Blood_Group_register" class="form-label required">فصيلة الدم</label>
+                                <label for="Blood_Group_register" class="form-label required">{{ trans('register.Blood Group') }}</label>
                                 <select class="form-control select2 @error('Blood_Group') is-invalid @enderror"
                                     id="Blood_Group_register" name="Blood_Group" required
-                                    data-placeholder="اختر فصيلة الدم">
+                                    data-placeholder="{{ trans('register.Select Blood Group') }}">
                                     <option value=""></option>
                                     @php $bloodGroupsArray = ['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']; @endphp
                                     @foreach ($bloodGroupsArray as $group)
@@ -957,21 +947,21 @@
                         </div>
                         <div class="field-row">
                             <div class="field-group">
-                                <label for="Gender_register" class="form-label required">الجنس</label>
+                                <label for="Gender_register" class="form-label required">{{ trans('register.Gender') }}</label>
                                 <select class="form-control select2 @error('Gender') is-invalid @enderror"
-                                    id="Gender_register" name="Gender" required data-placeholder="اختر الجنس">
+                                    id="Gender_register" name="Gender" required data-placeholder="{{ trans('register.Select Gender') }}">
                                     <option value=""></option>
-                                    <option value="1" {{ old('Gender') == 1 ? 'selected' : '' }}>ذكر</option>
-                                    <option value="2" {{ old('Gender') == 2 ? 'selected' : '' }}>أنثى</option>
+                                    <option value="1" {{ old('Gender') == 1 ? 'selected' : '' }}>{{ trans('register.Male') }}</option>
+                                    <option value="2" {{ old('Gender') == 2 ? 'selected' : '' }}>{{ trans('register.Female') }}</option>
                                 </select>
                                 @error('Gender')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="field-group full-width"> {{-- استخدام full-width للعنوان --}}
-                                <label for="Address_register" class="form-label required">العنوان التفصيلي</label>
+                                <label for="Address_register" class="form-label required">{{ trans('register.Address') }}</label>
                                 <textarea rows="2" class="form-control @error('Address') is-invalid @enderror" id="Address_register"
-                                    name="Address" placeholder="الحي، الشارع، المدينة">{{ old('Address') }}</textarea>
+                                    name="Address" placeholder="{{ trans('register.Address Placeholder') }}">{{ old('Address') }}</textarea>
                                 @error('Address')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -981,15 +971,13 @@
                         {{-- حقل الحساسيات كنص حر --}}
                         <div class="field-row">
                             <div class="field-group full-width">
-                                <label for="Allergies_register" class="form-label">الحساسيات المعروفة
-                                    (اختياري)</label>
+                                <label for="Allergies_register" class="form-label">{{ trans('register.Allergies') }}</label>
                                 <textarea rows="2" class="form-control @error('Allergies') is-invalid @enderror" id="Allergies_register"
-                                    name="Allergies" placeholder="مثال: حساسية من البنسلين، حساسية من الفول السوداني...">{{ old('Allergies') }}</textarea>
+                                    name="Allergies" placeholder="{{ trans('register.Allergies Placeholder') }}">{{ old('Allergies') }}</textarea>
                                 @error('Allergies')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                <div class="medical-text">إذا كنت تعاني من أي حساسيات، يرجى ذكرها هنا. افصل بينها
-                                    بفاصلة.</div>
+                                <div class="medical-text">{{ trans('register.Allergies Help Text') }}</div>
                             </div>
                         </div>
                     </div>
@@ -1000,7 +988,7 @@
                     <div class="chronic-diseases-section mt-3">
                         <h6 class="section-title-sub"
                             style="font-size: 1.1rem; border-bottom:none; margin-bottom: 1rem;">
-                            <i class="fas fa-viruses text-danger"></i> الأمراض المزمنة (إن وجدت)
+                            <i class="fas fa-viruses text-danger"></i> {{ trans('register.Chronic Diseases') }}
                         </h6>
                         <div id="chronic_diseases_wrapper_register"> {{-- <<<--- تأكد من هذا المعرف --}}
                             @if (is_array(old('chronic_diseases')))
@@ -1008,10 +996,10 @@
                                 @foreach (old('chronic_diseases') as $oldDiseaseData)
                                     <div class="chronic_disease_row">
                                         <div class="col-md-3-cd field-group">
-                                            <label class="form-label">المرض</label>
+                                            <label class="form-label">{{ trans('register.Disease') }}</label>
                                             <select name="chronic_diseases[{{ $current_index_for_old }}][disease_id]"
                                                 class="form-select select2-diseases-dynamic @error('chronic_diseases.' . $current_index_for_old . '.disease_id') is-invalid @enderror"
-                                                data-placeholder="اختر مرض">
+                                                data-placeholder="{{ trans('register.Select Disease') }} ">
                                                 <option value=""></option>
                                                 @if (isset($diseases_list))
                                                     @foreach ($diseases_list as $id => $name)
@@ -1026,7 +1014,7 @@
                                             @enderror
                                         </div>
                                         <div class="col-md-2-cd field-group">
-                                            <label class="form-label">تاريخ التشخيص</label>
+                                            <label class="form-label">{{ trans('register.Diagnosis Date') }}</label>
                                             <input type="text"
                                                 name="chronic_diseases[{{ $current_index_for_old }}][diagnosed_at]"
                                                 value="{{ old('chronic_diseases.' . $current_index_for_old . '.diagnosed_at', $oldDiseaseData['diagnosed_at'] ?? '') }}"
@@ -1037,11 +1025,11 @@
                                             @enderror
                                         </div>
                                         <div class="col-md-2-cd field-group">
-                                            <label class="form-label">الحالة الحالية</label>
+                                            <label class="form-label">{{ trans('register.Current Status') }}</label>
                                             <select
                                                 name="chronic_diseases[{{ $current_index_for_old }}][current_status]"
                                                 class="form-select select2-statuses-dynamic @error('chronic_diseases.' . $current_index_for_old . '.current_status') is-invalid @enderror"
-                                                data-placeholder="الحالة">
+                                                data-placeholder="{{ trans('register.Select Status') }}">
                                                 <option value=""></option>
                                                 @if (isset($chronic_disease_statuses))
                                                     @foreach ($chronic_disease_statuses as $key => $value)
@@ -1056,12 +1044,12 @@
                                             @enderror
                                         </div>
                                         <div class="col-md-4-cd field-group">
-                                            <label class="form-label">ملاحظات (اختياري)</label>
+                                            <label class="form-label">{{ trans('register.Notes') }}</label>
                                             <input type="text"
                                                 name="chronic_diseases[{{ $current_index_for_old }}][notes]"
                                                 value="{{ old('chronic_diseases.' . $current_index_for_old . '.notes', $oldDiseaseData['notes'] ?? '') }}"
                                                 class="form-control @error('chronic_diseases.' . $current_index_for_old . '.notes') is-invalid @enderror"
-                                                placeholder="أي ملاحظات إضافية">
+                                                placeholder="{{ trans('register.Notes Placeholder') }}">
                                             @error('chronic_diseases.' . $current_index_for_old . '.notes')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -1077,9 +1065,9 @@
                         </div>
                         <button type="button" class="btn" id="add_chronic_disease_btn_register">
                             {{-- <<<--- تأكد من هذا المعرف --}}
-                            <i class="fas fa-plus-circle"></i> إضافة مرض مزمن آخر (إذا كنت تعاني من أكثر من مرض)
+                            <i class="fas fa-plus-circle"></i>{{ trans('register.Add another chronic illness (if you have more than one)') }}
                         </button>
-                        <div class="medical-text mt-2">إذا كنت لا تعاني من أي أمراض مزمنة، يمكنك ترك هذا القسم فارغًا.
+                        <div class="medical-text mt-2">{{ trans('register.If you do not suffer from any chronic diseases, you can leave this section blank.') }}
                         </div>
                     </div>
 
@@ -1087,9 +1075,9 @@
                     <template id="chronic_disease_template_register"> {{-- <<<--- تأكد من هذا المعرف --}}
                         <div class="chronic_disease_row">
                             <div class="col-md-3-cd field-group">
-                                <label class="form-label">المرض</label>
+                                <label class="form-label">{{ trans('register.Disease') }}</label>
                                 <select name="chronic_diseases[__INDEX__][disease_id]"
-                                    class="form-select select2-diseases-dynamic" data-placeholder="اختر مرض">
+                                    class="form-select select2-diseases-dynamic" data-placeholder="{{ trans('register.Select Disease') }}">
                                     <option value=""></option>
                                     @if (isset($diseases_list))
                                         @foreach ($diseases_list as $id => $name)
@@ -1116,9 +1104,9 @@
                                 </select>
                             </div> --}}
                             <div class="col-md-4-cd field-group">
-                                <label class="form-label">ملاحظات (اختياري)</label>
+                                <label class="form-label">{{ trans('register.Notes') }}</label>
                                 <input type="text" name="chronic_diseases[__INDEX__][notes]" class="form-control"
-                                    placeholder="أي ملاحظات إضافية">
+                                    placeholder="{{ trans('register.Notes Placeholder') }}">
                             </div>
                             <div class="col-md-1-cd field-group">
                                 <button type="button" class="remove_chronic_disease_row_btn"
@@ -1136,10 +1124,9 @@
                             <input class="form-check-input @error('terms') is-invalid @enderror" type="checkbox"
                                 id="terms_register" name="terms" required>
                             <label class="form-check-label" for="terms_register">
-                                أقر بأن جميع المعلومات المقدمة صحيحة وأوافق على <a href="#" target="_blank"
-                                    style="color: var(--primary-color);">شروط الاستخدام</a> و
-                                <a href="#" target="_blank" style="color: var(--primary-color);">سياسة
-                                    الخصوصية</a> الخاصة بالنظام.
+                                 {{ trans('register.I acknowledge that all information provided is correct and I agree to') }}<a href="#" target="_blank"
+                                    style="color: var(--primary-color);">{{ trans('register.terms of use') }}</a>
+                                                <a href="#" target="_blank" style="color: var(--primary-color);">{{ trans('register.Privacy Policy') }}</a> {{ trans('register.System specific.') }}
                             </label>
                             @error('terms')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -1151,7 +1138,7 @@
                 <!-- زر الإرسال -->
                 <div class="text-center mt-4">
                     <button type="submit" class="btn-submit" id="submitPatientRegisterForm">
-                        <span class="btn-text"><i class="fas fa-user-plus"></i> إنشاء حساب جديد</span>
+                        <span class="btn-text"><i class="fas fa-user-plus"></i> {{ trans('register.Create a new account') }}</span>
                         <i class="fas fa-spinner fa-spin spinner-icon"></i>
                     </button>
                 </div>
@@ -1450,25 +1437,25 @@
                 <div id="privacyModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 10000; padding: 15px;">
                     <div style="background: white; padding: 25px; border-radius: 15px; max-width: 550px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 5px 20px rgba(0,0,0,0.2); animation: fadeInModal 0.3s ease-out;">
                         <h3 style="color: var(--primary-color); margin-bottom: 20px; text-align:center; border-bottom: 1px solid #eee; padding-bottom:10px;">
-                            <i class="fas fa-shield-alt me-2"></i> سياسة الخصوصية وشروط الاستخدام
+                                <i class="fas fa-shield-alt me-2"></i> {{ trans('register.Privacy Policy and Terms of Use') }}
                         </h3>
                         <div style="margin-bottom: 25px; line-height: 1.75; font-size:0.95rem; color: #555;">
-                            <p class="mb-2">باستمرارك في عملية التسجيل، فإنك تقر بموافقتك على شروط الاستخدام وسياسة الخصوصية الخاصة بنظام إدارة المرضى:</p>
+                            <p class="mb-2">{{ trans('register.By continuing with the registration process, you agree to the Patient Management System\'s Terms of Use and Privacy Policy:') }}</p>
                             <ul style="padding-right: 20px; margin-top: 15px; list-style-type: decimal;">
-                                <li class="mb-1"><strong>أمان البيانات:</strong> نتعهد بتخزين بياناتك الشخصية والصحية بشكل آمن ومشفر وفقًا لأفضل الممارسات الأمنية.</li>
-                                <li class="mb-1"><strong>سرية المعلومات:</strong> لا يتم مشاركة بياناتك مع أي جهات خارجية غير مصرح لها بدون موافقتك الصريحة، إلا في الحالات التي يقتضيها القانون.</li>
-                                <li class="mb-1"><strong>حقوق المستخدم:</strong> يحق لك الوصول إلى بياناتك، تعديلها، أو طلب حذفها في أي وقت وفقًا للإجراءات المتبعة.</li>
-                                <li class="mb-1"><strong>استخدام المعلومات:</strong> تستخدم المعلومات المقدمة لأغراض تحسين جودة الرعاية الصحية المقدمة لك وتسهيل إدارة ملفك الطبي.</li>
-                                <li class="mb-1"><strong>ملفات تعريف الارتباط (Cookies):</strong> قد نستخدم ملفات تعريف الارتباط لتحسين تجربتك على النظام.</li>
+                                <li class="mb-1"><strong>{{ trans('register.Data security:') }}</strong>{{ trans('register.We pledge to store your personal and health data securely and encrypted in accordance with best security practices.') }}</li>
+                                <li class="mb-1"><strong>{{ trans('register.Confidentiality of information:') }}</strong> {{ trans('register.Your data will not be shared with any unauthorized third parties without your express consent, except where required by law.') }}</li>
+                                <li class="mb-1"><strong>{{ trans('register.User rights:') }}</strong> {{ trans('register.You have the right to access, modify, or request deletion of your data at any time in accordance with applicable procedures.') }}</li>
+                                <li class="mb-1"><strong>{{ trans('register.Use of information:') }}</strong> {{ trans('register.The information provided is used to improve the quality of healthcare provided to you and facilitate the management of your medical record.') }}</li>
+                                <li class="mb-1"><strong>{{ trans('register.Cookies') }}</strong> {{ trans('register.We may use cookies to enhance your experience on the system.') }}</li>
                             </ul>
-                            <p class="mt-3">نشكرك على ثقتك بنا ونتعهد بحماية خصوصيتك.</p>
+                            <p class="mt-3">{{ trans('register.We thank you for your trust and we are committed to protecting your privacy.') }}</p>
                         </div>
                         <div style="display: flex; justify-content: space-around; margin-top: 20px; gap:15px;">
                             <button id="acceptPrivacyBtn" style="background: var(--primary-color); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight:bold; flex-grow:1; transition: background 0.2s ease;">
-                                <i class="fas fa-check-circle me-1"></i> أوافق وأستمر
+                                <i class="fas fa-check-circle me-1"></i> {{ trans('register.I agree and continue') }}
                             </button>
                             <button id="cancelPrivacyBtn" style="background: #6c757d; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight:bold; flex-grow:1; transition: background 0.2s ease;">
-                                <i class="fas fa-times-circle me-1"></i> إلغاء التسجيل
+                                <i class="fas fa-times-circle me-1"></i> {{ trans('register.Cancel Registration') }}
                             </button>
                         </div>
                     </div>

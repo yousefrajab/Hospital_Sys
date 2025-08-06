@@ -876,14 +876,26 @@
                                         @endif
 
 
-                                        <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
+                                        {{-- <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
                                             data-target="#deletePatientModal{{ $Patient->id }}" data-placement="top"
                                             title="حذف المريض">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
-                                @include('Dashboard.Patients.Deleted', ['patient_for_modal' => $Patient])
+                                @include('Dashboard.Patients.Deleted', ['patient_for_modal' => $Patient]) --}}
+
+
+                                <form action="{{ route('admin.Patients.destroy', $Patient->id) }}" method="POST"
+                                    class="d-inline"
+                                    onsubmit="return confirm('تحذير!\nأنت على وشك حذف المريض: {{ $Patient->name }}.\nسيتم حذف جميع السجلات المرتبطة به بشكل نهائي (مثل الإقامات والفواتير والتشخيصات).\nهل أنت متأكد أنك تريد المتابعة؟ لا يمكن التراجع عن هذا الإجراء.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" data-toggle="tooltip"
+                                        data-placement="top" title="حذف المريض">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
                             @endforeach
                         </tbody>
                     </table>
@@ -926,17 +938,6 @@
 
     <script>
         $(document).ready(function() {
-            // DataTables (إذا كنت لا تزال تريد استخدامها مع الترقيم من Laravel)
-            // إذا كنت ستعتمد كليًا على ترقيم Laravel، يمكنك إزالة هذا الجزء
-            // أو استخدامه فقط للبحث والفرز من جانب العميل للبيانات المعروضة في الصفحة الحالية
-            // $('#patients-table-datatable-custom').DataTable({
-            //     language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/ar.json" },
-            //     responsive: true,
-            //     paging: false, // تعطيل ترقيم DataTables إذا كنت تستخدم ترقيم Laravel
-            //     searching: false, // تعطيل بحث DataTables إذا كنت تستخدم بحث Laravel
-            //     info: false,   // تعطيل معلومات DataTables
-            //     ordering: false, // تعطيل ترتيب DataTables إذا كنت تعتمد على ترتيب Laravel
-            // });
 
             // تهيئة Select2
             $('.select2').select2({
@@ -974,10 +975,10 @@
             @if (session('edit'))
                 showNotif("<i class='fas fa-check-circle me-2'></i> تم تعديل بيانات المريض بنجاح!", "success");
             @endif
-            @if (session('delete'))
-                showNotif("<i class='fas fa-check-circle me-2'></i> تم حذف المريض بنجاح.", "success",
-                    'bottom-center');
-            @endif
+            // @if (session('delete'))
+            //     showNotif("<i class='fas fa-check-circle me-2'></i> تم حذف المريض بنجاح.", "success",
+            //         'bottom-center');
+            // @endif
             @if (session('success'))
                 showNotif("<i class='fas fa-thumbs-up me-2'></i> {{ session('success') }}", "success");
             @endif

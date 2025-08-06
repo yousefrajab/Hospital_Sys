@@ -15,15 +15,14 @@ use App\Models\single_invoice;
 use Illuminate\Support\Carbon;
 use App\Models\PatientAdmission;
 use Illuminate\Support\Facades\DB;
-// use Illuminate\Database\Eloquent\Model; // ليس ضروريًا هنا
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
-use Illuminate\Http\Request; // تم إضافتها بشكل صحيح
+use Illuminate\Http\Request;
 use App\Interfaces\Patients\PatientRepositoryInterface;
-use App\Models\PatientChronicDisease; // ** استيراد هذا الموديل **
+use App\Models\PatientChronicDisease; 
 
 class PatientRepository implements PatientRepositoryInterface
 {
@@ -395,32 +394,42 @@ class PatientRepository implements PatientRepositoryInterface
         }
     }
 
-    public function destroy($request) // تستقبل Request
+    // في ملف PatientController.php
+
+    public function destroy($id) // ✅ تم التعديل: نستقبل الـ id مباشرة من الرابط
     {
-        $patientId = $request->input('id'); // ID من الحقل المخفي أو من الفورم
-        if (!$patientId) {
-            return redirect()->back()->with('error', 'لم يتم تحديد المريض للحذف.');
-        }
+        // ✅ تم التعديل: لا حاجة للبحث في الـ request، الـ id موجود بالفعل
+        $patientId = $id;
+
+        // لا حاجة لهذا الشرط الآن، لأن Laravel سيطلق خطأ 404 إذا لم يكن الـ id موجوداً في الرابط
+        // if (!$patientId) { ... }
+
         DB::beginTransaction();
         try {
+            // استخدم findOrFail مباشرة مع الـ id الذي تم تمريره
             $patient = Patient::findOrFail($patientId);
             $patientName = $patient->name; // للاستخدام في الرسالة
 
+            // هذا الجزء من الكود يبقى كما هو، وهو مكتوب بشكل ممتاز
             if ($patient->image) {
                 $this->Delete_attachment('upload_image', 'patients/' . $patient->image->filename, $patient->id, Patient::class);
             }
 
-            // PatientObserver سيهتم بـ GlobalEmail
-            // cascadeOnDelete في Migrations سيهتم بـ patient_chronic_diseases و patient_admissions
             $patient->delete();
 
             DB::commit();
             session()->flash('delete', "تم حذف المريض '{$patientName}' وجميع سجلاته المرتبطة بنجاح.");
             return redirect()->route('admin.Patients.index');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // هذا للتعامل مع حالة إذا كان الـ id غير موجود في قاعدة البيانات
+            DB::rollBack();
+            Log::warning("Attempted to delete a non-existent patient with ID {$patientId}.");
+            return redirect()->back()->with('error', 'المريض الذي تحاول حذفه غير موجود.');
         } catch (\Exception $e) {
+            // هذا للتعامل مع أي أخطاء أخرى قد تحدث
             DB::rollBack();
             Log::error("Error deleting patient ID {$patientId}: " . $e->getMessage());
-            return redirect()->back()->with('error', 'حدث خطأ أثناء حذف المريض.');
+            return redirect()->back()->with('error', 'حدث خطأ أثناء حذف المريض. يرجى المحاولة مرة أخرى.');
         }
     }
 }

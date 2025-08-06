@@ -46,11 +46,10 @@ class UserRoleController extends Controller
             return $user;
         };
 
-        // جلب الأطباء
         $doctors = Doctor::with(['image', 'translations', 'section' => function($q_section) {
                 $q_section->withTranslation()->select('id'); // جلب القسم مع الترجمة واسم محدد
             }])
-            ->select('id', 'email', 'created_at', 'status', 'phone', 'section_id')
+            
             ->get()
             ->map(function($user) use ($mapUser, $locale) { // تمرير $locale هنا
                 $user = $mapUser($user, 'طبيب', 'doctor', true);
