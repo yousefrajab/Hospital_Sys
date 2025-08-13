@@ -4,31 +4,26 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-danger" id="cancelModalLabel{{ $appointment->id }}">
-                    <i class="fas fa-exclamation-triangle"></i> تأكيد إلغاء الموعد
+                    <i class="fas fa-exclamation-triangle"></i> {{ trans('AdminSb.confirm_appointment_cancellation_title') }}
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form action="{{ route('admin.admin_cancel', $appointment->id) }}" method="post"> {{-- استخدام اسم المسار الجديد --}}
-                @method('PATCH') {{-- استخدام PATCH لتحديث الحالة --}}
+            <form action="{{ route('admin.admin_cancel', $appointment->id) }}" method="post">
+                @method('PATCH')
                 @csrf
                 <div class="modal-body">
-                    <p>هل أنت متأكد من رغبتك في إلغاء هذا الموعد للمريض:</p>
+                    <p>{{ trans('AdminSb.are_you_sure_cancel_appointment') }}</p>
                     <p><strong>{{ $appointment->name }}</strong></p>
-                    <p>مع الطبيب: <strong>{{ $appointment->doctor->name ?? '-' }}</strong></p>
-                    <p>في تاريخ: <strong dir="ltr">{{ $appointment->appointment ? $appointment->appointment->translatedFormat('l، d M Y - h:i A') : '-' }}</strong></p>
+                    <p>{{ trans('AdminSb.with_doctor_colon') }} <strong>{{ $appointment->doctor->name ?? '-' }}</strong></p>
+                    <p>{{ trans('AdminSb.on_date_colon') }} <strong dir="ltr">{{ $appointment->appointment ? $appointment->appointment->translatedFormat('l، d M Y - h:i A') : '-' }}</strong></p>
                     <hr>
-                    <p class="text-danger small">ملاحظة: سيتم إرسال إشعار إلغاء للمريض والطبيب.</p>
-                    {{-- (اختياري) إضافة حقل لسبب الإلغاء --}}
-                    {{-- <div class="form-group mt-3">
-                        <label for="cancel_reason_{{ $appointment->id }}">سبب الإلغاء (اختياري):</label>
-                        <textarea class="form-control form-control-sm" id="cancel_reason_{{ $appointment->id }}" name="cancel_reason" rows="2"></textarea>
-                    </div> --}}
+                    <p class="text-danger small">{{ trans('AdminSb.cancellation_notification_note') }}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">تراجع</button>
-                    <button type="submit" class="btn btn-danger">نعم، إلغاء الموعد</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ trans('AdminSb.go_back') }}</button>
+                    <button type="submit" class="btn btn-danger">{{ trans('AdminSb.yes_cancel_appointment') }}</button>
                 </div>
             </form>
         </div>

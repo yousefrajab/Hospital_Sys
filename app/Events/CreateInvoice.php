@@ -37,7 +37,6 @@
      public function broadcastOn()
      {
         return new PrivateChannel('create-invoice.'.$this->doctor_id);
-             //return ['create-invoice'];
      }
 
      public function broadcastAs()

@@ -1,84 +1,120 @@
 @extends('Dashboard.layouts.master')
 @section('css')
-    <link href="{{URL::asset('dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
-    <link href="{{URL::asset('Dashboard/plugins/select2/css/select2.min.css')}}" rel="stylesheet">
+    <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('Dashboard/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
 @endsection
 @section('title', 'تعديل سند قبض')
 @section('page-header')
     <div class="breadcrumb-header justify-content-between">
-        <div class="my-auto"><div class="d-flex"><h4 class="content-title mb-0 my-auto">الحسابات</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل سند قبض</span></div></div>
+        <div class="my-auto">
+            <div class="d-flex">
+                <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.accounts') }}</h4><span
+                    class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.edit_receipt') }}</span>
+            </div>
+        </div>
     </div>
 @endsection
+
 @section('content')
     @include('Dashboard.messages_alert')
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('admin.Receipt.update', $receipt_accounts->id) }}" method="post" autocomplete="off">
+                    <form action="{{ route('admin.Receipt.update', $receipt_accounts->id) }}" method="post"
+                        autocomplete="off">
                         @method('patch')
                         @csrf
-                        <input value="{{$receipt_accounts->id}}" name="id" type="hidden">
+                        <input value="{{ $receipt_accounts->id }}" name="id" type="hidden">
                         <div class="pd-30 pd-sm-40 bg-gray-200">
                             <div class="row row-xs align-items-center mg-b-20">
-                                <div class="col-md-2"><label for="patient_id_edit">اسم المريض <span class="text-danger">*</span></label></div>
+                                <div class="col-md-2"><label for="patient_id_edit">{{ trans('AdminSb.patient_name') }} <span
+                                            class="text-danger">*</span></label></div>
                                 <div class="col-md-10 mg-t-5 mg-md-t-0">
-                                    <select name="patient_id" id="patient_id_edit" class="form-control select2 @error('patient_id') is-invalid @enderror" required>
-                                        @foreach($Patients as $Patient)
-                                            <option value="{{$Patient->id}}" {{ old('patient_id', $receipt_accounts->patient_id) == $Patient->id ? 'selected':'' }} >{{$Patient->name}}</option>
+                                    <select name="patient_id" id="patient_id_edit"
+                                        class="form-control select2 @error('patient_id') is-invalid @enderror" required>
+                                        @foreach ($Patients as $Patient)
+                                            <option value="{{ $Patient->id }}"
+                                                {{ old('patient_id', $receipt_accounts->patient_id) == $Patient->id ? 'selected' : '' }}>
+                                                {{ $Patient->name }}</option>
                                         @endforeach
                                     </select>
-                                    @error('patient_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    @error('patient_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
                             <div class="row row-xs align-items-center mg-b-20">
                                 <div class="col-md-2">
-                                    <label for="item_type_id_edit">الخدمة / الباقة (اختياري)</label>
+                                    <label for="item_type_id_edit">{{ trans('AdminSb.service_package_optional') }}</label>
                                 </div>
                                 <div class="col-md-10 mg-t-5 mg-md-t-0">
-                                   <select name="item_type_id" id="item_type_id_edit" class="form-control select2 @error('item_type_id') is-invalid @enderror">
-                                        <option value="" data-price="0" data-name="">{{ trans('forms.select_option_optional') }}</option>
-                                        @if(isset($Services) && $Services->count() > 0)
-                                            <optgroup label="الخدمات المفردة">
-                                                @foreach($Services as $Service)
-                                                   <option value="service_{{$Service->id}}" data-price="{{$Service->price}}" data-name="{{$Service->name}}" {{ old('item_type_id', ($receipt_accounts->service_id == $Service->id ? 'service_'.$Service->id : '')) == 'service_'.$Service->id ? 'selected' : '' }}>
-                                                       {{$Service->name}} ({{number_format($Service->price, 2)}} {{ config('app.currency_symbol', 'ر.س') }})
-                                                   </option>
+                                    <select name="item_type_id" id="item_type_id_edit"
+                                        class="form-control select2 @error('item_type_id') is-invalid @enderror">
+                                        <option value="" data-price="0" data-name="">
+                                            {{ trans('AdminSb.select_option_optional') }}</option>
+                                        @if (isset($Services) && $Services->count() > 0)
+                                            <optgroup label="{{ trans('AdminSb.Single_service') }}">
+                                                @foreach ($Services as $Service)
+                                                    <option value="service_{{ $Service->id }}"
+                                                        data-price="{{ $Service->price }}"
+                                                        data-name="{{ $Service->name }}"
+                                                        {{ old('item_type_id', $receipt_accounts->service_id == $Service->id ? 'service_' . $Service->id : '') == 'service_' . $Service->id ? 'selected' : '' }}>
+                                                        {{ $Service->name }} ({{ number_format($Service->price, 2) }}
+                                                        {{ config('app.currency_symbol', 'NIS') }})
+                                                    </option>
                                                 @endforeach
                                             </optgroup>
                                         @endif
-                                        @if(isset($GroupedServices) && $GroupedServices->count() > 0)
-                                            <optgroup label="الباقات المجمعة">
-                                                @foreach($GroupedServices as $Group)
-                                                   <option value="group_{{$Group->id}}" data-price="{{$Group->Total_with_tax ?? 0}}" data-name="{{$Group->name}}" {{ old('item_type_id', ($receipt_accounts->group_id == $Group->id ? 'group_'.$Group->id : '')) == 'group_'.$Group->id ? 'selected' : '' }}>
-                                                       باقة: {{$Group->name}} ({{number_format($Group->Total_with_tax ?? 0, 2)}} {{ config('app.currency_symbol', 'ر.س') }})
-                                                   </option>
+                                        @if (isset($GroupedServices) && $GroupedServices->count() > 0)
+                                            <optgroup label="{{ trans('AdminSb.Group_Services') }}">
+                                                @foreach ($GroupedServices as $Group)
+                                                    <option value="group_{{ $Group->id }}"
+                                                        data-price="{{ $Group->Total_with_tax ?? 0 }}"
+                                                        data-name="{{ $Group->name }}"
+                                                        {{ old('item_type_id', $receipt_accounts->group_id == $Group->id ? 'group_' . $Group->id : '') == 'group_' . $Group->id ? 'selected' : '' }}>
+                                                        {{ trans('AdminSb.package_colon') }} {{ $Group->name }}
+                                                        ({{ number_format($Group->Total_with_tax ?? 0, 2) }}
+                                                        {{ config('app.currency_symbol', 'NIS') }})
+                                                    </option>
                                                 @endforeach
                                             </optgroup>
                                         @endif
                                     </select>
-                                    @error('item_type_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    @error('item_type_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
                             <div class="row row-xs align-items-center mg-b-20">
-                                <div class="col-md-2"><label for="Debit_edit">المبلغ <span class="text-danger">*</span></label></div>
+                                <div class="col-md-2"><label for="Debit_edit">{{ trans('AdminSb.amount') }} <span
+                                            class="text-danger">*</span></label></div>
                                 <div class="col-md-10 mg-t-5 mg-md-t-0">
-                                    <input class="form-control @error('Debit') is-invalid @enderror" id="Debit_edit" value="{{ old('Debit', $receipt_accounts->amount) }}" name="Debit" type="number" step="0.01" required>
-                                    @error('Debit') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    <input class="form-control @error('Debit') is-invalid @enderror" id="Debit_edit"
+                                        value="{{ old('Debit', $receipt_accounts->amount) }}" name="Debit" type="number"
+                                        step="0.01" required>
+                                    @error('Debit')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
                             <div class="row row-xs align-items-center mg-b-20">
-                                <div class="col-md-2"><label for="description_edit">البيان</label></div>
+                                <div class="col-md-2"><label
+                                        for="description_edit">{{ trans('AdminSb.description') }}</label></div>
                                 <div class="col-md-10 mg-t-5 mg-md-t-0">
-                                    <textarea class="form-control @error('description') is-invalid @enderror" id="description_edit" name="description" rows="3">{{ old('description', $receipt_accounts->description) }}</textarea>
-                                    @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    <textarea class="form-control @error('description') is-invalid @enderror" id="description_edit" name="description"
+                                        rows="3">{{ old('description', $receipt_accounts->description) }}</textarea>
+                                    @error('description')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-main-primary pd-x-30 mg-r-5 mg-t-5">{{ trans('Doctors.submit') }}</button>
+                            <button type="submit"
+                                class="btn btn-main-primary pd-x-30 mg-r-5 mg-t-5">{{ trans('AdminSb.submit') }}</button>
                         </div>
                     </form>
                 </div>
@@ -87,10 +123,10 @@
     </div>
 @endsection
 @section('js')
-    <script src="{{URL::asset('dashboard/plugins/notify/js/notifIt.js')}}"></script>
-    <script src="{{URL::asset('dashboard/plugins/notify/js/notifit-custom.js')}}"></script>
-    <script src="{{URL::asset('Dashboard/plugins/select2/js/select2.min.js')}}"></script>
-    <script src="{{URL::asset('dashboard/js/form-elements.js')}}"></script>
+    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.min.js') }}"></script>
+    <script src="{{ URL::asset('dashboard/js/form-elements.js') }}"></script>
     <script>
         $(document).ready(function() {
             if ($.fn.select2) {
@@ -113,10 +149,14 @@
                     // $('#Debit_edit').val(''); // اتركه أو امسحه حسب الرغبة
                 }
 
-                if (itemName !== undefined && itemValue !== "" && (currentDescription === "" || currentDescription.startsWith("رسوم خدمة:") || currentDescription.startsWith("رسوم باقة:"))) {
-                    var prefix = itemValue.startsWith("service_") ? "رسوم خدمة: " : (itemValue.startsWith("group_") ? "رسوم باقة: " : "");
+                if (itemName !== undefined && itemValue !== "" && (currentDescription === "" ||
+                        currentDescription.startsWith("رسوم خدمة:") || currentDescription.startsWith(
+                            "رسوم باقة:"))) {
+                    var prefix = itemValue.startsWith("service_") ? "رسوم خدمة: " : (itemValue.startsWith(
+                        "group_") ? "رسوم باقة: " : "");
                     $('#description_edit').val(prefix + itemName);
-                } else if (itemValue === "" && (currentDescription.startsWith("رسوم خدمة:") || currentDescription.startsWith("رسوم باقة:"))) {
+                } else if (itemValue === "" && (currentDescription.startsWith("رسوم خدمة:") ||
+                        currentDescription.startsWith("رسوم باقة:"))) {
                     // $('#description_edit').val('');
                 }
             });

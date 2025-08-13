@@ -21,12 +21,12 @@
                 <div class="page-title-box">
                     <div class="float-right">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('dashboard.admin') }}">لوحة التحكم</a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('admin.patient_admissions.index') }}">سجلات دخول المرضى</a></li>
-                            <li class="breadcrumb-item active">تسجيل دخول جديد</li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard.admin') }}">{{ trans('AdminSb.dashboard') }}</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.patient_admissions.index') }}">{{ trans('AdminSb.patient_admission_records') }}</a></li>
+                            <li class="breadcrumb-item active">{{ trans('AdminSb.new_admission') }}</li>
                         </ol>
                     </div>
-                    <h4 class="page-title">تسجيل دخول مريض جديد</h4>
+                    <h4 class="page-title">{{ trans('AdminSb.admit_new_patient') }}</h4>
                 </div><!--end page-title-box-->
             </div><!--end col-->
         </div><!--end row-->
@@ -47,18 +47,17 @@
             @csrf
 
             @include('Dashboard.PatientAdmissions.partials._form', [
-                'patients' => $patients, // من المتحكم
-                'doctors' => $doctors,   // من المتحكم
-                'sections' => $sections, // من المتحكم
-                'availableBeds' => $availableBeds, // من المتحكم
-                'admissionStatuses' => $admissionStatuses, // من المتحكم
-                // لا يوجد 'patientAdmission' هنا لأننا في وضع الإنشاء
+                'patients' => $patients,
+                'doctors' => $doctors,
+                'sections' => $sections,
+                'availableBeds' => $availableBeds,
+                'admissionStatuses' => $admissionStatuses,
             ])
 
             <div class="row">
                 <div class="col-12 text-center mt-3 mb-3">
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i> حفظ وتسجيل الدخول</button>
-                    <a href="{{ route('admin.patient_admissions.index') }}" class="btn btn-secondary"><i class="fas fa-times me-1"></i> إلغاء</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i> {{ trans('AdminSb.save_and_admit') }}</button>
+                    <a href="{{ route('admin.patient_admissions.index') }}" class="btn btn-secondary"><i class="fas fa-times me-1"></i> {{ trans('AdminSb.cancel') }}</a>
                 </div>
             </div>
         </form>
@@ -67,18 +66,15 @@
 @endsection
 
 @section('js')
-    <!-- Select2 JS -->
     <script src="{{ asset('dashboard/assets/plugins/select2/select2.full.min.js') }}"></script>
-    {{-- <script src="{{ asset('dashboard/assets/pages/jquery.forms-advanced.js') }}"></script> --}}
-    @stack('js_after_form') {{-- لجلب الـ JS من ملف _form.blade.php --}}
+    @stack('js_after_form')
     <script>
-        // أي JS إضافي خاص بصفحة الإنشاء
-        // $(document).ready(function() {
-            // إذا كنت ستستخدم error bag مخصص للإنشاء
-            // const createForm = document.getElementById('createAdmissionForm');
-            // if (createForm) {
-            //     // ...
-            // }
-        // });
+        $(document).ready(function() {
+            $('.select2').select2({
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+
+        });
     </script>
 @endsection

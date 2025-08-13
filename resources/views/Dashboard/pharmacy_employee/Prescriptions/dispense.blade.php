@@ -331,11 +331,11 @@
                                             <div class="form-group mb-0">
                                                 <label for="disp_qty_{{ $item->id }}" class="form-label" >الكمية المصروفة
                                                     <small class="text-danger">*</small></label>
-                                                <input type="number" name="items[{{ $index }}][dispensed_quantity]" disabled
+                                                <input type="number" name="items[{{ $index }}][dispensed_quantity]" 
                                                     id="disp_qty_{{ $item->id }}"
                                                     value="{{ old('items.' . $index . '.dispensed_quantity', ($item->quantity_prescribed > 0 ? $item->quantity_prescribed : 0)) }}"
                                                     class="form-control @error('items.' . $index . '.dispensed_quantity') is-invalid @enderror"
-                                                    min="0" placeholder="الكمية" required>
+                                                    min="0" placeholder="الكمية" >
                                                 @error('items.' . $index . '.dispensed_quantity') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
                                         </div>

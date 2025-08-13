@@ -176,12 +176,7 @@ class BedController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Bed  $bed (Route Model Binding)
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy(Bed $bed)
     {
         try {

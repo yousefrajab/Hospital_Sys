@@ -16,7 +16,6 @@
         <li class="side-item side-item-category">{{ trans('main-sidebar_trans.Main') }}</li>
         <li class="slide">
             <a class="side-menu__item" href="{{ route('dashboard.admin') }}">
-                {{-- أيقونة لوحة التحكم الرئيسية - SVG الحالي جيد --}}
                 <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24">
                     <path d="M0 0h24v24H0V0z" fill="none" />
                     <path d="M5 5h4v6H5zm10 8h4v6h-4zM5 17h4v2H5zM15 5h4v2h-4z" opacity=".3" />
@@ -30,14 +29,14 @@
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-user-cog"></i> {{-- أيقونة لإعدادات الملف الشخصي --}}
+                <i class="side-menu__icon fas fa-user-cog"></i>
                 <span class="side-menu__label">{{ trans('AdminSb.Profile') }}</span>
-                <i class="angle fa fa-chevron-down"></i> {{-- Font Awesome الأصلي للسهم هنا جيد --}}
+                <i class="angle fa fa-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.profile.show') }}">
-                            <i class="fas fa-eye me-2"></i> {{ trans('AdminSb.ViewProfile') }}</a>
+                        <i class="fas fa-eye me-2"></i> {{ trans('AdminSb.ViewProfile') }}</a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.profile.edit') }}">
@@ -49,7 +48,6 @@
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                {{-- SVG الحالي جيد لمجموعة المستخدمين والأدوار --}}
                 <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -66,13 +64,12 @@
                         <i class="fas fa-list-ul me-2"></i>{{ trans('AdminSb.ViewAll') }}
                     </a>
                 </li>
-                {{-- <li><a class="slide-item" href="#"><i class="fas fa-plus-circle me-2"></i> إضافة دور جديد (مثال)</a></li> --}}
             </ul>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-sitemap"></i> {{-- أيقونة هيكل تنظيمي أو أقسام --}}
+                <i class="side-menu__icon fas fa-sitemap"></i>
                 <span class="side-menu__label">{{ trans('main-sidebar_trans.sections') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
@@ -80,7 +77,6 @@
                 <li>
                     <a class="slide-item" href="{{ route('admin.Sections.index') }}">
                         <i class="fas fa-stream me-2"></i> {{ trans('main-sidebar_trans.view_all') }}
-                        {{-- stream: لتمثيل قائمة أو تدفق --}}
                     </a>
                 </li>
             </ul>
@@ -89,7 +85,7 @@
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-user-md"></i> {{-- أيقونة طبيب --}}
+                <i class="side-menu__icon fas fa-user-md"></i>
                 <span class="side-menu__label">{{ trans('main-sidebar_trans.doctors') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
@@ -103,19 +99,21 @@
         </li>
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-pills"></i> {{-- أيقونة صيدلية/أدوية --}}
-                <span class="side-menu__label">الصيدلية</span>
+                <i class="side-menu__icon fas fa-pills"></i>
+                <span class="side-menu__label">{{ trans('AdminSb.Pharmacy') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
-                    <a class="slide-item" href="{{ route('admin.pharmacy_manager.index') }}"> {{-- {{ route('admin.pharmacy.staff.index') }} --}}
-                        <i class="fas fa-users-cog me-2"></i> قائمة مديري الصيدلية {{-- (أو أيقونة مناسبة لموظفي الصيدلية) --}}
+                    <a class="slide-item" href="{{ route('admin.pharmacy_manager.index') }}">
+                        <i class="fas fa-users-cog me-2"></i>
+                        {{ trans('AdminSb.PharmacyManager') }}
                     </a>
                 </li>
                 <li>
-                    <a class="slide-item" href="{{ route('admin.pharmacy_employee.index') }}"> {{-- {{ route('admin.pharmacy.staff.index') }} --}}
-                        <i class="fas fa-users-cog me-2"></i> قائمة الموظفين{{-- (أو أيقونة مناسبة لموظفي الصيدلية) --}}
+                    <a class="slide-item" href="{{ route('admin.pharmacy_employee.index') }}">
+                        <i class="fas fa-users-cog me-2"></i>
+                        {{ trans('AdminSb.PharmacyEmployees') }}
                     </a>
                 </li>
 
@@ -125,14 +123,14 @@
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-x-ray"></i> {{-- أيقونة أشعة --}}
-                <span class="side-menu__label">موظفي الأشعة</span>
+                <i class="side-menu__icon fas fa-x-ray"></i>
+                <span class="side-menu__label">{{ trans('AdminSb.Radiology staff') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.ray_employee.index') }}">
-                        <i class="fas fa-users me-2"></i> قائمة الموظفين
+                        <i class="fas fa-users me-2"></i> {{ trans('AdminSb.Staff List') }}
                     </a>
                 </li>
             </ul>
@@ -140,34 +138,35 @@
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-microscope"></i> {{-- أيقونة مختبر --}}
-                <span class="side-menu__label">موظفي المختبر</span>
+                <i class="side-menu__icon fas fa-microscope"></i>
+                <span class="side-menu__label">{{ trans('AdminSb.laboratory staff') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.laboratorie_employee.index') }}">
-                        <i class="fas fa-users me-2"></i> قائمة الموظفين
-                    </a>
+                        <i class="fas fa-users me-2"></i> {{ trans('AdminSb.Staff List') }}</a>
                 </li>
             </ul>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-users"></i> {{-- أيقونة مجموعة مرضى --}}
-                <span class="side-menu__label">المرضى</span>
+                <i class="side-menu__icon fas fa-users"></i>
+                <span class="side-menu__label">{{ trans('AdminSb.patients') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.Patients.index') }}">
-                        <i class="fas fa-list-ul me-2 text-primary opacity-75"></i> قائمة المرضى
+                        <i class="fas fa-list-ul me-2 text-primary opacity-75"></i>
+                        {{ trans('AdminSb.patients list') }}
                     </a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.Patients.create') }}">
-                        <i class="fas fa-user-plus me-2 text-success opacity-75"></i> إضافة مريض جديد
+                        <i class="fas fa-user-plus me-2 text-success opacity-75"></i>
+                        {{ trans('AdminSb.Add a new patient') }}
                     </a>
                 </li>
                 <li>
@@ -175,13 +174,14 @@
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.patient_admissions.index') }}">
-                        <i class="fas fa-notes-medical me-2 text-info opacity-75"></i> سجلات دخول وخروج المرضى
+                        <i class="fas fa-notes-medical me-2 text-info opacity-75"></i>
+                        {{ trans('AdminSb.Patient admission and discharge records') }}
                     </a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.patient_admissions.create') }}">
-                        <i class="fas fa-procedures me-2 text-warning opacity-75"></i> تسجيل دخول مريض جديد
-                        {{-- procedures: إجراءات طبية / سرير --}}
+                        <i class="fas fa-procedures me-2 text-warning opacity-75"></i>
+                        {{ trans('AdminSb.New patient login') }}
                     </a>
                 </li>
             </ul>
@@ -189,33 +189,33 @@
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
                 <i class="side-menu__icon fas fa-calendar-alt"></i> {{-- أيقونة تقويم/مواعيد --}}
-                <span class="side-menu__label">المواعيد</span>
+                <span class="side-menu__label">{{ trans('AdminSb.appointments') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.appointments.index') }}">
-                        <i class="fas fa-calendar-day me-2"></i> قائمة المواعيد الغير مؤكدة
+                        <i class="fas fa-calendar-day me-2"></i> {{ trans('AdminSb.Unconfirmed appointment list') }}
                     </a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.appointments.index2') }}">
-                        <i class="fas fa-calendar-check me-2"></i> قائمة المواعيد المؤكدة
+                        <i class="fas fa-calendar-check me-2"></i> {{ trans('AdminSb.confirmed appointment list') }}
                     </a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.completed') }}">
-                        <i class="fas fa-calendar-times me-2"></i> قائمة المواعيد المنتهية
+                        <i class="fas fa-calendar-times me-2"></i> {{ trans('AdminSb.expired appointment list') }}
                     </a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.appointments.lapsed') }}">
-                        <i class="fas fa-calendar-day me-2"></i> قائمة المواعيد الفائتة
+                        <i class="fas fa-calendar-day me-2"></i> {{ trans('AdminSb.missed appointment list') }}
                     </a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.cancelled') }}">
-                        <i class="fas fa-ban me-2"></i> قائمة المواعيد الملغاة
+                        <i class="fas fa-ban me-2"></i> {{ trans('AdminSb.canceled appointment list') }}
                     </a>
                 </li>
             </ul>
@@ -223,22 +223,21 @@
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                {{-- أيقونة رئيسية جديدة: درع مع فيروس، يرمز لإدارة ومكافحة الأمراض --}}
                 <i class="side-menu__icon fas fa-heartbeat"></i>
-                <span class="side-menu__label">ادارة الأمراض</span>
+                <span class="side-menu__label">{{ trans('AdminSb.disease management') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.diseases.index') }}">
-                        {{-- أيقونة قائمة الأمراض: دفتر ملاحظات طبية أو قائمة ملاحظات --}}
-                        <i class="fas fa-notes-medical me-2 text-primary opacity-75"></i> قائمة الامراض
+                        <i class="fas fa-notes-medical me-2 text-primary opacity-75"></i>
+                        {{ trans('AdminSb.list of diseases') }}
                     </a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.diseases.create') }}">
-                        {{-- أيقونة إضافة مرض جديد: ملف طبي جديد أو رمز لإنشاء سجل --}}
-                        <i class="fas fa-file-medical me-2 text-success opacity-75"></i> إضافة مرض جديد
+                        <i class="fas fa-file-medical me-2 text-success opacity-75"></i>
+                        {{ trans('AdminSb.Add a new disease') }}
                     </a>
                 </li>
             </ul>
@@ -247,18 +246,18 @@
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
                 <i class="side-menu__icon fas fa-door-open"></i> {{-- أيقونة غرفة --}}
-                <span class="side-menu__label">{{ trans('main-sidebar_trans.rooms_management') }}</span>
+                <span class="side-menu__label">{{ trans('AdminSb.rooms_management') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.rooms.index') }}">
-                        <i class="fas fa-th-list me-2"></i> {{ trans('main-sidebar_trans.view_all_rooms') }}
+                        <i class="fas fa-th-list me-2"></i> {{ trans('AdminSb.view_all_rooms') }}
                     </a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.rooms.create') }}">
-                        <i class="fas fa-plus-square me-2"></i> {{ trans('main-sidebar_trans.add_new_room') }}
+                        <i class="fas fa-plus-square me-2"></i> {{ trans('AdminSb.add_new_room') }}
                     </a>
                 </li>
             </ul>
@@ -267,18 +266,18 @@
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
                 <i class="side-menu__icon fas fa-bed"></i> {{-- أيقونة سرير --}}
-                <span class="side-menu__label">{{ trans('main-sidebar_trans.beds_management') }}</span>
+                <span class="side-menu__label">{{ trans('AdminSb.beds_management') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.beds.index') }}">
-                        <i class="fas fa-bed me-2"></i> {{ trans('main-sidebar_trans.view_all_beds') }}
+                        <i class="fas fa-bed me-2"></i> {{ trans('AdminSb.view_all_beds') }}
                     </a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.beds.create') }}">
-                        <i class="fas fa-plus-circle me-2"></i> {{ trans('main-sidebar_trans.add_new_bed') }}
+                        <i class="fas fa-plus-circle me-2"></i> {{ trans('AdminSb.add_new_bed') }}
                     </a>
                 </li>
             </ul>
@@ -306,19 +305,19 @@
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-file-invoice-dollar"></i> {{-- أيقونة فاتورة --}}
-                <span class="side-menu__label">الفواتير</span>
+                <i class="side-menu__icon fas fa-file-invoice-dollar"></i>
+                <span class="side-menu__label">{{ trans('AdminSb.invoices') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.single_invoices') }}">
-                        <i class="fas fa-file-invoice me-2"></i> فاتورة خدمة مفردة
+                        <i class="fas fa-file-invoice me-2"></i> {{ trans('AdminSb.Single service invoice') }}
                     </a>
                 </li>
                 <li>
                     <a class="slide-item" href="{{ route('admin.group_invoices') }}">
-                        <i class="fas fa-file-alt me-2"></i> فاتورة مجموعة خدمات {{-- file-alt or files-medical --}}
+                        <i class="fas fa-file-alt me-2"></i> {{ trans('AdminSb.Group service invoice') }}
                     </a>
                 </li>
             </ul>
@@ -328,14 +327,14 @@
 
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="#">
-                <i class="side-menu__icon fas fa-calculator"></i> {{-- أيقونة حسابات --}}
-                <span class="side-menu__label">الحسابات</span>
+                <i class="side-menu__icon fas fa-calculator"></i>
+                <span class="side-menu__label">{{ trans('AdminSb.accounts') }}</span>
                 <i class="angle fe fe-chevron-down"></i>
             </a>
             <ul class="slide-menu">
                 <li>
                     <a class="slide-item" href="{{ route('admin.Receipt.index') }}">
-                        <i class="fas fa-file-import me-2"></i> سند قبض {{-- file-import: إدخال --}}
+                        <i class="fas fa-file-import me-2"></i> {{ trans('AdminSb.a receipt') }}
                     </a>
                 </li>
                 {{-- <li>
@@ -346,23 +345,32 @@
             </ul>
         </li>
 
-<li class="nav-item {{ request()->routeIs('admin.testimonials.*') ? 'menu-open' : '' }}">
-    <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}">
-        <i class="nav-icon far fa-comments"></i>
-        <p>
-            آراء المرضى
-            {{-- يمكنك إضافة عدد التعليقات قيد المراجعة هنا --}}
-            @php
-                $pendingCount = \App\Models\Testimonial::where('status', 'pending')->count();
-            @endphp
-            @if ($pendingCount > 0)
-                <span class="badge badge-warning right">{{ $pendingCount }}</span>
-            @endif
-        </p>
-    </a>
-</li>
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#">
+                <i class="side-menu__icon far fa-comments"></i>
+                <span class="side-menu__label">{{ trans('AdminSb.reviews of patients') }}</span>
+                <i class="angle fe fe-chevron-down"></i>
+            </a>
+            <ul class="slide-menu">
+                <li>
+                    <a class="slide-item {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}"
+                        href="{{ route('admin.testimonials.index') }}">
+                        <i class="fas fa-comment-alt me-2"></i> {{ trans('AdminSb.View All') }}
+
+                        @php
+                            $pendingCount = \App\Models\Testimonial::where('status', 'pending')->count();
+                        @endphp
+
+                        @if ($pendingCount > 0)
+                            <span class="badge bg-warning text-dark ms-2">{{ $pendingCount }}</span>
+                        @endif
+                    </a>
+                </li>
+            </ul>
+        </li>
 
 
-        <li class="side-item side-item-category">Pages</li> {{-- يمكنك إزالة هذا إذا لم يكن له معنى كبير --}}
+
+
     </ul>
 </div>

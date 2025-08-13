@@ -12,9 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\PharmacyStock; // مهم لعملية الصرف
-// ستحتاج FormRequest لعملية الصرف لاحقًا
-// use App\Http\Requests\Dashboard\PharmacyEmployee\DispensePrescriptionRequest;
+use App\Models\PharmacyStock;
 
 class PharmacyEmployeePrescriptionController extends Controller
 {
@@ -184,10 +182,6 @@ class PharmacyEmployeePrescriptionController extends Controller
             'availableStocksByMedication'
         ));
     }
-
-    /**
-     * معالجة عملية صرف الوصفة.
-     */
     public function processDispense(Request $request, Prescription $prescription) // لاحقًا DispensePrescriptionRequest
     {
         $pharmacyEmployeeId = Auth::guard('pharmacy_employee')->id();

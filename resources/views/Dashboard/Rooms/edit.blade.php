@@ -221,15 +221,16 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-door-open fa-lg me-2" style="color: var(--admin-primary, #4f46e5);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">إدارة الغرف</h4>
-                    <span class="text-muted mt-0 tx-13">/ تعديل الغرفة: {{ $room->room_number }}</span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.rooms_management') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('AdminSb.edit_room_colon') }}
+                        {{ $room->room_number }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('admin.rooms.index') }}" class="btn btn-outline-secondary btn-sm"
                 style="border-radius: var(--admin-radius-md);">
-                <i class="fas fa-arrow-left me-1"></i> العودة لقائمة الغرف
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('AdminSb.back_to_rooms_list') }}
             </a>
         </div>
     </div>
@@ -242,29 +243,27 @@
         <div class="col-lg-8 col-md-10">
             <div class="form-container-card">
                 <div class="card-header card-header-custom">
-                    <h3 class="card-title mb-0"><i class="fas fa-edit"></i> تعديل بيانات الغرفة: {{ $room->room_number }}
-                    </h3>
+                    <h3 class="card-title mb-0"><i class="fas fa-edit"></i> {{ trans('AdminSb.edit_room_data_colon') }}
+                        {{ $room->room_number }}</h3>
                 </div>
                 <div class="card-body p-4 p-md-5">
                     <form action="{{ route('admin.rooms.update', $room->id) }}" method="POST" class="needs-validation"
                         novalidate autocomplete="off">
-                        @method('PUT') {{-- أو PATCH، يجب أن يتطابق مع تعريف الـ Route --}}
+                        @method('PUT')
                         @csrf
                         <div class="row g-3">
-                            {{-- القسم --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="section_id" class="form-label">القسم <span
+                                    <label for="section_id" class="form-label">{{ trans('AdminSb.department') }} <span
                                             class="text-danger">*</span></label>
                                     <select name="section_id" id="section_id"
                                         class="form-select select2 @error('section_id') is-invalid @enderror" required
-                                        data-placeholder="-- اختر القسم --">
+                                        data-placeholder="{{ trans('AdminSb.select_department_placeholder') }}">
                                         <option value=""></option>
                                         @foreach ($sections as $section)
                                             <option value="{{ $section->id }}"
                                                 {{ old('section_id', $room->section_id) == $section->id ? 'selected' : '' }}>
-                                                {{ $section->name }}
-                                            </option>
+                                                {{ $section->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('section_id')
@@ -273,11 +272,10 @@
                                 </div>
                             </div>
 
-                            {{-- رقم/اسم الغرفة --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="room_number" class="form-label">رقم/اسم الغرفة <span
-                                            class="text-danger">*</span></label>
+                                    <label for="room_number" class="form-label">{{ trans('AdminSb.room_number_name') }}
+                                        <span class="text-danger">*</span></label>
                                     <input type="text" name="room_number" id="room_number"
                                         class="form-control @error('room_number') is-invalid @enderror"
                                         value="{{ old('room_number', $room->room_number) }}" required>
@@ -287,14 +285,13 @@
                                 </div>
                             </div>
 
-                            {{-- نوع الغرفة --}}
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="type" class="form-label">نوع الغرفة <span
+                                    <label for="type" class="form-label">{{ trans('AdminSb.room_type') }} <span
                                             class="text-danger">*</span></label>
                                     <select name="type" id="type"
                                         class="form-select select2 @error('type') is-invalid @enderror" required
-                                        data-placeholder="-- اختر النوع --">
+                                        data-placeholder="{{ trans('AdminSb.select_type_placeholder') }}">
                                         <option value=""></option>
                                         @foreach ($roomTypes as $key => $value)
                                             <option value="{{ $key }}"
@@ -308,14 +305,13 @@
                                 </div>
                             </div>
 
-                            {{-- تخصيص الجنس --}}
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="gender_type" class="form-label">تخصيص الجنس <span
-                                            class="text-danger">*</span></label>
+                                    <label for="gender_type" class="form-label">{{ trans('AdminSb.gender_allocation') }}
+                                        <span class="text-danger">*</span></label>
                                     <select name="gender_type" id="gender_type"
                                         class="form-select select2 @error('gender_type') is-invalid @enderror" required
-                                        data-placeholder="-- اختر --">
+                                        data-placeholder="{{ trans('AdminSb.select_gender_allocation_placeholder') }}">
                                         <option value=""></option>
                                         @foreach ($genderTypes as $key => $value)
                                             <option value="{{ $key }}"
@@ -329,16 +325,14 @@
                                 </div>
                             </div>
 
-                            {{-- الحالة --}}
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="status" class="form-label">الحالة <span
+                                    <label for="status" class="form-label">{{ trans('AdminSb.status') }} <span
                                             class="text-danger">*</span></label>
                                     <select name="status" id="status"
                                         class="form-select select2 @error('status') is-invalid @enderror" required
-                                        data-placeholder="-- اختر الحالة --">
+                                        data-placeholder="{{ trans('AdminSb.select_status_placeholder') }}">
                                         <option value=""></option>
-                                        {{-- $roomStatuses هنا يجب أن تحتوي على كل الحالات الممكنة للتعديل --}}
                                         @foreach ($roomStatuses as $key => $value)
                                             <option value="{{ $key }}"
                                                 {{ old('status', $room->status) == $key ? 'selected' : '' }}>
@@ -351,10 +345,9 @@
                                 </div>
                             </div>
 
-                            {{-- الطابق --}}
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="floor" class="form-label">الطابق</label>
+                                    <label for="floor" class="form-label">{{ trans('AdminSb.floor') }}</label>
                                     <input type="text" name="floor" id="floor"
                                         class="form-control @error('floor') is-invalid @enderror"
                                         value="{{ old('floor', $room->floor) }}">
@@ -364,10 +357,9 @@
                                 </div>
                             </div>
 
-                            {{-- ملاحظات --}}
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="notes" class="form-label">ملاحظات</label>
+                                    <label for="notes" class="form-label">{{ trans('AdminSb.notes') }}</label>
                                     <textarea name="notes" id="notes" class="form-control @error('notes') is-invalid @enderror" rows="3">{{ old('notes', $room->notes) }}</textarea>
                                     @error('notes')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -377,33 +369,28 @@
                         </div>
 
                         <div class="form-actions mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
-                            {{-- ***** زر "حذف الغرفة" الذي يفتح المودال ***** --}}
                             <div>
                                 <a type="button" class="btn btn-delete-form" data-toggle="modal"
                                     href="#deleteRoomConfirmModal{{ $room->id }}">
-                                    <i class="fas fa-trash-alt me-2"></i> حذف الغرفة
+                                    <i class="fas fa-trash-alt me-2"></i> {{ trans('AdminSb.delete_room') }}
                                 </a>
                             </div>
-
-                            {{-- أزرار الإلغاء وحفظ التعديلات (تابعة للفورم الرئيسي للتحديث) --}}
                             <div>
                                 <a href="{{ route('admin.rooms.index') }}" class="btn btn-cancel-form">
-                                    <i class="fas fa-times me-2"></i> إلغاء
+                                    <i class="fas fa-times me-2"></i> {{ trans('AdminSb.cancel') }}
                                 </a>
-                                <button type="submit" class="btn btn-submit-form ms-2"> {{-- هذا الزر يرسل فورم التحديث --}}
-                                    <i class="fas fa-save me-2"></i> حفظ التعديلات
+                                <button type="submit" class="btn btn-submit-form ms-2">
+                                    <i class="fas fa-save me-2"></i> {{ trans('AdminSb.save changes') }}
                                 </button>
                             </div>
                         </div>
-                    </form> {{-- نهاية الفورم الرئيسي للتحديث --}}
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
     @include('Dashboard.Rooms.delete')
-
-
 @endsection
 
 @section('js')

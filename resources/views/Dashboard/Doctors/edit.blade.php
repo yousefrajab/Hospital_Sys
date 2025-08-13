@@ -712,7 +712,7 @@
         $(document).ready(function() {
             $('.select2-gender').select2({
                 dir: "rtl",
-                placeholder: "-- اختر الجنس --",
+                placeholder: trans('AdminSb.select'),
                 minimumResultsForSearch: Infinity,
                 templateResult: formatGenderOption,
                 templateSelection: formatGenderOption
@@ -738,7 +738,7 @@
         $(document).ready(function() {
             $('.select2').select2({
                 theme: 'bootstrap4',
-                placeholder: "اختر",
+                placeholder: trans('AdminSb.select'),
                 width: '100%'
             });
 

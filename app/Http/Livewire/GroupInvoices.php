@@ -66,11 +66,9 @@ class GroupInvoices extends Component
     public function store()
     {
 
-        // في حالة كانت الفاتورة نقدي
         if ($this->type == 1) {
 
             try {
-                // في حالة التعديل
                 if ($this->updateMode) {
 
                     $group_invoices = Invoice::findorfail($this->group_invoice_id);
@@ -83,9 +81,7 @@ class GroupInvoices extends Component
                     $group_invoices->price = $this->price;
                     $group_invoices->discount_value = $this->discount_value;
                     $group_invoices->tax_rate = $this->tax_rate;
-                    // قيمة الضريبة = السعر - الخصم * نسبة الضريبة /100
                     $group_invoices->tax_value = ($this->price - $this->discount_value) * ((is_numeric($this->tax_rate) ? $this->tax_rate : 0) / 100);
-                    // الاجمالي شامل الضريبة  = السعر - الخصم + قيمة الضريبة
                     $group_invoices->total_with_tax = $group_invoices->price -  $group_invoices->discount_value + $group_invoices->tax_value;
                     $group_invoices->type = $this->type;
                     $group_invoices->save();
@@ -100,7 +96,6 @@ class GroupInvoices extends Component
                     $this->show_table = true;
                 }
 
-                // في حالة الاضافة
                 else {
 
                     $group_invoices = new Invoice();
@@ -113,9 +108,7 @@ class GroupInvoices extends Component
                     $group_invoices->price = $this->price;
                     $group_invoices->discount_value = $this->discount_value;
                     $group_invoices->tax_rate = $this->tax_rate;
-                    // قيمة الضريبة = السعر - الخصم * نسبة الضريبة /100
                     $group_invoices->tax_value = ($this->price - $this->discount_value) * ((is_numeric($this->tax_rate) ? $this->tax_rate : 0) / 100);
-                    // الاجمالي شامل الضريبة  = السعر - الخصم + قيمة الضريبة
                     $group_invoices->total_with_tax = $group_invoices->price -  $group_invoices->discount_value + $group_invoices->tax_value;
                     $group_invoices->type = $this->type;
                     $group_invoices->save();
@@ -135,14 +128,9 @@ class GroupInvoices extends Component
             }
         }
 
-        //----------------------------------------------------------------------------------------------------
-
-        // في حالة الفاتورة اجل
-
         else {
 
             try {
-                // في حالة التعديل
                 if ($this->updateMode) {
 
                     $group_invoices = Invoice::findorfail($this->group_invoice_id);
@@ -155,9 +143,7 @@ class GroupInvoices extends Component
                     $group_invoices->price = $this->price;
                     $group_invoices->discount_value = $this->discount_value;
                     $group_invoices->tax_rate = $this->tax_rate;
-                    // قيمة الضريبة = السعر - الخصم * نسبة الضريبة /100
                     $group_invoices->tax_value = ($this->price - $this->discount_value) * ((is_numeric($this->tax_rate) ? $this->tax_rate : 0) / 100);
-                    // الاجمالي شامل الضريبة  = السعر - الخصم + قيمة الضريبة
                     $group_invoices->total_with_tax = $group_invoices->price -  $group_invoices->discount_value + $group_invoices->tax_value;
                     $group_invoices->type = $this->type;
                     $group_invoices->save();
@@ -174,7 +160,6 @@ class GroupInvoices extends Component
                     $this->rest();
                 }
 
-                // في حالة الاضافة
                 else {
 
 
@@ -188,9 +173,7 @@ class GroupInvoices extends Component
                     $group_invoices->price = $this->price;
                     $group_invoices->discount_value = $this->discount_value;
                     $group_invoices->tax_rate = $this->tax_rate;
-                    // قيمة الضريبة = السعر - الخصم * نسبة الضريبة /100
                     $group_invoices->tax_value = ($this->price - $this->discount_value) * ((is_numeric($this->tax_rate) ? $this->tax_rate : 0) / 100);
-                    // الاجمالي شامل الضريبة  = السعر - الخصم + قيمة الضريبة
                     $group_invoices->total_with_tax = $group_invoices->price -  $group_invoices->discount_value + $group_invoices->tax_value;
                     $group_invoices->type = $this->type;
                     $group_invoices->save();
@@ -235,44 +218,38 @@ class GroupInvoices extends Component
     {
         $this->group_invoice_id = $id;
         session()->flash('delete');
-        return redirect()->to('admin/group_invoices')->with('success', 'تم حذف الخدمة بنجاح');
+        return redirect()->to('admin/group_invoices')->with('success', trans('AdminSb.invoice_deleted_successfully'));
     }
 
     public function prepareForDelete($id)
     {
         $this->group_invoice_id = $id;
-        Log::info('Preparing to delete invoice ID: ' . $id); // اختياري
-        // يمكنك إضافة $this->dispatchBrowserEvent('show-delete-modal'); إذا أردت فتح المودال عبر JS
-        // ولكن data-toggle="modal" عادة ما يكون كافيًا
+        Log::info('Preparing to delete invoice ID: ' . $id);
+
     }
 
     public function destroy()
     {
-        // التحقق من أن الـ ID موجود قبل محاولة الحذف
         if ($this->group_invoice_id) {
             Log::info('Attempting to destroy invoice ID: ' . $this->group_invoice_id);
             try {
-                Invoice::destroy($this->group_invoice_id); // حذف الفاتورة
-                session()->flash('message', 'تم حذف الفاتورة بنجاح.'); // استخدام رسالة flash عامة
+                Invoice::destroy($this->group_invoice_id);
+                session()->flash('message', trans('AdminSb.invoice_deleted_successfully'));
                 Log::info('Invoice ID: ' . $this->group_invoice_id . ' destroyed successfully.');
-                // إغلاق المودال بعد الحذف (باستخدام حدث للمتصفح)
                 $this->dispatchBrowserEvent('close-delete-modal');
-                // إعادة تعيين الـ ID بعد الحذف (اختياري ولكن جيد)
                 $this->group_invoice_id = null;
-                // إعادة تحميل بيانات الجدول أو إعادة التوجيه
-                // $this->emit('refreshComponent'); // إذا كنت تستخدم حدثًا لتحديث الجدول
-                return redirect()->to('admin/group_invoices'); // أو المسار الصحيح
+
+                return redirect()->to('admin/group_invoices');
 
             } catch (\Exception $e) {
                 Log::error('Error destroying invoice ID: ' . $this->group_invoice_id . ' - ' . $e->getMessage());
-                session()->flash('error', 'حدث خطأ أثناء حذف الفاتورة.');
-                // إغلاق المودال حتى في حالة الخطأ
+                session()->flash('error', trans('AdminSb.error_deleting_invoice'));
                 $this->dispatchBrowserEvent('close-delete-modal');
-                $this->group_invoice_id = null; // إعادة التعيين
+                $this->group_invoice_id = null;
             }
         } else {
             Log::warning('Destroy called without a group_invoice_id set.');
-            session()->flash('error', 'لم يتم تحديد الفاتورة المراد حذفها.');
+            session()->flash('error', trans('AdminSb.invoice_not_selected_for_deletion'));
         }
     }
 

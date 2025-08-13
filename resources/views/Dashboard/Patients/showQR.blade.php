@@ -153,7 +153,7 @@
 
         .disease-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .patient-profile-avatar {
@@ -170,9 +170,12 @@
             body * {
                 visibility: hidden;
             }
-            .qr-card-container, .qr-card-container * {
+
+            .qr-card-container,
+            .qr-card-container * {
                 visibility: visible;
             }
+
             .qr-card-container {
                 position: absolute;
                 left: 0;
@@ -182,6 +185,7 @@
                 border: none;
                 box-shadow: none;
             }
+
             .no-print {
                 display: none !important;
             }
@@ -199,16 +203,17 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-qrcode text-primary"></i> بطاقة QR للمريض</h4>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-qrcode text-primary"></i>
+                    {{ trans('AdminSb.patient_qr_card') }}</h4>
                 <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ $patientNameForTitle }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <button onclick="window.print()" class="btn btn-success btn-sm no-print">
-                <i class="fas fa-print me-1"></i> طباعة البطاقة
+                <i class="fas fa-print me-1"></i> {{ trans('AdminSb.print_card') }}
             </button>
             <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm ms-2 no-print">
-                <i class="fas fa-arrow-left me-1"></i> رجوع
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('AdminSb.back') }}
             </a>
         </div>
     </div>
@@ -224,29 +229,32 @@
                     class="patient-profile-avatar" alt="{{ $patient->name }}">
             @else
                 <img src="{{ Url::asset('Dashboard/img/doctor_default.png') }}" class="patient-profile-avatar"
-                    alt="صورة افتراضية">
+                    alt="{{ trans('AdminSb.default_image') }}">
             @endif
 
             <h3>{{ $patientNameForTitle }}</h3>
-            <p>بطاقة تعريف المريض السريعة</p>
+            <p>{{ trans('AdminSb.quick_patient_id_card') }}</p>
         </div>
 
-        @if($patient->emergency_contact || $patient->Blood_Group)
-        <div class="emergency-section">
-            <h5 class="text-danger"><i class="fas fa-exclamation-triangle"></i> معلومات الطوارئ</h5>
-            <div class="row">
-                @if($patient->emergency_contact)
-                <div class="col-md-6">
-                    <p><strong>جهة اتصال الطوارئ:</strong> {{ $patient->emergency_contact }}</p>
+        @if ($patient->emergency_contact || $patient->Blood_Group)
+            <div class="emergency-section">
+                <h5 class="text-danger"><i class="fas fa-exclamation-triangle"></i>
+                    {{ trans('AdminSb.emergency_information') }}</h5>
+                <div class="row">
+                    @if ($patient->emergency_contact)
+                        <div class="col-md-6">
+                            <p><strong>{{ trans('AdminSb.emergency_contact_colon') }}</strong>
+                                {{ $patient->emergency_contact }}</p>
+                        </div>
+                    @endif
+                    @if ($patient->Blood_Group)
+                        <div class="col-md-6">
+                            <p><strong>{{ trans('AdminSb.blood_type_colon') }}</strong> <span class="badge bg-danger"
+                                    style="color: white">{{ $patient->Blood_Group }}</span></p>
+                        </div>
+                    @endif
                 </div>
-                @endif
-                @if($patient->Blood_Group)
-                <div class="col-md-6">
-                    <p><strong>فصيلة الدم:</strong> <span class="badge bg-danger" style="color: white" >{{ $patient->Blood_Group }}</span></p>
-                </div>
-                @endif
             </div>
-        </div>
         @endif
 
         <div class="qr-code-section">
@@ -254,94 +262,99 @@
                 <div class="qr-code-image">
                     {!! $patient->generateQrCodeSvg(200) !!}
                 </div>
-                <p class="qr-code-instructions">امسح الرمز لعرض ملف المريض الكامل</p>
+                <p class="qr-code-instructions">{{ trans('AdminSb.scan_qr_for_profile') }}</p>
                 <div class="qr-download-buttons mt-3 no-print">
                     <a href="#" class="btn btn-sm btn-outline-primary" id="downloadPNG">
-                        <i class="fas fa-download"></i> تحميل PNG
+                        <i class="fas fa-download"></i> {{ trans('AdminSb.download_png') }}
                     </a>
                     <a href="#" class="btn btn-sm btn-outline-success" id="downloadSVG">
-                        <i class="fas fa-download"></i> تحميل SVG
+                        <i class="fas fa-download"></i> {{ trans('AdminSb.download_svg') }}
                     </a>
                 </div>
             @else
-                <p class="text-danger my-4">خطأ: لا يمكن إنشاء رمز QR لهذا المريض.</p>
+                <p class="text-danger my-4">{{ trans('AdminSb.qr_code_error') }}</p>
             @endif
         </div>
 
         <div class="patient-info-section">
             <h5 class="mb-3" style="color:var(--primary-dark); font-weight:600;">
-                <i class="fas fa-user-shield me-2"></i>المعلومات الشخصية
+                <i class="fas fa-user-shield me-2"></i>{{ trans('AdminSb.personal_information') }}
             </h5>
             <ul class="info-list">
                 <li>
-                    <span class="label"><i class="fas fa-id-card"></i> الرقم الوطني:</span>
+                    <span class="label"><i class="fas fa-id-card"></i> {{ trans('AdminSb.national_id_colon') }}</span>
                     <span class="value">{{ $patient->national_id ?? '-' }}</span>
                 </li>
                 <li>
-                    <span class="label"><i class="fas fa-envelope"></i> البريد الإلكتروني:</span>
+                    <span class="label"><i class="fas fa-envelope"></i> {{ trans('AdminSb.email_colon') }}</span>
                     <span class="value">{{ $patient->email ?? '-' }}</span>
                 </li>
                 <li>
-                    <span class="label"><i class="fas fa-phone"></i> الهاتف:</span>
+                    <span class="label"><i class="fas fa-phone"></i> {{ trans('AdminSb.phone_colon') }}</span>
                     <span class="value">{{ $patient->Phone ?? '-' }}</span>
                 </li>
                 <li>
-                    <span class="label"><i class="fas fa-calendar-alt"></i> تاريخ الميلاد:</span>
+                    <span class="label"><i class="fas fa-calendar-alt"></i>
+                        {{ trans('AdminSb.date_of_birth_colon') }}</span>
                     <span class="value">
                         {{ $patient->Date_Birth ? \Carbon\Carbon::parse($patient->Date_Birth)->translatedFormat('d M Y') : '-' }}
                     </span>
                 </li>
                 <li>
-                    <span class="label"><i class="fas fa-venus-mars"></i> الجنس:</span>
+                    <span class="label"><i class="fas fa-venus-mars"></i> {{ trans('AdminSb.gender_colon') }}</span>
                     <span class="value badge {{ $patient->Gender == 1 ? 'bg-primary' : 'bg-pink' }}" style="color: white">
-                        {{ $patient->Gender == 1 ? __('patients.male') : ($patient->Gender == 2 ? __('patients.female') : '-') }}
+                        {{ $patient->Gender == 1 ? trans('AdminSb.male') : ($patient->Gender == 2 ? trans('AdminSb.female') : '-') }}
                     </span>
                 </li>
                 @if ($patient->Address)
-                <li>
-                    <span class="label"><i class="fas fa-map-marker-alt"></i> العنوان:</span>
-                    <span class="value">{{ $patient->Address }}</span>
-                </li>
+                    <li>
+                        <span class="label"><i class="fas fa-map-marker-alt"></i>
+                            {{ trans('AdminSb.address_colon') }}</span>
+                        <span class="value">{{ $patient->Address }}</span>
+                    </li>
                 @endif
             </ul>
         </div>
 
-        @if($patient->diagnosedChronicDiseases->isNotEmpty())
-        <div class="chronic-diseases-section">
-            <h5 class="text-primary"><i class="fas fa-heartbeat"></i> الأمراض المزمنة</h5>
-            <div class="row">
-                @foreach($patient->diagnosedChronicDiseases as $disease)
-                <div class="col-md-6 mb-2">
-                    <div class="disease-card p-3 bg-light rounded">
-                        <h6 class="d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-disease text-danger me-2"></i>{{ $disease->name }}</span>
-                            <span class="badge bg-{{ $disease->pivot->severity == 'high' ? 'danger' : ($disease->pivot->severity == 'medium' ? 'warning' : 'info') }}">
-                                {{ $disease->pivot->severity }}
-                            </span>
-                        </h6>
-                        @if($disease->pivot->diagnosis_date)
-                        <p class="mb-1"><small>تاريخ التشخيص: {{ $disease->pivot->diagnosis_date->format('Y-m-d') }}</small></p>
-                        @endif
-                        @if($disease->pivot->current_status)
-                        <p class="mb-0"><small>الحالة الحالية: {{ $disease->pivot->current_status }}</small></p>
-                        @endif
-                    </div>
+        @if ($patient->diagnosedChronicDiseases->isNotEmpty())
+            <div class="chronic-diseases-section">
+                <h5 class="text-primary"><i class="fas fa-heartbeat"></i> {{ trans('AdminSb.chronic_diseases') }}</h5>
+                <div class="row">
+                    @foreach ($patient->diagnosedChronicDiseases as $disease)
+                        <div class="col-md-6 mb-2">
+                            <div class="disease-card p-3 bg-light rounded">
+                                <h6 class="d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-disease text-danger me-2"></i>{{ $disease->name }}</span>
+                                    <span
+                                        class="badge bg-{{ $disease->pivot->severity == 'high' ? 'danger' : ($disease->pivot->severity == 'medium' ? 'warning' : 'info') }}">
+                                        {{ $disease->pivot->severity }}
+                                    </span>
+                                </h6>
+                                @if ($disease->pivot->diagnosis_date)
+                                    <p class="mb-1"><small>{{ trans('AdminSb.diagnosis_date_colon_short') }}
+                                            {{ $disease->pivot->diagnosis_date->format('Y-m-d') }}</small></p>
+                                @endif
+                                @if ($disease->pivot->current_status)
+                                    <p class="mb-0"><small>{{ trans('AdminSb.current_status_colon_short') }}
+                                            {{ $disease->pivot->current_status }}</small></p>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-                @endforeach
             </div>
-        </div>
         @endif
 
         @if ($patient->allergies)
-        <div class="medical-notes-section p-3 bg-warning bg-opacity-10 mx-3 mb-3 rounded">
-            <h5 class="text-warning"><i class="fas fa-allergies"></i> الحساسيات</h5>
-            <p>{{ $patient->allergies }}</p>
-        </div>
+            <div class="medical-notes-section p-3 bg-warning bg-opacity-10 mx-3 mb-3 rounded">
+                <h5 class="text-warning"><i class="fas fa-allergies"></i> {{ trans('AdminSb.allergies') }}</h5>
+                <p>{{ $patient->allergies }}</p>
+            </div>
         @endif
 
         <div class="print-button-container no-print text-center p-3">
             <button onclick="window.print()" class="btn btn-primary">
-                <i class="fas fa-print me-2"></i> طباعة هذه البطاقة
+                <i class="fas fa-print me-2"></i> {{ trans('AdminSb.print_this_card') }}
             </button>
         </div>
     </div>
@@ -370,7 +383,9 @@
                 const DOMURL = window.URL || window.webkitURL || window;
 
                 const img = new Image();
-                const svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+                const svgBlob = new Blob([data], {
+                    type: 'image/svg+xml;charset=utf-8'
+                });
                 const url = DOMURL.createObjectURL(svgBlob);
 
                 img.onload = function() {
@@ -395,7 +410,9 @@
             document.getElementById('downloadSVG').addEventListener('click', function(e) {
                 e.preventDefault();
                 const svg = document.querySelector('.qr-code-image svg').outerHTML;
-                const blob = new Blob([svg], {type: 'image/svg+xml'});
+                const blob = new Blob([svg], {
+                    type: 'image/svg+xml'
+                });
                 const url = URL.createObjectURL(blob);
                 const downloadLink = document.createElement('a');
                 downloadLink.href = url;

@@ -3,11 +3,13 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content shadow-lg border-0">
             <!-- Modal Header -->
-            <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-color, #4A90E2), var(--secondary-color, #50E3C2)); color: white;">
+            <div class="modal-header"
+                style="background: linear-gradient(135deg, var(--primary-color, #4A90E2), var(--secondary-color, #50E3C2)); color: white;">
                 <h5 class="modal-title" id="addLabEmployeeLabel">
-                    <i class="fas fa-user-plus mr-2"></i>إضافة موظف مختبر جديد
+                    <i class="fas fa-user-plus mr-2"></i>{{ trans('AdminSb.add_new_lab_employee') }}
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 0.9;">
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"
+                    style="opacity: 0.9;">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -21,78 +23,93 @@
                     <div class="row">
                         <!-- Image Upload Section -->
                         <div class="col-md-12 text-center mb-4">
-                            <div class="avatar-upload-container mx-auto" style="width: 150px; height: 150px; position: relative;">
-                                <img id="add_output_photo"
-                                    src="{{ URL::asset('Dashboard/img/doctorr_default.png') }}" {{-- Default image --}}
-                                    alt="صورة الموظف"
+                            <div class="avatar-upload-container mx-auto"
+                                style="width: 150px; height: 150px; position: relative;">
+                                <img id="add_output_photo" src="{{ URL::asset('Dashboard/img/doctorr_default.png') }}"
+                                    {{-- Default image --}} alt="{{ trans('AdminSb.employee_image') }}"
                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                                <label for="add_avatar_upload_photo"
-                                       class="btn btn-sm"
-                                       style="position: absolute; bottom: 5px; right: 5px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor:pointer; background-color: var(--primary-color, #4A90E2); color:white;"
-                                       title="اختيار صورة">
+                                <label for="add_avatar_upload_photo" class="btn btn-sm"
+                                    style="position: absolute; bottom: 5px; right: 5px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor:pointer; background-color: var(--primary-color, #4A90E2); color:white;"
+                                    title="{{ trans('AdminSb.select_image') }}">
                                     <i class="fas fa-camera"></i>
                                 </label>
                                 <input id="add_avatar_upload_photo" type="file" accept="image/*" name="photo"
-                                       onchange="previewImage(event, 'add_output_photo')" style="display: none;">
-                                <small class="form-text text-muted d-block mt-2">اختياري. يفضل صورة مربعة.</small>
+                                    onchange="previewImage(event, 'add_output_photo')" style="display: none;">
+                                <small
+                                    class="form-text text-muted d-block mt-2">{{ trans('AdminSb.optional_square_image_preferred') }}</small>
                             </div>
                         </div>
 
                         <!-- Full Name -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="font-weight-bold" style="color: var(--primary-color, #4A90E2);">الاسم الكامل <span class="text-danger">*</span></label>
-                                <input type="text" name="name" value="{{ old('name') }}" class="form-control rounded-lg shadow-sm"
-                                    placeholder="أدخل الاسم الكامل" required>
+                                <label class="font-weight-bold"
+                                    style="color: var(--primary-color, #4A90E2);">{{ trans('AdminSb.full name') }} <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="name" value="{{ old('name') }}"
+                                    class="form-control rounded-lg shadow-sm"
+                                    placeholder="{{ trans('AdminSb.enter_full_name') }}" required>
                             </div>
                         </div>
 
                         <!-- National ID -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="font-weight-bold" style="color: var(--primary-color, #4A90E2);">رقم الهوية <span class="text-danger">*</span></label>
-                                <input type="text" name="national_id" value="{{ old('national_id') }}" class="form-control rounded-lg shadow-sm"
-                                    placeholder="أدخل رقم الهوية" pattern="[0-9]{9,10}"
+                                <label class="font-weight-bold"
+                                    style="color: var(--primary-color, #4A90E2);">{{ trans('AdminSb.national_id') }}
+                                    <span class="text-danger">*</span></label>
+                                <input type="text" name="national_id" value="{{ old('national_id') }}"
+                                    class="form-control rounded-lg shadow-sm"
+                                    placeholder="{{ trans('AdminSb.enter_national_id') }}" pattern="[0-9]{9,10}"
                                     oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
-                                <small class="form-text text-muted">يجب أن يكون 9 أو 10 أرقام.</small>
+                                <small
+                                    class="form-text text-muted">{{ trans('AdminSb.must_be_9_or_10_digits') }}</small>
                             </div>
                         </div>
 
                         <!-- Email -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="font-weight-bold" style="color: var(--primary-color, #4A90E2);">البريد الإلكتروني <span class="text-danger">*</span></label>
-                                <input type="email" name="email" value="{{ old('email') }}" class="form-control rounded-lg shadow-sm"
-                                    placeholder="example@domain.com" required>
+                                <label class="font-weight-bold"
+                                    style="color: var(--primary-color, #4A90E2);">{{ trans('AdminSb.email') }} <span
+                                        class="text-danger">*</span></label>
+                                <input type="email" name="email" value="{{ old('email') }}"
+                                    class="form-control rounded-lg shadow-sm" placeholder="example@domain.com" required>
                             </div>
                         </div>
 
                         <!-- Phone -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="font-weight-bold" style="color: var(--primary-color, #4A90E2);">{{ trans('doctors.phone') }} <span class="text-danger">*</span></label>
-                                <input class="form-control rounded-lg shadow-sm" name="phone" value="{{ old('phone') }}" type="tel"
-                                    pattern="^05\d{8}$" title="يجب أن يبدأ رقم الجوال بـ 05 ويتكون من 10 أرقام"
-                                    maxlength="10" required>
-                                <small class="form-text text-muted">مثال: 0512345678</small>
+                                <label class="font-weight-bold"
+                                    style="color: var(--primary-color, #4A90E2);">{{ trans('AdminSb.phone') }} <span
+                                        class="text-danger">*</span></label>
+                                <input class="form-control rounded-lg shadow-sm" name="phone"
+                                    value="{{ old('phone') }}" type="tel" pattern="^05\d{8}$"
+                                    title="{{ trans('AdminSb.phone_validation_rule') }}" maxlength="10" required>
+                                <small class="form-text text-muted">{{ trans('AdminSb.phone_example') }}</small>
                             </div>
                         </div>
 
                         <!-- Password -->
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="font-weight-bold" style="color: var(--primary-color, #4A90E2);">كلمة المرور <span class="text-danger">*</span></label>
+                                <label class="font-weight-bold"
+                                    style="color: var(--primary-color, #4A90E2);">{{ trans('AdminSb.password') }} <span
+                                        class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="password" name="password" class="form-control rounded-lg shadow-sm"
                                         placeholder="********" required id="add_password_field">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary toggle-password-button" type="button" data-target-input="#add_password_field"
-                                                style="border-top-right-radius: .5rem !important; border-bottom-right-radius: .5rem !important; border-left:0;">
+                                        <button class="btn btn-outline-secondary toggle-password-button"
+                                            type="button" data-target-input="#add_password_field"
+                                            style="border-top-right-radius: .5rem !important; border-bottom-right-radius: .5rem !important; border-left:0;">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </div>
                                 </div>
-                                <small class="form-text text-muted">يجب أن تحتوي على 8 أحرف على الأقل.</small>
+                                <small
+                                    class="form-text text-muted">{{ trans('AdminSb.password_min_8_chars') }}</small>
                             </div>
                         </div>
                     </div>
@@ -101,10 +118,11 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer border-top-0">
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-dismiss="modal">
-                        <i class="fas fa-times mr-2"></i>{{ trans('Dashboard/sections_trans.Close') }}
+                        <i class="fas fa-times mr-2"></i>{{ trans('AdminSb.cancel') }}
                     </button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4" style="background: linear-gradient(135deg, var(--primary-color, #4A90E2), var(--secondary-color, #50E3C2)); border: none;">
-                        <i class="fas fa-save mr-2"></i>{{ trans('Dashboard/sections_trans.submit') }}
+                    <button type="submit" class="btn btn-primary rounded-pill px-4"
+                        style="background: linear-gradient(135deg, var(--primary-color, #4A90E2), var(--secondary-color, #50E3C2)); border: none;">
+                        <i class="fas fa-save mr-2"></i>{{ trans('AdminSb.submit') }}
                     </button>
                 </div>
             </form>
@@ -142,7 +160,8 @@
                 toggleButtons.forEach(function(button) {
                     button.addEventListener('click', function() {
                         const targetInputSelector = this.dataset.targetInput;
-                        const input = addModal.querySelector(targetInputSelector); // Scope to current modal
+                        const input = addModal.querySelector(
+                        targetInputSelector); // Scope to current modal
                         if (input) {
                             const icon = this.querySelector('i');
                             if (input.getAttribute('type') === 'password') {
@@ -169,13 +188,16 @@
 --}}
 <style>
     :root {
-        --primary-color: #4A90E2; /* Softer Blue - Make sure this is defined */
-        --secondary-color: #50E3C2; /* Tealish Green - Make sure this is defined */
+        --primary-color: #4A90E2;
+        /* Softer Blue - Make sure this is defined */
+        --secondary-color: #50E3C2;
+        /* Tealish Green - Make sure this is defined */
     }
 
     /* General form control focus style if not already defined globally */
     .form-control:focus {
         border-color: var(--primary-color, #4A90E2);
-        box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25); /* Use RGB of primary color */
+        box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        /* Use RGB of primary color */
     }
 </style>

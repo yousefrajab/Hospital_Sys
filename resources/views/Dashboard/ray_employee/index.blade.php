@@ -70,12 +70,11 @@
 @endsection
 
 @section('page-header')
-    <!-- breadcrumb -->
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الأشعة</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ قائمة
-                    الموظفين</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.Radiology staff') }}</h4><span
+                    class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.list of employees') }}</span>
             </div>
         </div>
     </div>
@@ -90,9 +89,9 @@
             <div class="card employee-table-card">
                 <div class="card-header employee-table-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h3 class="card-title mb-0 text-white">قائمة الموظفين</h3>
+                        <h3 class="card-title mb-0 text-white">{{ trans('AdminSb.list of employees') }}</h3>
                         <button type="button" class="btn btn-add-employee" data-toggle="modal" data-target="#add">
-                            <i class="fas fa-user-plus"></i> إضافة موظف جديد
+                            <i class="fas fa-user-plus"></i> {{ trans('AdminSb.Add a new employee') }}
                         </button>
                     </div>
                 </div>
@@ -102,14 +101,14 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>الصورة</th>
-                                    <th>الاسم</th>
-                                    <th>رقم الهوية</th>
-                                    <th>البريد الالكتروني</th>
-                                    <th>رقم الجوال</th>
-                                    <th> الحالة</th>
-                                    <th>تاريخ الاضافة</th>
-                                    <th>العمليات</th>
+                                    <th>{{ trans('AdminSb.image') }}</th>
+                                    <th>{{ trans('AdminSb.name') }}</th>
+                                    <th>{{ trans('AdminSb.national_id') }}</th>
+                                    <th>{{ trans('AdminSb.email') }}</th>
+                                    <th>{{ trans('AdminSb.phone') }}</th>
+                                    <th>{{ trans('AdminSb.status') }}</th>
+                                    <th>{{ trans('AdminSb.Date joined') }}</th>
+                                    <th>{{ trans('AdminSb.operations') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -118,7 +117,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <img src="{{ asset('Dashboard/img/rayEmployees/' . ($ray_employee->image ? $ray_employee->image->filename : 'default.png')) }}"
-                                                class="doctor-avatar" alt="صورة الموظف">
+                                                class="doctor-avatar" alt="{{ trans('AdminSb.employee_image') }}">
                                         </td>
                                         <td>{{ $ray_employee->name }}</td>
                                         <td>{{ $ray_employee->national_id }}</td>
@@ -127,20 +126,14 @@
                                         <td>
                                             <span
                                                 class="badge badge-{{ $ray_employee->status == 1 ? 'success' : 'danger' }}">
-                                                {{ $ray_employee->status == 1 ? 'نشط' : 'غير نشط' }}
+                                                {{ $ray_employee->status == 1 ? trans('AdminSb.active') : trans('AdminSb.inactive') }}
                                             </span>
                                         </td>
                                         <td>{{ $ray_employee->created_at->diffForHumans() }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                {{-- <button class="btn btn-sm btn-info" data-toggle="modal"
-                                                    data-target="#edit{{ $ray_employee->id }}"><i
-                                                        class="las la-pen"></i></button> --}}
-
-
                                                 <a href="{{ route('admin.ray_employee.edit', $ray_employee->id) }}"
-                                                    class="btn btn-sm btn-info" {{-- الحفاظ على نفس شكل الزر --}} title="تعديل">
-                                                    {{-- إضافة تلميح للمستخدم --}}
+                                                    class="btn btn-sm btn-info" title="{{ trans('AdminSb.edit') }}">
                                                     <i class="las la-pen"></i>
                                                 </a>
                                                 <button class="btn btn-sm btn-danger" data-toggle="modal"
@@ -149,8 +142,6 @@
                                             </div>
                                         </td>
                                     </tr>
-
-                                    {{-- @include('Dashboard.ray_employee.edit') --}}
                                     @include('Dashboard.ray_employee.delete')
                                 @endforeach
                             </tbody>

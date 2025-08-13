@@ -296,14 +296,14 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-user-plus fa-lg me-2" style="color: var(--primary-color);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto" style="font-weight: 600;">إضافة مريض جديد</h4>
-                    <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعبئة بيانات المريض</span>
+                    <h4 class="content-title mb-0 my-auto" style="font-weight: 600;">{{ trans('AdminSb.Add a new patient') }}</h4>
+                    <span class="text-muted mt-1 tx-13 mr-2 mb-0"> {{ trans('AdminSb.fill_patient_data') }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('admin.Patients.index') }}" class="btn btn-outline-secondary btn-sm ripple-effect">
-                <i class="fas fa-arrow-left me-1"></i> رجوع لقائمة المرضى
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('AdminSb.back_to_patients_list') }}
             </a>
         </div>
     </div>
@@ -314,20 +314,20 @@
 
     <div class="patient-form-container animate__animated animate__fadeInUp">
         <div class="form-header">
-            <i class="fas fa-user-md"></i> {{-- أيقونة مختلفة قليلاً --}}
-            <h3>تسجيل مريض جديد</h3>
-            <p class="mb-0">يرجى إدخال بيانات المريض بعناية لإضافته إلى النظام.</p>
+            <i class="fas fa-user-md"></i>
+            <h3>{{ trans('AdminSb.register_new_patient') }}</h3>
+            <p class="mb-0">{{ trans('AdminSb.enter_patient_data_carefully') }}</p>
         </div>
         <div class="form-section">
             <form action="{{ route('admin.Patients.store') }}" method="post" autocomplete="off"
                 id="patientForm" enctype="multipart/form-data" novalidate class="needs-validation">
                 @csrf
 
-                <div class="text-center mb-4"> {{-- تم نقل الصورة هنا لتكون في المنتصف --}}
+                <div class="text-center mb-4">
                     <div class="avatar-upload d-inline-block">
                         <img id="output_create"
                             src="{{ URL::asset('Dashboard/img/default_patient_avatar.png') }}"
-                            alt="الصورة الشخصية">
+                            alt="{{ trans('AdminSb.profile picture') }}">
                         <label for="avatar_upload_input_create">
                             <i class="fas fa-camera"></i>
                         </label>
@@ -336,20 +336,19 @@
                     @error('photo') <div class="text-danger d-block mt-1">{{ $message }}</div> @enderror
                 </div>
 
-
-                <h5 class="section-title-sub" style="border:none; padding-bottom:0; margin-bottom: 0.8rem;"><i class="fas fa-user-circle"></i> المعلومات الأساسية</h5>
+                <h5 class="section-title-sub" style="border:none; padding-bottom:0; margin-bottom: 0.8rem;"><i class="fas fa-user-circle"></i> {{ trans('AdminSb.basic information') }}</h5>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name_create" class="form-label required">الاسم الكامل</label>
+                            <label for="name_create" class="form-label required">{{ trans('AdminSb.full name') }}</label>
                             <input type="text" id="name_create" name="name" value="{{ old('name') }}"
-                                class="form-control @error('name') is-invalid @enderror" required placeholder="الاسم رباعي">
+                                class="form-control @error('name') is-invalid @enderror" required placeholder="{{ trans('AdminSb.four_part_name_placeholder') }}">
                             @error('name')<div class="invalid-feedback">{{ $message }}</div>@else<div class="valid-feedback"><i class="fas fa-check-circle"></i></div>@enderror
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="email_create" class="form-label required">البريد الإلكتروني</label>
+                            <label for="email_create" class="form-label required">{{ trans('AdminSb.email') }}</label>
                             <input type="email" id="email_create" name="email" value="{{ old('email') }}"
                                 class="form-control @error('email') is-invalid @enderror" required placeholder="example@mail.com">
                             @error('email')<div class="invalid-feedback">{{ $message }}</div>@else<div class="valid-feedback"><i class="fas fa-check-circle"></i></div>@enderror
@@ -358,48 +357,48 @@
                 </div>
 
                 <hr class="form-section-divider">
-                <h5 class="section-title-sub"><i class="fas fa-id-card"></i> معلومات الهوية والاتصال</h5>
+                <h5 class="section-title-sub"><i class="fas fa-id-card"></i> {{ trans('AdminSb.identity_and_contact_info') }}</h5>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="national_id_create" class="form-label required">رقم الهوية</label>
+                            <label for="national_id_create" class="form-label required">{{ trans('AdminSb.national_id') }}</label>
                             <input class="form-control @error('national_id') is-invalid @enderror" id="national_id_create" name="national_id"
                                 type="text" value="{{ old('national_id') }}" pattern="[0-9]{9}"
-                                maxlength="9" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="9 أرقام">
+                                maxlength="9" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="{{ trans('AdminSb.9_digits_placeholder') }}">
                             @error('national_id')<div class="invalid-feedback">{{ $message }}</div>@else<div class="valid-feedback"><i class="fas fa-check-circle"></i></div>@enderror
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="Phone_create" class="form-label required">رقم الهاتف</label>
+                            <label for="Phone_create" class="form-label required">{{ trans('AdminSb.phone') }}</label>
                             <input type="tel" id="Phone_create" name="Phone" value="{{ old('Phone') }}"
                                 class="form-control @error('Phone') is-invalid @enderror" maxlength="10"
-                                required title="مثال: 059xxxxxxx أو 056xxxxxxx" placeholder="05xxxxxxxx">
+                                required title="{{ trans('AdminSb.phone_validation_title_example') }}" placeholder="{{ trans('AdminSb.phone_example_short') }}">
                             @error('Phone')<div class="invalid-feedback">{{ $message }}</div>@else<div class="valid-feedback"><i class="fas fa-check-circle"></i></div>@enderror
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="Date_Birth_create" class="form-label required">تاريخ الميلاد</label>
+                            <label for="Date_Birth_create" class="form-label required">{{ trans('AdminSb.date_of_birth') }}</label>
                             <input class="form-control flatpickr-date @error('Date_Birth') is-invalid @enderror" id="Date_Birth_create" name="Date_Birth" value="{{ old('Date_Birth') }}" type="text" autocomplete="off" required placeholder="YYYY-MM-DD">
                             @error('Date_Birth')<div class="invalid-feedback">{{ $message }}</div>@else<div class="valid-feedback"><i class="fas fa-check-circle"></i></div>@enderror
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="Gender_create" class="form-label required">الجنس</label>
-                            <select class="form-select select2 @error('Gender') is-invalid @enderror" id="Gender_create" name="Gender" required data-placeholder="-- اختر الجنس --">
+                            <label for="Gender_create" class="form-label required">{{ trans('AdminSb.gender') }}</label>
+                            <select class="form-select select2 @error('Gender') is-invalid @enderror" id="Gender_create" name="Gender" required data-placeholder="{{ trans('AdminSb.select_gender_placeholder') }}">
                                 <option value=""></option>
-                                <option value="1" {{ old('Gender') == 1 ? 'selected' : '' }}>ذكر</option>
-                                <option value="2" {{ old('Gender') == 2 ? 'selected' : '' }}>أنثى</option>
+                                <option value="1" {{ old('Gender') == 1 ? 'selected' : '' }}>{{ trans('AdminSb.male') }}</option>
+                                <option value="2" {{ old('Gender') == 2 ? 'selected' : '' }}>{{ trans('AdminSb.female') }}</option>
                             </select>
                             @error('Gender')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="Blood_Group_create" class="form-label required">فصيلة الدم</label>
-                            <select class="form-select select2 @error('Blood_Group') is-invalid @enderror" id="Blood_Group_create" name="Blood_Group" required data-placeholder="-- اختر الفصيلة --">
+                            <label for="Blood_Group_create" class="form-label required">{{ trans('AdminSb.blood_type') }}</label>
+                            <select class="form-select select2 @error('Blood_Group') is-invalid @enderror" id="Blood_Group_create" name="Blood_Group" required data-placeholder="{{ trans('AdminSb.select_blood_type_placeholder') }}">
                                 <option value=""></option>
                                 @php $bloodGroupsArray = ['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']; @endphp
                                 @foreach($bloodGroupsArray as $group)
@@ -411,8 +410,8 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="Address_create" class="form-label">العنوان التفصيلي</label>
-                            <textarea rows="2" class="form-control @error('Address') is-invalid @enderror" id="Address_create" name="Address" placeholder="مثال: الخليل - دورا - حي رأس كركر - بالقرب من مسجد التقوى">{{ old('Address') }}</textarea>
+                            <label for="Address_create" class="form-label">{{ trans('AdminSb.detailed_address') }}</label>
+                            <textarea rows="2" class="form-control @error('Address') is-invalid @enderror" id="Address_create" name="Address" placeholder="{{ trans('AdminSb.address_placeholder_example') }}">{{ old('Address') }}</textarea>
                             @error('Address')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                     </div>
@@ -420,15 +419,14 @@
 
                 <hr class="form-section-divider">
                 <div class="chronic-diseases-section">
-                    <h5 class="section-title-sub"><i class="fas fa-laptop-medical"></i> السجل الطبي (الأمراض المزمنة) - <small class="text-muted">اختياري</small></h5>
+                    <h5 class="section-title-sub"><i class="fas fa-laptop-medical"></i> {{ trans('AdminSb.medical_record_chronic_optional') }}</h5>
                     <div id="chronic_diseases_wrapper_create">
                         @if(is_array(old('chronic_diseases')))
                             @foreach(old('chronic_diseases') as $index => $oldDiseaseData)
-                            {{-- الصف القديم يعاد بناؤه هنا بنفس طريقة القالب --}}
-                            <div class="chronic_disease_row"> {{-- استخدام flex هنا من CSS --}}
+                            <div class="chronic_disease_row">
                                 <div class="col-md-3 field-group">
-                                    <label class="form-label">المرض</label>
-                                    <select name="chronic_diseases[{{$index}}][disease_id]" class="form-select select2-diseases-dynamic @error('chronic_diseases.'.$index.'.disease_id') is-invalid @enderror" data-placeholder="اختر مرض">
+                                    <label class="form-label">{{ trans('AdminSb.disease') }}</label>
+                                    <select name="chronic_diseases[{{$index}}][disease_id]" class="form-select select2-diseases-dynamic @error('chronic_diseases.'.$index.'.disease_id') is-invalid @enderror" data-placeholder="{{ trans('AdminSb.select_disease_placeholder') }}">
                                         <option value=""></option>
                                         @if(isset($diseases_list))
                                             @foreach($diseases_list as $id => $name)
@@ -439,13 +437,13 @@
                                     @error('chronic_diseases.'.$index.'.disease_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-md-2 field-group">
-                                     <label class="form-label">تاريخ التشخيص</label>
+                                     <label class="form-label">{{ trans('AdminSb.diagnosis_date') }}</label>
                                     <input type="text" name="chronic_diseases[{{$index}}][diagnosed_at]" value="{{ $oldDiseaseData['diagnosed_at'] ?? '' }}" class="form-control flatpickr-date-chronic @error('chronic_diseases.'.$index.'.diagnosed_at') is-invalid @enderror" placeholder="YYYY-MM-DD">
                                     @error('chronic_diseases.'.$index.'.diagnosed_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-md-2 field-group">
-                                    <label class="form-label">الحالة الحالية</label>
-                                    <select name="chronic_diseases[{{$index}}][current_status]" class="form-select select2-statuses-dynamic @error('chronic_diseases.'.$index.'.current_status') is-invalid @enderror" data-placeholder="الحالة">
+                                    <label class="form-label">{{ trans('AdminSb.current_status') }}</label>
+                                    <select name="chronic_diseases[{{$index}}][current_status]" class="form-select select2-statuses-dynamic @error('chronic_diseases.'.$index.'.current_status') is-invalid @enderror" data-placeholder="{{ trans('AdminSb.status') }}">
                                         <option value=""></option>
                                         @if(isset($chronic_disease_statuses))
                                             @foreach($chronic_disease_statuses as $key => $value)
@@ -456,57 +454,57 @@
                                     @error('chronic_diseases.'.$index.'.current_status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-md-4 field-group">
-                                    <label class="form-label">ملاحظات / علاج</label>
-                                    <input type="text" name="chronic_diseases[{{$index}}][notes]" value="{{ $oldDiseaseData['notes'] ?? '' }}" class="form-control @error('chronic_diseases.'.$index.'.notes') is-invalid @enderror" placeholder="ملاحظات مختصرة أو خطة علاج">
+                                    <label class="form-label">{{ trans('AdminSb.notes_treatment') }}</label>
+                                    <input type="text" name="chronic_diseases[{{$index}}][notes]" value="{{ $oldDiseaseData['notes'] ?? '' }}" class="form-control @error('chronic_diseases.'.$index.'.notes') is-invalid @enderror" placeholder="{{ trans('AdminSb.notes_placeholder') }}">
                                     @error('chronic_diseases.'.$index.'.notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-md-1 field-group">
-                                    <button type="button" class="remove_chronic_disease_row_btn" title="حذف هذا المرض"><i class="fas fa-trash-can"></i></button> {{-- أيقونة مختلفة --}}
+                                    <button type="button" class="remove_chronic_disease_row_btn" title="{{ trans('AdminSb.delete_this_disease') }}"><i class="fas fa-trash-can"></i></button>
                                 </div>
                             </div>
                             @endforeach
                         @endif
                     </div>
                     <button type="button" class="btn mt-3" id="add_chronic_disease_btn_create">
-                        <i class="fas fa-plus-circle"></i> إضافة مرض مزمن
+                        <i class="fas fa-plus-circle"></i> {{ trans('AdminSb.add_chronic_disease') }}
                     </button>
                 </div>
 
                 <hr class="form-section-divider">
-                <h5 class="section-title-sub"><i class="fas fa-lock"></i> إنشاء كلمة المرور</h5>
+                <h5 class="section-title-sub"><i class="fas fa-lock"></i> {{ trans('AdminSb.create_password') }}</h5>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group password-wrapper">
-                            <label for="password_create" class="form-label required">كلمة المرور</label>
+                            <label for="password_create" class="form-label required">{{ trans('AdminSb.password') }}</label>
                             <input type="password" id="password_create" name="password"
                                 class="form-control @error('password') is-invalid @enderror"
                                 placeholder="••••••••" required minlength="8"
-                                pattern="^(?=.*[A-Za-z])(?=.*\d).{8,}$" title="يجب أن تحتوي على 8 أحرف على الأقل، حروف وأرقام.">
+                                pattern="^(?=.*[A-Za-z])(?=.*\d).{8,}$" title="{{ trans('AdminSb.password_validation_title_strong') }}">
                             <button type="button" class="toggle-password" data-target="password_create" tabindex="-1">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            @error('password') <div class="invalid-feedback">{{ $message }}</div> @else<div class="valid-feedback"><i class="fas fa-check-circle"></i> قوية!</div>@enderror
+                            @error('password') <div class="invalid-feedback">{{ $message }}</div>@else<div class="valid-feedback"><i class="fas fa-check-circle"></i> {{ trans('AdminSb.strong_password_feedback') }}</div>@enderror
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group password-wrapper">
-                            <label for="password_confirmation_create" class="form-label required">تأكيد كلمة المرور</label>
+                            <label for="password_confirmation_create" class="form-label required">{{ trans('AdminSb.confirm_password') }}</label>
                             <input type="password" id="password_confirmation_create" name="password_confirmation"
                                 class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="••••••••" required>
                             <button type="button" class="toggle-password" data-target="password_confirmation_create" tabindex="-1">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            @error('password_confirmation') <div class="invalid-feedback">{{ $message }}</div>@else<div class="valid-feedback"><i class="fas fa-check-circle"></i> متطابقة!</div>@enderror
+                            @error('password_confirmation') <div class="invalid-feedback">{{ $message }}</div>@else<div class="valid-feedback"><i class="fas fa-check-circle"></i> {{ trans('AdminSb.passwords_match_feedback') }}</div>@enderror
                         </div>
                     </div>
                 </div>
 
                 <div class="form-actions">
                     <a href="{{ route('admin.Patients.index') }}" class="btn btn-cancel me-2 ripple-effect">
-                        <i class="fas fa-times-circle me-1"></i> إلغاء
+                        <i class="fas fa-times-circle me-1"></i> {{ trans('AdminSb.cancel') }}
                     </a>
                     <button type="submit" class="btn btn-submit ripple-effect" id="submitPatientFormCreate">
-                        <span class="btn-text"><i class="fas fa-user-plus me-1"></i> إضافة المريض</span>
+                        <span class="btn-text"><i class="fas fa-user-plus me-1"></i> {{ trans('AdminSb.add_patient_button') }}</span>
                         <i class="fas fa-spinner fa-spin spinner-icon"></i>
                     </button>
                 </div>
@@ -514,12 +512,11 @@
         </div>
     </div>
 
-    {{-- قالب صف الأمراض المزمنة (للاستنساخ بواسطة JavaScript) --}}
     <template id="chronic_disease_template_create">
-        <div class="chronic_disease_row"> {{-- استخدام flex هنا من CSS --}}
+        <div class="chronic_disease_row">
             <div class="col-md-3 field-group">
-                 <label class="form-label">المرض</label>
-                <select name="chronic_diseases[__INDEX__][disease_id]" class="form-select select2-diseases-dynamic" data-placeholder="اختر مرض">
+                 <label class="form-label">{{ trans('AdminSb.disease') }}</label>
+                <select name="chronic_diseases[__INDEX__][disease_id]" class="form-select select2-diseases-dynamic" data-placeholder="{{ trans('AdminSb.select_disease_placeholder') }}">
                     <option value=""></option>
                     @if(isset($diseases_list))
                         @foreach($diseases_list as $id => $name)
@@ -529,12 +526,12 @@
                 </select>
             </div>
             <div class="col-md-2 field-group">
-                <label class="form-label">تاريخ التشخيص</label>
+                <label class="form-label">{{ trans('AdminSb.diagnosis_date') }}</label>
                 <input type="text" name="chronic_diseases[__INDEX__][diagnosed_at]" class="form-control flatpickr-date-chronic-dynamic" placeholder="YYYY-MM-DD">
             </div>
             <div class="col-md-2 field-group">
-                <label class="form-label">الحالة الحالية</label>
-                <select name="chronic_diseases[__INDEX__][current_status]" class="form-select select2-statuses-dynamic" data-placeholder="الحالة">
+                <label class="form-label">{{ trans('AdminSb.current_status') }}</label>
+                <select name="chronic_diseases[__INDEX__][current_status]" class="form-select select2-statuses-dynamic" data-placeholder="{{ trans('AdminSb.status') }}">
                     <option value=""></option>
                      @if(isset($chronic_disease_statuses))
                         @foreach($chronic_disease_statuses as $key => $value)
@@ -544,16 +541,15 @@
                 </select>
             </div>
             <div class="col-md-4 field-group">
-                <label class="form-label">ملاحظات / علاج</label>
-                <input type="text" name="chronic_diseases[__INDEX__][notes]" class="form-control" placeholder="ملاحظات مختصرة أو خطة علاج">
+                <label class="form-label">{{ trans('AdminSb.notes_treatment') }}</label>
+                <input type="text" name="chronic_diseases[__INDEX__][notes]" class="form-control" placeholder="{{ trans('AdminSb.notes_placeholder') }}">
             </div>
             <div class="col-md-1 field-group">
-                <button type="button" class="remove_chronic_disease_row_btn" title="حذف هذا المرض"><i class="fas fa-trash-can"></i></button>
+                <button type="button" class="remove_chronic_disease_row_btn" title="{{ trans('AdminSb.delete_this_disease') }}"><i class="fas fa-trash-can"></i></button>
             </div>
         </div>
     </template>
 @endsection
-
 @section('js')
     @parent
     <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
@@ -593,7 +589,7 @@
 
             function initializeSelect2(selector, placeholder, parent = $(document.body), customOptions = {}) {
                 $(selector).select2({
-                    placeholder: placeholder || "-- اختر --",
+                    placeholder: placeholder ||trans('AdminSb.select'),
                     width: '100%', dir: "rtl", theme: "bootstrap-5",
                     allowClear: !$(selector).prop('required'),
                     dropdownParent: parent,
@@ -606,13 +602,12 @@
             initializeSelect2('.select2', null, $('#patientForm'));
 
 
-            // --- Chronic Diseases Section for CREATE page ---
             let chronicDiseaseCounterCreate = {{ is_array(old('chronic_diseases')) ? count(old('chronic_diseases')) : 0 }};
 
             function initializeChronicDiseaseRowPluginsCreate(rowElement) {
                 const $row = $(rowElement);
-                initializeSelect2($row.find('.select2-diseases-dynamic'), "اختر المرض", $row.find('.col-md-3')); // parent is the column div
-                initializeSelect2($row.find('.select2-statuses-dynamic'), "اختر الحالة", $row.find('.col-md-2').eq(1)); // parent for status
+                initializeSelect2($row.find('.select2-diseases-dynamic'), trans('AdminSb.select'), $row.find('.col-md-3')); // parent is the column div
+                initializeSelect2($row.find('.select2-statuses-dynamic'), trans('AdminSb.select'), $row.find('.col-md-2').eq(1)); // parent for status
                 $row.find('.flatpickr-date-chronic-dynamic, .flatpickr-date-chronic').each(function() {
                     if (this._flatpickr) { this._flatpickr.destroy(); }
                     initializeFlatpickrOnRow(this);
@@ -628,7 +623,6 @@
                 const newRowHtml = template.replace(/__INDEX__/g, chronicDiseaseCounterCreate);
                 chronicDiseaseCounterCreate++;
                 const $newRow = $(newRowHtml).appendTo('#chronic_diseases_wrapper_create');
-                // $newRow.find('.form-label').removeClass('d-none'); // Labels are now always visible
                 initializeChronicDiseaseRowPluginsCreate($newRow[0]);
                 $newRow.find('select.select2-diseases-dynamic').first().select2('open');
             });
@@ -644,9 +638,6 @@
 
             if (patientForm) {
                 patientForm.addEventListener('submit', function (event) {
-                    // إزالة التحقق الافتراضي لـ HTML5 لعرض رسائل Bootstrap المخصصة فقط
-                    // patientForm.classList.remove('was-validated');
-
                     if (!patientForm.checkValidity()) {
                         event.preventDefault();
                         event.stopPropagation();

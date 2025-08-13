@@ -222,15 +222,15 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-bed-pulse fa-lg me-2" style="color: var(--admin-primary, #4f46e5);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">إدارة الأسرة</h4>
-                    <span class="text-muted mt-0 tx-13">/ تعديل السرير: {{ $bedIdentifier }}</span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.beds_management') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('AdminSb.edit_bed_colon') }} {{ $bedIdentifier }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('admin.beds.index') }}" class="btn btn-outline-secondary btn-sm"
                 style="border-radius: var(--admin-radius-md);">
-                <i class="fas fa-arrow-left me-1"></i> العودة لقائمة الأسرة
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('AdminSb.back_to_beds_list') }}
             </a>
         </div>
     </div>
@@ -243,25 +243,24 @@
         <div class="col-lg-8 col-md-10">
             <div class="form-container-card">
                 <div class="card-header card-header-custom">
-                    <h3 class="card-title mb-0"><i class="fas fa-edit"></i> تعديل بيانات السرير: {{ $bedIdentifier }}</h3>
+                    <h3 class="card-title mb-0"><i class="fas fa-edit"></i> {{ trans('AdminSb.edit_bed_data_colon') }}
+                        {{ $bedIdentifier }}</h3>
                 </div>
                 <div class="card-body p-4 p-md-5">
                     <form action="{{ route('admin.beds.update', $bed->id) }}" method="POST" class="needs-validation"
                         novalidate autocomplete="off">
-                        @method('PUT') {{-- أو PATCH --}}
+                        @method('PUT')
                         @csrf
                         <div class="row g-3">
-                            {{-- الغرفة --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="room_id" class="form-label">الغرفة <span
+                                    <label for="room_id" class="form-label">{{ trans('AdminSb.room') }} <span
                                             class="text-danger">*</span></label>
                                     <select name="room_id" id="room_id"
                                         class="form-select select2 @error('room_id') is-invalid @enderror" required
-                                        data-placeholder="-- اختر الغرفة --">
+                                        data-placeholder="{{ trans('AdminSb.select_room_placeholder') }}">
                                         <option value=""></option>
                                         @foreach ($rooms as $room_option)
-                                            {{-- استخدام اسم متغير مختلف لتجنب التعارض مع $room الحالية --}}
                                             <option value="{{ $room_option->id }}"
                                                 {{ old('room_id', $bed->room_id) == $room_option->id ? 'selected' : '' }}>
                                                 {{ $room_option->display_name }}
@@ -274,10 +273,9 @@
                                 </div>
                             </div>
 
-                            {{-- رقم/كود السرير --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="bed_number" class="form-label">رقم/كود السرير <span
+                                    <label for="bed_number" class="form-label">{{ trans('AdminSb.bed_number_code') }} <span
                                             class="text-danger">*</span></label>
                                     <input type="text" name="bed_number" id="bed_number"
                                         class="form-control @error('bed_number') is-invalid @enderror"
@@ -288,14 +286,13 @@
                                 </div>
                             </div>
 
-                            {{-- نوع السرير --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="type" class="form-label">نوع السرير <span
+                                    <label for="type" class="form-label">{{ trans('AdminSb.bed_type') }} <span
                                             class="text-danger">*</span></label>
                                     <select name="type" id="type"
                                         class="form-select select2 @error('type') is-invalid @enderror" required
-                                        data-placeholder="-- اختر النوع --">
+                                        data-placeholder="{{ trans('AdminSb.select_type_placeholder') }}">
                                         <option value=""></option>
                                         @foreach ($bedTypes as $key => $value)
                                             <option value="{{ $key }}"
@@ -309,16 +306,14 @@
                                 </div>
                             </div>
 
-                            {{-- الحالة --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="status" class="form-label">الحالة <span
+                                    <label for="status" class="form-label">{{ trans('AdminSb.status') }} <span
                                             class="text-danger">*</span></label>
                                     <select name="status" id="status"
                                         class="form-select select2 @error('status') is-invalid @enderror" required
-                                        data-placeholder="-- اختر الحالة --">
+                                        data-placeholder="{{ trans('AdminSb.select_status_placeholder') }}">
                                         <option value=""></option>
-                                        {{-- $bedStatuses هنا يجب أن تحتوي على كل الحالات الممكنة --}}
                                         @foreach ($bedStatuses as $key => $value)
                                             <option value="{{ $key }}"
                                                 {{ old('status', $bed->status) == $key ? 'selected' : '' }}>
@@ -333,18 +328,13 @@
                         </div>
 
                         <div class="form-actions mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
-                            {{-- <div>
-                                <button type="button" class="btn btn-delete-form" data-bs-toggle="modal"
-                                    data-bs-target="#deleteBedConfirmModal{{ $bed->id }}">
-                                    <i class="fas fa-trash-alt me-2"></i> حذف السرير
-                                </button>
-                            </div> --}}
+                            <div></div> {{-- This empty div is for alignment, can be removed if not needed --}}
                             <div>
                                 <a href="{{ route('admin.beds.index') }}" class="btn btn-cancel-form">
-                                    <i class="fas fa-times me-2"></i> إلغاء
+                                    <i class="fas fa-times me-2"></i> {{ trans('AdminSb.cancel') }}
                                 </a>
                                 <button type="submit" class="btn btn-submit-form ms-2">
-                                    <i class="fas fa-save me-2"></i> حفظ التعديلات
+                                    <i class="fas fa-save me-2"></i> {{ trans('AdminSb.save changes') }}
                                 </button>
                             </div>
                         </div>
@@ -353,10 +343,6 @@
             </div>
         </div>
     </div>
-
-    {{-- مودال تأكيد حذف السرير --}}
-    {{-- @include('Dashboard.Beds.delete_confirm_modal', ['bed_for_modal' => $bed]) --}}
-
 @endsection
 
 @section('js')

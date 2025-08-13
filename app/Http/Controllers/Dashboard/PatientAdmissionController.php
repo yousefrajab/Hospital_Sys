@@ -86,8 +86,8 @@ class PatientAdmissionController extends Controller
 
         $sections = Section::orderByTranslation('name')->get();
         $admissionStatuses = [
-            PatientAdmission::STATUS_ADMITTED => 'مقيم حاليًا',
-            PatientAdmission::STATUS_DISCHARGED => 'خرج من المستشفى',
+            PatientAdmission::STATUS_ADMITTED => trans('AdminSb.currently_admitted'),
+            PatientAdmission::STATUS_DISCHARGED => trans('AdminSb.was released from the hospital'),
             // أضف الحالات الأخرى إذا كنت ستستخدمها في الفلتر
         ];
 
@@ -141,8 +141,7 @@ class PatientAdmissionController extends Controller
 
 
         $admissionStatuses = [ // الحالات الأولية عند تسجيل الدخول
-            PatientAdmission::STATUS_ADMITTED => 'تسجيل دخول (مقيم)',
-            // PatientAdmission::STATUS_RESERVED => 'حجز موعد دخول', // إذا كان لديك نظام حجز
+            PatientAdmission::STATUS_ADMITTED => trans('AdminSb.Login (Resident)'),
         ];
 
         return view('Dashboard.PatientAdmissions.create', compact(
@@ -453,7 +452,7 @@ class PatientAdmissionController extends Controller
                 'respiratoryRate' => $respiratoryRateData,
             ];
         }
-        
+
         return view('Dashboard.PatientAdmissions.vital_signs_monitoring_sheet', compact(
             'patientAdmission',
             'chartData'

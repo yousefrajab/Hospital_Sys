@@ -200,8 +200,7 @@
 @section('page-header')
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
-            <h4 class="content-title mb-0 my-auto">الأمراض</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ إضافة مرض
-                جديد</span>
+            <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.disease_management') }}</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.add_new_disease') }}</span>
         </div>
     </div>
 @endsection
@@ -212,13 +211,13 @@
         <div class="col-lg-8 col-md-10">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">بيانات المرض الجديد</h5>
+                    <h5 class="card-title mb-0">{{ trans('AdminSb.new_disease_data') }}</h5>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.diseases.store') }}" method="POST" class="needs-validation" novalidate>
                         @csrf
                         <div class="form-group mb-3">
-                            <label for="name" class="form-label">اسم المرض <span class="text-danger">*</span></label>
+                            <label for="name" class="form-label">{{ trans('AdminSb.disease_name') }} <span class="text-danger">*</span></label>
                             <input type="text" name="name" id="name"
                                 class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
                                 required>
@@ -227,7 +226,7 @@
                             @enderror
                         </div>
                         <div class="form-group mb-3">
-                            <label for="description" class="form-label">وصف المرض</label>
+                            <label for="description" class="form-label">{{ trans('AdminSb.disease_description') }}</label>
                             <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
                                 rows="4">{{ old('description') }}</textarea>
                             @error('description')
@@ -235,17 +234,17 @@
                             @enderror
                         </div>
                         <div class="form-group mb-4">
-                            <label class="form-label">هل المرض مزمن؟ <span class="text-danger">*</span></label>
+                            <label class="form-label">{{ trans('AdminSb.is_the_disease_chronic') }} <span class="text-danger">*</span></label>
                             <div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="is_chronic" id="is_chronic_yes"
                                         value="1" {{ old('is_chronic', '1') == '1' ? 'checked' : '' }} required>
-                                    <label class="form-check-label" for="is_chronic_yes">نعم</label>
+                                    <label class="form-check-label" for="is_chronic_yes">{{ trans('AdminSb.yes') }}</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="is_chronic" id="is_chronic_no"
                                         value="0" {{ old('is_chronic') == '0' ? 'checked' : '' }} required>
-                                    <label class="form-check-label" for="is_chronic_no">لا</label>
+                                    <label class="form-check-label" for="is_chronic_no">{{ trans('AdminSb.no') }}</label>
                                 </div>
                             </div>
                             @error('is_chronic')
@@ -253,8 +252,8 @@
                             @enderror
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary">حفظ المرض</button>
-                            <a href="{{ route('admin.diseases.index') }}" class="btn btn-secondary">إلغاء</a>
+                            <button type="submit" class="btn btn-primary">{{ trans('AdminSb.save_disease') }}</button>
+                            <a href="{{ route('admin.diseases.index') }}" class="btn btn-secondary">{{ trans('AdminSb.cancel') }}</a>
                         </div>
                     </form>
                 </div>

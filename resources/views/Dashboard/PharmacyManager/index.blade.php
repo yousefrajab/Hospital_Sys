@@ -71,16 +71,13 @@
 @endsection
 
 @section('page-header')
-    <!-- breadcrumb -->
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الصيدلية</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ قائمة
-                    المسؤولين</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.Pharmacy') }}</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.list of officials') }}</span>
             </div>
         </div>
     </div>
-    <!-- breadcrumb -->
 @endsection
 
 @section('content')
@@ -91,9 +88,9 @@
             <div class="card employee-table-card">
                 <div class="card-header employee-table-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h3 class="card-title mb-0 text-white">قائمة المسؤولين</h3>
+                        <h3 class="card-title mb-0 text-white">{{ trans('AdminSb.list of officials') }}</h3>
                         <button type="button" class="btn btn-add-employee" data-toggle="modal" data-target="#add">
-                            <i class="fas fa-user-plus"></i> إضافة مسؤول جديد
+                            <i class="fas fa-user-plus"></i> {{ trans('AdminSb.Add a new administrator') }}
                         </button>
                     </div>
                 </div>
@@ -103,14 +100,14 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>الصورة</th>
-                                    <th>الاسم</th>
-                                    <th>رقم الهوية</th>
-                                    <th>البريد الالكتروني</th>
-                                    <th>رقم الجوال</th>
-                                    <th> الحالة</th>
-                                    <th>تاريخ الاضافة</th>
-                                    <th>العمليات</th>
+                                    <th>{{ trans('AdminSb.image') }}</th>
+                                    <th>{{ trans('AdminSb.name') }}</th>
+                                    <th>{{ trans('AdminSb.national_id') }}</th>
+                                    <th>{{ trans('AdminSb.email') }}</th>
+                                    <th>{{ trans('AdminSb.phone') }}</th>
+                                    <th>{{ trans('AdminSb.status') }}</th>
+                                    <th>{{ trans('AdminSb.Date joined') }}</th>
+                                    <th>{{ trans('AdminSb.operations') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -127,15 +124,15 @@
                                         <td>{{ $pharmacy_manager->phone }}</td>
                                         <td>
                                             <span class="badge badge-{{ $pharmacy_manager->status == 1 ? 'success' : 'danger' }}">
-                                                {{ $pharmacy_manager->status == 1 ? 'نشط' : 'غير نشط' }}
+                                                {{ $pharmacy_manager->status == 1 ? __('AdminSb.active') : __('AdminSb.Inactive') }}
                                             </span>
                                         </td>
                                         <td>{{ $pharmacy_manager->created_at->diffForHumans() }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('admin.pharmacy_manager.edit', $pharmacy_manager->id) }}"
-                                                    class="btn btn-sm btn-info" {{-- الحفاظ على نفس شكل الزر --}}
-                                                    title="تعديل"> {{-- إضافة تلميح للمستخدم --}}
+                                                    class="btn btn-sm btn-info"
+                                                    title="تعديل">
                                                      <i class="las la-pen"></i>
                                                  </a>
                                                 <button class="btn btn-sm btn-danger" data-toggle="modal"

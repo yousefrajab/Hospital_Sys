@@ -259,14 +259,14 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-viruses fa-lg me-2" style="color: var(--admin-primary);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">قائمة الأمراض</h4>
-                    <span class="text-muted mt-0 tx-13">عرض وإدارة الأمراض في النظام</span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.diseases_list') }}</h4>
+                    <span class="text-muted mt-0 tx-13">{{ trans('AdminSb.view_and_manage_diseases') }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('admin.diseases.create') }}" class="btn btn-primary ripple">
-                <i class="fas fa-plus me-1"></i> إضافة مرض جديد
+                <i class="fas fa-plus me-1"></i> {{ trans('AdminSb.add_new_disease') }}
             </a>
         </div>
     </div>
@@ -275,36 +275,38 @@
 @section('content')
     @include('Dashboard.messages_alert')
 
-    {{-- بطاقة الفلترة --}}
     <div class="card mb-4 animate__animated animate__fadeIn">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة البحث</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>{{ trans('AdminSb.filter_search') }}</h5>
         </div>
         <div class="card-body">
             <form action="{{ route('admin.diseases.index') }}" method="GET">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label for="search_disease" class="form-label">بحث (اسم/وصف المرض):</label>
+                        <label for="search_disease"
+                            class="form-label">{{ trans('AdminSb.search_by_name_description') }}</label>
                         <input type="text" name="search_disease" id="search_disease" class="form-control"
-                            placeholder="ابحث..." value="{{ $request->search_disease }}">
+                            placeholder="{{ trans('AdminSb.search_placeholder_generic') }}"
+                            value="{{ $request->search_disease }}">
                     </div>
                     <div class="col-md-4">
-                        <label for="is_chronic_filter" class="form-label">نوع المرض:</label>
+                        <label for="is_chronic_filter" class="form-label">{{ trans('AdminSb.disease_type') }}</label>
                         <select name="is_chronic_filter" id="is_chronic_filter" class="form-select">
                             <option value="all"
                                 {{ $request->is_chronic_filter == 'all' || !$request->filled('is_chronic_filter') ? 'selected' : '' }}>
-                                الكل</option>
-                            <option value="1" {{ $request->is_chronic_filter === '1' ? 'selected' : '' }}>مرض مزمن
-                            </option>
-                            <option value="0" {{ $request->is_chronic_filter === '0' ? 'selected' : '' }}>مرض غير مزمن
-                            </option>
+                                {{ trans('AdminSb.all') }}</option>
+                            <option value="1" {{ $request->is_chronic_filter === '1' ? 'selected' : '' }}>
+                                {{ trans('AdminSb.chronic_disease') }}</option>
+                            <option value="0" {{ $request->is_chronic_filter === '0' ? 'selected' : '' }}>
+                                {{ trans('AdminSb.non_chronic_disease') }}</option>
                         </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> بحث</button>
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i>
+                            {{ trans('AdminSb.search_button') }}</button>
                         @if (request()->hasAny(['search_disease', 'is_chronic_filter']))
                             <a href="{{ route('admin.diseases.index') }}" class="btn btn-outline-secondary ms-2"
-                                title="مسح الفلتر"><i class="fas fa-eraser"></i></a>
+                                title="{{ trans('AdminSb.clear_filter') }}"><i class="fas fa-eraser"></i></a>
                         @endif
                     </div>
                 </div>
@@ -314,7 +316,8 @@
 
     <div class="card animate__animated animate__fadeInUp">
         <div class="card-header">
-            <h5 class="card-title mb-0"><i class="fas fa-list-ul me-2"></i>قائمة الأمراض ({{ $diseases->total() }})</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-list-ul me-2"></i>{{ trans('AdminSb.diseases_list') }}
+                ({{ $diseases->total() }})</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -322,11 +325,11 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>اسم المرض</th>
-                            <th>الوصف</th>
-                            <th>النوع</th>
-                            <th>تاريخ الإضافة</th>
-                            <th class="text-center">إجراءات</th>
+                            <th>{{ trans('AdminSb.disease_name') }}</th>
+                            <th>{{ trans('AdminSb.description') }}</th>
+                            <th>{{ trans('AdminSb.type') }}</th>
+                            <th>{{ trans('AdminSb.date_added') }}</th>
+                            <th class="text-center">{{ trans('AdminSb.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -337,30 +340,32 @@
                                 <td>{{ Str::limit($disease->description, 70) }}</td>
                                 <td>
                                     <span class="badge {{ $disease->is_chronic ? 'badge-chronic' : 'badge-not-chronic' }}">
-                                        {{ $disease->is_chronic ? 'مزمن' : 'غير مزمن' }}
+                                        {{ $disease->is_chronic ? trans('AdminSb.chronic') : trans('AdminSb.non_chronic') }}
                                     </span>
                                 </td>
                                 <td>{{ $disease->created_at->translatedFormat('Y/m/d') }}</td>
                                 <td class="text-center action-buttons">
                                     <a href="{{ route('admin.diseases.show', $disease->id) }}"
-                                        class="btn btn-sm btn-outline-success" title="عرض"><i class="fas fa-eye"></i></a>
+                                        class="btn btn-sm btn-outline-success" title="{{ trans('AdminSb.view') }}"><i
+                                            class="fas fa-eye"></i></a>
                                     <a href="{{ route('admin.diseases.edit', $disease->id) }}"
-                                        class="btn btn-sm btn-outline-primary" title="تعديل"><i
+                                        class="btn btn-sm btn-outline-primary" title="{{ trans('AdminSb.edit') }}"><i
                                             class="fas fa-edit"></i></a>
                                     <form action="{{ route('admin.diseases.destroy', $disease->id) }}" method="POST"
-                                        class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا المرض؟');">
+                                        class="d-inline"
+                                        onsubmit="return confirm('{{ trans('AdminSb.confirm_delete_disease') }}');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="حذف"><i
-                                                class="fas fa-trash-alt"></i></button>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            title="{{ trans('AdminSb.delete') }}"><i class="fas fa-trash-alt"></i></button>
                                     </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="6" class="text-center py-4">
-                                    لا توجد أمراض مسجلة. <a href="{{ route('admin.diseases.create') }}">أضف مرضًا
-                                        جديدًا</a>.
+                                    {{ trans('AdminSb.no_diseases_registered') }} <a
+                                        href="{{ route('admin.diseases.create') }}">{{ trans('AdminSb.add_a_new_disease_now') }}</a>.
                                 </td>
                             </tr>
                         @endforelse

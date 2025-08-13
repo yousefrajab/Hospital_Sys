@@ -11,6 +11,7 @@ use App\Models\Appointment;
 use App\Models\FundAccount;
 use App\Models\Notification;
 use App\Events\CreateInvoice;
+use App\Models\Admin;
 use App\Models\PatientAccount;
 use App\Models\single_invoice;
 use Illuminate\Support\Facades\DB;
@@ -101,13 +102,11 @@ class SingleInvoices extends Component
 
     public function store(){
 
-        // في حالة كانت الفاتورة نقدي
         if($this->type == 1){
 
             DB::beginTransaction();
             try {
 
-                // في حالة التعديل
                 if($this->updateMode){
 
                     $single_invoices = Invoice::findorfail($this->single_invoice_id);
@@ -174,14 +173,14 @@ class SingleInvoices extends Component
                     if ($appointment_info) {
                         $appointment = Appointment::find($appointment_info->id);
                         $appointment->update([
-                            'type' => 'منتهي'
+                            'type' => trans('AdminSb.appointment_status_completed')
                         ]);
                     }
 
                     $notifications = new Notification();
                     $notifications->user_id = $this->doctor_id;
                     $patient = Patient::find($this->patient_id);
-                    $notifications->message = "كشف جديد : ".$patient->name;
+                    $notifications->message = trans('AdminSb.new_examination_notification') . $patient->name;
                     $notifications->save();
 
 
@@ -281,7 +280,7 @@ class SingleInvoices extends Component
                     if ($appointment_info) {
                         $appointment = Appointment::find($appointment_info->id);
                         $appointment->update([
-                            'type' => 'منتهي'
+                            'type' => trans('AdminSb.appointment_status_completed')
                         ]);
                     }
                 }
@@ -304,7 +303,7 @@ class SingleInvoices extends Component
 
      $this->single_invoice_id = $id;
      session()->flash('delete');
-    return redirect()->to('admin/single_invoices')->with('success', 'تم حذف الخدمة بنجاح');
+    return redirect()->to('admin/single_invoices')->with('success', trans('AdminSb.invoice_deleted_successfully'));
 
     }
 
@@ -312,17 +311,15 @@ class SingleInvoices extends Component
     public function prepareForDelete($id)
     {
         $this->single_invoice_id = $id;
-        Log::info('Preparing to delete invoice ID: ' . $id); // اختياري
-        // يمكنك إضافة $this->dispatchBrowserEvent('show-delete-modal'); إذا أردت فتح المودال عبر JS
-        // ولكن data-toggle="modal" عادة ما يكون كافيًا
+        Log::info('Preparing to delete invoice ID: ' . $id);
+
     }
 
 
     public function destroy(){
         Invoice::destroy($this->single_invoice_id);
-        // return redirect()->to('/single_invoices');
         session()->flash('delete');
-    return redirect()->to('admin/single_invoices')->with('success', 'تم حذف الخدمة بنجاح');
+    return redirect()->to('admin/single_invoices')->with('success', trans('AdminSb.invoice_deleted_successfully'));
     }
 
 

@@ -92,17 +92,17 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-viruses fa-lg me-2" style="color: var(--admin-primary);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">إدارة الأمراض</h4>
-                    <span class="text-muted mt-0 tx-13">/ تفاصيل المرض: {{ $disease->name }}</span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.disease_management') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('AdminSb.disease_details_colon') }} {{ $disease->name }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('admin.diseases.edit', $disease->id) }}" class="btn btn-outline-primary btn-sm me-2" style="border-radius: var(--admin-radius-md);">
-                <i class="fas fa-edit me-1"></i> تعديل المرض
+                <i class="fas fa-edit me-1"></i> {{ trans('AdminSb.edit_disease') }}
             </a>
             <a href="{{ route('admin.diseases.index') }}" class="btn btn-outline-secondary btn-sm" style="border-radius: var(--admin-radius-md);">
-                <i class="fas fa-arrow-left me-1"></i> العودة لقائمة الأمراض
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('AdminSb.back_to_diseases_list') }}
             </a>
         </div>
     </div>
@@ -117,79 +117,76 @@
                 <h3><i class="fas fa-notes-medical"></i> {{ $disease->name }}</h3>
                 <span class="badge disease-type-badge {{ $disease->is_chronic ? 'badge-chronic-show' : 'badge-not-chronic-show' }}">
                     <i class="fas {{ $disease->is_chronic ? 'fa-history' : 'fa-bolt' }} me-1"></i>
-                    {{ $disease->is_chronic ? 'مرض مزمن' : 'مرض غير مزمن' }}
+                    {{ $disease->is_chronic ? trans('AdminSb.chronic_disease') : trans('AdminSb.non_chronic_disease') }}
                 </span>
             </div>
 
             <div class="details-card-body">
                 <div class="info-grid-disease">
                     <div class="info-card-disease">
-                        <span class="info-label"><i class="fas fa-file-signature"></i>اسم المرض</span>
+                        <span class="info-label"><i class="fas fa-file-signature"></i>{{ trans('AdminSb.disease_name') }}</span>
                         <strong class="info-value">{{ $disease->name }}</strong>
                     </div>
                     <div class="info-card-disease">
-                        <span class="info-label"><i class="far fa-calendar-alt"></i>تاريخ الإضافة</span>
+                        <span class="info-label"><i class="far fa-calendar-alt"></i>{{ trans('AdminSb.date_added') }}</span>
                         <strong class="info-value">{{ $disease->created_at->translatedFormat('l, d M Y - H:i A') }}</strong>
                     </div>
                     <div class="info-card-disease">
-                        <span class="info-label"><i class="far fa-calendar-check"></i>آخر تحديث</span>
+                        <span class="info-label"><i class="far fa-calendar-check"></i>{{ trans('AdminSb.last_updated') }}</span>
                         <strong class="info-value">{{ $disease->updated_at->translatedFormat('l, d M Y - H:i A') }}</strong>
                     </div>
                     <div class="info-card-disease">
-                        <span class="info-label"><i class="fas {{ $disease->is_chronic ? 'fa-stopwatch-20' : 'fa-heart-pulse' }}"></i>نوع المرض</span>
-                        <strong class="info-value">{{ $disease->is_chronic ? 'مزمن' : 'غير مزمن (حاد/مؤقت)' }}</strong>
+                        <span class="info-label"><i class="fas {{ $disease->is_chronic ? 'fa-stopwatch-20' : 'fa-heart-pulse' }}"></i>{{ trans('AdminSb.disease_type') }}</span>
+                        <strong class="info-value">{{ $disease->is_chronic ? trans('AdminSb.chronic') : trans('AdminSb.non_chronic_acute_temporary') }}</strong>
                     </div>
                 </div>
 
                 @if($disease->description)
                     <hr class="section-divider-page">
                     <div class="description-box">
-                        <h5><i class="fas fa-align-left me-2"></i> وصف المرض</h5>
+                        <h5><i class="fas fa-align-left me-2"></i> {{ trans('AdminSb.disease_description') }}</h5>
                         <p>{{ $disease->description }}</p>
                     </div>
                 @endif
                 @if($disease->patientChronicRecords()->count() > 0)
                 <hr class="section-divider-page">
                 <div>
-                    <h5 class="section-title-page"><i class="fas fa-users me-2"></i> مرضى تم تشخيصهم بهذا المرض ({{ $disease->patientChronicRecords()->count() }})</h5>
+                    <h5 class="section-title-page"><i class="fas fa-users me-2"></i> {{ trans('AdminSb.patients_diagnosed_with_this_disease', ['count' => $disease->patientChronicRecords()->count()]) }}</h5>
                     <ul class="list-group list-group-flush">
-                        @foreach($disease->patientChronicRecords()->with('patient')->take(5)->get() as $record) {{-- مثال: عرض أول 5 --}}
+                        @foreach($disease->patientChronicRecords()->with('patient')->take(5)->get() as $record)
                             <li class="list-group-item">
-                                <a href="#">{{ $record->patient->name ?? 'مريض غير معروف' }}</a>
-                                <small class="text-muted"> (تاريخ التشخيص: {{ $record->diagnosed_at ? $record->diagnosed_at->format('Y-m-d') : '-' }})</small>
+                                <a href="#">{{ $record->patient->name ?? trans('AdminSb.unknown_patient') }}</a>
+                                <small class="text-muted"> ({{ trans('AdminSb.diagnosis_date_colon') }} {{ $record->diagnosed_at ? $record->diagnosed_at->format('Y-m-d') : '-' }})</small>
                             </li>
                         @endforeach
                         @if($disease->patientChronicRecords()->count() > 5)
-                            <li class="list-group-item text-center"><a href="#">عرض المزيد...</a></li>
+                            <li class="list-group-item text-center"><a href="#">{{ trans('AdminSb.view_more') }}</a></li>
                         @endif
                     </ul>
                 </div>
                 @endif
 
-
                 <div class="action-buttons-footer-show">
                     <a href="{{ route('admin.diseases.edit', $disease->id) }}" class="btn btn-primary-custom btn-action-footer-show ripple-effect">
-                        <i class="fas fa-edit me-2"></i> تعديل بيانات المرض
+                        <i class="fas fa-edit me-2"></i> {{ trans('AdminSb.edit_disease_data') }}
                     </a>
                     <a href="{{ route('admin.diseases.index') }}" class="btn btn-secondary-custom btn-action-footer-show ripple-effect">
-                        <i class="fas fa-list-alt me-2"></i> عرض كل الأمراض
+                        <i class="fas fa-list-alt me-2"></i> {{ trans('AdminSb.view_all_diseases') }}
                     </a>
-                     {{-- زر الحذف يفتح مودال (إذا أردت) --}}
-                    <button type="button" class="btn btn-danger btn-action-footer-show ripple-effect" data-toggle="modal" data-target="#deleteDiseaseConfirmModal{{ $disease->id }}">
-                        <i class="fas fa-trash-alt me-2"></i> حذف المرض
+                     <button type="button" class="btn btn-danger btn-action-footer-show ripple-effect" data-toggle="modal" data-target="#deleteDiseaseConfirmModal{{ $disease->id }}">
+                        <i class="fas fa-trash-alt me-2"></i> {{ trans('AdminSb.delete_disease') }}
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- مودال تأكيد حذف المرض (نفس نمط مودالات الحذف السابقة) --}}
     @if(isset($disease))
     <div class="modal fade" id="deleteDiseaseConfirmModal{{ $disease->id }}" tabindex="-1" aria-labelledby="deleteDiseaseModalLabel{{ $disease->id }}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header" style="background: linear-gradient(135deg, var(--admin-danger), #c82333); color:white; border-bottom:none;">
-                    <h5 class="modal-title" id="deleteDiseaseModalLabel{{ $disease->id }}"><i class="fas fa-exclamation-triangle me-2"></i> تأكيد الحذف</h5>
+                    <h5 class="modal-title" id="deleteDiseaseModalLabel{{ $disease->id }}"><i class="fas fa-exclamation-triangle me-2"></i> {{ trans('AdminSb.confirm_deletion') }}</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center py-4">
@@ -199,21 +196,21 @@
                         <div style="font-size: 3rem; color: var(--admin-danger); margin-bottom: 1rem;">
                             <i class="fas fa-viruses"></i>
                         </div>
-                        <h4>هل أنت متأكد من حذف المرض التالي نهائيًا؟</h4>
+                        <h4>{{ trans('AdminSb.are_you_sure_delete_disease_permanently') }}</h4>
                         <p class="text-muted">
-                            اسم المرض: <strong>{{ $disease->name }}</strong>
+                            {{ trans('AdminSb.disease_name_colon') }} <strong>{{ $disease->name }}</strong>
                         </p>
                         <p class="text-danger small mt-3">
-                            <i class="fas fa-info-circle"></i> هذا الإجراء لا يمكن التراجع عنه.
+                            <i class="fas fa-info-circle"></i> {{ trans('AdminSb.action_cannot_be_undone') }}
                             @if($disease->patientChronicRecords()->exists())
-                                <br><strong>تحذير: هذا المرض مسجل لبعض المرضى. حذفه قد يؤثر على سجلاتهم.</strong>
+                                <br><strong>{{ trans('AdminSb.warning_disease_linked_to_patients') }}</strong>
                             @endif
                         </p>
                     </form>
                 </div>
                 <div class="modal-footer justify-content-center border-top-0">
-                    <button type="submit" class="btn btn-secondary" data-dismiss="modal" style="min-width: 100px;"><i class="fas fa-times me-1"></i> إلغاء</button>
-                    <button type="submit" form="confirmDeleteDiseaseFormModal{{ $disease->id }}" class="btn btn-danger" style="min-width: 100px;"><i class="fas fa-trash-alt me-1"></i> نعم، احذف</button>
+                    <button type="submit" class="btn btn-secondary" data-dismiss="modal" style="min-width: 100px;"><i class="fas fa-times me-1"></i> {{ trans('AdminSb.cancel') }}</button>
+                    <button type="submit" form="confirmDeleteDiseaseFormModal{{ $disease->id }}" class="btn btn-danger" style="min-width: 100px;"><i class="fas fa-trash-alt me-1"></i> {{ trans('AdminSb.yes_delete') }}</button>
                 </div>
             </div>
         </div>

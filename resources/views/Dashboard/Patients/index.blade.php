@@ -605,32 +605,32 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <i class="fas fa-users-cog fa-lg me-2" style="color: var(--admin-primary);"></i> {{-- أيقونة مختلفة قليلاً --}}
+                <i class="fas fa-users-cog fa-lg me-2" style="color: var(--admin-primary);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto" style="font-weight: 600;">إدارة المرضى</h4>
-                    <span class="text-muted mt-0 tx-13">/ عرض وتصفية قائمة المرضى</span>
+                    <h4 class="content-title mb-0 my-auto" style="font-weight: 600;">
+                        {{ trans('AdminSb.Patients Management') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('AdminSb.view_and_filter_patients') }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('admin.Patients.create') }}" class="btn btn-primary ripple">
-                <i class="fas fa-user-plus"></i> إضافة مريض جديد
+                <i class="fas fa-user-plus"></i> {{ trans('AdminSb.Add a new patient') }}
             </a>
         </div>
     </div>
 @endsection
 
 @section('content')
-    @include('Dashboard.messages_alert') {{-- تأكد من أن هذا الملف موجود ويعمل بشكل صحيح --}}
+    @include('Dashboard.messages_alert')
 
-    {{-- 1. بطاقات الإحصائيات --}}
-    <div class="row g-4 mb-4 animate__animated animate__fadeInDown"> {{-- g-4 لزيادة المسافة بين الأعمدة --}}
+    <div class="row g-4 mb-4 animate__animated animate__fadeInDown">
         <div class="col-sm-6 col-lg-4">
             <div class="stats-card-patient primary">
                 <div class="icon"><i class="fas fa-users"></i></div>
                 <div class="info">
                     <span class="count">{{ $totalPatients ?? 0 }}</span>
-                    <span class="label">إجمالي عدد المرضى</span>
+                    <span class="label">{{ trans('AdminSb.total_patients') }}</span>
                 </div>
             </div>
         </div>
@@ -639,16 +639,16 @@
                 <div class="icon"><i class="fas fa-hospital-user"></i></div>
                 <div class="info">
                     <span class="count">{{ $admittedPatientsCount ?? 0 }}</span>
-                    <span class="label">مرضى مقيمون حاليًا</span>
+                    <span class="label">{{ trans('AdminSb.currently_admitted_patients') }}</span>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-4"> {{-- col-12 col-sm-6 col-lg-4 إذا أردت أن يأخذ العرض كامل في الشاشات الصغيرة جدا --}}
+        <div class="col-sm-6 col-lg-4">
             <div class="stats-card-patient info">
-                <div class="icon"><i class="fas fa-user-clock"></i></div> {{-- أيقونة مختلفة قليلاً للمرضى الجدد --}}
+                <div class="icon"><i class="fas fa-user-clock"></i></div>
                 <div class="info">
                     <span class="count">{{ $newPatientsThisMonth ?? 0 }}</span>
-                    <span class="label">مرضى جدد (الشهر الحالي)</span>
+                    <span class="label">{{ trans('AdminSb.new_patients_this_month') }}</span>
                 </div>
             </div>
         </div>
@@ -657,21 +657,23 @@
     {{-- 2. بطاقة الفلترة --}}
     <div class="card filter-card animate__animated animate__fadeIn">
         <div class="card-header">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2" style="color: var(--admin-secondary);"></i>خيارات
-                تصفية المرضى</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"
+                    style="color: var(--admin-secondary);"></i>{{ trans('AdminSb.patient_filter_options') }}</h5>
         </div>
         <div class="card-body">
             <form action="{{ route('admin.Patients.index') }}" method="GET">
-                <div class="row g-3 align-items-end"> {{-- align-items-end لمحاذاة الأزرار مع الحقول --}}
+                <div class="row g-3 align-items-end">
                     <div class="col-lg-3 col-md-6">
-                        <label for="search_patient" class="form-label">بحث شامل:</label>
+                        <label for="search_patient" class="form-label">{{ trans('AdminSb.comprehensive_search') }}</label>
                         <input type="text" name="search_patient" id="search_patient" class="form-control"
-                            placeholder="اسم, هوية, إيميل, هاتف..." value="{{ $request->input('search_patient') }}">
+                            placeholder="{{ trans('AdminSb.search_placeholder_patient') }}"
+                            value="{{ $request->input('search_patient') }}">
                     </div>
                     <div class="col-lg-2 col-md-6">
-                        <label for="gender_filter" class="form-label">الجنس:</label>
-                        <select name="gender_filter" id="gender_filter" class="form-select select2" data-placeholder="الكل">
-                            <option value="">الكل</option>
+                        <label for="gender_filter" class="form-label">{{ trans('AdminSb.gender') }}</label>
+                        <select name="gender_filter" id="gender_filter" class="form-select select2"
+                            data-placeholder="{{ trans('AdminSb.all') }}">
+                            <option value="">{{ trans('AdminSb.all') }}</option>
                             @foreach ($genders as $key => $value)
                                 <option value="{{ $key }}"
                                     {{ $request->input('gender_filter') == $key ? 'selected' : '' }}>{{ $value }}
@@ -680,10 +682,10 @@
                         </select>
                     </div>
                     <div class="col-lg-2 col-md-6">
-                        <label for="blood_group_filter" class="form-label">فصيلة الدم:</label>
+                        <label for="blood_group_filter" class="form-label">{{ trans('AdminSb.blood_type') }}</label>
                         <select name="blood_group_filter" id="blood_group_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="{{ trans('AdminSb.all') }}">
+                            <option value="">{{ trans('AdminSb.all') }}</option>
                             @foreach ($bloodGroups as $group)
                                 <option value="{{ $group }}"
                                     {{ $request->input('blood_group_filter') == $group ? 'selected' : '' }}>
@@ -692,10 +694,11 @@
                         </select>
                     </div>
                     <div class="col-lg-2 col-md-6">
-                        <label for="admission_status_filter" class="form-label">حالة الإقامة:</label>
+                        <label for="admission_status_filter"
+                            class="form-label">{{ trans('AdminSb.admission_status') }}</label>
                         <select name="admission_status_filter" id="admission_status_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="{{ trans('AdminSb.all') }}">
+                            <option value="">{{ trans('AdminSb.all') }}</option>
                             @foreach ($admissionStatusesFilter as $key => $value)
                                 <option value="{{ $key }}"
                                     {{ $request->input('admission_status_filter') == $key ? 'selected' : '' }}>
@@ -703,12 +706,13 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-lg-3 col-md-12 d-flex mt-md-0 mt-3"> {{-- مساحة أكبر لأزرار البحث والمسح --}}
-                        <button type="submit" class="btn btn-primary w-100 me-2"><i class="fas fa-search me-1"></i> تطبيق
-                            الفلتر</button>
+                    <div class="col-lg-3 col-md-12 d-flex mt-md-0 mt-3">
+                        <button type="submit" class="btn btn-primary w-100 me-2"><i class="fas fa-search me-1"></i>
+                            {{ trans('AdminSb.apply_filter') }}</button>
                         @if (request()->hasAny(['search_patient', 'gender_filter', 'blood_group_filter', 'admission_status_filter']))
                             <a href="{{ route('admin.Patients.index') }}" class="btn btn-outline-secondary"
-                                data-bs-toggle="tooltip" title="مسح جميع الفلاتر"><i class="fas fa-eraser"></i></a>
+                                data-bs-toggle="tooltip" title="{{ trans('AdminSb.clear_all_filters') }}"><i
+                                    class="fas fa-eraser"></i></a>
                         @endif
                     </div>
                 </div>
@@ -719,34 +723,31 @@
     {{-- 3. بطاقة جدول المرضى --}}
     <div class="card patient-table-card animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
         <div class="card-header">
-            <h3 class="card-title"><i class="fas fa-clipboard-list me-2" style="color: var(--admin-info);"></i>قائمة
-                المرضى المسجلين
+            <h3 class="card-title"><i class="fas fa-clipboard-list me-2"
+                    style="color: var(--admin-info);"></i>{{ trans('AdminSb.registered_patients_list') }}
                 @if ($Patients->total() > 0)
-                    <span class="badge bg-primary-light text-primary ms-2">{{ $Patients->total() }} مريض</span>
+                    <span class="badge bg-primary-light text-primary ms-2">{{ $Patients->total() }}
+                        {{ trans('AdminSb.patient') }}</span>
                 @endif
             </h3>
-            {{-- يمكن إزالة زر الإضافة من هنا إذا كان موجودًا في page-header --}}
-            {{-- <a href="{{ route('admin.Patients.create') }}" class="btn btn-light btn-sm">
-                <i class="fas fa-user-plus me-1"></i> اضافة مريض
-            </a> --}}
         </div>
-        <div class="card-body p-0"> {{-- p-0 لإزالة الـ padding الافتراضي من card-body إذا كان الجدول سيملأه --}}
+        <div class="card-body p-0">
             @if ($Patients->isNotEmpty())
                 <div class="table-responsive">
                     <table class="table table-hover text-md-nowrap" id="patients-table-datatable-custom">
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>
-                                <th>الصورة</th>
-                                <th>اسم المريض <small class="d-block text-muted">والبريد الإلكتروني</small></th>
-                                <th>رقم الهوية</th>
-                                <th>العمر <small class="d-block text-muted">وتاريخ الميلاد</small></th>
-                                <th>رقم الهاتف</th>
-                                <th>الجنس</th>
-                                <th>فصيلة الدم</th>
-                                <th>حالة الإقامة <small class="d-block text-muted">وتفاصيلها</small></th>
-                                <th>الأمراض المزمنة</th>
-                                <th class="text-center">العمليات</th>
+                                <th>{{ trans('AdminSb.patient_image') }}</th>
+                                <th>{{ trans('AdminSb.patient_name_and_email') }}</th>
+                                <th>{{ trans('AdminSb.national_id') }}</th>
+                                <th>{{ trans('AdminSb.age_and_dob') }}</th>
+                                <th>{{ trans('AdminSb.phone') }}</th>
+                                <th>{{ trans('AdminSb.gender') }}</th>
+                                <th>{{ trans('AdminSb.blood_type') }}</th>
+                                <th>{{ trans('AdminSb.admission_status_and_details') }}</th>
+                                <th>{{ trans('AdminSb.chronic_diseases') }}</th>
+                                <th class="text-center">{{ trans('AdminSb.operations') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -757,26 +758,23 @@
                                     <td>
                                         @if ($Patient->image && $Patient->image->filename)
                                             <img src="{{ asset('Dashboard/img/patients/' . $Patient->image->filename) }}"
-                                                {{-- Corrected path --}} class="patient-avatar-table"
-                                                alt="{{ $Patient->name }}"
+                                                class="patient-avatar-table" alt="{{ $Patient->name }}"
                                                 onerror="this.onerror=null; this.src='{{ URL::asset('Dashboard/img/doctor_default.png') }}';">
-                                            {{-- Fallback --}}
                                         @else
                                             <img src="{{ URL::asset('Dashboard/img/doctor_default.png') }}"
-                                                class="patient-avatar-table" alt="صورة افتراضية">
+                                                class="patient-avatar-table" alt="{{ trans('AdminSb.default_image') }}">
                                         @endif
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.Patients.show', $Patient->id) }}"
-                                            class="patient-name-link">
-                                            {{ $Patient->name }}
-                                        </a>
+                                            class="patient-name-link">{{ $Patient->name }}</a>
                                         <small class="text-muted d-block">{{ $Patient->email }}</small>
                                     </td>
                                     <td>{{ $Patient->national_id }}</td>
                                     <td>
                                         @if ($Patient->Date_Birth)
-                                            {{ \Carbon\Carbon::parse($Patient->Date_Birth)->age }} سنة
+                                            {{ \Carbon\Carbon::parse($Patient->Date_Birth)->age }}
+                                            {{ trans('AdminSb.years_old') }}
                                             <small
                                                 class="text-muted d-block">({{ \Carbon\Carbon::parse($Patient->Date_Birth)->translatedFormat('j M Y') }})</small>
                                         @else
@@ -790,7 +788,7 @@
                                                 class="badge {{ $Patient->Gender == 1 ? 'badge-gender-male' : 'badge-gender-female' }}">
                                                 <i
                                                     class="fas {{ $Patient->Gender == 1 ? 'fa-mars' : 'fa-venus' }} me-1"></i>
-                                                {{ $Patient->Gender == 1 ? 'ذكر' : 'أنثى' }}
+                                                {{ $Patient->Gender == 1 ? trans('AdminSb.male') : trans('AdminSb.female') }}
                                             </span>
                                         @else
                                             <span class="text-muted">-</span>
@@ -798,9 +796,8 @@
                                     </td>
                                     <td>
                                         @if ($Patient->Blood_Group)
-                                            <span class="badge badge-blood">
-                                                <i class="fas fa-tint me-1"></i> {{ $Patient->Blood_Group }}
-                                            </span>
+                                            <span class="badge badge-blood"><i class="fas fa-tint me-1"></i>
+                                                {{ $Patient->Blood_Group }}</span>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
@@ -808,26 +805,29 @@
                                     <td
                                         class="status-badge-table {{ $Patient->currentAdmission ? 'admitted' : 'not-admitted' }}">
                                         @if ($Patient->currentAdmission)
-                                            <i class="fas fa-procedures fa-fw me-1"></i> مقيم حاليًا
+                                            <i class="fas fa-procedures fa-fw me-1"></i>
+                                            {{ trans('AdminSb.currently_admitted') }}
                                             @if ($Patient->currentAdmission->bed && $Patient->currentAdmission->bed->room)
                                                 <small class="d-block text-muted" style="font-size: 0.75rem;">
-                                                    ({{ $Patient->currentAdmission->bed->room->section->name ?? 'قسم' }} -
-                                                    غ:
-                                                    {{ $Patient->currentAdmission->bed->room->room_number }} - س:
+                                                    ({{ $Patient->currentAdmission->bed->room->section->name ?? trans('AdminSb.department') }}
+                                                    -
+                                                    {{ trans('AdminSb.room_short') }}:
+                                                    {{ $Patient->currentAdmission->bed->room->room_number }} -
+                                                    {{ trans('AdminSb.bed_short') }}:
                                                     {{ $Patient->currentAdmission->bed->bed_number }})
                                                 </small>
                                             @endif
                                         @else
-                                            <i class="fas fa-user-check fa-fw me-1"></i> غير مقيم
+                                            <i class="fas fa-user-check fa-fw me-1"></i>
+                                            {{ trans('AdminSb.not_admitted') }}
                                         @endif
                                     </td>
-
                                     <td>
                                         @if ($Patient->diagnosedChronicDiseases && $Patient->diagnosedChronicDiseases->count() > 0)
                                             <ul class="diseases-list-inline">
                                                 @foreach ($Patient->diagnosedChronicDiseases->take(2) as $diagnosedDisease)
                                                     <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                        title="{{ $diagnosedDisease->name }} - تاريخ التشخيص: {{ $diagnosedDisease->pivot->diagnosed_at ? \Carbon\Carbon::parse($diagnosedDisease->pivot->diagnosed_at)->format('Y-m-d') : 'غير محدد' }} - الحالة: {{ \App\Models\PatientChronicDisease::getStatuses()[$diagnosedDisease->pivot->current_status] ?? $diagnosedDisease->pivot->current_status }}">
+                                                        title="{{ $diagnosedDisease->name }} - {{ trans('AdminSb.diagnosis_date') }}: {{ $diagnosedDisease->pivot->diagnosed_at ? \Carbon\Carbon::parse($diagnosedDisease->pivot->diagnosed_at)->format('Y-m-d') : trans('AdminSb.undefined') }} - {{ trans('AdminSb.status') }}: {{ \App\Models\PatientChronicDisease::getStatuses()[$diagnosedDisease->pivot->current_status] ?? $diagnosedDisease->pivot->current_status }}">
                                                         <i class="fas fa-viruses fa-xs"></i>
                                                         {{ Str::limit($diagnosedDisease->name, 15) }}
                                                     </li>
@@ -836,66 +836,54 @@
                                                     <li class="more-diseases">
                                                         <a href="{{ route('admin.Patients.show', $Patient->id) }}#chronic-diseases-section"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            title="عرض كل الأمراض المزمنة (+{{ $Patient->diagnosedChronicDiseases->count() - 2 }})">
+                                                            title="{{ trans('AdminSb.view_all_chronic_diseases') }} (+{{ $Patient->diagnosedChronicDiseases->count() - 2 }})">
                                                             <i class="fas fa-ellipsis-h"></i>
                                                         </a>
                                                     </li>
                                                 @endif
                                             </ul>
                                         @else
-                                            <span class="no-chronic-diseases">لا يوجد</span>
+                                            <span
+                                                class="no-chronic-diseases">{{ trans('AdminSb.no_chronic_diseases_found') }}</span>
                                         @endif
                                     </td>
                                     <td class="text-center action-buttons">
                                         <a href="{{ route('admin.showQR', $Patient->id) }}"
                                             class="btn btn-sm btn-outline-success" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="عرض ملف المريض"><i class="fas fa-eye"></i></a>
+                                            data-bs-placement="top" title="{{ trans('AdminSb.view_patient_file') }}"><i
+                                                class="fas fa-eye"></i></a>
                                         <a href="{{ route('admin.Patients.edit', $Patient->id) }}"
                                             class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="تعديل بيانات المريض"><i
+                                            data-bs-placement="top" title="{{ trans('AdminSb.edit_patient_data') }}"><i
                                                 class="fas fa-edit"></i></a>
-
                                         @if (!$Patient->currentAdmission)
                                             <a href="{{ route('admin.patient_admissions.create', ['patient_id' => $Patient->id]) }}"
                                                 class="btn btn-sm btn-outline-info" data-toggle="tooltip"
-                                                data-bs-placement="top" title="تسجيل دخول (إقامة) للمريض">
-                                                <i class="fas fa-procedures"></i> {{-- Changed icon --}}
-                                            </a>
+                                                data-bs-placement="top" title="{{ trans('AdminSb.admit_patient') }}"><i
+                                                    class="fas fa-procedures"></i></a>
                                         @else
                                             <a href="{{ route('admin.patient_admissions.edit', $Patient->currentAdmission->id) }}"
                                                 class="btn btn-sm btn-outline-warning" data-toggle="tooltip"
-                                                data-bs-placement="top" title="تعديل الإقامة الحالية أو تسجيل خروج">
-                                                <i class="fas fa-file-medical-alt"></i>
-                                            </a>
-
+                                                data-bs-placement="top"
+                                                title="{{ trans('AdminSb.edit_admission_or_discharge') }}"><i
+                                                    class="fas fa-file-medical-alt"></i></a>
                                             <a href="{{ route('admin.patient_admissions.vital_signs_sheet', $Patient->currentAdmission->id) }}"
                                                 class="btn btn-sm btn-outline-danger" data-toggle="tooltip"
-                                                {{-- اختر لوناً مناسباً مثلاً danger أو secondary --}} title="ورقة مراقبة العلامات الحيوية">
-                                                <i class="fas fa-heartbeat"></i>
-                                            </a>
+                                                title="{{ trans('AdminSb.vital_signs_sheet') }}"><i
+                                                    class="fas fa-heartbeat"></i></a>
                                         @endif
-
-
-                                        {{-- <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
-                                            data-target="#deletePatientModal{{ $Patient->id }}" data-placement="top"
-                                            title="حذف المريض">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
+                                        <form action="{{ route('admin.Patients.destroy', $Patient->id) }}" method="POST"
+                                            class="d-inline"
+                                            onsubmit="return confirm('{{ trans('AdminSb.confirm_delete_warning') }}\n{{ trans('AdminSb.confirm_delete_message_part1') }} {{ $Patient->name }}.\n{{ trans('AdminSb.confirm_delete_message_part2') }}\n{{ trans('AdminSb.confirm_delete_message_part3') }}');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                data-toggle="tooltip" data-placement="top"
+                                                title="{{ trans('AdminSb.delete_patient') }}"><i
+                                                    class="fas fa-trash-alt"></i></button>
+                                        </form>
                                     </td>
                                 </tr>
-                                @include('Dashboard.Patients.Deleted', ['patient_for_modal' => $Patient]) --}}
-
-
-                                <form action="{{ route('admin.Patients.destroy', $Patient->id) }}" method="POST"
-                                    class="d-inline"
-                                    onsubmit="return confirm('تحذير!\nأنت على وشك حذف المريض: {{ $Patient->name }}.\nسيتم حذف جميع السجلات المرتبطة به بشكل نهائي (مثل الإقامات والفواتير والتشخيصات).\nهل أنت متأكد أنك تريد المتابعة؟ لا يمكن التراجع عن هذا الإجراء.');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" data-toggle="tooltip"
-                                        data-placement="top" title="حذف المريض">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
                             @endforeach
                         </tbody>
                     </table>
@@ -909,19 +897,18 @@
             @else
                 <div class="no-patients-message">
                     <i class="fas fa-user-injured"></i>
-                    <p>لم يتم العثور على مرضى يطابقون معايير البحث الحالية.</p>
+                    <p>{{ trans('AdminSb.no_patients_found_message') }}</p>
                     @if (!request()->hasAny(['search_patient', 'gender_filter', 'blood_group_filter', 'admission_status_filter']))
                         <a href="{{ route('admin.Patients.create') }}" class="btn btn-primary"><i
-                                class="fas fa-user-plus me-2"></i> أضف مريضًا جديدًا الآن</a>
+                                class="fas fa-user-plus me-2"></i> {{ trans('AdminSb.add_new_patient_now') }}</a>
                     @else
                         <a href="{{ route('admin.Patients.index') }}" class="btn btn-outline-secondary"><i
-                                class="fas fa-eraser me-2"></i> مسح الفلاتر وعرض الكل</a>
+                                class="fas fa-eraser me-2"></i> {{ trans('AdminSb.clear_filters_and_view_all') }}</a>
                     @endif
                 </div>
             @endif
         </div>
     </div>
-    </div> {{-- This closing div might be extra, check your layout master file --}}
 @endsection
 
 @section('js')
@@ -941,7 +928,7 @@
 
             // تهيئة Select2
             $('.select2').select2({
-                placeholder: $(this).data('placeholder') || "اختر من القائمة...",
+                placeholder: $(this).data('placeholder') || trans('AdminSb.select'),
                 width: '100%',
                 dir: "rtl",
                 theme: "bootstrap-5",

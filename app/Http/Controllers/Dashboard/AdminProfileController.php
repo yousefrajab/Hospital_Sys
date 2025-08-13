@@ -24,11 +24,11 @@ use App\Models\Admin;                                 // **استيراد مود
 use App\Traits\UploadTrait;                           // **استيراد UploadTrait**
 use App\Http\Requests\Admin\UpdateAdminProfileRequest; // **استيراد الـ FormRequest**
 use Illuminate\Http\Request; // لا يزال مطلوبًا إذا كنت ستستخدم $request مباشرة في أي مكان
-use Illuminate\Validation\ValidationException;        // **لرمي أخطاء التحقق يدويًا إذا لزم الأمر**
+use Illuminate\Validation\ValidationException;
 
 class AdminProfileController extends Controller
 {
-    use UploadTrait; // **استخدام الـ Trait**
+    use UploadTrait;
 
     public function dashboard(Request $request)
     {
@@ -54,16 +54,11 @@ class AdminProfileController extends Controller
             ->whereHas('bed.room', fn($q) => $q->where('type', 'icu_room'))
             ->count();
 
-        // *** جديد: عدد المواعيد التي تنتظر التأكيد من الأدمن ***
         $pendingAppointmentsCount = Appointment::where('type', Appointment::STATUS_PENDING)
-            // (اختياري) يمكنك إضافة شرط زمني إذا أردت (مثلاً، الطلبات خلال آخر 7 أيام)
-            // ->where('created_at', '>=', Carbon::now()->subDays(7))
             ->count();
 
-        // (اختياري) عدد المستخدمين الإجمالي إذا كنت ستعرضه
         $totalUsersCount = $doctorsCount + $patientsCount + RayEmployee::count() + LaboratorieEmployee::count() + $manCount + $empCount + 1; // افترض 1 للأدمن نفسه
 
-        // لمعرفة ما إذا كان هناك تنبيهات هامة
         $hasAdminAlerts = ($pendingAppointmentsCount > 0);
 
 

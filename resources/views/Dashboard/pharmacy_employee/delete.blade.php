@@ -1,5 +1,6 @@
 <!-- Enhanced Delete Laboratory Employee Modal -->
-<div class="modal fade" id="delete{{ $pharmacy_employee->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteEmployeeLabel{{ $pharmacy_employee->id }}" aria-hidden="true">
+<div class="modal fade" id="delete{{ $pharmacy_employee->id }}" tabindex="-1" role="dialog"
+    aria-labelledby="deleteEmployeeLabel{{ $pharmacy_employee->id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content border-0 shadow-lg">
             <!-- Modal Header with Gradient Background -->
@@ -7,8 +8,8 @@
                 <div class="d-flex align-items-center">
                     <i class="fas fa-exclamation-triangle fa-2x mr-3"></i>
                     <div>
-                        <h5 class="modal-title font-weight-bold" id="deleteEmployeeLabel{{ $pharmacy_employee->id }}">تأكيد حذف الموظف</h5>
-                        <p class="mb-0 small">سيتم حذف جميع البيانات المرتبطة</p>
+                        <h5 class="modal-title font-weight-bold" id="deleteEmployeeLabel{{ $pharmacy_employee->id }}">
+                            {{ trans('AdminSb.Confirm employee deletion') }}</h5>
                     </div>
                 </div>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
@@ -18,7 +19,8 @@
 
             <!-- Modal Body -->
             <div class="modal-body py-4">
-                <form action="{{ route('admin.pharmacy_employee.destroy', $pharmacy_employee->id) }}" method="post" id="deleteLaboratorieForm{{ $pharmacy_employee->id }}">
+                <form action="{{ route('admin.pharmacy_employee.destroy', $pharmacy_employee->id) }}" method="post"
+                    id="deleteLaboratorieForm{{ $pharmacy_employee->id }}">
                     @method('DELETE')
                     @csrf
 
@@ -26,29 +28,31 @@
                         <div class="delete-icon-container">
                             <i class="fas fa-user-slash text-danger"></i>
                         </div>
-                        <h4 class="text-danger font-weight-bold mt-3">تحذير!</h4>
-                        <p class="text-muted">أنت على وشك حذف السجل التالي:</p>
+                        <h4 class="text-danger font-weight-bold mt-3">{{ trans('AdminSb.warning') }}</h4>
+                        <p class="text-muted">{{ trans('AdminSb.You are about to delete the following record:') }}</p>
                     </div>
 
                     <div class="alert alert-light border-danger border text-center py-3">
                         <h5 class="font-weight-bold mb-1">{{ $pharmacy_employee->name }}</h5>
-                        <p class="text-muted small mb-0">رقم الموظف: #{{ $pharmacy_employee->id }}</p>
+                        <p class="text-muted small mb-0">{{ trans('AdminSb.Id') }} #{{ $pharmacy_employee->id }}</p>
                     </div>
 
                     <div class="custom-control custom-checkbox my-4 text-center">
-                        <input type="checkbox" class="custom-control-input" id="confirmLaboratorieCheck{{ $pharmacy_employee->id }}" required>
-                        <label class="custom-control-label text-danger" for="confirmLaboratorieCheck{{ $pharmacy_employee->id }}">
-                            أنا أدرك أن هذا الإجراء لا يمكن التراجع عنه
-                        </label>
+                        <input type="checkbox" class="custom-control-input"
+                            id="confirmLaboratorieCheck{{ $pharmacy_employee->id }}" required>
+                        <label class="custom-control-label text-danger"
+                            for="confirmLaboratorieCheck{{ $pharmacy_employee->id }}">
+                            {{ trans('AdminSb.I realize that this action cannot be undone') }} </label>
                     </div>
 
                     <!-- Modal Footer -->
                     <div class="modal-footer border-0 pt-0">
                         <button type="button" class="btn btn-light bg-gradient-light" data-dismiss="modal">
-                            <i class="fas fa-times-circle mr-2"></i> إلغاء
+                            <i class="fas fa-times-circle mr-2"></i> {{ trans('AdminSb.cancel') }}
                         </button>
-                        <button type="submit" id="deleteLaboratorieBtn{{ $pharmacy_employee->id }}" class="btn btn-danger bg-gradient-danger">
-                            <i class="fas fa-trash-alt mr-2"></i> تأكيد الحذف
+                        <button type="submit" id="deleteLaboratorieBtn{{ $pharmacy_employee->id }}"
+                            class="btn btn-danger bg-gradient-danger">
+                            <i class="fas fa-trash-alt mr-2"></i> {{ trans('AdminSb.save changes') }}
                         </button>
                     </div>
                 </form>
@@ -57,7 +61,6 @@
     </div>
 </div>
 
-<!-- Shared Styles -->
 <style>
     .delete-icon-container {
         width: 80px;
@@ -87,19 +90,20 @@
         border-radius: 0.25rem;
     }
 
-    .custom-control-input:checked ~ .custom-control-label::before {
+    .custom-control-input:checked~.custom-control-label::before {
         border-color: #dc3545;
         background-color: #dc3545;
     }
 </style>
 
-<!-- Deletion Button Animation -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const deleteLaboratorieForm = document.getElementById('deleteLaboratorieForm{{ $pharmacy_employee->id }}');
+        const deleteLaboratorieForm = document.getElementById(
+            'deleteLaboratorieForm{{ $pharmacy_employee->id }}');
         if (deleteLaboratorieForm) {
             deleteLaboratorieForm.addEventListener('submit', function(e) {
-                const deleteBtn = document.getElementById('deleteLaboratorieBtn{{ $pharmacy_employee->id }}');
+                const deleteBtn = document.getElementById(
+                    'deleteLaboratorieBtn{{ $pharmacy_employee->id }}');
                 if (deleteBtn) {
                     deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> جاري الحذف...';
                     deleteBtn.disabled = true;

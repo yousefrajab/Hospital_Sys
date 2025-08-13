@@ -180,11 +180,9 @@ Route::group(
             // (اختياري) مسار الحذف النهائي (قد يكون موجوداً ضمن destroy في Route::resource)
             // Route::delete('/delete/{appointment}', [AppointmentController::class, 'destroy'])->name('destroy');
 
-            // مسار عرض المستخدمين وأدوارهم
             Route::get('/users-roles', [UserRoleController::class, 'index'])->name('users.roles.index');
 
             Route::get('/users-roles/{role_key}/{id}/edit', [UserRoleController::class, 'editUser'])->name('users.roles.edit');
-            // Route لتحديث بيانات المستخدم
             Route::match(['put', 'patch'], '/users-roles/{role_key}/{id}', [UserRoleController::class, 'updateUser'])->name('users.roles.update');
 
             Route::resource('rooms', RoomController::class);
@@ -207,7 +205,6 @@ Route::group(
 
             Route::get('/patient-admissions/{patient_admission}/vital-signs-monitoring', [PatientAdmissionController::class, 'vitalSignsMonitoringSheet'])->name('patient_admissions.vital_signs_sheet');
 
-            // يمكنك إضافة مسارات أخرى لإدارة العلامات الحيوية لاحقاً
             Route::delete('/vital-signs/{vital_sign}', [VitalSignController::class, 'destroy'])->name('vital_signs.destroy');
             Route::get('/vital-signs/{vital_sign}/edit', [VitalSignController::class, 'edit'])->name('vital_signs.edit');
             Route::put('/vital-signs/{vital_sign}', [VitalSignController::class, 'update'])->name('vital_signs.update');

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Repository\Finance;
 
 use App\Models\Group;
@@ -15,10 +14,9 @@ use App\Interfaces\Finance\ReceiptRepositoryInterface;
 
 class ReceiptRepository implements ReceiptRepositoryInterface
 {
-
     public function index()
     {
-        $receipts = ReceiptAccount::with(['patients', 'service', 'group' /* تحميل ترجمات الخدمة/الباقة إذا لزم الأمر */])
+        $receipts = ReceiptAccount::with(['patients', 'service', 'group'])
             ->orderBy('created_at', 'desc')->get();
         return view('Dashboard.Receipt.index', compact('receipts'));
     }
@@ -27,10 +25,9 @@ class ReceiptRepository implements ReceiptRepositoryInterface
     {
         $Patients = Patient::get();
         $Services = Service::where('status', 1)->get();
-        $GroupedServices = Group::get(); // افترض أن Group لديه name وليس مترجماً حالياً
-        return view('Dashboard.Receipt.add', compact('Patients', 'Services', 'GroupedServices')); //  <--- تمرير الباقات
+        $GroupedServices = Group::get();
+        return view('Dashboard.Receipt.add', compact('Patients', 'Services', 'GroupedServices'));
     }
-
 
     public function show($id)
     {
@@ -43,7 +40,7 @@ class ReceiptRepository implements ReceiptRepositoryInterface
         $request->validate([
             'patient_id' => 'required|exists:patients,id',
             'Debit' => 'required|numeric|min:0',
-            'item_type_id' => 'nullable|string', // قيمة مثل "service_X" أو "group_Y"
+            'item_type_id' => 'nullable|string',
             'description' => 'nullable|string|max:500',
         ]);
 
@@ -64,7 +61,8 @@ class ReceiptRepository implements ReceiptRepositoryInterface
                     if ($service) {
                         $service_id = $service->id;
                         if (empty($description)) {
-                            $description = "رسوم خدمة: " . $service->name;
+                            // تم التعديل هنا
+                            $description = trans('AdminSb.fees_for_service') . $service->name;
                         }
                     }
                 } elseif ($itemType === 'group' && $itemId) {
@@ -72,7 +70,8 @@ class ReceiptRepository implements ReceiptRepositoryInterface
                     if ($group) {
                         $group_id = $group->id;
                         if (empty($description)) {
-                            $description = "رسوم باقة: " . $group->name; // افترض أن Group لديه name
+                            // تم التعديل هنا
+                            $description = trans('AdminSb.fees_for_package') . $group->name;
                         }
                     }
                 }
@@ -82,12 +81,11 @@ class ReceiptRepository implements ReceiptRepositoryInterface
             $receipt_accounts->date = date('Y-m-d');
             $receipt_accounts->patient_id = $request->patient_id;
             $receipt_accounts->service_id = $service_id;
-            $receipt_accounts->group_id = $group_id; //  <--- حفظ الباقة
+            $receipt_accounts->group_id = $group_id;
             $receipt_accounts->amount = $request->Debit;
             $receipt_accounts->description = $description;
             $receipt_accounts->save();
 
-            // ... (بقية حفظ fund_accounts و patient_accounts كما هي)
             $fund_accounts = new FundAccount();
             $fund_accounts->date = date('Y-m-d');
             $fund_accounts->receipt_id = $receipt_accounts->id;
@@ -103,9 +101,9 @@ class ReceiptRepository implements ReceiptRepositoryInterface
             $patient_accounts->credit = $request->Debit;
             $patient_accounts->save();
 
-
             DB::commit();
-            session()->flash('add', 'تم حفظ سند القبض بنجاح.');
+            // تم التعديل هنا
+            session()->flash('add', trans('AdminSb.receipt_saved_successfully'));
             return redirect()->route('admin.Receipt.index');
         } catch (\Exception $e) {
             DB::rollback();
@@ -117,9 +115,9 @@ class ReceiptRepository implements ReceiptRepositoryInterface
     {
         $receipt_accounts = ReceiptAccount::findOrFail($id);
         $Patients = Patient::get();
-        $Services = Service::where('status', 1)/*->with('translations')*/->get();
-        $GroupedServices = Group::/*where('status', 1)->with('translations')->*/get();
-        return view('Dashboard.Receipt.edit', compact('receipt_accounts', 'Patients', 'Services', 'GroupedServices')); //  <--- تمرير الباقات
+        $Services = Service::where('status', 1)->get();
+        $GroupedServices = Group::get();
+        return view('Dashboard.Receipt.edit', compact('receipt_accounts', 'Patients', 'Services', 'GroupedServices'));
     }
 
     public function update($request)
@@ -150,7 +148,8 @@ class ReceiptRepository implements ReceiptRepositoryInterface
                     if ($service) {
                         $service_id = $service->id;
                         if (empty($description)) {
-                            $description = "رسوم خدمة: " . $service->name;
+                            // تم التعديل هنا
+                            $description = trans('AdminSb.fees_for_service') . $service->name;
                         }
                     }
                 } elseif ($itemType === 'group' && $itemId) {
@@ -158,7 +157,8 @@ class ReceiptRepository implements ReceiptRepositoryInterface
                     if ($group) {
                         $group_id = $group->id;
                         if (empty($description)) {
-                            $description = "رسوم باقة: " . $group->name;
+                            // تم التعديل هنا
+                            $description = trans('AdminSb.fees_for_package') . $group->name;
                         }
                     }
                 }
@@ -167,12 +167,11 @@ class ReceiptRepository implements ReceiptRepositoryInterface
             $receipt_accounts->date = date('Y-m-d');
             $receipt_accounts->patient_id = $validatedData['patient_id'];
             $receipt_accounts->service_id = $service_id;
-            $receipt_accounts->group_id = $group_id; //  <--- تحديث الباقة
+            $receipt_accounts->group_id = $group_id;
             $receipt_accounts->amount = $validatedData['Debit'];
             $receipt_accounts->description = $description;
             $receipt_accounts->save();
 
-            // ... (بقية تحديث fund_accounts و patient_accounts كما هي) ...
             $fund_accounts = FundAccount::where('receipt_id', $receipt_accounts->id)->first();
             if ($fund_accounts) {
                 $fund_accounts->date = date('Y-m-d');
@@ -189,7 +188,8 @@ class ReceiptRepository implements ReceiptRepositoryInterface
             }
 
             DB::commit();
-            session()->flash('edit', 'تم تحديث سند القبض بنجاح.');
+            // تم التعديل هنا
+            session()->flash('edit', trans('AdminSb.receipt_updated_successfully'));
             return redirect()->route('admin.Receipt.index');
         } catch (\Exception $e) {
             DB::rollback();
@@ -197,21 +197,18 @@ class ReceiptRepository implements ReceiptRepositoryInterface
         }
     }
 
-
-    public function destroy($request) // يجب أن يكون $request إما ID أو كائن Request يحتوي على ID
+    public function destroy($request)
     {
         try {
             $receiptId = $request->id ?? ($request instanceof \Illuminate\Http\Request ? $request->input('id') : null);
             if (!$receiptId) {
-                throw new \Exception('Receipt ID not provided for deletion.');
+                // تم التعديل هنا
+                throw new \Exception(trans('AdminSb.receipt_id_not_provided'));
             }
-            // لا حاجة لحذف FundAccount و PatientAccount يدوياً إذا كان لديك
-            // onDelete('cascade') في المفاتيح الأجنبية لهذه الجداول التي تشير لـ receipt_id
-            // إذا لم يكن كذلك، يجب حذفهم يدوياً قبل حذف ReceiptAccount
-            // FundAccount::where('receipt_id', $receiptId)->delete();
-            // PatientAccount::where('receipt_id', $receiptId)->delete();
+
             ReceiptAccount::destroy($receiptId);
-            session()->flash('delete', 'تم حذف سند القبض بنجاح.');
+            // تم التعديل هنا
+            session()->flash('delete', trans('AdminSb.receipt_deleted_successfully'));
             return redirect()->back();
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);

@@ -2,20 +2,19 @@
 @section('title', 'إدارة سجلات دخول وخروج المرضى')
 
 @section('page-header')
-    <div class="breadcrumb-header justify-content-between">
+    <div class="breadcrumb-header justify-content-between no-print">
         <div class="my-auto">
             <div class="d-flex align-items-center">
                 <i class="fas fa-procedures fa-lg me-2" style="color: var(--admin-primary, #4f46e5);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">إدارة المرضى</h4>
-                    <span class="text-muted mt-0 tx-13">/ سجلات الدخول والخروج</span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.Patients Management') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('AdminSb.admission_discharge_records') }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
-            {{-- زر تسجيل دخول مريض جديد --}}
             <a href="{{ route('admin.patient_admissions.create') }}" class="btn btn-primary ripple">
-                <i class="fas fa-user-plus me-1"></i> تسجيل دخول مريض جديد
+                <i class="fas fa-user-plus me-1"></i> {{ trans('AdminSb.admit_new_patient') }}
             </a>
         </div>
     </div>
@@ -24,24 +23,26 @@
 @section('content')
     @include('Dashboard.messages_alert')
 
-    {{-- بطاقة الفلترة --}}
     <div class="card mb-4 animate__animated animate__fadeIn">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة السجلات</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>{{ trans('AdminSb.filter_records') }}</h5>
         </div>
         <div class="card-body">
             <form action="{{ route('admin.patient_admissions.index') }}" method="GET">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label for="search_patient" class="form-label">بحث (اسم/هوية/إيميل المريض):</label>
+                        <label for="search_patient"
+                            class="form-label">{{ trans('AdminSb.search_patient_by_name_id_email') }}</label>
                         <input type="text" name="search_patient" id="search_patient" class="form-control"
-                            placeholder="ابحث..." value="{{ $request->search_patient }}">
+                            placeholder="{{ trans('AdminSb.search_placeholder_generic') }}"
+                            value="{{ $request->search_patient }}">
                     </div>
                     <div class="col-md-3">
-                        <label for="current_status_filter" class="form-label">حالة الإقامة:</label>
+                        <label for="current_status_filter"
+                            class="form-label">{{ trans('AdminSb.admission_status') }}</label>
                         <select name="current_status" id="current_status_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="{{ trans('AdminSb.all') }}">
+                            <option value="">{{ trans('AdminSb.all') }}</option>
                             @foreach ($admissionStatuses as $key => $value)
                                 <option value="{{ $key }}"
                                     {{ $request->current_status == $key ? 'selected' : '' }}>{{ $value }}</option>
@@ -49,22 +50,22 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="section_id_filter" class="form-label">القسم:</label>
+                        <label for="section_id_filter" class="form-label">{{ trans('AdminSb.department') }}</label>
                         <select name="section_id_filter" id="section_id_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="{{ trans('AdminSb.all') }}">
+                            <option value="">{{ trans('AdminSb.all') }}</option>
                             @foreach ($sections as $section)
                                 <option value="{{ $section->id }}"
-                                    {{ $request->section_id_filter == $section->id ? 'selected' : '' }}>{{ $section->name }}
-                                </option>
+                                    {{ $request->section_id_filter == $section->id ? 'selected' : '' }}>
+                                    {{ $section->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="doctor_id_filter" class="form-label">الطبيب المسؤول:</label>
+                        <label for="doctor_id_filter" class="form-label">{{ trans('AdminSb.responsible_doctor') }}</label>
                         <select name="doctor_id_filter" id="doctor_id_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="{{ trans('AdminSb.all') }}">
+                            <option value="">{{ trans('AdminSb.all') }}</option>
                             @foreach ($doctors as $doctor)
                                 <option value="{{ $doctor->id }}"
                                     {{ $request->doctor_id_filter == $doctor->id ? 'selected' : '' }}>{{ $doctor->name }}
@@ -73,20 +74,21 @@
                         </select>
                     </div>
                     <div class="col-md-3 mt-3">
-                        <label for="admission_date_from" class="form-label">تاريخ الدخول (من):</label>
+                        <label for="admission_date_from"
+                            class="form-label">{{ trans('AdminSb.admission_date_from') }}</label>
                         <input type="date" name="admission_date_from" id="admission_date_from"
                             class="form-control flatpickr-date" value="{{ $request->admission_date_from }}">
                     </div>
                     <div class="col-md-3 mt-3">
-                        <label for="admission_date_to" class="form-label">تاريخ الدخول (إلى):</label>
+                        <label for="admission_date_to" class="form-label">{{ trans('AdminSb.admission_date_to') }}</label>
                         <input type="date" name="admission_date_to" id="admission_date_to"
                             class="form-control flatpickr-date" value="{{ $request->admission_date_to }}">
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12 text-center">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-search me-1"></i> تطبيق
-                            الفلتر</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search me-1"></i>
+                            {{ trans('AdminSb.apply_filter') }}</button>
                         @if (request()->hasAny([
                                 'search_patient',
                                 'current_status',
@@ -96,7 +98,7 @@
                                 'admission_date_to',
                             ]))
                             <a href="{{ route('admin.patient_admissions.index') }}" class="btn btn-outline-secondary"><i
-                                    class="fas fa-eraser me-1"></i> مسح الفلتر</a>
+                                    class="fas fa-eraser me-1"></i> {{ trans('AdminSb.clear_filter') }}</a>
                         @endif
                     </div>
                 </div>
@@ -104,10 +106,10 @@
         </div>
     </div>
 
-    {{-- بطاقة جدول سجلات الدخول --}}
     <div class="card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-clipboard-list me-2"></i>سجلات دخول وخروج المرضى
+            <h5 class="card-title mb-0"><i
+                    class="fas fa-clipboard-list me-2"></i>{{ trans('AdminSb.patient_admission_discharge_records') }}
                 ({{ $admissions->total() }})</h5>
         </div>
         <div class="card-body">
@@ -116,14 +118,14 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>المريض</th>
-                            <th>القسم</th>
-                            <th>الغرفة - السرير</th>
-                            <th>الطبيب المسؤول</th>
-                            <th>تاريخ الدخول</th>
-                            <th>تاريخ الخروج</th>
-                            <th>الحالة</th>
-                            <th class="text-center">إجراءات</th>
+                            <th>{{ trans('AdminSb.patient') }}</th>
+                            <th>{{ trans('AdminSb.department') }}</th>
+                            <th>{{ trans('AdminSb.room_bed') }}</th>
+                            <th>{{ trans('AdminSb.responsible_doctor') }}</th>
+                            <th>{{ trans('AdminSb.admission_date') }}</th>
+                            <th>{{ trans('AdminSb.discharge_date') }}</th>
+                            <th>{{ trans('AdminSb.status') }}</th>
+                            <th class="text-center">{{ trans('AdminSb.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -136,19 +138,14 @@
                                             <img src="{{ $admission->patient->image ? asset('Dashboard/img/patients/' . $admission->patient->image->filename) : asset('Dashboard/img/doctor_default.png') }}"
                                                 alt="{{ $admission->patient->name }}" class="patient-avatar-sm">
                                             <div>
-                                                {{-- ***** تعديل هنا ***** --}}
                                                 <a
-                                                    href="{{ route('admin.Patients.show', ['Patient' => $admission->patient->id]) }}">
-
-                                                    {{ $admission->patient->name }}
-                                                </a>
-                                                <small class="text-muted d-block">هوية:
+                                                    href="{{ route('admin.Patients.show', ['Patient' => $admission->patient->id]) }}">{{ $admission->patient->name }}</a>
+                                                <small class="text-muted d-block">{{ trans('AdminSb.id_colon') }}
                                                     {{ $admission->patient->national_id }}</small>
                                             </div>
-
                                         </div>
                                     @else
-                                        <span class="text-muted">غير محدد</span>
+                                        <span class="text-muted">{{ trans('AdminSb.unspecified') }}</span>
                                     @endif
                                 </td>
                                 <td>{{ $admission->section->name ?? ($admission->bed->room->section->name ?? 'N/A') }}</td>
@@ -157,16 +154,14 @@
                                         {{ $admission->bed->room->room_number ?? 'N/A' }} -
                                         {{ $admission->bed->bed_number ?? 'N/A' }}
                                     @else
-                                        <span class="text-muted">لم يخصص سرير</span>
+                                        <span class="text-muted">{{ trans('AdminSb.no_bed_assigned') }}</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if ($admission->doctor)
-                                        <a href="#">{{-- رابط لملف الطبيب --}}
-                                            {{ $admission->doctor->name }}
-                                        </a>
+                                        <a href="#">{{ $admission->doctor->name }}</a>
                                     @else
-                                        <span class="text-muted">غير محدد</span>
+                                        <span class="text-muted">{{ trans('AdminSb.unspecified') }}</span>
                                     @endif
                                 </td>
                                 <td>{{ $admission->admission_date->translatedFormat('Y/m/d H:i A') }}</td>
@@ -175,7 +170,7 @@
                                 <td>
                                     @php
                                         $statusText = $admissionStatuses[$admission->status] ?? $admission->status;
-                                        $statusBadgeClass = 'bg-info-soft'; // افتراضي
+                                        $statusBadgeClass = 'bg-info-soft';
                                         if ($admission->status == \App\Models\PatientAdmission::STATUS_ADMITTED) {
                                             $statusBadgeClass = 'status-admitted';
                                         } elseif (
@@ -192,49 +187,41 @@
                                 </td>
                                 <td class="text-center action-buttons">
                                     <a href="{{ route('admin.patient_admissions.show', $admission->id) }}"
-                                        class="btn btn-sm btn-outline-success" title="عرض التفاصيل"><i
-                                            class="fas fa-eye"></i></a>
+                                        class="btn btn-sm btn-outline-success"
+                                        title="{{ trans('AdminSb.view_details') }}"><i class="fas fa-eye"></i></a>
                                     @if ($admission->status == \App\Models\PatientAdmission::STATUS_ADMITTED && !$admission->discharge_date)
-                                        {{-- زر تعديل بيانات الدخول (مثل تغيير السرير، الطبيب) --}}
                                         <a href="{{ route('admin.patient_admissions.edit', $admission->id) }}"
-                                            class="btn btn-sm btn-outline-primary" title="تعديل بيانات الدخول"><i
+                                            class="btn btn-sm btn-outline-primary"
+                                            title="{{ trans('AdminSb.edit_admission_data') }}"><i
                                                 class="fas fa-edit"></i></a>
-
-                                        {{-- زر لتسجيل الخروج (يفتح مودال أو صفحة) --}}
                                         <button type="button" class="btn btn-sm btn-outline-warning"
-                                            title="تسجيل خروج المريض" data-toggle="modal" {{-- لـ Bootstrap 5 --}}
-                                            {{-- data-toggle="modal" --}} {{-- لـ Bootstrap 4 --}}
+                                            title="{{ trans('AdminSb.discharge_patient_button') }}" data-toggle="modal"
                                             data-target="#dischargePatientModal{{ $admission->id }}">
-                                            {{-- لـ Bootstrap 5 --}}
-                                            {{-- data-target="#dischargePatientModal{{ $admission->id }}" --}} {{-- لـ Bootstrap 4 --}}
-                                            <i class="fas fa-user-check"></i> {{--  أيقونة أفضل لتسجيل الخروج من fas fa-procedures --}}
+                                            <i class="fas fa-user-check"></i>
                                         </button>
                                     @endif
-
                                     <a href="{{ route('admin.patient_admissions.vital_signs_sheet', $admission->id) }}"
-                                        class="btn btn-sm btn-outline-success" title="مراقبة العلامات الحيوية"><i
+                                        class="btn btn-sm btn-outline-success"
+                                        title="{{ trans('AdminSb.vital_signs_monitoring') }}"><i
                                             class="fas fa-heartbeat"></i></a>
-                                    {{-- زر حذف سجل الدخول (بحذر شديد!) --}}
                                     @if ($admission->status !== \App\Models\PatientAdmission::STATUS_ADMITTED || !is_null($admission->discharge_date))
-                                        {{-- اسمح بالحذف فقط إذا لم يكن المريض مقيمًا حاليًا --}}
                                         <form action="{{ route('admin.patient_admissions.destroy', $admission->id) }}"
                                             method="POST" class="d-inline"
-                                            onsubmit="return confirm('هل أنت متأكد من حذف سجل الدخول هذا؟ لا يمكن التراجع عن هذا الإجراء.');">
+                                            onsubmit="return confirm('{{ trans('AdminSb.confirm_delete_admission_record') }}');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                title="حذف السجل"><i class="fas fa-trash-alt"></i></button>
+                                                title="{{ trans('AdminSb.delete_record') }}"><i
+                                                    class="fas fa-trash-alt"></i></button>
                                         </form>
                                     @endif
                                 </td>
-
                             </tr>
-
                         @empty
                             <tr>
                                 <td colspan="9" class="text-center py-4">
                                     <i class="fas fa-folder-open fa-2x text-muted mb-2"></i><br>
-                                    لا توجد سجلات دخول وخروج حاليًا.
+                                    {{ trans('AdminSb.no_admission_records_found') }}
                                     @if (
                                         !request()->hasAny([
                                             'search_patient',
@@ -245,38 +232,30 @@
                                             'admission_date_to',
                                         ]))
                                         <br> <a href="{{ route('admin.patient_admissions.create') }}"
-                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-user-plus"></i> تسجيل
-                                            دخول مريض جديد</a>
+                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-user-plus"></i>
+                                            {{ trans('AdminSb.admit_new_patient') }}</a>
                                     @else
-                                        <br> <span class="text-muted">حاول تعديل معايير الفلترة.</span>
+                                        <br> <span class="text-muted">{{ trans('AdminSb.try_adjusting_filters') }}</span>
                                     @endif
                                 </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
-
             </div>
-
-
-
 
             @if ($admissions->hasPages())
                 <div class="mt-3 d-flex justify-content-center pagination-container">
                     {{ $admissions->links('pagination::bootstrap-5') }}
                 </div>
             @endif
-
         </div>
     </div>
     @foreach ($admissions as $index => $admission)
         @if ($admission->status === \App\Models\PatientAdmission::STATUS_ADMITTED && is_null($admission->discharge_date))
-            @include('Dashboard.PatientAdmissions.modals._discharge_modal', [
-                'admission' => $admission,
-            ])
+            @include('Dashboard.PatientAdmissions.modals._discharge_modal', ['admission' => $admission])
         @endif
     @endforeach
-
 @endsection
 
 @section('css')

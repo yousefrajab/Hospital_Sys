@@ -3,6 +3,7 @@
 return array(
     'Select Section' => 'اختر القسم',
     'Add new Doctor' => 'اضافة طبيب جديد',
+    'Doctor'=>'اسم الطبيب',
     'Enter the password ' => 'ادخل كلمة المرور',
     'The Doctors' => 'الأطباء',
     'Choose' => 'اختار من القائمة',

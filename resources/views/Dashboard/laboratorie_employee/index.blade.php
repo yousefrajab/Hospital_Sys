@@ -8,8 +8,7 @@
     <link href="{{ URL::asset('Dashboard/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('Dashboard/plugins/datatable/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
     <style>
-    <style>
-        :root {
+        <style> :root {
             --primary-color: #4361ee;
             --secondary-color: #3f37c9;
             --accent-color: #4895ef;
@@ -75,8 +74,8 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">المختبر</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ قائمة
-                    الموظفين</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.laboratory staff') }}</h4><span
+                    class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.list of employees') }}</span>
             </div>
         </div>
     </div>
@@ -91,9 +90,9 @@
             <div class="card employee-table-card">
                 <div class="card-header employee-table-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h3 class="card-title mb-0 text-white">قائمة الموظفين</h3>
+                        <h3 class="card-title mb-0 text-white">{{ trans('AdminSb.list of employees') }}</h3>
                         <button type="button" class="btn btn-add-employee" data-toggle="modal" data-target="#add">
-                            <i class="fas fa-user-plus"></i> إضافة موظف جديد
+                            <i class="fas fa-user-plus"></i> {{ trans('AdminSb.Add a new employee') }}
                         </button>
                     </div>
                 </div>
@@ -103,14 +102,14 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>الصورة</th>
-                                    <th>الاسم</th>
-                                    <th>رقم الهوية</th>
-                                    <th>البريد الالكتروني</th>
-                                    <th>رقم الجوال</th>
-                                    <th> الحالة</th>
-                                    <th>تاريخ الاضافة</th>
-                                    <th>العمليات</th>
+                                    <th>{{ trans('AdminSb.image') }}</th>
+                                    <th>{{ trans('AdminSb.name') }}</th>
+                                    <th>{{ trans('AdminSb.national_id') }}</th>
+                                    <th>{{ trans('AdminSb.email') }}</th>
+                                    <th>{{ trans('AdminSb.phone') }}</th>
+                                    <th>{{ trans('AdminSb.status') }}</th>
+                                    <th>{{ trans('AdminSb.Date joined') }}</th>
+                                    <th>{{ trans('AdminSb.operations') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,35 +118,34 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <img src="{{ asset('Dashboard/img/laboratorieEmployees/' . ($laboratorie_employee->image ? $laboratorie_employee->image->filename : 'default.png')) }}"
-                                                class="doctor-avatar" alt="صورة الموظف">
+                                                class="doctor-avatar" alt="{{ trans('AdminSb.employee_image') }}">
                                         </td>
                                         <td>{{ $laboratorie_employee->name }}</td>
                                         <td>{{ $laboratorie_employee->national_id }}</td>
                                         <td>{{ $laboratorie_employee->email }}</td>
                                         <td>{{ $laboratorie_employee->phone }}</td>
                                         <td>
-                                            <span class="badge badge-{{ $laboratorie_employee->status == 1 ? 'success' : 'danger' }}">
-                                                {{ $laboratorie_employee->status == 1 ? 'نشط' : 'غير نشط' }}
+                                            <span
+                                                class="badge badge-{{ $laboratorie_employee->status == 1 ? 'success' : 'danger' }}">
+                                                {{ $laboratorie_employee->status == 1 ? trans('AdminSb.active') : trans('AdminSb.inactive') }}
                                             </span>
                                         </td>
                                         <td>{{ $laboratorie_employee->created_at->diffForHumans() }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('admin.laboratorie_employee.edit', $laboratorie_employee->id) }}"
-                                                    class="btn btn-sm btn-info" {{-- الحفاظ على نفس شكل الزر --}}
-                                                    title="تعديل"> {{-- إضافة تلميح للمستخدم --}}
-                                                     <i class="las la-pen"></i>
-                                                 </a>
+                                                    class="btn btn-sm btn-info" title="{{ trans('AdminSb.edit') }}">
+                                                    <i class="las la-pen"></i>
+                                                </a>
                                                 <button class="btn btn-sm btn-danger" data-toggle="modal"
                                                     data-target="#delete{{ $laboratorie_employee->id }}"><i
                                                         class="las la-trash"></i></button>
                                             </div>
                                         </td>
                                     </tr>
-
-                                    {{-- @include('Dashboard.laboratorie_employee.edit', ['laboratorie_employee' => $laboratorie_employee])
-                                    {{-- ** تضمين مودال الحذف هنا ** --}}
-                                    @include('Dashboard.laboratorie_employee.delete', ['laboratorie_employee' => $laboratorie_employee])
+                                    @include('Dashboard.laboratorie_employee.delete', [
+                                        'laboratorie_employee' => $laboratorie_employee,
+                                    ])
                                 @endforeach
                             </tbody>
                         </table>

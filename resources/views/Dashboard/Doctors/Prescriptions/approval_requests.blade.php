@@ -132,7 +132,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('doctor.prescriptions.show', $prescription->id) }}" class="fw-500" data-bs-toggle="tooltip" title="عرض تفاصيل الوصفة الأصلية">
+                                        <a href="{{ route('prescriptions.show', $prescription->id) }}" class="fw-500" data-bs-toggle="tooltip" title="عرض تفاصيل الوصفة الأصلية">
                                             {{ $prescription->prescription_number }}
                                         </a>
                                         <small class="text-muted d-block">أنشئت: {{ $prescription->prescription_date->translatedFormat('d M Y') }}</small>

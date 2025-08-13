@@ -312,18 +312,18 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">المواعيد</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ المواعيد
-                    المؤكدة</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.appointments') }}</h4><span
+                    class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.confirmed_appointments') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
-            <a href="{{ route('admin.appointments.index') }}" class="btn btn-outline-primary btn-sm"> {{-- زر للعودة لغير المؤكدة --}}
-                <i class="fas fa-clock me-1"></i> عرض غير المؤكدة
+            <a href="{{ route('admin.appointments.index') }}" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-clock me-1"></i> {{ trans('AdminSb.view_unconfirmed') }}
             </a>
-            <a href="{{ route('admin.completed') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-history me-1"></i>
-                المنتهية</a>
+            <a href="{{ route('admin.completed') }}" class="btn btn-outline-secondary btn-sm"><i
+                    class="fas fa-history me-1"></i> {{ trans('AdminSb.completed_appointments') }}</a>
             <a href="{{ route('admin.cancelled') }}" class="btn btn-outline-danger btn-sm"><i class="fas fa-times me-1"></i>
-                الملغاة</a>
+                {{ trans('AdminSb.cancelled') }}</a>
         </div>
     </div>
     <!-- breadcrumb -->
@@ -334,103 +334,75 @@
 
     <div class="admin-appointments-container">
         <div class="page-title-container">
-            <h1 class="page-title"><i class="fas fa-calendar-check"></i> المواعيد المؤكدة</h1>
+            <h1 class="page-title"><i class="fas fa-calendar-check"></i> {{ trans('AdminSb.confirmed_appointments') }}</h1>
         </div>
-
-        {{-- قسم الفلترة والبحث (يمكن تفعيله لاحقاً) --}}
-        {{-- <div class="filter-controls animate__animated animate__fadeIn mb-4"> ... </div> --}}
 
         <div class="admin-appointments-grid">
             @forelse ($appointments as $appointment)
                 <div class="admin-appointment-card animate__animated animate__fadeInUp"
                     data-status="{{ $appointment->type }}" style="animation-delay: {{ $loop->index * 0.05 }}s;">
                     <div class="card-main-info">
-                        {{-- معلومات المريض --}}
+                        {{-- Patient Information --}}
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-user"></i></span>
                             <div class="info-details">
-                                <span class="info-label">اسم المريض</span>
+                                <span class="info-label">{{ trans('AdminSb.patient_name') }}</span>
                                 <span class="info-value">{{ $appointment->name }}</span>
                             </div>
                         </div>
-                        {{-- القسم والطبيب --}}
+                        {{-- Department and Doctor --}}
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-sitemap"></i></span>
                             <div class="info-details">
-                                <span class="info-label">القسم</span>
+                                <span class="info-label">{{ trans('AdminSb.department') }}</span>
                                 <span class="info-value section-name">{{ $appointment->section->name ?? '-' }}</span>
                             </div>
                         </div>
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-user-md"></i></span>
                             <div class="info-details">
-                                <span class="info-label">الطبيب</span>
+                                <span class="info-label">{{ trans('AdminSb.doctor') }}</span>
                                 <span class="info-value doctor-name">{{ $appointment->doctor->name ?? '-' }}</span>
                             </div>
                         </div>
-                        {{-- وقت الموعد المؤكد --}}
+                        {{-- Confirmed Appointment Time --}}
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-calendar-check"></i></span>
                             <div class="info-details">
-                                <span class="info-label">تاريخ ووقت الموعد المؤكد</span>
+                                <span class="info-label">{{ trans('AdminSb.confirmed_appointment_datetime') }}</span>
                                 <span
                                     class="info-value font-weight-bold text-success">{{ $appointment->appointment ? $appointment->appointment->translatedFormat('l، d M Y - h:i A') : '-' }}</span>
                             </div>
                         </div>
-                        {{-- الهاتف (اختياري) --}}
+                        {{-- Phone --}}
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-phone-volume"></i></span>
                             <div class="info-details">
-                                <span class="info-label">الهاتف</span>
+                                <span class="info-label">{{ trans('AdminSb.phone') }}</span>
                                 <span class="info-value">{{ $appointment->phone ?: '-' }}</span>
                             </div>
                         </div>
-                        {{-- الإيميل (اختياري) --}}
-                        {{-- <div class="info-row"> ... </div> --}}
                     </div>
-                    {{-- أزرار الإجراءات للمواعيد المؤكدة --}}
+                    {{-- Action Buttons for Confirmed Appointments --}}
                     <div class="card-actions">
-                        {{-- يمكنك إضافة زر لعرض تفاصيل أكثر أو الانتقال لملف المريض --}}
-                        {{-- <button class="action-btn btn-details"><i class="fas fa-eye"></i> تفاصيل</button> --}}
-                        {{-- زر الحذف للمواعيد المؤكدة (قد لا يكون مرغوباً به) --}}
-                        {{-- <button class="action-btn btn-delete" data-toggle="modal"
-                            data-target="#Deleted{{ $appointment->id }}"><i class="fas fa-trash-alt"></i> حذف</button> --}}
-                        {{-- <span class="status-badge-confirmed"><i class="fas fa-check-circle me-1"></i> مؤكد</span> --}}
-                        {{-- زر إلغاء جديد للأدمن (يفتح مودال أو يستخدم AJAX) --}}
                         <button class="action-btn btn-delete" data-toggle="modal"
-                            data-target="#cancelModal{{ $appointment->id }}"> {{-- تغيير data-target --}}
-                            <i class="fas fa-times"></i> إلغاء الموعد
+                            data-target="#cancelModal{{ $appointment->id }}">
+                            <i class="fas fa-times"></i> {{ trans('AdminSb.cancel_appointment') }}
                         </button>
-                        <span class="badge bg-light text-success p-2"> <i class="fas fa-check-circle"></i> موعد مؤكد</span>
+                        <span class="badge bg-light text-success p-2"> <i class="fas fa-check-circle"></i>
+                            {{ trans('AdminSb.appointment_confirmed') }}</span>
                     </div>
                 </div>
                 @include('Dashboard.appointments.cancel_modal')
-                {{-- تضمين مودال الحذف (إذا كنت ستبقي على زر الحذف) --}}
                 @include('Dashboard.appointments.delete')
             @empty
                 <div class="no-appointments-admin">
                     <i class="fas fa-calendar-check"></i>
-                    <p>لا توجد مواعيد مؤكدة لعرضها حالياً.</p>
+                    <p>{{ trans('AdminSb.no_confirmed_appointments_to_display') }}</p>
                 </div>
             @endforelse
         </div>
-
-        {{-- Pagination
-         @if ($appointments->hasPages())
-            <div class="pagination-wrapper mt-4">
-                {{ $appointments->links() }}
-            </div>
-        @endif --}}
-
     </div>
-
-    {{-- المودالات (تبقى كما هي إذا كنت تستخدمها) --}}
-    {{-- @if (isset($appointments) && $appointments->isNotEmpty())
-        @foreach ($appointments as $appointment)
-             @include('Dashboard.appointments.delete')
-             {{-- لا حاجة لمودال approval هنا --}}
-    {{-- @endforeach
-     @endif --}}
 @endsection
 
 {{-- ====================== JavaScript Section ===================== --}}

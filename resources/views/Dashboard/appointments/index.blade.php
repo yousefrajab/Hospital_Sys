@@ -227,19 +227,17 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">المواعيد</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ المواعيد
-                    غير المؤكدة</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.appointments') }}</h4><span
+                    class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.unconfirmed_appointments') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
-            {{-- أزرار للانتقال بين قوائم المواعيد --}}
-
             <a href="{{ route('admin.appointments.index2') }}" class="btn btn-outline-success btn-sm mr-2"><i
-                    class="fas fa-check me-1"></i> المؤكدة</a>
-            <a href="{{ route('admin.completed') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-history me-1"></i>
-                المنتهية</a>
+                    class="fas fa-check me-1"></i> {{ trans('AdminSb.confirmed') }}</a>
+            <a href="{{ route('admin.completed') }}" class="btn btn-outline-secondary btn-sm"><i
+                    class="fas fa-history me-1"></i> {{ trans('AdminSb.completed_appointments') }}</a>
             <a href="{{ route('admin.cancelled') }}" class="btn btn-outline-danger btn-sm"><i class="fas fa-times me-1"></i>
-                الملغاة</a>
+                {{ trans('AdminSb.cancelled') }}</a>
         </div>
     </div>
     <!-- breadcrumb -->
@@ -250,116 +248,107 @@
 
     <div class="admin-appointments-container">
         <div class="page-title-container">
-            <h1 class="page-title"><i class="fas fa-clock"></i> المواعيد بانتظار التأكيد</h1>
-            {{-- يمكنك إضافة زر للانتقال لقائمة المواعيد المؤكدة هنا --}}
-            {{-- <a href="{{ route('admin.appointments.confirmed') }}" class="btn btn-outline-success btn-sm">عرض المؤكدة</a> --}}
+            <h1 class="page-title"><i class="fas fa-clock"></i> {{ trans('AdminSb.appointments_awaiting_confirmation') }}
+            </h1>
         </div>
 
-        {{-- شبكة عرض البطاقات --}}
+        {{-- Grid of cards --}}
         <div class="admin-appointments-grid">
             @forelse($appointments as $appointment)
                 <div class="admin-appointment-card animate__animated animate__fadeInUp"
                     style="animation-delay: {{ $loop->index * 0.05 }}s;">
                     <div class="card-main-info">
-                        {{-- معلومات المريض --}}
+                        {{-- Patient Information --}}
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-user-injured"></i></span>
                             <div class="info-details">
-                                <span class="info-label">اسم المريض</span>
+                                <span class="info-label">{{ trans('AdminSb.patient_name') }}</span>
                                 <span class="info-value">{{ $appointment->name }}</span>
                             </div>
                         </div>
-                        {{-- الإيميل والهاتف --}}
+                        {{-- Email and Phone --}}
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-at"></i></span>
                             <div class="info-details">
-                                <span class="info-label">البريد الإلكتروني</span>
+                                <span class="info-label">{{ trans('AdminSb.email') }}</span>
                                 <span class="info-value">{{ $appointment->email ?: '-' }}</span>
                             </div>
                         </div>
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-phone-alt"></i></span>
                             <div class="info-details">
-                                <span class="info-label">الهاتف</span>
+                                <span class="info-label">{{ trans('AdminSb.phone') }}</span>
                                 <span class="info-value">{{ $appointment->phone ?: '-' }}</span>
                             </div>
                         </div>
-                        {{-- القسم والطبيب --}}
+                        {{-- Department and Doctor --}}
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-sitemap"></i></span>
                             <div class="info-details">
-                                <span class="info-label">القسم</span>
-                                <span class="info-value section-name">{{ $appointment->section->name ?? 'غير محدد' }}</span>
+                                <span class="info-label">{{ trans('AdminSb.department') }}</span>
+                                <span
+                                    class="info-value section-name">{{ $appointment->section->name ?? trans('AdminSb.unspecified') }}</span>
                             </div>
                         </div>
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-user-md"></i></span>
                             <div class="info-details">
-                                <span class="info-label">الطبيب</span>
-                                <span class="info-value doctor-name">{{ $appointment->doctor->name ?? 'غير محدد' }}</span>
+                                <span class="info-label">{{ trans('AdminSb.doctor') }}</span>
+                                <span
+                                    class="info-value doctor-name">{{ $appointment->doctor->name ?? trans('AdminSb.unspecified') }}</span>
                             </div>
                         </div>
-                        {{-- وقت الموعد المطلوب --}}
+                        {{-- Requested Appointment Time --}}
                         <div class="info-row">
                             <span class="info-icon"><i class="fas fa-calendar-alt"></i></span>
                             <div class="info-details">
-                                <span class="info-label">تاريخ ووقت الموعد المطلوب</span>
+                                <span class="info-label">{{ trans('AdminSb.requested_appointment_datetime') }}</span>
                                 <span
-                                    class="info-value font-weight-bold text-primary">{{ $appointment->appointment ? $appointment->appointment->translatedFormat('l، d M Y - h:i A') : 'غير محدد' }}</span>
+                                    class="info-value font-weight-bold text-primary">{{ $appointment->appointment ? $appointment->appointment->translatedFormat('l، d M Y - h:i A') : trans('AdminSb.unspecified') }}</span>
                             </div>
                         </div>
-                        {{-- الملاحظات --}}
+                        {{-- Notes --}}
                         @if ($appointment->notes)
                             <div class="notes-section">
-                                <div class="info-label"><i class="fas fa-sticky-note"></i> ملاحظات المريض:</div>
+                                <div class="info-label"><i class="fas fa-sticky-note"></i>
+                                    {{ trans('AdminSb.patient_notes_colon') }}</div>
                                 <p class="info-value notes-text">{{ $appointment->notes }}</p>
                             </div>
                         @endif
                     </div>
-                    {{-- أزرار الإجراءات --}}
+                    {{-- Action Buttons --}}
                     <div class="card-actions">
                         <button class="action-btn btn-approve" data-toggle="modal"
-                            data-target="#approval{{ $appointment->id }}"><i class="fas fa-check"></i> تأكيد الموعد
-                        </button>
+                            data-target="#approval{{ $appointment->id }}"><i class="fas fa-check"></i>
+                            {{ trans('AdminSb.confirm_appointment') }}</button>
                         <button class="action-btn btn-delete" data-toggle="modal"
-                            data-target="#Deleted{{ $appointment->id }}"><i class="fas fa-trash-alt"></i> حذف الطلب
-                        </button>
+                            data-target="#Deleted{{ $appointment->id }}"><i class="fas fa-trash-alt"></i>
+                            {{ trans('AdminSb.delete_request') }}</button>
                     </div>
                 </div>
-                {{-- تضمين المودالات هنا داخل الحلقة --}}
+                {{-- Include modals inside the loop --}}
                 @include('Dashboard.appointments.approval')
                 @include('Dashboard.appointments.delete')
             @empty
-                {{-- رسالة عند عدم وجود مواعيد --}}
+                {{-- Message when no appointments are found --}}
                 <div class="no-appointments-admin">
                     <i class="fas fa-inbox"></i>
-                    <p>لا توجد مواعيد بانتظار التأكيد حالياً.</p>
+                    <p>{{ trans('AdminSb.no_appointments_awaiting_confirmation') }}</p>
                 </div>
             @endforelse
         </div>
-
-        {{-- Pagination (إذا كنت تستخدمه) --}}
-        {{-- <div class="pagination-wrapper mt-4"> {{ $appointments->links() ?? '' }} </div> --}}
-
     </div>
 @endsection
 
-{{-- ====================== JavaScript Section ===================== --}}
 @section('js')
-    @parent {{-- مهم للحفاظ على سكربتات الـ layout --}}
-    {{-- استيراد مكتبات JS الضرورية (إذا لم تكن محملة في الـ layout) --}}
-    {{-- <script src="{{ URL::asset('Dashboard/plugins/jquery/jquery.min.js') }}"></script> --}}
-    {{-- <script src="{{ URL::asset('Dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script> --}}
+    @parent
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script> {{-- تأكد من وجود هذا الملف --}}
-    {{-- (اختياري) Flatpickr JS للفلترة --}}
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ar.js"></script>
 
-    {{-- كود مخصص لهذه الصفحة --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // تهيئة Flatpickr لفلتر التاريخ (اختياري)
             if (document.getElementById('dateFilter')) {
                 flatpickr("#dateFilter", {
                     dateFormat: "Y-m-d",
@@ -369,17 +358,16 @@
                 });
             }
 
-            // (اختياري) كود فلترة الواجهة الأمامية الأساسي (يمكن حذفه إذا كانت الفلترة تتم بالـ Backend)
             const searchInput = document.getElementById('patientSearch');
             const statusFilter = document.getElementById(
-            'statusFilter'); // على الرغم من أن الحالة هنا دائماً غير مؤكد
+                'statusFilter');
             const appointmentCards = document.querySelectorAll('.admin-appointment-card');
 
             function applyFilters() {
                 const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
                 appointmentCards.forEach(card => {
                     const patientNameElement = card.querySelector(
-                        '.info-value:not(.doctor-name):not(.section-name)'); // محاولة تحديد اسم المريض
+                        '.info-value:not(.doctor-name):not(.section-name)');
                     const patientName = patientNameElement ? patientNameElement.textContent.toLowerCase() :
                         '';
                     let showCard = true;
@@ -397,14 +385,11 @@
                         }, 500);
                     }
                 });
-                // إظهار رسالة إذا لم توجد نتائج (اختياري)
             }
             if (searchInput) searchInput.addEventListener('input', applyFilters);
-            // لا حاجة لربط statusFilter هنا لأننا نعرض غير المؤكدة فقط
 
-            // التأكد من عمل أزرار فتح المودالات (تعتمد على Bootstrap JS المحمل في الـ layout)
             console.log('Admin appointments page loaded.');
 
-        }); // نهاية DOMContentLoaded
+        });
     </script>
 @endsection

@@ -2,84 +2,62 @@
 
 namespace App\Http\Controllers\Dashboard\appointments;
 
-// --- الاستيرادات الأساسية ---
 use App\Models\Appointment;
-use App\Models\Doctor; // استيراد موديل الطبيب (للإشعارات)
-use App\Models\Patient; // استيراد موديل المريض (للإشعارات)
+use App\Models\Doctor;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-// --- استيرادات الإشعارات ---
 use Illuminate\Support\Facades\Mail;
-use App\Mail\AppointmentConfirmation; // Mailable التأكيد (تأكد من وجوده)
-use App\Mail\AppointmentCancelledByAdmin; // Mailable الإلغاء بواسطة الأدمن (تأكد من إنشائه)
+use App\Mail\AppointmentConfirmation;
+use App\Mail\AppointmentCancelledByAdmin;
 use Twilio\Rest\Client;
 use Twilio\Exceptions\TwilioException;
 
 class AppointmentController extends Controller
 {
-    /**
-     * عرض قائمة المواعيد غير المؤكدة (للأدمن).
-     * GET /appointments
-     */
-    public function index(Request $request) // كانت للمواعيد "غير المؤكدة"
+
+    public function index(Request $request)
     {
         Log::info("Admin: Fetching PENDING appointments that need action.");
-        // فترة سماح للمواعيد غير المؤكدة قبل أن نعتبرها "فائتة تماماً"
-        $pendingGraceDays = intval(config('appointments.admin_pending_grace_days', 1)); // مثال: يوم واحد
+        $pendingGraceDays = intval(config('appointments.admin_pending_grace_days', 1));
 
-        $query = Appointment::where('type', Appointment::STATUS_PENDING) // فقط "غير مؤكد"
+        $query = Appointment::where('type', Appointment::STATUS_PENDING)
             ->whereNotNull('appointment')
-            // وقت الموعد لم يفت بعد بيوم كامل (كمثال)
             ->where('appointment', '>=', Carbon::now()->subDays($pendingGraceDays))
-            // وأيضاً هي قادمة أو اليوم (لتجنب عرض ما فات بيوم ولكن لا يزال ضمن فترة السماح)
-            // ->where('appointment', '>=', Carbon::today()->startOfDay()) //  هذا قد يكون صارماً جداً
             ->with(['doctor:id', 'section:id', 'patient:id'])
-            ->orderBy('appointment', 'asc'); // الأقرب أولاً
+            ->orderBy('appointment', 'asc');
 
-        // فلاتر البحث (يمكنك تكييفها)
         if ($request->filled('search_pending')) {
-            // ... منطق البحث ...
         }
 
         $appointments = $query->paginate(config('pagination.admin_pending', 10))->appends($request->query());
 
-        return view('Dashboard.appointments.index', compact('appointments', 'request')); //  نفس الـ view
+        return view('Dashboard.appointments.index', compact('appointments', 'request'));
     }
 
-    /**
-     * عرض قائمة المواعيد المؤكدة والقادمة (بما في ذلك التي فات وقتها قليلاً وتحتاج تحديث حالة من الطبيب).
-     */
-    public function index2(Request $request) // كانت للمواعيد "المؤكدة"
+
+    public function index2(Request $request)
     {
         Log::info("Admin: Fetching CONFIRMED & UPCOMING appointments.");
-        // فترة سماح قصيرة بعد الموعد المؤكد ليقوم الطبيب بتحديث الحالة
-        $confirmedActionGraceHours = intval(config('appointments.doctor_action_grace_hours', 3)); // مثال: 3 ساعات
-
+        $confirmedActionGraceHours = intval(config('appointments.doctor_action_grace_hours', 3));
         $query = Appointment::where('type', Appointment::STATUS_CONFIRMED)
             ->whereNotNull('appointment')
-            // وقت الموعد لم يفت بعد بـ 3 ساعات (مثلاً)
             ->where('appointment', '>=', Carbon::now()->subHours($confirmedActionGraceHours))
             ->with(['doctor:id', 'section:id', 'patient:id'])
             ->orderBy('appointment', 'asc');
 
         if ($request->filled('search_confirmed')) {
-            // ... منطق البحث ...
         }
 
         $appointments = $query->paginate(config('pagination.admin_confirmed', 10))->appends($request->query());
 
-        return view('Dashboard.appointments.index2', compact('appointments', 'request')); // نفس الـ view
+        return view('Dashboard.appointments.index2', compact('appointments', 'request'));
     }
 
-
-    /**
-     * عرض قائمة المواعيد المنتهية (للأدمن).
-     * GET /appointments/completed
-     */
     public function indexCompleted()
     {
         Log::info("Fetching completed appointments for admin view.");
@@ -91,16 +69,12 @@ class AppointmentController extends Controller
         return view('Dashboard.appointments.index_completed', compact('appointments'));
     }
 
-    /**
-     * عرض قائمة المواعيد الملغاة (للأدمن).
-     * GET /appointments/cancelled
-     */
     public function indexCancelled()
     {
         Log::info("Fetching cancelled appointments for admin view.");
         $appointments = Appointment::where('type', Appointment::STATUS_CANCELLED)
             ->with(['doctor', 'section', 'patient'])
-            ->orderBy('updated_at', 'desc') //  تاريخ الإلغاء هو آخر تحديث
+            ->orderBy('updated_at', 'desc')
             ->paginate(10);
 
         return view('Dashboard.appointments.index_cancelled', compact('appointments'));
@@ -110,33 +84,24 @@ class AppointmentController extends Controller
     {
         Log::info("Admin: Fetching Lapsed Appointments - SIMPLIFIED QUERY v2.");
 
-        $now = Carbon::now(); // الوقت الحالي
+        $now = Carbon::now();
 
         $query = Appointment::query()
-            // الشرط الأساسي: أحضر المواعيد التي وقتها المحدد قد مضى
-            ->whereNotNull('appointment') // تأكد أن حقل وقت الموعد ليس فارغاً
-            ->where('appointment', '<', $now) // وقت الموعد أقدم من الآن
+            ->whereNotNull('appointment')
+            ->where('appointment', '<', $now)
 
-            // و حالتها لا تزال "نشطة" (مؤكد أو غير مؤكد)
             ->whereIn('type', [
-                Appointment::STATUS_PENDING,   // 'غير مؤكد'
-                Appointment::STATUS_CONFIRMED  // 'مؤكد'
+                Appointment::STATUS_PENDING,
+                Appointment::STATUS_CONFIRMED
             ])
-            // لا نحتاج لـ whereNotIn هنا إذا كنا سنعتمد على المهمة المجدولة لاحقاً
-            // لتغييرها إلى STATUS_LAPSED, ولكن للإضافة الآن:
-            // ->whereNotIn('type', [
-            //     Appointment::STATUS_COMPLETED,
-            //     Appointment::STATUS_CANCELLED,
-            //     Appointment::STATUS_LAPSED
-            // ])
+
             ->with([
                 'doctor' => fn($q) => $q->select('id'),
                 'section' => fn($q) => $q->select('id'),
                 'patient' => fn($q) => $q->select('id', 'phone')
             ])
-            ->orderBy('appointment', 'asc'); // الأقدم (الأكثر فواتاً) أولاً
+            ->orderBy('appointment', 'asc');
 
-        // فلتر البحث (كما هو لديك)
         if ($request->filled('search_lapsed')) {
             $searchTerm = $request->search_lapsed;
             $query->where(function ($q) use ($searchTerm) {
@@ -144,10 +109,9 @@ class AppointmentController extends Controller
                     ->orWhereTranslationLike('name', "%{$searchTerm}%"))
                     ->orWhereHas('doctor', fn($dq) => $dq->where('name', 'like', "%{$searchTerm}%")
                         ->orWhereTranslationLike('name', "%{$searchTerm}%"))
-                    ->orWhere('appointments.name', 'like', "%{$searchTerm}%"); // اسم المريض في جدول appointments
+                    ->orWhere('appointments.name', 'like', "%{$searchTerm}%");
             });
         }
-        // فلتر التاريخ (كما هو لديك)
         if ($request->filled('date_lapsed_filter')) {
             try {
                 $dateFilter = Carbon::parse($request->date_lapsed_filter)->toDateString();
@@ -156,38 +120,23 @@ class AppointmentController extends Controller
             }
         }
 
-        $lapsedAppointments = $query->paginate(15)->appends($request->query()); // 15 عنصر لكل صفحة
+        $lapsedAppointments = $query->paginate(15)->appends($request->query());
 
         Log::info("Admin Lapsed Appointments: Found {$lapsedAppointments->total()} results with simplified query.");
         if ($lapsedAppointments->isEmpty()) {
             Log::warning("Admin Lapsed Appointments: No appointments matched the simplified query conditions.");
-            // يمكنك هنا تسجيل بعض استعلامات SQL التي نفذت إذا لم تظهر نتائج لفحصها
-            // DB::enableQueryLog();
-            // $lapsedAppointments = $query->paginate(15)...
-            // Log::debug(DB::getQueryLog());
+
         }
-
-
-        // تم تغيير اسم المتغير هنا ليتطابق مع ما استخدمته في الـ Blade المُرسل
         return view('Dashboard.appointments.lapsed_appointments', compact('lapsedAppointments', 'request'));
     }
-
-
-    /**
-     * تأكيد موعد محدد بواسطة الأدمن.
-     * PUT/PATCH /appointments/approval/{id}
-     */
     public function approval(Request $request, $id)
     {
         Log::info("Attempting to approve appointment ID: {$id} by admin.");
         $appointment = null;
-        $notificationWarning = null; // لتجميع رسائل فشل الإشعارات
-
+        $notificationWarning = null;
         try {
-            // تحميل العلاقات اللازمة (استخدم اسم علاقة المريض الصحيح: patient أو user)
-            $appointment = Appointment::with(['doctor', 'section', 'patient'])->findOrFail($id); // نفترض 'patient'
+            $appointment = Appointment::with(['doctor', 'section', 'patient'])->findOrFail($id);
 
-            // 1. التحقق من الحالة والوقت
             if ($appointment->type !== 'غير مؤكد') {
                 Log::warning("Approval failed for appointment ID: {$id}. Current status: {$appointment->type}");
                 return redirect()->back()->with('error', 'لا يمكن تأكيد هذا الموعد، حالته ليست "غير مؤكد".');
@@ -197,29 +146,25 @@ class AppointmentController extends Controller
                 return redirect()->back()->with('error', 'لا يمكن تأكيد موعد قد فات وقته.');
             }
 
-            // 2. تحديث الحالة
             $appointment->update(['type' => 'مؤكد']);
             Log::info("Appointment ID {$appointment->id} confirmed successfully by admin (DB updated).");
 
-            // 3. محاولة إرسال الإشعارات
             $emailWarning = null;
             $smsWarning = null;
 
-            // --- إرسال البريد ---
             try {
                 $patientEmail = $appointment->patient->email ?? $appointment->email;
                 // $patientName = $appointment->patient->name ?? $appointment->name;
                 // $doctorName = $appointment->doctor->name ?? 'الطبيب المختص';
-                $patientNameForMail = $appointment->name; // اسم المريض من الموعد نفسه
-                $appointmentObject = $appointment->appointment; // كائن Carbon للوقت
-                $doctorNameForMail = $appointment->doctor->name ?? 'الطبيب المعالج'; // اسم الطبيب
-                $sectionNameForMail = $appointment->section->name ?? 'القسم المختص'; // اسم القسم (تحتاج لتحميل علاقة section أيضاً)
+                $patientNameForMail = $appointment->name;
+                $appointmentObject = $appointment->appointment;
+                $doctorNameForMail = $appointment->doctor->name ?? 'الطبيب المعالج';
+                $sectionNameForMail = $appointment->section->name ?? 'القسم المختص';
 
                 if ($patientEmail && $appointmentObject) {
-                    // *** تمرير المتغيرات بالأسماء الصحيحة ***
                     Mail::to($patientEmail)->send(new AppointmentConfirmation(
                         $patientNameForMail,
-                        $appointmentObject, // كائن Carbon
+                        $appointmentObject,
                         $doctorNameForMail,
                         $sectionNameForMail
                     ));
@@ -233,28 +178,22 @@ class AppointmentController extends Controller
                 $emailWarning = 'فشل إرسال البريد الإلكتروني.';
             }
 
-            // --- إرسال SMS ---
             try {
-                // استخدام الحقل الصحيح للهاتف
-                $receiverNumber = $appointment->patient->Phone ?? $appointment->phone; // تأكد من اسم الحقل Phone أو phone
+                $receiverNumber = $appointment->patient->Phone ?? $appointment->phone;
                 if ($receiverNumber && $appointment->appointment) {
                     $message = "عزيزي المريض " . $appointment->name . "، تم تأكيد موعدك بنجاح بتاريخ " . $appointment->appointment->format('Y-m-d \ا\ل\س\ا\ع\ة H:i') . ".";
                     $smsSent = $this->sendTwilioSms($receiverNumber, $message, $appointment->id, 'confirmation');
-                    if (!$smsSent) { // التحقق من نتيجة دالة الإرسال
+                    if (!$smsSent) {
                         $smsWarning = 'فشل إرسال رسالة SMS (تحقق من اللوغات).';
                     }
                 } else {
                     Log::warning("Cannot send confirmation SMS for appt ID: {$appointment->id}. Phone or Time missing.");
-                    // لا تضع رسالة خطأ إذا فشل البريد أيضاً هنا، سيتم تجميعها لاحقاً
                     if (!$emailWarning) $smsWarning = 'لم يتم العثور على رقم هاتف صالح للمريض.';
                 }
             } catch (\Exception $e) {
                 Log::error("General error sending confirmation SMS for appt ID: {$appointment->id}. Error: " . $e->getMessage());
                 $smsWarning = 'خطأ غير متوقع أثناء إرسال SMS.';
             }
-
-
-            // --- تجميع رسائل التحذير ---
             if ($emailWarning && $smsWarning) {
                 $notificationWarning = $emailWarning . " و" . lcfirst($smsWarning);
             } elseif ($emailWarning) {
@@ -263,28 +202,23 @@ class AppointmentController extends Controller
                 $notificationWarning = $smsWarning;
             }
 
-            // --- تحديد رسالة الـ Flash النهائية ---
             if ($notificationWarning) {
                 session()->flash('warning', 'تم تأكيد الموعد بنجاح، لكن ' . $notificationWarning);
             } else {
-                session()->flash('add', 'تم تأكيد الموعد بنجاح وإرسال الإشعارات.'); // أو 'success'
+                session()->flash('add', 'تم تأكيد الموعد بنجاح وإرسال الإشعارات.');
             }
 
-            return redirect()->route('appointments.index'); // العودة لقائمة غير المؤكدة
+            return redirect()->route('appointments.index');
 
         } catch (ModelNotFoundException $e) {
             Log::error("Appointment not found for approval. ID: {$id}");
             return redirect()->back()->with('error', 'الموعد المطلوب غير موجود.');
-        } catch (\Exception $e) { // التقاط أي خطأ يحدث *قبل* أو *أثناء* Update
+        } catch (\Exception $e) {
             Log::error("CRITICAL Error approving appointment ID {$id}: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
             return redirect()->back()->with('error', 'حدث خطأ حرج وغير متوقع أثناء محاولة تأكيد الموعد.');
         }
-    } // نهاية approval
+    }
 
-    /**
-     * إلغاء موعد محدد بواسطة الأدمن.
-     * PATCH /appointments/admin-cancel/{appointment}
-     */
     public function adminCancelAppointment(Request $request, Appointment $appointment)
     {
         Log::info("Admin attempting to cancel appointment ID: {$appointment->id}");
@@ -295,22 +229,17 @@ class AppointmentController extends Controller
         $cancelReason = $request->input('cancel_reason', 'تم الإلغاء من قبل الإدارة لأسباب ادارية');
 
         try {
-            $appointment->load(['doctor', 'patient']); // تحميل العلاقات اللازمة للإشعارات
+            $appointment->load(['doctor', 'patient']);
             $appointment->update(['type' => 'ملغي']);
             Log::info("Appointment ID {$appointment->id} cancelled successfully by Admin.");
-            $this->sendAdminCancellationNotifications($appointment, $cancelReason); // إرسال الإشعارات
+            $this->sendAdminCancellationNotifications($appointment, $cancelReason);
 
             session()->flash('success', 'تم إلغاء الموعد بنجاح وإرسال الإشعارات.');
-            return redirect()->route('appointments.index2'); // العودة للمواعيد المؤكدة
+            return redirect()->route('appointments.index2');
 
-        } catch (\Exception $e) { /* ... معالجة الخطأ ... */
+        } catch (\Exception $e) {
         }
     }
-
-    /**
-     * حذف سجل موعد (نهائي).
-     * DELETE /appointments/{id}
-     */
     public function destroy($id)
     {
         Log::info("Attempting to delete appointment ID: {$id}");
@@ -324,45 +253,31 @@ class AppointmentController extends Controller
         }
         return redirect()->back();
     }
-
-    // ================================================================
-    //  *** دوال مساعدة لإرسال الإشعارات ***
-    // ================================================================
-
-    /**
-     * إرسال إشعارات إلغاء الموعد (عند إلغاء الأدمن).
-     */
     protected function sendAdminCancellationNotifications(Appointment $appointment, $reason)
     {
         try {
-            $patientName = $appointment->patient->name ?? $appointment->name; // استخدم العلاقة الصحيحة
+            $patientName = $appointment->patient->name ?? $appointment->name;
             $appointmentTime = $appointment->appointment ? $appointment->appointment->translatedFormat('l، d M Y - h:i A') : 'غير محدد';
             $doctorName = $appointment->doctor->name ?? 'الطبيب';
 
             // للمريض
-            $patientEmail = $appointment->patient->email ?? $appointment->email; // العلاقة الصحيحة
+            $patientEmail = $appointment->patient->email ?? $appointment->email;
             if ($patientEmail) {
                 Mail::to($patientEmail)->send(new AppointmentCancelledByAdmin($patientName, $appointmentTime, $doctorName, $reason));
                 Log::info("Admin cancellation email sent to patient: {$patientEmail} for appt ID: {$appointment->id}");
             }
-            $patientPhone = $appointment->patient->Phone ?? $appointment->phone; // العلاقة واسم الحقل الصحيح
+            $patientPhone = $appointment->patient->Phone ?? $appointment->phone;
             if ($patientPhone) {
                 $smsMessagePatient = "عزيزي " . $patientName . "، نأسف لإلغاء موعدك مع د. " . $doctorName . " بتاريخ " . $appointmentTime . " بسبب: " . $reason . ". يرجى التواصل معنا.";
                 $this->sendTwilioSms($patientPhone, $smsMessagePatient, $appointment->id, 'admin_cancellation_patient');
             }
 
-            // للطبيب
-            if ($appointment->doctor) { /* ... نفس الكود السابق لإرسال للطبيب ... */
+            if ($appointment->doctor) {
             }
         } catch (\Exception $e) {
             Log::error("Failed sending admin cancellation notifications for appt ID: {$appointment->id}. Error: " . $e->getMessage());
-            // لا تضع flash هنا مباشرة، لكن يمكن لدالة adminCancelAppointment التحقق من قيمة الإرجاع
         }
     }
-
-    /**
-     * دالة مساعدة لإرسال رسائل Twilio SMS.
-     */
     protected function sendTwilioSms($receiverNumber, $message, $appointmentId, $context = 'message')
     {
         $account_sid = getenv("TWILIO_SID");
@@ -389,4 +304,4 @@ class AppointmentController extends Controller
             return false;
         }
     }
-} // نهاية الكلاس
+} 

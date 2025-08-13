@@ -7,15 +7,12 @@ use Illuminate\Support\Facades\Auth;
 
 class PatientProfileController extends Controller
 {
-    public function showpat() // تغيير اسم الدالة ليكون أوضح
+    public function showpat()
     {
         $patient = Auth::guard('patient')->user();
         if (!$patient) {
             abort(404);
         }
-        // // تحميل العلاقات الأساسية فقط
-        // $doctor->load(['section', 'image']);
-        // return view('Dashboard.Doctors.profile.show', compact('admin'));
     }
 
 
@@ -25,8 +22,6 @@ class PatientProfileController extends Controller
         if (!$patient) {
             abort(404);
         }
-        // // يمكنك جلب بيانات إضافية هنا إذا لزم الأمر (مثل الأقسام)
-        // return view('Dashboard.Doctors.profile.edit', compact('doctor'));
     }
 
     public function update(Request $request)
@@ -35,16 +30,5 @@ class PatientProfileController extends Controller
         if (!$patient) {
             abort(404);
         }
-        // --- هنا ستضع منطق التحقق والتحديث المشابه لما في DoctorRepository ---
-        // --- لكن بشكل مبسط وموجه للطبيب نفسه ---
-        // $request->validate([...]);
-        // $doctor->update([...]);
-        // // تحديث الترجمة
-        // $doctor->name = $request->name;
-        // $doctor->save();
-        // // تحديث الصورة إذا تم رفعها
-        // // تحديث كلمة المرور إذا تم إدخالها
-
-        // return redirect()->route('doctor.profile.show')->with('success', 'تم تحديث الملف الشخصي بنجاح.');
     }
 }

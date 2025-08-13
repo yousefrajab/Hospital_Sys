@@ -197,16 +197,16 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <i class="fas fa-hospital-user fa-lg me-2" style="color: var(--admin-primary);"></i> {{-- أيقونة مناسبة --}}
+                <i class="fas fa-hospital-user fa-lg me-2" style="color: var(--admin-primary);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">إدارة المرافق</h4>
-                    <span class="text-muted mt-0 tx-13">/ قائمة الغرف</span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.facilities_management') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('AdminSb.rooms_list') }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('admin.rooms.create') }}" class="btn btn-primary ripple">
-                <i class="fas fa-plus me-1"></i> إضافة غرفة جديدة
+                <i class="fas fa-plus me-1"></i> {{ trans('AdminSb.add_new_room') }}
             </a>
         </div>
     </div>
@@ -215,54 +215,51 @@
 @section('content')
     @include('Dashboard.messages_alert')
 
-    {{-- بطاقة الفلترة --}}
     <div class="card animate__animated animate__fadeIn">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة البحث عن الغرف</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>{{ trans('AdminSb.filter_rooms_search') }}</h5>
         </div>
         <div class="card-body">
             <form action="{{ route('admin.rooms.index') }}" method="GET">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label for="search_room" class="form-label">رقم/اسم الغرفة:</label>
+                        <label for="search_room" class="form-label">{{ trans('AdminSb.room_number_name') }}</label>
                         <input type="text" name="search_room" id="search_room" class="form-control"
-                            placeholder="أدخل رقم الغرفة..." value="{{ $request->search_room }}">
+                            placeholder="{{ trans('AdminSb.enter_room_number_placeholder') }}"
+                            value="{{ $request->search_room }}">
                     </div>
                     <div class="col-md-3">
-                        <label for="section_id_filter" class="form-label">القسم:</label>
+                        <label for="section_id_filter" class="form-label">{{ trans('AdminSb.department') }}</label>
                         <select name="section_id_filter" id="section_id_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="{{ trans('AdminSb.all') }}">
+                            <option value="">{{ trans('AdminSb.all') }}</option>
                             @foreach ($sections as $section)
                                 <option value="{{ $section->id }}"
                                     {{ $request->section_id_filter == $section->id ? 'selected' : '' }}>
-                                    {{ $section->name }} {{-- يفترض أن الاسم مترجم --}}
-                                </option>
+                                    {{ $section->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="room_type_filter" class="form-label">نوع الغرفة:</label>
+                        <label for="room_type_filter" class="form-label">{{ trans('AdminSb.room_type') }}</label>
                         <select name="room_type_filter" id="room_type_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="{{ trans('AdminSb.all') }}">
+                            <option value="">{{ trans('AdminSb.all') }}</option>
                             @foreach ($roomTypes as $key => $value)
                                 <option value="{{ $key }}"
-                                    {{ $request->room_type_filter == $key ? 'selected' : '' }}>
-                                    {{ $value }}
+                                    {{ $request->room_type_filter == $key ? 'selected' : '' }}>{{ $value }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="room_status_filter" class="form-label">حالة الغرفة:</label>
+                        <label for="room_status_filter" class="form-label">{{ trans('AdminSb.room_status') }}</label>
                         <select name="room_status_filter" id="room_status_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="{{ trans('AdminSb.all') }}">
+                            <option value="">{{ trans('AdminSb.all') }}</option>
                             @foreach ($roomStatuses as $key => $value)
                                 <option value="{{ $key }}"
-                                    {{ $request->room_status_filter == $key ? 'selected' : '' }}>
-                                    {{ $value }}
+                                    {{ $request->room_status_filter == $key ? 'selected' : '' }}>{{ $value }}
                                 </option>
                             @endforeach
                         </select>
@@ -270,11 +267,11 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12 text-center">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-search me-1"></i> تطبيق
-                            الفلتر</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search me-1"></i>
+                            {{ trans('AdminSb.apply_filter') }}</button>
                         @if (request()->hasAny(['search_room', 'section_id_filter', 'room_type_filter', 'room_status_filter']))
                             <a href="{{ route('admin.rooms.index') }}" class="btn btn-outline-secondary"><i
-                                    class="fas fa-eraser me-1"></i> مسح الفلتر</a>
+                                    class="fas fa-eraser me-1"></i> {{ trans('AdminSb.clear_filter') }}</a>
                         @endif
                     </div>
                 </div>
@@ -282,27 +279,25 @@
         </div>
     </div>
 
-    {{-- بطاقة جدول الغرف --}}
     <div class="card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
         <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0"><i class="fas fa-door-open me-2"></i>قائمة الغرف المسجلة ({{ $rooms->total() }})
-            </h5>
-            {{-- يمكنك إضافة زر "إضافة" هنا أيضًا إذا أردت --}}
+            <h5 class="card-title mb-0"><i class="fas fa-door-open me-2"></i>{{ trans('AdminSb.registered_rooms_list') }}
+                ({{ $rooms->total() }})</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover table-striped">
-                    <thead class="table-light"> {{-- استخدام thead-light أو table-light --}}
+                    <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>رقم الغرفة</th>
-                            <th>القسم</th>
-                            <th>النوع</th>
-                            <th>تخصيص الجنس</th>
-                            <th>الطابق</th>
-                            <th>الحالة</th>
-                            <th>عدد الأسرة</th>
-                            <th>الإجراءات</th>
+                            <th>{{ trans('AdminSb.room_number') }}</th>
+                            <th>{{ trans('AdminSb.department') }}</th>
+                            <th>{{ trans('AdminSb.type') }}</th>
+                            <th>{{ trans('AdminSb.gender_allocation') }}</th>
+                            <th>{{ trans('AdminSb.floor') }}</th>
+                            <th>{{ trans('AdminSb.status') }}</th>
+                            <th>{{ trans('AdminSb.beds_count') }}</th>
+                            <th>{{ trans('AdminSb.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -310,15 +305,15 @@
                             <tr>
                                 <td>{{ $rooms->firstItem() + $index }}</td>
                                 <td class="fw-bold">{{ $room->room_number }}</td>
-                                <td>{{ $room->section->name ?? 'N/A' }}</td> {{-- الاسم المترجم للقسم --}}
+                                <td>{{ $room->section->name ?? 'N/A' }}</td>
                                 <td>{{ $roomTypes[$room->type] ?? $room->type }}</td>
                                 <td>
                                     @php
                                         $genderTypeDisplay = match ($room->gender_type) {
-                                            'male' => 'ذكور فقط',
-                                            'female' => 'إناث فقط',
-                                            'mixed' => 'مختلط',
-                                            'any' => 'أي جنس',
+                                            'male' => trans('AdminSb.males_only'),
+                                            'female' => trans('AdminSb.females_only'),
+                                            'mixed' => trans('AdminSb.mixed'),
+                                            'any' => trans('AdminSb.any_gender'),
                                             default => $room->gender_type,
                                         };
                                     @endphp
@@ -335,31 +330,28 @@
                                             default => 'bg-light text-dark',
                                         };
                                     @endphp
-                                    <span class="badge {{ $statusClass }}">
-                                        {{ $roomStatuses[$room->status] ?? $room->status }}
-                                    </span>
+                                    <span
+                                        class="badge {{ $statusClass }}">{{ $roomStatuses[$room->status] ?? $room->status }}</span>
                                 </td>
-                                <td>
-                                    {{-- استخدام العلاقة المحملة مسبقًا إذا أمكن، أو عدها مباشرة --}}
-                                    {{ $room->beds_count ?? $room->beds->count() }}
-                                </td>
+                                <td>{{ $room->beds_count ?? $room->beds->count() }}</td>
                                 <td class="action-buttons">
                                     <a href="{{ route('admin.rooms.show', $room->id) }}"
-                                        class="btn btn-sm btn-outline-success" title="عرض التفاصيل"><i
-                                            class="fas fa-eye"></i></a>
+                                        class="btn btn-sm btn-outline-success"
+                                        title="{{ trans('AdminSb.view_details') }}"><i class="fas fa-eye"></i></a>
                                     <a href="{{ route('admin.rooms.edit', $room->id) }}"
-                                        class="btn btn-sm btn-outline-primary" title="تعديل الغرفة"><i
+                                        class="btn btn-sm btn-outline-primary" title="{{ trans('AdminSb.edit_room') }}"><i
                                             class="fas fa-edit"></i></a>
                                     <a href="{{ route('admin.beds.index', ['room_id_filter' => $room->id]) }}"
-                                        class="btn btn-sm btn-outline-secondary" title="إدارة أسرة الغرفة"><i
-                                            class="fas fa-bed"></i></a>
+                                        class="btn btn-sm btn-outline-secondary"
+                                        title="{{ trans('AdminSb.manage_room_beds') }}"><i class="fas fa-bed"></i></a>
                                     <form action="{{ route('admin.rooms.destroy', $room->id) }}" method="POST"
                                         class="d-inline"
-                                        onsubmit="return confirm('هل أنت متأكد من رغبتك في حذف هذه الغرفة وكل ما يتعلق بها من أسرة وسجلات دخول؟ هذا الإجراء لا يمكن التراجع عنه.');">
+                                        onsubmit="return confirm('{{ trans('AdminSb.confirm_delete_room') }}');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger"
-                                            title="حذف الغرفة"><i class="fas fa-trash-alt"></i></button>
+                                            title="{{ trans('AdminSb.delete_room') }}"><i
+                                                class="fas fa-trash-alt"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -367,13 +359,13 @@
                             <tr>
                                 <td colspan="9" class="text-center py-4">
                                     <i class="fas fa-info-circle fa-2x text-muted mb-2"></i><br>
-                                    لا توجد غرف مسجلة حاليًا.
+                                    {{ trans('AdminSb.no_rooms_registered') }}
                                     @if (!request()->hasAny(['search_room', 'section_id_filter', 'room_type_filter', 'room_status_filter']))
                                         <br> <a href="{{ route('admin.rooms.create') }}"
-                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-plus"></i> أضف غرفة
-                                            جديدة</a>
+                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-plus"></i>
+                                            {{ trans('AdminSb.add_new_room') }}</a>
                                     @else
-                                        <br> <span class="text-muted">حاول تعديل معايير الفلترة.</span>
+                                        <br> <span class="text-muted">{{ trans('AdminSb.try_adjusting_filters') }}</span>
                                     @endif
                                 </td>
                             </tr>

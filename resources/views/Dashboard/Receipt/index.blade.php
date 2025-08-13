@@ -22,24 +22,24 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الحسابات</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ سندات
-                    القبض</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.accounts') }}</h4><span
+                    class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.receipts') }}</span>
             </div>
         </div>
     </div>
     <!-- breadcrumb -->
 @endsection
+
 @section('content')
     @include('Dashboard.messages_alert')
     <!-- row -->
-    <!-- row opened -->
     <div class="row row-sm">
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header pb-0">
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('admin.Receipt.create') }}" class="btn btn-primary" role="button"
-                            aria-pressed="true">اضافة سند جديد</a>
+                            aria-pressed="true">{{ trans('AdminSb.add_new_receipt') }}</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -48,12 +48,12 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>اسم المريض</th>
-                                    <th>الخدمة / الباقة</th>
-                                    <th>المبلغ</th>
-                                    <th>البيان</th>
-                                    <th>تاريخ الاضافة</th>
-                                    <th>العمليات</th>
+                                    <th>{{ trans('AdminSb.patient_name') }}</th>
+                                    <th>{{ trans('AdminSb.service_package') }}</th>
+                                    <th>{{ trans('AdminSb.amount') }}</th>
+                                    <th>{{ trans('AdminSb.description') }}</th>
+                                    <th>{{ trans('AdminSb.date_added') }}</th>
+                                    <th>{{ trans('AdminSb.Processes') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,9 +63,11 @@
                                         <td>{{ $receipt->patients->name }}</td>
                                         <td>
                                             @if ($receipt->service)
-                                                {{ $receipt->service->name }} <span class="badge badge-primary">خدمة</span>
+                                                {{ $receipt->service->name }} <span
+                                                    class="badge badge-primary">{{ trans('AdminSb.service') }}</span>
                                             @elseif($receipt->group)
-                                                {{ $receipt->group->name }} <span class="badge badge-success">باقة</span>
+                                                {{ $receipt->group->name }} <span
+                                                    class="badge badge-success">{{ trans('AdminSb.package') }}</span>
                                             @else
                                                 -
                                             @endif
@@ -80,7 +82,8 @@
                                                 data-toggle="modal" href="#delete{{ $receipt->id }}"><i
                                                     class="las la-trash"></i></a>
                                             <a href="{{ route('admin.Receipt.show', $receipt->id) }}"
-                                                class="btn btn-primary btn-sm" target="_blank" title="طباعه سند قبض"><i
+                                                class="btn btn-primary btn-sm" target="_blank"
+                                                title="{{ trans('AdminSb.print_receipt') }}"><i
                                                     class="fas fa-print"></i></a>
                                         </td>
                                     </tr>
@@ -93,15 +96,8 @@
             </div><!-- bd -->
         </div>
         <!--/div-->
-
-        <!-- /row -->
-
     </div>
     <!-- row closed -->
-
-    <!-- Container closed -->
-
-    <!-- main-content closed -->
 @endsection
 @section('js')
 

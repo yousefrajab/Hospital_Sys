@@ -11,27 +11,24 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
 
     public function index()
     {
-        // تأكد أن علاقة 'doctor' (مفرد) مُعرفة في موديل Service
-        // وأن علاقة 'translations' مُعرفة إذا كنت تستخدمها (مثلاً مع astrotomic/laravel-translatable)
         $services = Service::with(['doctor'])->orderBy('created_at', 'desc')->get();
-        $doctors = Doctor::where('status', 1)->orderByTranslation('name')->get(); // جلب الأطباء النشطين وترتيبهم بالاسم المترجم
+        $doctors = Doctor::where('status', 1)->orderByTranslation('name')->get();
         return view('Dashboard.Services.Single Service.index', compact('services', 'doctors'));
     }
 
-    public function create() // هذا الميثود قد لا يُستخدم إذا كانت الإضافة تتم عبر مودال من صفحة index
+    public function create()
     {
         $doctors = Doctor::where('status', 1)->orderByTranslation('name')->get();
-        return view('Dashboard.Services.Single Service.add', compact('doctors')); // افترض أن لديك هذا الـ view
+        return view('Dashboard.Services.Single Service.add', compact('doctors'));
     }
 
     public function store($request)
     {
-        // قم بإضافة Validation هنا للـ request
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'doctor_id' => 'nullable|exists:doctors,id', // تأكد أن الطبيب موجود إذا تم إرساله
+            'doctor_id' => 'nullable|exists:doctors,id',
             'status' => 'required|boolean',
         ]);
 
@@ -39,18 +36,17 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
         try {
             $SingleService = new Service();
             $SingleService->price = $request->price;
-            // $SingleService->description = $request->description; // الوصف يجب أن يُحفظ مع الترجمة إذا كان مترجماً
-            $SingleService->status = $request->status; // احصل على الحالة من الطلب
+            // $SingleService->description = $request->description;
+            $SingleService->status = $request->status;
             $SingleService->doctor_id = $request->doctor_id;
-            $SingleService->save(); // الحفظ الأول للبيانات الأساسية
+            $SingleService->save();
 
-            // حفظ الترجمات
-            $SingleService->name = $request->name; // يفترض أن 'name' هو translatedAttribute
-            $SingleService->description = $request->description; // إذا كان الوصف مترجماً أيضاً
-            $SingleService->save(); // الحفظ الثاني لتحديث الترجمات
+            $SingleService->name = $request->name;
+            $SingleService->description = $request->description;
+            $SingleService->save();
 
             DB::commit();
-            session()->flash('add', trans('messages.success')); // استخدام رسالة نجاح عامة
+            session()->flash('add', trans('messages.success'));
             return redirect()->route('admin.Service.index');
 
         } catch (\Exception $e) {
@@ -67,22 +63,15 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
         return view('Dashboard.Services.Single Service.edit', compact('service', 'doctors')); // افترض أن لديك هذا الـ view
     }
 
-    public function update($request) // كان يجب أن يستقبل $request, $id أو يستخدم route model binding
+    public function update($request)
     {
-        // قم بإضافة Validation هنا للـ request
         $validatedData = $request->validate([
-           'id' => 'required|exists:services,id', // للتأكد من أن الـ ID المُرسل موجود
+           'id' => 'required|exists:services,id',
             'name' => [
                 'required',
                 'string',
                 'max:255',
-                // Rule::unique('service_translations', 'name')->ignore($serviceId, 'service_id') // For single locale in service_translations table
-                // If 'name' is directly on 'services' table (not translatable or only one language stored directly)
-                // Rule::unique('services', 'name')->ignore($serviceId)
 
-                // *** For astrotomic/laravel-translatable, unique validation is more complex. ***
-                // You often need a custom rule or manual check because the 'name' is in a separate table.
-                // Let's do a manual check for simplicity here for the current locale:
             ],
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
@@ -93,7 +82,7 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
 
         DB::beginTransaction();
         try {
-            $SingleService = Service::findOrFail($validatedData['id']); // استخدام $request->id أو $validatedData['id']
+            $SingleService = Service::findOrFail($validatedData['id']);
             $SingleService->price = $validatedData['price'];
             // $SingleService->description = $validatedData['description'];
             $SingleService->status = $validatedData['status'];
@@ -106,7 +95,7 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
             $SingleService->save();
 
             DB::commit();
-            session()->flash('edit', trans('messages.update')); // استخدام رسالة نجاح عامة
+            session()->flash('edit', trans('messages.update'));
             return redirect()->route('admin.Service.index');
 
         } catch (\Exception $e) {
@@ -116,10 +105,9 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
         }
     }
 
-    public function destroy($request) // يجب أن يكون $request إما ID أو كائن Request يحتوي على ID
+    public function destroy($request)
     {
         try {
-            //  تأكد من أن $request->id موجود وصحيح
             $serviceId = $request->id ?? ($request instanceof \Illuminate\Http\Request ? $request->input('id') : null);
             if (!$serviceId) {
                  throw new \Exception('Service ID not provided for deletion.');

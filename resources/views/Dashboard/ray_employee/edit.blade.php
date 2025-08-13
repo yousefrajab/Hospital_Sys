@@ -31,9 +31,9 @@
             --warning-color: #f59e0b;
             --radius-md: 0.5rem;
             --radius-lg: 1rem;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -99,7 +99,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: -1;
@@ -140,11 +140,9 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(255, 255, 255, 0.1),
-                rgba(255, 255, 255, 0)
-            );
+            background: linear-gradient(to bottom right,
+                    rgba(255, 255, 255, 0.1),
+                    rgba(255, 255, 255, 0));
             transform: rotate(30deg);
             pointer-events: none;
         }
@@ -220,13 +218,13 @@
             pointer-events: none;
             z-index: 2;
             border-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
-        .floating-label input:focus ~ label,
-        .floating-label input:not(:placeholder-shown):not(:focus) ~ label,
-        .floating-label select:focus ~ label,
-        .floating-label select:not([value=""]):not(:focus) ~ label {
+        .floating-label input:focus~label,
+        .floating-label input:not(:placeholder-shown):not(:focus)~label,
+        .floating-label select:focus~label,
+        .floating-label select:not([value=""]):not(:focus)~label {
             top: -10px;
             font-size: 13px;
             color: var(--primary-color);
@@ -396,19 +394,45 @@
 
         /* تأثيرات الحركة */
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-5px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(5px);
+            }
         }
 
         .animate-float {
@@ -432,19 +456,22 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(255, 255, 255, 0.3),
-                rgba(255, 255, 255, 0)
-            );
+            background: linear-gradient(to bottom right,
+                    rgba(255, 255, 255, 0.3),
+                    rgba(255, 255, 255, 0));
             transform: rotate(30deg);
             animation: shine 3s infinite;
             pointer-events: none;
         }
 
         @keyframes shine {
-            0% { transform: rotate(30deg) translate(-30%, -30%); }
-            100% { transform: rotate(30deg) translate(30%, 30%); }
+            0% {
+                transform: rotate(30deg) translate(-30%, -30%);
+            }
+
+            100% {
+                transform: rotate(30deg) translate(30%, 30%);
+            }
         }
 
         /* تنسيقات إضافية */
@@ -485,13 +512,14 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">موظفو الأشعة</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل بيانات / {{ $employeeName }}</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.Radiology staff') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.edit_data') }} /
+                    {{ $employeeName }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('admin.ray_employee.index') }}" class="btn btn-sm btn-outline-primary">
-                <i class="fas fa-arrow-left me-1"></i> عودة للقائمة
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('AdminSb.Back to list') }}
             </a>
         </div>
     </div>
@@ -505,41 +533,29 @@
             <div class="card-glass card-highlight p-lg-6 p-4 animate__animated animate__fadeInUp">
                 <div class="d-flex justify-content-between align-items-center mb-5">
                     <h3 class="section-title mb-0">
-                        <i class="fas fa-user-edit section-icon"></i> تعديل بيانات موظف الأشعة
+                        <i class="fas fa-user-edit section-icon"></i> {{ trans('AdminSb.edit_ray_employee_data') }}
                     </h3>
                     <div class="badge bg-gradient-primary rounded-pill p-2 animate-pulse">
                         <i class="fas fa-id-card me-1"></i> ID: {{ $ray_employee->id }}
                     </div>
                 </div>
 
-                <form action="{{ route('admin.ray_employee.update', $ray_employee->id) }}" method="POST" enctype="multipart/form-data"
-                    class="needs-validation" novalidate autocomplete="off">
+                <form action="{{ route('admin.ray_employee.update', $ray_employee->id) }}" method="POST"
+                    enctype="multipart/form-data" class="needs-validation" novalidate autocomplete="off">
                     @method('PUT')
                     @csrf
 
                     <div class="row">
                         {{-- قسم الصورة --}}
                         <div class="col-md-4 d-flex flex-column align-items-center">
-                            {{-- <div class="avatar-upload mb-3 animate-float">
-                                <img id="ray_photo_preview_{{ $ray_employee->id }}"
-                                     src="{{ $ray_employee->image ? URL::asset('Dashboard/img/rayEmployees/' . $ray_employee->image->filename) : URL::asset('Dashboard/img/default_avatar.png') }}"
-                                     alt="صورة الموظف" class="animate__animated animate__fadeIn">
-                                <label for="ray_photo_input_{{ $ray_employee->id }}">
-                                    <i class="fas fa-camera"></i>
-                                </label>
-                                <input id="ray_photo_input_{{ $ray_employee->id }}" type="file" accept="image/*,image/webp" name="photo"
-                                       onchange="loadFile(event, 'ray_photo_preview_{{ $ray_employee->id }}')">
-                            </div> --}}
-
-
                             <div class="avatar-upload mb-3 animate-float">
                                 @if ($ray_employee->image)
                                     <img id="output"
                                         src="{{ URL::asset('Dashboard/img/rayEmployees/' . $ray_employee->image->filename) }}"
-                                        alt="{{ trans('rayEmployees.img') }}">
+                                        alt="{{ trans('AdminSb.employee_image') }}">
                                 @else
                                     <img id="output" src="{{ URL::asset('Dashboard/img/doctor_default.png') }}"
-                                        alt="صورة الطبيب">
+                                        alt="{{ trans('AdminSb.doctor_image') }}">
                                 @endif
                                 <label for="avatar-upload">
                                     <i class="fas fa-camera"></i>
@@ -547,53 +563,72 @@
                                 <input id="avatar-upload" type="file" accept="image/*" name="photo"
                                     onchange="loadFile(event)">
                             </div>
-                            @error('photo') <small class="text-danger text-center d-block mb-2">{{ $message }}</small> @enderror
-                            <small class="avatar-hint">الصورة الشخصية (اختياري - JPG, PNG, WEBP)</small>
+                            @error('photo')
+                                <small class="text-danger text-center d-block mb-2">{{ $message }}</small>
+                            @enderror
+                            <small class="avatar-hint">{{ trans('AdminSb.profile_image_optional') }}</small>
                         </div>
 
                         {{-- بقية الحقول --}}
                         <div class="col-md-8">
                             <div class="form-section">
-                                <h5 class="form-section-title"><i class="fas fa-user-circle"></i> المعلومات الشخصية</h5>
+                                <h5 class="form-section-title"><i class="fas fa-user-circle"></i>
+                                    {{ trans('AdminSb.personal_information') }}</h5>
                                 <div class="row">
                                     <!-- الاسم الكامل -->
                                     <div class="col-md-6">
                                         <div class="floating-label">
                                             <input type="text" id="name_edit_{{ $ray_employee->id }}" name="name"
-                                                   class="form-control-modern @error('name') is-invalid @enderror"
-                                                   value="{{ old('name', $ray_employee->name) }}" required placeholder=" ">
-                                            <label for="name_edit_{{ $ray_employee->id }}">الاسم الكامل <span class="required-star">*</span></label>
-                                            @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                class="form-control-modern @error('name') is-invalid @enderror"
+                                                value="{{ old('name', $ray_employee->name) }}" required placeholder=" ">
+                                            <label
+                                                for="name_edit_{{ $ray_employee->id }}">{{ trans('AdminSb.full name') }}
+                                                <span class="required-star">*</span></label>
+                                            @error('name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
                                     <!-- رقم الهوية -->
                                     <div class="col-md-6">
                                         <div class="floating-label">
-                                            <input type="text" id="national_id_edit_{{ $ray_employee->id }}" name="national_id"
-                                                   class="form-control-modern @error('national_id') is-invalid @enderror"
-                                                   value="{{ old('national_id', $ray_employee->national_id) }}"
-                                                   pattern="[0-9]{9,10}" maxlength="10"
-                                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" required placeholder=" ">
-                                            <label for="national_id_edit_{{ $ray_employee->id }}">رقم الهوية <span class="required-star">*</span></label>
-                                            <small class="form-text">يجب أن يتكون من 9 أو 10 أرقام فقط</small>
-                                            @error('national_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            <input type="text" id="national_id_edit_{{ $ray_employee->id }}"
+                                                name="national_id"
+                                                class="form-control-modern @error('national_id') is-invalid @enderror"
+                                                value="{{ old('national_id', $ray_employee->national_id) }}"
+                                                pattern="[0-9]{9,10}" maxlength="10"
+                                                oninput="this.value = this.value.replace(/[^0-9]/g, '')" required
+                                                placeholder=" ">
+                                            <label
+                                                for="national_id_edit_{{ $ray_employee->id }}">{{ trans('AdminSb.national_id') }}
+                                                <span class="required-star">*</span></label>
+                                            <small
+                                                class="form-text">{{ trans('AdminSb.must_be_9_or_10_digits_only') }}</small>
+                                            @error('national_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-section">
-                                <h5 class="form-section-title"><i class="fas fa-address-card"></i> معلومات التواصل</h5>
+                                <h5 class="form-section-title"><i class="fas fa-address-card"></i>
+                                    {{ trans('AdminSb.contact_information') }}</h5>
                                 <div class="row">
                                     <!-- البريد الإلكتروني -->
                                     <div class="col-md-6">
                                         <div class="floating-label">
                                             <input type="email" id="email_edit_{{ $ray_employee->id }}" name="email"
-                                                   class="form-control-modern @error('email') is-invalid @enderror"
-                                                   value="{{ old('email', $ray_employee->email) }}" required placeholder=" ">
-                                            <label for="email_edit_{{ $ray_employee->id }}">البريد الإلكتروني <span class="required-star">*</span></label>
-                                            @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                class="form-control-modern @error('email') is-invalid @enderror"
+                                                value="{{ old('email', $ray_employee->email) }}" required
+                                                placeholder=" ">
+                                            <label for="email_edit_{{ $ray_employee->id }}">{{ trans('AdminSb.email') }}
+                                                <span class="required-star">*</span></label>
+                                            @error('email')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
@@ -601,46 +636,65 @@
                                     <div class="col-md-6">
                                         <div class="floating-label">
                                             <input type="tel" id="phone_edit_{{ $ray_employee->id }}" name="phone"
-                                                   class="form-control-modern @error('phone') is-invalid @enderror"
-                                                   value="{{ old('phone', $ray_employee->phone) }}"
-                                                   pattern="^05\d{8}$" maxlength="10" required placeholder=" ">
-                                            <label for="phone_edit_{{ $ray_employee->id }}">رقم الهاتف <span class="required-star">*</span></label>
-                                            <small class="form-text">يجب أن يبدأ بـ 05 ويتكون من 10 أرقام</small>
-                                            @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                                class="form-control-modern @error('phone') is-invalid @enderror"
+                                                value="{{ old('phone', $ray_employee->phone) }}" pattern="^05\d{8}$"
+                                                maxlength="10" required placeholder=" ">
+                                            <label for="phone_edit_{{ $ray_employee->id }}">{{ trans('AdminSb.phone') }}
+                                                <span class="required-star">*</span></label>
+                                            <small
+                                                class="form-text">{{ trans('AdminSb.phone_validation_rule_starts_with_05') }}</small>
+                                            @error('phone')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-section">
-                                <h5 class="form-section-title"><i class="fas fa-lock"></i> الإعدادات الأمنية</h5>
+                                <h5 class="form-section-title"><i class="fas fa-lock"></i>
+                                    {{ trans('AdminSb.security_settings') }}</h5>
                                 <div class="row">
                                     <!-- الحالة -->
                                     <div class="col-md-6">
                                         <div class="floating-label">
                                             <select name="status" id="status_edit_{{ $ray_employee->id }}"
-                                                    class="form-select-modern w-100 @error('status') is-invalid @enderror" required>
-                                                <option value="1" {{ old('status', $ray_employee->status) == 1 ? 'selected' : '' }}>نشط</option>
-                                                <option value="0" {{ old('status', $ray_employee->status) == 0 ? 'selected' : '' }}>غير نشط</option>
+                                                class="form-select-modern w-100 @error('status') is-invalid @enderror"
+                                                required>
+                                                <option value="1"
+                                                    {{ old('status', $ray_employee->status) == 1 ? 'selected' : '' }}>
+                                                    {{ trans('AdminSb.active') }}</option>
+                                                <option value="0"
+                                                    {{ old('status', $ray_employee->status) == 0 ? 'selected' : '' }}>
+                                                    {{ trans('AdminSb.inactive') }}</option>
                                             </select>
-                                            <label for="status_edit_{{ $ray_employee->id }}">الحالة <span class="required-star">*</span></label>
-                                            @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            <label
+                                                for="status_edit_{{ $ray_employee->id }}">{{ trans('AdminSb.status') }}
+                                                <span class="required-star">*</span></label>
+                                            @error('status')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
                                     <!-- كلمة المرور الجديدة -->
                                     <div class="col-md-6">
                                         <div class="floating-label position-relative">
-                                            <input type="password" id="password_edit_{{ $ray_employee->id }}" name="password"
-                                                   class="form-control-modern password-input @error('password') is-invalid @enderror"
-                                                   autocomplete="new-password" minlength="8" placeholder=" ">
-                                            <label for="password_edit_{{ $ray_employee->id }}">كلمة المرور الجديدة</label>
+                                            <input type="password" id="password_edit_{{ $ray_employee->id }}"
+                                                name="password"
+                                                class="form-control-modern password-input @error('password') is-invalid @enderror"
+                                                autocomplete="new-password" minlength="8" placeholder=" ">
+                                            <label
+                                                for="password_edit_{{ $ray_employee->id }}">{{ trans('AdminSb.new password') }}</label>
                                             <button type="button" class="toggle-password-eye"
-                                                    onclick="togglePasswordVisibility('password_edit_{{ $ray_employee->id }}')">
+                                                onclick="togglePasswordVisibility('password_edit_{{ $ray_employee->id }}')">
                                                 <i class="fas fa-eye"></i>
                                             </button>
-                                            <small class="form-text">اتركه فارغاً لعدم التغيير (8 أحرف على الأقل)</small>
-                                            @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                            <small
+                                                class="form-text">{{ trans('AdminSb.leave_blank_for_no_change_min_8_chars') }}</small>
+                                            @error('password')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -650,10 +704,12 @@
 
                     <div class="d-flex justify-content-end mt-5 gap-4">
                         <a href="{{ route('admin.ray_employee.index') }}" class="btn-custom btn-cancel">
-                            <span class="btn-content"><i class="fas fa-times me-2"></i><span>إلغاء</span></span>
+                            <span class="btn-content"><i
+                                    class="fas fa-times me-2"></i><span>{{ trans('AdminSb.cancel') }}</span></span>
                         </a>
                         <button type="submit" class="btn-custom btn-save">
-                            <span class="btn-content"><i class="fas fa-save me-2"></i><span>حفظ التغييرات</span></span>
+                            <span class="btn-content"><i
+                                    class="fas fa-save me-2"></i><span>{{ trans('AdminSb.save changes') }}</span></span>
                         </button>
                     </div>
                 </form>
@@ -661,14 +717,13 @@
         </div>
     </div>
 @endsection
-
 @section('js')
     @parent
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
 
     <script>
-          var loadFile = function(event) {
+        var loadFile = function(event) {
             var output = document.getElementById('output');
             output.src = URL.createObjectURL(event.target.files[0]);
             output.onload = function() {
@@ -697,7 +752,7 @@
         }
 
         // التحقق من صحة Bootstrap مع تأثيرات
-        (function () {
+        (function() {
             'use strict';
 
             // استرجاع جميع النماذج التي نريد تطبيق التحقق من صحتها عليها
@@ -705,8 +760,8 @@
 
             // التكرار عليها ومنع الإرسال
             Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
+                .forEach(function(form) {
+                    form.addEventListener('submit', function(event) {
                         if (!form.checkValidity()) {
                             event.preventDefault();
                             event.stopPropagation();
@@ -716,7 +771,8 @@
                             invalidFields.forEach(field => {
                                 field.classList.add('animate__animated', 'animate__headShake');
                                 setTimeout(() => {
-                                    field.classList.remove('animate__animated', 'animate__headShake');
+                                    field.classList.remove('animate__animated',
+                                        'animate__headShake');
                                 }, 1000);
                             });
                         }

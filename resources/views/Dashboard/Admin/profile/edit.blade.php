@@ -1,8 +1,7 @@
-{{-- resources/views/Dashboard/Admin/profile/edit.blade.php --}}
-@extends('Dashboard.layouts.master') {{-- تأكد من اسم الـ Layout --}}
+@extends('Dashboard.layouts.master')
 
 @section('title')
-    تعديل الملف الشخصي
+   {{ trans('AdminSb.Edit Profile') }}
 @endsection
 
 {{-- ========================== CSS Section ========================== --}}
@@ -90,13 +89,13 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-user-cog mr-2" style="color:var(--admin-primary);"></i>الملف الشخصي</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل البيانات</span>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-user-cog mr-2" style="color:var(--admin-primary);"></i>{{ trans('AdminSb.Profile') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.modify data') }}</span>
             </div>
         </div>
          <div class="d-flex my-xl-auto right-content">
              <a href="{{ route('admin.profile.show') }}" class="btn btn-outline-secondary btn-sm" style="border-radius: var(--admin-radius-md);">
-                 <i class="fas fa-eye me-1"></i> عرض الملف الشخصي
+                 <i class="fas fa-eye me-1"></i> {{ trans('AdminSb.Profile') }}
             </a>
         </div>
     </div>
@@ -110,19 +109,18 @@
             <div class="edit-card-header">
                 <h3 class="edit-card-title">
                     <i class="fas fa-user-pen"></i>
-                    تعديل بيانات الملف الشخصي
+                    {{ trans('AdminSb.modify data') }}
                 </h3>
             </div>
 
             <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate autocomplete="off">
-                @method('PATCH') {{-- أو PUT، يجب أن يتطابق مع الـ Route definition --}}
+                @method('PATCH')
                 @csrf
 
-                <!-- Profile Image Upload -->
                 <div class="profile-avatar-edit-container">
                     <img id="profile_photo_preview_edit"
                          src="{{ $admin->image ? asset('Dashboard/img/admin_photos/' . $admin->image->filename) : asset('Dashboard/img/default_avatar.png') }}"
-                         alt="الصورة الشخصية">
+                         alt="{{ trans('AdminSb.profile picture') }}">
                     <label for="profile_photo_input_edit" class="upload-btn-edit" title="تغيير الصورة">
                         <i class="fas fa-camera"></i>
                     </label>
@@ -138,7 +136,7 @@
                     {{-- الاسم --}}
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name_edit" class="form-label">الاسم الكامل <span class="text-danger">*</span></label>
+                            <label for="name_edit" class="form-label">{{ trans('AdminSb.full name') }}<span class="text-danger">*</span></label>
                             <input type="text" id="name_edit" name="name" class="form-control @error('name') is-invalid @enderror"
                                    value="{{ old('name', $admin->name) }}" required>
                             @error('name')
@@ -150,7 +148,7 @@
                     {{-- البريد الإلكتروني --}}
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="email_edit" class="form-label">البريد الإلكتروني <span class="text-danger">*</span></label>
+                            <label for="email_edit" class="form-label">{{ trans('AdminSb.email') }}<span class="text-danger">*</span></label>
                             <input type="email" id="email_edit" name="email" class="form-control @error('email') is-invalid @enderror"
                                    value="{{ old('email', $admin->email) }}" required>
                              @error('email')
@@ -162,10 +160,10 @@
                     {{-- رقم الهاتف --}}
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="phone_edit" class="form-label">رقم الهاتف</label>
+                            <label for="phone_edit" class="form-label">{{ trans('AdminSb.phone') }}</label>
                             <input type="tel" id="phone_edit" name="phone" class="form-control @error('phone') is-invalid @enderror"
                                    value="{{ old('phone', $admin->phone) }}" pattern="^05\d{8}$" title="يجب أن يبدأ رقم الجوال بـ 05 ويتكون من 10 أرقام" maxlength="10" placeholder="05xxxxxxxx">
-                            <small class="form-text text-muted">اختياري. مثال: 0512345678</small>
+                            {{-- <small class="form-text text-muted">ا 0512345678</small> --}}
                              @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -174,13 +172,13 @@
 
 
                     {{-- تغيير كلمة المرور --}}
-                    <div class="col-md-12">
+                    {{-- <div class="col-md-12">
                          <hr class="my-4">
                          <p class="text-muted small mb-3">لتغيير كلمة المرور، أدخل كلمة المرور الحالية ثم الجديدة وتأكيدها. اتركه فارغًا لعدم التغيير.</p>
-                    </div>
-                    <div class="col-md-12"> {{-- كلمة المرور الحالية --}}
+                    </div> --}}
+                    <div class="col-md-12">
                         <div class="form-group password-wrapper">
-                            <label for="current_password_edit" class="form-label">كلمة المرور الحالية</label>
+                            <label for="current_password_edit" class="form-label">{{ trans('AdminSb.your current password') }}</label>
                             <input type="password" id="current_password_edit" name="current_password" class="form-control @error('current_password') is-invalid @enderror" autocomplete="current-password">
                              <button type="button" class="toggle-password-btn" data-target="current_password_edit">
                                 <i class="fas fa-eye"></i>
@@ -190,21 +188,21 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-6"> {{-- كلمة المرور الجديدة --}}
+                    <div class="col-md-6">
                         <div class="form-group password-wrapper">
-                            <label for="password_edit" class="form-label">كلمة المرور الجديدة</label> {{-- تم تغيير الاسم إلى password ليتطابق مع FormRequest --}}
+                            <label for="password_edit" class="form-label">{{ trans('AdminSb.new password') }}</label>
                             <input type="password" id="password_edit" name="password" class="form-control @error('password') is-invalid @enderror" autocomplete="new-password">
                              <button type="button" class="toggle-password-btn" data-target="password_edit">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            @error('password') {{-- كان new_password، تم تغييره إلى password --}}
+                            @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-                     <div class="col-md-6"> {{-- تأكيد كلمة المرور الجديدة --}}
+                     <div class="col-md-6">
                         <div class="form-group password-wrapper">
-                            <label for="password_confirmation_edit" class="form-label">تأكيد كلمة المرور الجديدة</label>
+                            <label for="password_confirmation_edit" class="form-label">{{ trans('AdminSb.confirm new password') }}</label>
                             <input type="password" id="password_confirmation_edit" name="password_confirmation" class="form-control" autocomplete="new-password">
                              <button type="button" class="toggle-password-btn" data-target="password_confirmation_edit">
                                 <i class="fas fa-eye"></i>
@@ -212,14 +210,14 @@
                         </div>
                     </div>
 
-                </div> {{-- نهاية .row --}}
+                </div>
 
                 <div class="form-actions">
                     <a href="{{ route('admin.profile.show') }}" class="btn btn-cancel">
-                         <i class="fas fa-times me-1"></i> إلغاء
+                         <i class="fas fa-times me-1"></i> {{ trans('AdminSb.cancel') }}
                     </a>
                     <button type="submit" class="btn btn-submit">
-                        <i class="fas fa-save me-1"></i> حفظ التغييرات
+                        <i class="fas fa-save me-1"></i> {{ trans('AdminSb.save changes') }}
                     </button>
                 </div>
 

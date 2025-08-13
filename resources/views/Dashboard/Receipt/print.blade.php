@@ -225,94 +225,95 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الحسابات</h4><span
-                    class="text-muted mt-1 tx-13 ms-2 me-2 mb-0">/</span> {{-- استخدام ms-2 me-2 بدلاً من mr-2 --}}
-                <h4 class="content-title mb-0 my-auto">سندات القبض</h4><span
+                <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.accounts') }}</h4><span
                     class="text-muted mt-1 tx-13 ms-2 me-2 mb-0">/</span>
-                <span class="text-muted mt-1 tx-13">طباعة السند #{{ $receipt->id }}</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.receipts') }}</h4><span
+                    class="text-muted mt-1 tx-13 ms-2 me-2 mb-0">/</span>
+                <span
+                    class="text-muted mt-1 tx-13">{{ trans('AdminSb.print_receipt_number', ['id' => $receipt->id]) }}</span>
             </div>
         </div>
     </div>
     <!-- breadcrumb -->
 @endsection
+
 @section('content')
     <!-- row -->
     <div class="row row-sm">
         <div class="col-md-12 col-xl-12">
-            <div class="main-content-body-invoice" id="printArea"> {{-- تغيير ID إذا أردت --}}
+            <div class="main-content-body-invoice" id="printArea">
                 <div class="card card-invoice">
                     <div class="card-body">
-                        <div class="watermark">{{ $settings['site_name_ar'] ?? config('app.name', 'اسم المستشفى') }}</div>
+                        <div class="watermark">
+                            {{ $settings['site_name_' . App::getLocale()] ?? config('app.name', 'Hospital Name') }}</div>
 
                         <div class="invoice-header">
                             <div class="text-center mb-4">
-                                {{-- يمكنك جلب الشعار من الإعدادات إذا كان متاحاً --}}
                                 <img src="{{ $settings['logo_path'] ?? asset('Dashboard/img/brand/logohos.png') }}"
-                                    alt="شعار المستشفى" style="max-height: 90px; margin-bottom: 1rem;">
-
+                                    alt="{{ trans('AdminSb.hospital_logo') }}"
+                                    style="max-height: 90px; margin-bottom: 1rem;">
                             </div>
-                            <h1 class="invoice-number mb-0"style="font-size: 50px">سـنـد قـبـض<p class="invoice-number mb-0"
-                                    style="font-size: 25px"><strong style="font-size: 25px">رقم السند:</strong>
+                            <h1 class="invoice-number mb-0" style="font-size: 50px">{{ trans('AdminSb.receipt_voucher') }}<p
+                                    class="invoice-number mb-0" style="font-size: 25px"><strong
+                                        style="font-size: 25px">{{ trans('AdminSb.voucher_number_colon') }}</strong>
                                     #{{ $receipt->id }}</p>
                             </h1><br>
-
 
                             <div class="row">
                                 <div class="col-md-6 mb-3 mb-md-0">
                                     <div class="billed-from">
-                                        <h6>من:</h6>
+                                        <h6>{{ trans('AdminSb.from_colon') }}</h6>
                                         <p>
-                                            <strong>{{ $settings['site_name_ar'] ?? config('app.name', 'مستشفى الحياة') }}</strong><br>
-                                            {{ $settings['address'] ?? '201 شارع المهندسين، القاهرة' }}<br>
-                                            هاتف: {{ $settings['phone'] ?? '011111111' }}<br>
-                                            البريد الإلكتروني: {{ $settings['email'] ?? 'Hospital@gmail.com' }}
+                                            <strong>{{ $settings['site_name_' . App::getLocale()] ?? config('app.name', 'Life Hospital') }}</strong><br>
+                                            {{ $settings['address'] ?? '201 Mohandseen St, Cairo' }}<br>
+                                            {{ trans('AdminSb.phone_colon') }} {{ $settings['phone'] ?? '011111111' }}<br>
+                                            {{ trans('AdminSb.email_colon') }}
+                                            {{ $settings['email'] ?? 'Hospital@gmail.com' }}
                                         </p>
                                     </div>
                                 </div>
                                 <div class="col-md-6 text-md-end">
                                     <div class="billed-to">
-                                        <h6>إلى (المريض):</h6>
+                                        <h6>{{ trans('AdminSb.to_patient_colon') }}</h6>
                                         @if ($receipt->patients)
                                             <p>
                                                 <strong>{{ $receipt->patients->name }}</strong><br>
-                                                رقم الملف: {{ $receipt->patients->id }}<br>
+                                                {{ trans('AdminSb.file_number_colon') }} {{ $receipt->patients->id }}<br>
                                                 @if ($receipt->patients->Phone)
-                                                    الهاتف: {{ $receipt->patients->Phone }}<br>
+                                                    {{ trans('AdminSb.phone_colon') }} {{ $receipt->patients->Phone }}<br>
                                                 @endif
                                                 @if ($receipt->patients->email)
-                                                    البريد الإلكتروني: {{ $receipt->patients->email }}
+                                                    {{ trans('AdminSb.email_colon') }} {{ $receipt->patients->email }}
                                                 @endif
                                             </p>
                                         @else
-                                            <p class="text-danger">بيانات المريض غير متوفرة</p>
+                                            <p class="text-danger">{{ trans('AdminSb.patient_data_not_available') }}</p>
                                         @endif
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="row mg-t-20">
                             <div class="col-md-6">
-                                <label class="tx-gray-600 fw-bold">معلومات السند:</label>
-                                <p class="invoice-info-row"><span>تاريخ الإصدار:</span>
+                                <label class="tx-gray-600 fw-bold">{{ trans('AdminSb.voucher_information_colon') }}</label>
+                                <p class="invoice-info-row"><span>{{ trans('AdminSb.issue_date_colon') }}</span>
                                     <span>{{ \Carbon\Carbon::parse($receipt->date)->translatedFormat('d F Y') }}</span>
                                 </p>
-                                <p class="invoice-info-row"><span>وقت الطباعة:</span>
+                                <p class="invoice-info-row"><span>{{ trans('AdminSb.print_time_colon') }}</span>
                                     <span>{{ now()->translatedFormat('d F Y, h:i A') }}</span>
                                 </p>
-                            </div>
-                            <div class="col-md-6 text-md-end">
                             </div>
                         </div>
 
                         <div class="table-responsive mg-t-40">
                             <table class="table table-invoice border text-md-nowrap mb-0">
-                                <thead class="table-light"> 
+                                <thead class="table-light">
                                     <tr>
                                         <th class="wd-10p text-center">#</th>
-                                        <th class="wd-60p">البيان / الخدمة</th>
-                                        <th class="tx-center wd-30p">المبلغ ({{ config('app.currency_symbol', 'ر.س') }})
+                                        <th class="wd-60p">{{ trans('AdminSb.description_service') }}</th>
+                                        <th class="tx-center wd-30p">
+                                            {{ trans('AdminSb.amount_currency', ['currency' => config('app.currency_symbol', 'NIS')]) }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -320,21 +321,22 @@
                                     <tr>
                                         <td class="text-center">1</td>
                                         <td>
-                                            {{ $receipt->description ?: 'دفعة نقدية' }}
+                                            {{ $receipt->description ?: trans('AdminSb.cash_payment') }}
                                             @if ($receipt->service)
-                                                <br><small class="text-muted d-block mt-1">(الخدمة المقدمة:
+                                                <br><small
+                                                    class="text-muted d-block mt-1">({{ trans('AdminSb.service_provided_colon') }}
                                                     <strong>{{ $receipt->service->name }}</strong>)</small>
                                             @elseif($receipt->group)
-                                                <br><small class="text-muted d-block mt-1">(باقة الخدمات:
+                                                <br><small
+                                                    class="text-muted d-block mt-1">({{ trans('AdminSb.service_package_colon') }}
                                                     <strong>{{ $receipt->group->name }}</strong>)</small>
                                             @endif
                                         </td>
                                         <td class="tx-center">{{ number_format($receipt->amount, 2) }}</td>
                                     </tr>
-                                    {{-- يمكنك إضافة صفوف أخرى هنا إذا كان السند يغطي عدة بنود --}}
                                     <tr class="table-light">
-                                        <td colspan="2" class="text-start tx-uppercase fw-bold">المبلغ الإجمالي المستلم
-                                        </td>
+                                        <td colspan="2" class="text-start tx-uppercase fw-bold">
+                                            {{ trans('AdminSb.total_amount_received') }}</td>
                                         <td class="tx-center total-amount">{{ number_format($receipt->amount, 2) }}</td>
                                     </tr>
                                 </tbody>
@@ -344,35 +346,37 @@
                         <div class="row mg-t-40">
                             <div class="col-md-5">
                                 <div class="signature-box">
-                                    <p class="fw-bold">توقيع المستلم (أمين الصندوق):</p>
-                                    <p class="border-bottom"> </p>
-                                    <p class="text-muted">الاسم: .............................</p>
+                                    <p class="fw-bold">{{ trans('AdminSb.recipient_signature_cashier') }}</p>
+                                    <p class="border-bottom"> </p>
+                                    <p class="text-muted">{{ trans('AdminSb.name_colon') }} .............................
+                                    </p>
                                 </div>
                             </div>
-                            <div class="col-md-5 offset-md-2 text-md-end"> {{-- تعديل لـ offset-md-2 ومحاذاة --}}
+                            <div class="col-md-5 offset-md-2 text-md-end">
                                 <div class="signature-box">
-                                    <p class="fw-bold">توقيع المريض / ولي الأمر:</p>
-                                    <p class="border-bottom"> </p>
-                                    <p class="text-muted">الاسم: .............................</p>
+                                    <p class="fw-bold">{{ trans('AdminSb.patient_guardian_signature') }}</p>
+                                    <p class="border-bottom"> </p>
+                                    <p class="text-muted">{{ trans('AdminSb.name_colon') }} .............................
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="mg-t-40 invoice-footer-notes">
                             <p class="tx-10 text-muted text-center mb-0">
-                                شكراً لتعاملكم معنا - هذا السند يعتبر إيصالاً رسمياً بالمبلغ المذكور أعلاه.<br>
-                                {{ $settings['footer_notes_receipt'] ?? 'للاستفسارات، يرجى التواصل مع قسم الحسابات.' }}
+                                {{ trans('AdminSb.thank_you_message') }}<br>
+                                {{ $settings['footer_notes_receipt'] ?? trans('AdminSb.footer_note_default') }}
                             </p>
                         </div>
 
                         <hr class="mg-b-40 mg-t-30">
 
-                        <div class="d-print-none d-flex justify-content-end"> {{-- إخفاء الأزرار عند الطباعة --}}
+                        <div class="d-print-none d-flex justify-content-end">
                             <a href="{{ route('admin.Receipt.index') }}" class="btn btn-outline-secondary me-2">
-                                <i class="fas fa-arrow-left me-1"></i> رجوع للقائمة
+                                <i class="fas fa-arrow-left me-1"></i> {{ trans('AdminSb.back_to_list') }}
                             </a>
                             <button class="btn btn-primary" id="print_Button" onclick="printReceipt()">
-                                <i class="fas fa-print me-1"></i> طباعة السند
+                                <i class="fas fa-print me-1"></i> {{ trans('AdminSb.print_voucher') }}
                             </button>
                         </div>
                     </div>

@@ -37,12 +37,6 @@ class UpdatePharmacyEmployeeRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:255',
-            // 'national_id' => [
-            //     'required',
-            //     'string',
-            //     'max:20',
-            //     Rule::unique('pharmacy_employees', 'national_id')->ignore($employeeId),
-            // ],
             'national_id' => [
                 'required',
                 'string',

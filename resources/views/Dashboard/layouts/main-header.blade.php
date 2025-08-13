@@ -383,19 +383,20 @@
                         @if ($webEditRoute !== '#')
                             <a class="dropdown-item" href="{{ $webEditRoute }}"
                                 class="btn btn-outline-secondary ripple" target="_blank" ;>
-                                <i class="fas fa-home me-1"></i> الموقع الخارجي
+                                <i class="fas fa-home me-1"></i> {{ trans('AdminSb.external website') }}
                             </a>
                         @endif
                         @if ($profileShowRoute !== '#')
                             <a class="dropdown-item" href="{{ $profileShowRoute }}">
-                                <i class="bx bx-user-circle"></i>الملف الشخصي
+                                <i class="bx bx-user-circle"></i>
+                                {{ trans('AdminSb.Profile') }}
                             </a>
                         @endif
 
                         @if ($profileEditRoute !== '#')
                             <a class="dropdown-item" href="{{ $profileEditRoute }}">
-                                <i class="bx bx-cog"></i>تعديل الملف الشخصي
-                            </a>
+                                <i class="bx bx-cog"></i>
+                                {{ trans('AdminSb.EditProfile') }} </a>
                         @endif
 
 
@@ -427,7 +428,8 @@
                                 @csrf
                                 <a class="dropdown-item" href="{{ $logoutRoute }}"
                                     onclick="event.preventDefault(); document.getElementById('logoutFormGlobal').submit();">
-                                    <i class="bx bx-log-out"></i>تسجيل الخروج
+                                    <i class="bx bx-log-out"></i>
+                                    {{ trans('AdminSb.logout') }}
                                 </a>
                             </form>
                         @endif

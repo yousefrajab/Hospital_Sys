@@ -5,7 +5,7 @@ return array(
     'cancel' => 'Cancel',
 
     'Hospital Management System' => 'Hospital Management System',
-
+    'Doctor'=>'Doctor',
     'Leave it' => 'Leave it empty if you dont want to change',
     'edit_doctor_data' => 'Edit Data',
     'edit_doctor' => 'Edit Doctor',

@@ -1,11 +1,9 @@
-{{-- resources/views/Dashboard/Admin/profile/show.blade.php --}}
 @extends('Dashboard.layouts.master')
 
 @section('title')
-    الملف الشخصي | {{ $admin->name }}
+    {{ trans('AdminSb.Profile') }}| {{ $admin->name }}
 @endsection
 
-{{-- ========================== CSS Section ========================== --}}
 @section('css')
     @parent {{-- استيراد CSS الأساسي --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -350,160 +348,149 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-user-shield mr-2" style="color: var(--admin-primary);"></i>الملف الشخصي</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ عرض البيانات</span>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-user-shield mr-2" style="color: var(--admin-primary);"></i>{{ trans('AdminSb.Profile') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.display data') }}</span>
             </div>
         </div>
-         {{-- زر التعديل في الهيدر العلوي لسهولة الوصول --}}
         <div class="d-flex my-xl-auto right-content align-items-center">
              <a href="{{ route('admin.profile.edit') }}" class="btn-profile-action">
-                <i class="fas fa-edit"></i> تعديل الملف الشخصي
+                <i class="fas fa-edit"></i> {{ trans('AdminSb.EditProfile') }}
             </a>
         </div>
     </div>
 @endsection
 
 @section('content')
-    @include('Dashboard.messages_alert') {{-- لعرض رسائل النجاح أو الخطأ بعد التحديث --}}
+    @include('Dashboard.messages_alert')
 
     <div class="admin-profile-container">
 
-        {{-- 1. بطاقة رأس الملف الشخصي --}}
         <div class="profile-header-card animate__animated animate__fadeInUp">
             <div class="profile-avatar-wrapper">
-                {{-- تعديل مسار الصورة ليعكس صور الأدمن --}}
                 <img class="profile-avatar" alt="{{ $admin->name }}"
                     src="{{ $admin->image ? asset('Dashboard/img/admin_photos/' . $admin->image->filename) : asset('Dashboard/img/default_avatar.png') }}">
             </div>
             <div class="profile-details">
                 <h2>{{ $admin->name }}</h2>
-                <span class="role-badge">مدير النظام</span>
-                {{-- (اختياري) إضافة آخر تسجيل دخول --}}
+                <span class="role-badge">{{ trans('AdminSb.administrator') }}</span>
                 @if ($admin->last_login_at)
                     <p class="last-login">
-                        <i class="fas fa-clock"></i> آخر تسجيل دخول: {{ $admin->last_login_at->diffForHumans() }}
+                        <i class="fas fa-clock"></i> {{ trans('AdminSb.last login') }}: {{ $admin->last_login_at->diffForHumans() }}
                     </p>
                 @endif
             </div>
-            {{-- تم نقل زر التعديل إلى الهيدر الرئيسي للصفحة ليكون أوضح وأكثر سهولة في الوصول إليه --}}
             <div class="profile-edit-action">
                 <a href="{{ route('admin.profile.edit') }}" class="edit-profile-btn">
-                    <i class="fas fa-pencil-alt"></i> تعديل
+                    <i class="fas fa-pencil-alt"></i> {{ trans('AdminSb.edit') }}
                 </a>
             </div>
         </div>
 
-        {{-- 2. قسم المعلومات الأساسية --}}
         <div class="mb-5 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
-            <h4 class="section-title">المعلومات الأساسية</h4>
+            <h4 class="section-title">{{ trans('AdminSb.basic information') }}</h4>
             <div class="section-grid">
-                {{-- بطاقة البريد الإلكتروني --}}
                 <div class="info-card-2025">
                     <div class="info-icon"><i class="fas fa-envelope"></i></div>
                     <div class="info-content">
-                        <label>البريد الإلكتروني</label>
+                        <label>{{ trans('AdminSb.email') }}</label>
                         <p>{{ $admin->email }}</p>
                     </div>
                 </div>
 
-                {{-- بطاقة رقم الهاتف --}}
                 @if($admin->phone)
                 <div class="info-card-2025">
                     <div class="info-icon" style="background: linear-gradient(135deg, var(--admin-secondary), #0d9488);"><i class="fas fa-phone-alt"></i></div> {{-- لون مختلف قليلاً --}}
                     <div class="info-content">
-                        <label>رقم الهاتف</label>
+                        <label>{{ trans('AdminSb.phone') }}</label>
                         <p>{{ $admin->phone }}</p>
                     </div>
                 </div>
                 @endif
 
-                {{-- بطاقة تاريخ الانضمام --}}
                 <div class="info-card-2025">
                     <div class="info-icon"><i class="fas fa-calendar-check"></i></div>
                     <div class="info-content">
-                        <label>تاريخ الانضمام</label>
+                        <label>{{ trans('AdminSb.Date joined') }}</label>
                         <p>{{ $admin->created_at ? $admin->created_at->translatedFormat('d M Y, H:i A') : ' ' }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- 3. قسم الإجراءات السريعة (يمكنك تخصيصه حسب الحاجة) --}}
         <div class="mb-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
-            <h4 class="section-title">إجراءات سريعة</h4>
+            <h4 class="section-title">{{ trans('AdminSb.expedited procedures') }}</h4>
             <div class="section-grid">
-                @if(Route::has('admin.Doctors.index')) {{-- تحقق من وجود الراوت قبل عرضه --}}
+                @if(Route::has('admin.Doctors.index'))
                 <a href="{{ route('admin.Doctors.index') }}" class="action-card">
                     <span class="action-icon"><i class="fas fa-user-md"></i></span>
-                    <h5>إدارة الأطباء</h5>
-                    <p>عرض، إضافة، تعديل، أو حذف بيانات الأطباء.</p>
+                    <h5>{{ trans('AdminSb.Doctors Management') }}</h5>
+                    <p>{{ trans('AdminSb.View, add, edit, or delete doctors data') }}</p>
                 </a>
                 @endif
 
                 @if(Route::has('admin.Patients.index'))
                 <a href="{{ route('admin.Patients.index') }}" class="action-card">
                     <span class="action-icon"><i class="fas fa-users"></i></span>
-                    <h5>إدارة المرضى</h5>
-                    <p>الوصول إلى سجلات المرضى وإدارتها.</p>
+                    <h5>{{ trans('AdminSb.Patients Management') }}</h5>
+                    <p>{{ trans('AdminSb.View, add, edit, or delete patients data') }}</p>
                 </a>
                 @endif
 
                 @if(Route::has('admin.Sections.index'))
                 <a href="{{ route('admin.Sections.index') }}" class="action-card">
-                    <span class="action-icon"><i class="fas fa-hospital-symbol"></i></span> {{-- أيقونة مختلفة للأقسام --}}
-                    <h5>إدارة الأقسام</h5>
-                    <p>إدارة أقسام العيادات والخدمات.</p>
+                    <span class="action-icon"><i class="fas fa-hospital-symbol"></i></span>
+                    <h5>{{ trans('AdminSb.Sections Management') }}</h5>
+                    <p>{{ trans('AdminSb.View, add, edit, or delete sections data') }}</p>
                 </a>
                 @endif
 
                 @if(Route::has('admin.appointments.index'))
                 <a href="{{ route('admin.appointments.index') }}" class="action-card">
                     <span class="action-icon"><i class="fas fa-calendar-alt"></i></span>
-                    <h5>إدارة المواعيد</h5>
-                    <p>عرض وإدارة جميع المواعيد المحجوزة.</p>
+                    <h5>{{ trans('AdminSb.manage appointments') }}</h5>
+                    <p>{{ trans('AdminSb.View and manage all booked appointments.') }}</p>
                 </a>
                 @endif
 
                  @if(Route::has('admin.rooms.index'))
                 <a href="{{ route('admin.rooms.index') }}" class="action-card">
                     <span class="action-icon"><i class="side-menu__icon fas fa-door-open"></i></span>
-                    <h5>إدارة الغرف</h5>
-                    <p>عرض وإدارة جميع الغرف .</p>
+                    <h5>{{ trans('AdminSb.rooms_management') }}</h5>
+                    <p>{{ trans('AdminSb.View, add, edit, or delete rooms data') }}</p>
                 </a>
                 @endif
 
                  @if(Route::has('admin.beds.index'))
                 <a href="{{ route('admin.beds.index') }}" class="action-card">
                     <span class="action-icon"><i class="side-menu__icon fas fa-bed"></i></span>
-                    <h5>إدارة الأسرة</h5>
-                    <p>عرض وإدارة جميع الأسرة</p>
+                    <h5>{{ trans('AdminSb.beds_management') }}</h5>
+                    <p>{{ trans('AdminSb.View, add, edit, or delete beds data') }}</p>
                 </a>
                 @endif
 
             </div>
         </div>
 
-    </div> {{-- نهاية .admin-profile-container --}}
+    </div>
 @endsection
 
 @section('js')
     @parent
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script> {{-- تأكد من وجود هذا الملف أو إزالته إذا كان Notifit يعمل بدونه --}}
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
 
     <script>
         console.log("Admin profile page loaded for: {{ $admin->name }} (ID: {{ $admin->id }})");
 
-        // عرض رسالة النجاح عند وجودها في الجلسة
         @if (session('success'))
             notif({
                 msg: "{{ session('success') }}",
                 type: "success",
-                position: "center", // أو "bottom" أو "top"
-                timeout: 5000 // 5 ثواني
+                position: "center",
+                timeout: 5000
             });
         @endif
-        @if (session('error')) // لعرض رسائل الخطأ أيضًا إذا استخدمتها
+        @if (session('error'))
              notif({
                 msg: "{{ session('error') }}",
                 type: "error",
@@ -511,8 +498,5 @@
                 timeout: 7000
             });
         @endif
-
-        // يمكنك إضافة كلاس .dark إلى body هنا إذا أردت تفعيل الوضع الداكن يدويًا
-        // document.body.classList.add('dark');
     </script>
 @endsection

@@ -9,7 +9,6 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content border-0"
             style="border-radius: 16px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
-            <!-- Modal Header with Glass Morphism -->
             <div class="modal-header glass-header text-white py-4 position-relative">
                 <div class="d-flex w-100 align-items-center">
                     <div class="icon-wrapper mr-3">
@@ -19,10 +18,9 @@
                     </div>
                     <div>
                         <h5 class="modal-title font-weight-bold mb-0" id="editServiceModal">
-                            {{ trans('Services.edit_Service') }}
+                            {{ trans('AdminSb.edit_Service') }}
                         </h5>
-                        <small
-                            class="text-white-80">{{ trans('Dashboard/sections_trans.update_service_details') }}</small>
+                        <small class="text-white-80">{{ trans('AdminSb.update_service_details') }}</small>
                     </div>
                 </div>
                 <button type="button" class="close text-white opacity-100" data-dismiss="modal" aria-label="Close">
@@ -31,7 +29,6 @@
                 <div class="wave-effect"></div>
             </div>
 
-            <!-- Modal Body -->
             <form action="{{ route('admin.Service.update', 'test') }}" method="post" class="needs-validation"
                 novalidate autocomplete="off">
                 @csrf
@@ -39,19 +36,17 @@
                 <input type="hidden" name="id" value="{{ $service->id }}">
 
                 <div class="modal-body p-5">
-                    <!-- Service Name -->
                     <div class="form-group floating-label-group">
                         <input type="text" name="name" id="name" class="form-control floating-input"
                             value="{{ $service->name }}" required>
                         <label for="name" class="floating-label">
-                            <i class="fas fa-tag mr-2"></i>{{ trans('Services.name') }}
+                            <i class="fas fa-tag mr-2"></i>{{ trans('AdminSb.name') }}
                         </label>
                         <div class="invalid-feedback animated fadeIn">
-                            {{ trans('validation.required', ['attribute' => trans('Services.name')]) }}
+                            {{ trans('validation.required', ['attribute' => trans('AdminSb.name')]) }}
                         </div>
                     </div>
 
-                    <!-- Price -->
                     <div class="form-group floating-label-group mt-5">
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -62,22 +57,21 @@
                             <input type="number" name="price" id="price" value="{{ $service->price }}"
                                 class="form-control floating-input" min="0" step="0.01" required>
                             <label for="price" class="floating-label">
-                                {{ trans('Services.price') }}
+                                {{ trans('AdminSb.price') }}
                             </label>
                         </div>
                         <div class="invalid-feedback animated fadeIn">
-                            {{ trans('validation.min.numeric', ['attribute' => trans('Services.price'), 'min' => 0]) }}
+                            {{ trans('validation.min.numeric', ['attribute' => trans('AdminSb.price'), 'min' => 0]) }}
                         </div>
                     </div>
 
-                    <!-- Doctor Selection (Standard Select) -->
                     <div class="form-group floating-label-group mt-4">
                         <label for="doctor_id_edit_{{ $service->id }}" class="floating-label active">
-                            <i class="fas fa-user-md mr-2"></i>{{ trans('doctors.Doctor') }}
+                            <i class="fas fa-user-md mr-2"></i>{{ trans('AdminSb.Doctor') }}
                         </label>
                         <select name="doctor_id" id="doctor_id_edit_{{ $service->id }}"
-                            class="form-control custom-select floating-input"> {{-- Use form-control or custom-select for Bootstrap styling --}}
-                            <option value="">{{ trans('doctors.select_doctor_optional') }}</option>
+                            class="form-control custom-select floating-input">
+                            <option value="">{{ trans('AdminSb.select_doctor_optional') }}</option>
                             @php $allDoctorsCollection = collect($doctors ?? []); @endphp
                             @foreach ($allDoctorsCollection as $doctor)
                                 <option value="{{ $doctor->id }}"
@@ -86,27 +80,23 @@
                                 </option>
                             @endforeach
                         </select>
-                        {{-- You can add validation for doctor_id if it's required --}}
                     </div>
 
-                    <!-- Description -->
                     <div class="form-group floating-label-group mt-5">
                         <textarea class="form-control floating-input" name="description" id="description{{ $service->id }}" rows="3"
-                            placeholder="{{ trans('Services.description') }}" data-maxlength="500" style="min-height: 100px;">{{ $service->description }}</textarea>
+                            placeholder="{{ trans('AdminSb.description') }}" data-maxlength="500" style="min-height: 100px;">{{ $service->description }}</textarea>
                         <label for="description{{ $service->id }}" class="floating-label">
-                            <i class="fas fa-align-left mr-2"></i>{{ trans('Services.description') }}
+                            <i class="fas fa-align-left mr-2"></i>{{ trans('AdminSb.description') }}
                         </label>
                         <div class="d-flex justify-content-between mt-2">
-                            {{-- <small class="text-muted"></small> --}}
                             <small class="text-muted">
                                 <span id="charCount{{ $service->id }}">0</span>/500
                             </small>
                         </div>
                     </div>
 
-                    <!-- Status Switch -->
                     <div class="form-group mt-4">
-                        <label class="font-weight-bold text-primary d-block">{{ trans('doctors.Status') }}</label>
+                        <label class="font-weight-bold text-primary d-block">{{ trans('AdminSb.Status') }}</label>
                         <div class="custom-control custom-switch custom-switch-lg">
                             <input type="hidden" name="status" value="0">
                             <input type="checkbox" class="custom-control-input" id="status{{ $service->id }}"
@@ -114,22 +104,21 @@
                             <label class="custom-control-label" for="status{{ $service->id }}">
                                 <span
                                     class="font-weight-bold {{ $service->status == 1 ? 'text-success' : 'text-danger' }}">
-                                    {{ $service->status == 1 ? trans('doctors.Enabled') : trans('doctors.Not_enabled') }}
+                                    {{ $service->status == 1 ? trans('AdminSb.Enabled') : trans('AdminSb.Not_enabled') }}
                                 </span>
                             </label>
                         </div>
                     </div>
                 </div>
 
-                <!-- Footer -->
                 <div class="modal-footer bg-light-5">
                     <button type="button" class="btn btn-outline-secondary btn-rounded px-4 btn-hover-transform"
                         data-dismiss="modal">
-                        <i class="fas fa-times mr-2"></i>{{ trans('Dashboard/sections_trans.Close') }}
+                        <i class="fas fa-times mr-2"></i>{{ trans('AdminSb.close') }}
                     </button>
                     <button type="submit"
                         class="btn btn-primary-gradient btn-rounded px-4 btn-hover-transform shadow-sm">
-                        <i class="fas fa-save mr-2"></i>{{ trans('Dashboard/sections_trans.submit') }}
+                        <i class="fas fa-save mr-2"></i>{{ trans('AdminSb.submit') }}
                     </button>
                 </div>
             </form>

@@ -280,19 +280,20 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-users"></i> إدارة المرضى</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ ملف المريض</span>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-users"></i>
+                    {{ trans('AdminSb.Patients Management') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('AdminSb.patient_profile') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <div class="pr-1 mb-3 mb-xl-0">
                 <a href="{{ route('admin.Patients.index') }}" class="btn btn-outline-primary">
-                    <i class="fas fa-arrow-left"></i> قائمة المرضى
+                    <i class="fas fa-arrow-left"></i> {{ trans('AdminSb.patients list') }}
                 </a>
             </div>
             <div class="pr-1 mb-3 mb-xl-0 mr-2">
                 <a href="{{ route('admin.Patients.edit', $Patient->id) }}" class="btn btn-primary">
-                    <i class="fas fa-edit"></i> تعديل بيانات المريض
+                    <i class="fas fa-edit"></i> {{ trans('AdminSb.edit_patient_data') }}
                 </a>
             </div>
         </div>
@@ -306,26 +307,26 @@
 
         {{-- Left Column --}}
         <div class="col-lg-4 col-md-12">
-            <div class="patient-profile-header p-4 mb-4">
+            <div class="patient-profile-header p-4 mb-4" id="patientProfileHeaderSection">
                 <div class="d-flex align-items-center">
                     @if ($Patient->image)
                         <img src="{{ Url::asset('Dashboard/img/patients/' . $Patient->image->filename) }}"
                             class="patient-profile-avatar" alt="{{ $Patient->name }}">
                     @else
                         <img src="{{ Url::asset('Dashboard/img/doctor_default.png') }}" class="patient-profile-avatar"
-                            alt="صورة افتراضية">
+                            alt="{{ trans('AdminSb.default_image') }}">
                     @endif
                     <div class="profile-text-info">
                         <h3 class="mb-1 font-weight-bold">{{ $Patient->name }}</h3>
                         <p class="mb-1 text-light op-8">
                             <i class="fas fa-id-card mr-1"></i>
-                            {{ trans('patients.patient_id') }}: {{ $Patient->id }}
+                            {{ trans('AdminSb.patient_id') }}: {{ $Patient->id }}
                         </p>
                         <span
                             class="badge badge-pill {{ $Patient->Gender == 1 ? 'bg-primary-transparent text-primary' : 'bg-pink-transparent text-pink' }}"
                             style="background-color: rgba(255,255,255,0.2); color:white;">
                             <i class="fas {{ $Patient->Gender == 1 ? 'fa-mars' : 'fa-venus' }} mr-1"></i>
-                            {{ $Patient->Gender == 1 ? trans('patients.male') : trans('patients.female') }}
+                            {{ $Patient->Gender == 1 ? trans('AdminSb.male') : trans('AdminSb.female') }}
                         </span>
                     </div>
                 </div>
@@ -334,53 +335,52 @@
                         <div class="qr-code-image">
                             {!! $Patient->generateQrCodeSvg(200) !!}
                         </div>
-                        <p class="qr-code-instructions">امسح الرمز لعرض ملف المريض الكامل</p>
+                        <p class="qr-code-instructions">{{ trans('AdminSb.scan_qr_for_profile') }}</p>
                         <div class="qr-download-buttons mt-3 no-print">
                             <a href="#" class="btn btn-sm btn-outline-primary" style="color: white" id="downloadPNG">
-                                <i class="fas fa-download"></i> تحميل PNG
+                                <i class="fas fa-download"></i> {{ trans('AdminSb.download_png') }}
                             </a>
                             <a href="#" class="btn btn-sm btn-outline-success" style="color: white" id="downloadSVG">
-                                <i class="fas fa-download"></i> تحميل SVG
+                                <i class="fas fa-download"></i> {{ trans('AdminSb.download_svg') }}
                             </a>
                         </div>
                     @else
-                        <p class="text-danger my-4">خطأ: لا يمكن إنشاء رمز QR لهذا المريض.</p>
+                        <p class="text-danger my-4">{{ trans('AdminSb.qr_code_error') }}</p>
                     @endif
                 </div>
             </div>
 
             <div class="patient-stats p-3 mb-4">
-                <h5 class="mb-3 text-center font-weight-bold text-primary">ملخص مالي</h5>
+                <h5 class="mb-3 text-center font-weight-bold text-primary">{{ trans('AdminSb.financial_summary') }}</h5>
                 <div class="row text-center">
                     <div class="col-6 mb-3">
                         <div class="stat-card">
                             <h5 class="mb-1 text-primary font-weight-bold">
                                 {{ number_format($invoices->sum('total_with_tax'), 2) }}</h5>
-                            <small class="text-muted">إجمالي الفواتير</small>
+                            <small class="text-muted">{{ trans('AdminSb.total_invoices') }}</small>
                         </div>
                     </div>
                     <div class="col-6 mb-3">
                         <div class="stat-card">
                             <h5 class="mb-1 text-success font-weight-bold">
                                 {{ number_format($receipt_accounts->sum('amount'), 2) }}</h5>
-                            <small class="text-muted">إجمالي المدفوعات</small>
+                            <small class="text-muted">{{ trans('AdminSb.total_payments') }}</small>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-card">
                             <h5 class="mb-1 text-info font-weight-bold">{{ $invoices->count() }}</h5>
-                            <small class="text-muted">عدد الفواتير</small>
+                            <small class="text-muted">{{ trans('AdminSb.invoices_count') }}</small>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-card">
-                            @php
-                                $balance = $invoices->sum('total_with_tax') - $receipt_accounts->sum('amount');
-                            @endphp
+                            @php $balance = $invoices->sum('total_with_tax') - $receipt_accounts->sum('amount'); @endphp
                             <h5 class="mb-1 font-weight-bold {{ $balance >= 0 ? 'text-danger' : 'text-success' }}">
                                 {{ number_format(abs($balance), 2) }}
                             </h5>
-                            <small class="text-muted">{{ $balance >= 0 ? 'مدين' : 'دائن' }}</small>
+                            <small
+                                class="text-muted">{{ $balance >= 0 ? trans('AdminSb.debit') : trans('AdminSb.credit') }}</small>
                         </div>
                     </div>
                 </div>
@@ -388,51 +388,52 @@
 
             <div class="card card-custom">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-info-circle mr-2 text-primary"></i> المعلومات الأساسية</h5>
+                    <h5 class="mb-0"><i class="fas fa-info-circle mr-2 text-primary"></i>
+                        {{ trans('AdminSb.basic information') }}</h5>
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center list-group-item-action-custom">
                             <span><i class="fas fa-id-card-alt mr-2 text-primary op-7"></i>
-                                {{ trans('patients.national_id') }}</span>
+                                {{ trans('AdminSb.national_id') }}</span>
                             <strong class="text-dark">{{ $Patient->national_id }}</strong>
                         </li>
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center list-group-item-action-custom">
                             <span><i class="fas fa-phone-alt mr-2 text-primary op-7"></i>
-                                {{ trans('patients.phone') }}</span>
+                                {{ trans('AdminSb.phone') }}</span>
                             <strong class="text-dark">{{ $Patient->Phone }}</strong>
                         </li>
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center list-group-item-action-custom">
                             <span><i class="far fa-envelope mr-2 text-primary op-7"></i>
-                                {{ trans('patients.email') }}</span>
+                                {{ trans('AdminSb.email') }}</span>
                             <strong class="text-dark">{{ $Patient->email }}</strong>
                         </li>
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center list-group-item-action-custom">
                             <span><i class="fas fa-birthday-cake mr-2 text-primary op-7"></i>
-                                {{ trans('patients.Date_Birth') }}</span>
+                                {{ trans('AdminSb.date_of_birth') }}</span>
                             <strong
                                 class="text-dark">{{ \Carbon\Carbon::parse($Patient->Date_Birth)->format('d M, Y') }}</strong>
                         </li>
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center list-group-item-action-custom">
                             <span><i class="fas fa-tint mr-2 text-danger op-7"></i>
-                                {{ trans('patients.Blood_Group') }}</span>
+                                {{ trans('AdminSb.blood_type') }}</span>
                             <span class="badge badge-danger-light">{{ $Patient->Blood_Group }}</span>
                         </li>
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center list-group-item-action-custom">
                             <span><i class="fas fa-map-marker-alt mr-2 text-primary op-7"></i>
-                                {{ trans('patients.Address') }}</span>
+                                {{ trans('AdminSb.detailed_address') }}</span>
                             <strong class="text-dark">{{ $Patient->Address }}</strong>
                         </li>
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center list-group-item-action-custom">
                             <span><i class="far fa-calendar-alt mr-2 text-primary op-7"></i>
-                                {{ trans('patients.date_added') }}</span>
+                                {{ trans('AdminSb.date_added') }}</span>
                             <strong class="text-dark">{{ $Patient->created_at->format('d M, Y') }}</strong>
                         </li>
                     </ul>
@@ -442,7 +443,8 @@
             {{-- Chronic Diseases Card --}}
             <div class="card card-custom">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-notes-medical mr-2 text-danger"></i> الأمراض المزمنة</h5>
+                    <h5 class="mb-0"><i class="fas fa-notes-medical mr-2 text-danger"></i>
+                        {{ trans('AdminSb.chronic_diseases') }}</h5>
                 </div>
                 <div class="card-body">
                     @if ($Patient->diagnosedChronicDiseases && $Patient->diagnosedChronicDiseases->count() > 0)
@@ -450,26 +452,27 @@
                             <div class="mb-3 pb-2 border-bottom">
                                 <h6><i class="fas fa-disease text-danger mr-1"></i> {{ $diagnosedDisease->name }}</h6>
                                 <small class="d-block text-muted">
-                                    <i class="fas fa-calendar-check mr-1"></i> تاريخ التشخيص:
-                                    <strong>{{ $diagnosedDisease->pivot->diagnosed_at ? \Carbon\Carbon::parse($diagnosedDisease->pivot->diagnosed_at)->format('d M, Y') : 'N/A' }}</strong>
+                                    <i class="fas fa-calendar-check mr-1"></i> {{ trans('AdminSb.diagnosis_date_colon') }}
+                                    <strong>{{ $diagnosedDisease->pivot->diagnosed_at ? \Carbon\Carbon::parse($diagnosedDisease->pivot->diagnosed_at)->format('d M, Y') : trans('AdminSb.undefined') }}</strong>
                                 </small>
                                 <small class="d-block text-muted">
-                                    <i class="fas fa-user-md mr-1"></i> بواسطة:
-                                    <strong>{{ $diagnosedDisease->pivot->diagnosed_by ?? 'N/A' }}</strong>
+                                    <i class="fas fa-user-md mr-1"></i> {{ trans('AdminSb.diagnosed_by_colon') }}
+                                    <strong>{{ $diagnosedDisease->pivot->diagnosed_by ?? trans('AdminSb.undefined') }}</strong>
                                 </small>
                                 <small class="d-block text-muted">
-                                    <i class="fas fa-thermometer-half mr-1"></i> الحالة الحالية:
-                                    <strong>{{ \App\Models\PatientChronicDisease::getStatuses()[$diagnosedDisease->pivot->current_status] ?? 'N/A' }}</strong>
+                                    <i class="fas fa-thermometer-half mr-1"></i>
+                                    {{ trans('AdminSb.current_status_colon') }}
+                                    <strong>{{ \App\Models\PatientChronicDisease::getStatuses()[$diagnosedDisease->pivot->current_status] ?? trans('AdminSb.undefined') }}</strong>
                                 </small>
                                 @if ($diagnosedDisease->pivot->treatment_plan)
                                     <small class="d-block text-muted">
-                                        <i class="fas fa-pills mr-1"></i> خطة العلاج:
+                                        <i class="fas fa-pills mr-1"></i> {{ trans('AdminSb.treatment_plan_colon') }}
                                         <strong>{{ Str::limit($diagnosedDisease->pivot->treatment_plan, 50) }}</strong>
                                     </small>
                                 @endif
                                 @if ($diagnosedDisease->pivot->notes)
                                     <small class="d-block text-muted">
-                                        <i class="far fa-comment-dots mr-1"></i> ملاحظات:
+                                        <i class="far fa-comment-dots mr-1"></i> {{ trans('AdminSb.notes_colon') }}
                                         <strong>{{ Str::limit($diagnosedDisease->pivot->notes, 50) }}</strong>
                                     </small>
                                 @endif
@@ -477,15 +480,12 @@
                         @endforeach
                     @else
                         <div class="empty-state p-2 text-center">
-                            <div class="empty-state-icon">
-                                <i class="fas fa-file-medical-alt"></i>
-                            </div>
-                            <p class="text-muted">لا توجد أمراض مزمنة مسجلة لهذا المريض.</p>
+                            <div class="empty-state-icon"><i class="fas fa-file-medical-alt"></i></div>
+                            <p class="text-muted">{{ trans('AdminSb.no_chronic_diseases_registered') }}</p>
                         </div>
                     @endif
                 </div>
             </div>
-
         </div>
 
         {{-- Right Column --}}
@@ -496,39 +496,28 @@
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#invoices-tab" role="tab"
                                 aria-controls="invoices-tab" aria-selected="true">
-                                <i class="fas fa-file-invoice-dollar mr-1"></i> الفواتير
+                                <i class="fas fa-file-invoice-dollar mr-1"></i> {{ trans('AdminSb.invoices') }}
                                 <span class="badge badge-pill badge-light ms-1">{{ $invoices->count() }}</span>
-
                             </a>
                         </li>
-                        {{-- <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#payments-tab" role="tab"
-                                aria-controls="payments-tab" aria-selected="false">
-                                <i class="fas fa-money-bill-wave mr-1"></i> المدفوعات
-                                <span class="badge badge-pill badge-light ms-1">{{ $invoices->count() }}</span>
-
-                            </a>
-                        </li> --}}
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#account-tab" role="tab"
                                 aria-controls="account-tab" aria-selected="false">
-                                <i class="fas fa-calculator mr-1"></i> كشف حساب
+                                <i class="fas fa-calculator mr-1"></i> {{ trans('AdminSb.account_statement') }}
                                 <span class="badge badge-pill badge-light ms-1">{{ $receipt_accounts->count() }}</span>
-
                             </a>
                         </li>
-                        <li class="nav-item"> {{-- New Tab for Admissions --}}
+                        <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#admissions-tab" role="tab"
                                 aria-controls="admissions-tab" aria-selected="false">
-                                <i class="fas fa-procedures mr-1"></i> سجل الدخول
+                                <i class="fas fa-procedures mr-1"></i> {{ trans('AdminSb.admissions_log') }}
                                 <span class="badge badge-pill badge-light ms-1">{{ $patient->admissions->count() }}</span>
-
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#radiology-tab" role="tab"
                                 aria-controls="radiology-tab" aria-selected="false">
-                                <i class="fas fa-x-ray mr-1"></i> الأشعة
+                                <i class="fas fa-x-ray mr-1"></i> {{ trans('AdminSb.radiology') }}
                                 @if ($patient_rays)
                                     <span class="badge badge-pill badge-light ms-1">{{ $patient_rays->count() }}</span>
                                 @endif
@@ -537,19 +526,18 @@
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#lab-tab" role="tab"
                                 aria-controls="lab-tab" aria-selected="false">
-                                <i class="fas fa-flask mr-1"></i> المختبر
+                                <i class="fas fa-flask mr-1"></i> {{ trans('AdminSb.laboratory') }}
                                 @if ($patient_Laboratories)
                                     <span
                                         class="badge badge-pill badge-light ms-1">{{ $patient_Laboratories->count() }}</span>
                                 @endif
-
                             </a>
                         </li>
                     </ul>
                 </div>
 
                 <div class="card-body tab-content p-0 tab-content-card">
-                    <!-- الفواتير -->
+                    <!-- Invoices Tab -->
                     <div class="tab-pane fade show active p-3" id="invoices-tab" role="tabpanel">
                         @if ($invoices->count() > 0)
                             <div class="table-responsive">
@@ -557,11 +545,11 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>الخدمة / المجموعة</th>
-                                            <th>تاريخ الفاتورة</th>
-                                            <th>المبلغ الإجمالي</th>
-                                            <th>نوع الفاتورة</th>
-                                            <th>خيارات</th>
+                                            <th>{{ trans('AdminSb.service_group') }}</th>
+                                            <th>{{ trans('AdminSb.invoice_date') }}</th>
+                                            <th>{{ trans('AdminSb.total_amount') }}</th>
+                                            <th>{{ trans('AdminSb.invoice_type') }}</th>
+                                            <th>{{ trans('AdminSb.options') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -575,13 +563,13 @@
                                                 <td>
                                                     <span
                                                         class="badge badge-pill {{ $invoice->type == 1 ? 'invoice-badge' : 'payment-badge' }}">
-                                                        {{ $invoice->type == 1 ? 'نقدي' : 'آجل' }}
+                                                        {{ $invoice->type == 1 ? trans('AdminSb.cash') : trans('AdminSb.deferred') }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    {{-- Add view/print invoice button here --}}
                                                     <a href="#" class="btn btn-sm btn-outline-primary"
-                                                        data-toggle="tooltip" title="عرض الفاتورة"><i
+                                                        data-toggle="tooltip"
+                                                        title="{{ trans('AdminSb.view_invoice') }}"><i
                                                             class="fas fa-eye"></i></a>
                                                 </td>
                                             </tr>
@@ -589,7 +577,8 @@
                                     </tbody>
                                     <tfoot>
                                         <tr class="bg-light">
-                                            <th colspan="3" class="text-right font-weight-bold">الإجمالي</th>
+                                            <th colspan="3" class="text-right font-weight-bold">
+                                                {{ trans('AdminSb.total') }}</th>
                                             <th colspan="3" class="font-weight-bold">
                                                 {{ number_format($invoices->sum('total_with_tax'), 2) }}</th>
                                         </tr>
@@ -599,61 +588,13 @@
                         @else
                             <div class="empty-state">
                                 <div class="empty-state-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-                                <h4>لا توجد فواتير مسجلة</h4>
-                                <p class="text-muted">لم يتم تسجيل أي فواتير لهذا المريض حتى الآن</p>
+                                <h4>{{ trans('AdminSb.no_invoices_registered') }}</h4>
+                                <p class="text-muted">{{ trans('AdminSb.no_invoices_yet_for_patient') }}</p>
                             </div>
                         @endif
                     </div>
 
-                    <!-- المدفوعات -->
-                    <div class="tab-pane fade p-3" id="payments-tab" role="tabpanel">
-                        @if ($receipt_accounts->count() > 0)
-                            <div class="table-responsive">
-                                <table class="table data-table table-hover text-md-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>تاريخ السند</th>
-                                            <th>المبلغ</th>
-                                            <th>البيان</th>
-                                            <th>خيارات</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($receipt_accounts as $receipt_account)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($receipt_account->date)->format('Y-m-d') }}
-                                                </td>
-                                                <td>{{ number_format($receipt_account->amount, 2) }}</td>
-                                                <td>{{ $receipt_account->description }}</td>
-                                                <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-success"
-                                                        data-toggle="tooltip" title="عرض السند"><i
-                                                            class="fas fa-receipt"></i></a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot>
-                                        <tr class="bg-light">
-                                            <th colspan="2" class="text-right font-weight-bold">الإجمالي</th>
-                                            <th colspan="3" class="font-weight-bold">
-                                                {{ number_format($receipt_accounts->sum('amount'), 2) }}</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        @else
-                            <div class="empty-state">
-                                <div class="empty-state-icon"><i class="fas fa-money-bill-wave"></i></div>
-                                <h4>لا توجد مدفوعات مسجلة</h4>
-                                <p class="text-muted">لم يتم تسجيل أي مدفوعات لهذا المريض حتى الآن</p>
-                            </div>
-                        @endif
-                    </div>
-
-                    <!-- كشف الحساب -->
+                    <!-- Account Statement Tab -->
                     <div class="tab-pane fade p-3" id="account-tab" role="tabpanel">
                         @if ($Patient_accounts->count() > 0)
                             <div class="table-responsive">
@@ -661,11 +602,11 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>التاريخ</th>
-                                            <th>البيان</th>
-                                            <th>مدين</th>
-                                            <th>دائن</th>
-                                            <th>الرصيد</th>
+                                            <th>{{ trans('AdminSb.date') }}</th>
+                                            <th>{{ trans('AdminSb.description') }}</th>
+                                            <th>{{ trans('AdminSb.debit_col') }}</th>
+                                            <th>{{ trans('AdminSb.credit_col') }}</th>
+                                            <th>{{ trans('AdminSb.balance') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -682,14 +623,16 @@
                                                 </td>
                                                 <td>
                                                     @if ($Patient_account->invoice_id && $Patient_account->invoice)
-                                                        فاتورة خدمة:
+                                                        {{ trans('AdminSb.service_invoice_colon') }}
                                                         {{ $Patient_account->invoice->Service->name ?? ($Patient_account->invoice->Group->name ?? 'N/A') }}
                                                     @elseif($Patient_account->receipt_id && $Patient_account->ReceiptAccount)
-                                                        سند قبض: {{ $Patient_account->ReceiptAccount->description }}
+                                                        {{ trans('AdminSb.receipt_colon') }}
+                                                        {{ $Patient_account->ReceiptAccount->description }}
                                                     @elseif($Patient_account->Payment_id && $Patient_account->PaymentAccount)
-                                                        سند صرف: {{ $Patient_account->PaymentAccount->description }}
+                                                        {{ trans('AdminSb.payment_voucher_colon') }}
+                                                        {{ $Patient_account->PaymentAccount->description }}
                                                     @else
-                                                        حركة مالية
+                                                        {{ trans('AdminSb.financial_transaction') }}
                                                     @endif
                                                 </td>
                                                 <td>{{ number_format($currentDebit, 2) }}</td>
@@ -697,7 +640,7 @@
                                                 <td
                                                     class="{{ $runningBalance >= 0 ? 'text-danger' : 'text-success' }} font-weight-bold">
                                                     {{ number_format(abs($runningBalance), 2) }}
-                                                    <small>({{ $runningBalance >= 0 ? 'مدين' : 'دائن' }})</small>
+                                                    <small>({{ $runningBalance >= 0 ? trans('AdminSb.debit') : trans('AdminSb.credit') }})</small>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -707,24 +650,22 @@
 
                             <div class="balance-card p-3 mt-4">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0 font-weight-bold">الرصيد النهائي:</h5>
-                                    @php
-                                        // Recalculate final balance based on displayed transactions or use overall summary
-                                        $finalBalance =
-                                            $Patient_accounts->sum('Debit') - $Patient_accounts->sum('credit');
-                                    @endphp
+                                    <h5 class="mb-0 font-weight-bold">{{ trans('AdminSb.final_balance_colon') }}</h5>
+                                    @php $finalBalance = $Patient_accounts->sum('Debit') - $Patient_accounts->sum('credit'); @endphp
                                     <h3
                                         class="mb-0 font-weight-bold {{ $finalBalance >= 0 ? 'text-danger' : 'text-success' }}">
                                         {{ number_format(abs($finalBalance), 2) }}
-                                        <small class="text-muted">({{ $finalBalance >= 0 ? 'مدين' : 'دائن' }})</small>
+                                        <small
+                                            class="text-muted">({{ $finalBalance >= 0 ? trans('AdminSb.debit') : trans('AdminSb.credit') }})</small>
                                     </h3>
                                 </div>
                             </div>
                         @else
                             <div class="empty-state">
                                 <div class="empty-state-icon"><i class="fas fa-calculator"></i></div>
-                                <h4>لا توجد حركات مالية</h4>
-                                <p class="text-muted">لم يتم تسجيل أي حركات مالية لهذا المريض حتى الآن</p>
+                                <h4>{{ trans('AdminSb.no_financial_transactions') }}</h4>
+                                <p class="text-muted">{{ trans('AdminSb.no_financial_transactions_yet_for_patient') }}
+                                </p>
                             </div>
                         @endif
                     </div>
@@ -737,13 +678,13 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>تاريخ الدخول</th>
-                                            <th>تاريخ الخروج</th>
-                                            <th>الطبيب المعالج</th>
-                                            <th>القسم</th>
-                                            <th>الغرفة/السرير</th>
-                                            <th>سبب الدخول</th>
-                                            <th>الحالة</th>
+                                            <th>{{ trans('AdminSb.admission_date') }}</th>
+                                            <th>{{ trans('AdminSb.discharge_date') }}</th>
+                                            <th>{{ trans('AdminSb.attending_physician') }}</th>
+                                            <th>{{ trans('AdminSb.department') }}</th>
+                                            <th>{{ trans('AdminSb.room_bed') }}</th>
+                                            <th>{{ trans('AdminSb.reason_for_admission') }}</th>
+                                            <th>{{ trans('AdminSb.status') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -752,15 +693,14 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($admission->admission_date)->format('Y-m-d H:i') }}
                                                 </td>
-                                                <td>{{ $admission->discharge_date ? \Carbon\Carbon::parse($admission->discharge_date)->format('Y-m-d H:i') : 'مازال مقيم' }}
+                                                <td>{{ $admission->discharge_date ? \Carbon\Carbon::parse($admission->discharge_date)->format('Y-m-d H:i') : trans('AdminSb.still_admitted') }}
                                                 </td>
-                                                <td>{{ $admission->doctor->name ?? 'غير محدد' }}</td>
-                                                <td>{{ $admission->bed->room->section->name ?? 'غير محدد' }}</td>
-                                                <td>
-                                                    {{ $admission->bed->room->room_number ?? 'N/A' }} -
-                                                    {{ $admission->bed->bed_number ?? 'N/A' }}
+                                                <td>{{ $admission->doctor->name ?? trans('AdminSb.undefined') }}</td>
+                                                <td>{{ $admission->bed->room->section->name ?? trans('AdminSb.undefined') }}
                                                 </td>
-                                                <td>{{ Str::limit($admission->reason_for_admission, 40) ?? 'غير محدد' }}
+                                                <td>{{ $admission->bed->room->room_number ?? 'N/A' }} -
+                                                    {{ $admission->bed->bed_number ?? 'N/A' }}</td>
+                                                <td>{{ Str::limit($admission->reason_for_admission, 40) ?? trans('AdminSb.undefined') }}
                                                 </td>
                                                 <td>
                                                     <span
@@ -776,22 +716,21 @@
                         @else
                             <div class="empty-state">
                                 <div class="empty-state-icon"><i class="fas fa-procedures"></i></div>
-                                <h4>لا يوجد سجل دخول للمريض</h4>
-                                <p class="text-muted">لم يتم تسجيل أي دخول أو خروج لهذا المريض حتى الآن.</p>
+                                <h4>{{ trans('AdminSb.no_admission_history') }}</h4>
+                                <p class="text-muted">{{ trans('AdminSb.no_admission_discharge_yet') }}</p>
                             </div>
                         @endif
                     </div>
 
-                    <!-- الأشعة -->
-                    <!-- الأشعة -->
+                    <!-- Radiology Tab -->
                     <div class="tab-pane fade p-3" id="radiology-tab" role="tabpanel">
                         <div class="info-section-card mb-0">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <span><i class="fas fa-x-ray me-2"></i>سجل الأشعة</span>
-                                <!-- تم تحديث المعرف هنا ليشير إلى حاوية هذا التبويب -->
+                                <span><i class="fas fa-x-ray me-2"></i>{{ trans('AdminSb.radiology_log') }}</span>
                                 <button class="btn btn-sm btn-outline-secondary no-print"
                                     onclick="printPatientSection(['#patientProfileHeaderSection', '#radiology-tab'])"><i
-                                        class="fas fa-print fa-sm"></i> طباعة هذا القسم</button>
+                                        class="fas fa-print fa-sm"></i>
+                                    {{ trans('AdminSb.print_this_section') }}</button>
                             </div>
                             <div class="card-body p-0">
                                 @if (isset($patient_rays) && $patient_rays->count() > 0)
@@ -801,11 +740,11 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>الوصف/الطلب</th>
-                                                    <th>الطبيب الطالب</th>
-                                                    <th>تاريخ الطلب</th>
-                                                    <th class="text-center">الحالة</th>
-                                                    <th class="text-center no-print">النتيجة</th>
+                                                    <th>{{ trans('AdminSb.description_request') }}</th>
+                                                    <th>{{ trans('AdminSb.requesting_physician') }}</th>
+                                                    <th>{{ trans('AdminSb.request_date') }}</th>
+                                                    <th class="text-center">{{ trans('AdminSb.status') }}</th>
+                                                    <th class="text-center no-print">{{ trans('AdminSb.result') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -819,20 +758,20 @@
                                                         <td class="text-center">
                                                             @if ($ray->case == 1)
                                                                 <span
-                                                                    class="status-badge-sm status-completed">مكتملة</span>
+                                                                    class="status-badge-sm status-completed">{{ trans('AdminSb.completed') }}</span>
                                                             @else
-                                                                <span class="status-badge-sm status-pending">قيد
-                                                                    التنفيذ</span>
+                                                                <span
+                                                                    class="status-badge-sm status-pending">{{ trans('AdminSb.in_progress') }}</span>
                                                             @endif
                                                         </td>
                                                         <td class="text-center no-print">
                                                             @if ($ray->case == 1 && isset($ray->employee_id) && $ray->image && $ray->image->filename)
-                                                                {{-- افترض أن لديك مسار لتخزين صور الأشعة --}}
                                                                 <a href="{{ asset('ads/rays/' . $ray->image->filename) }}"
                                                                     data-lightbox="ray-images-{{ $patient->id }}"
-                                                                    data-title="أشعة: {{ $ray->description }} - تاريخ: {{ $ray->created_at ? $ray->created_at->translatedFormat('d M Y') : '' }}"
+                                                                    data-title="{{ trans('AdminSb.radiology') }}: {{ $ray->description }} - {{ trans('AdminSb.date') }}: {{ $ray->created_at ? $ray->created_at->translatedFormat('d M Y') : '' }}"
                                                                     class="btn btn-xs btn-outline-info px-2 py-1"
-                                                                    data-toggle="tooltip" title="عرض نتيجة الأشعة">
+                                                                    data-toggle="tooltip"
+                                                                    title="{{ trans('AdminSb.view_radiology_result') }}">
                                                                     <i class="fas fa-file-image fa-fw"></i>
                                                                 </a>
                                                             @else
@@ -846,23 +785,22 @@
                                     </div>
                                 @else
                                     <div class="empty-state-compact p-3 m-3"><i class="fas fa-radiation"></i>
-                                        <p>لا توجد طلبات أشعة سابقة.</p>
+                                        <p>{{ trans('AdminSb.no_previous_radiology_requests') }}</p>
                                     </div>
                                 @endif
                             </div>
                         </div>
                     </div>
 
-                    <!-- المختبر -->
-                    <!-- قسم المختبر -->
+                    <!-- Lab Tab -->
                     <div class="tab-pane fade p-3" id="lab-tab" role="tabpanel">
                         <div class="info-section-card mb-0">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <span><i class="fas fa-flask-vial me-2"></i>سجل المختبر</span>
-                                <!-- تم تحديث المعرف هنا ليشير إلى حاوية هذا التبويب -->
+                                <span><i class="fas fa-flask-vial me-2"></i>{{ trans('AdminSb.lab_log') }}</span>
                                 <button class="btn btn-sm btn-outline-secondary no-print"
                                     onclick="printPatientSection(['#patientProfileHeaderSection', '#lab-tab'])"><i
-                                        class="fas fa-print fa-sm"></i> طباعة هذا القسم</button>
+                                        class="fas fa-print fa-sm"></i>
+                                    {{ trans('AdminSb.print_this_section') }}</button>
                             </div>
                             <div class="card-body p-0">
                                 @if (isset($patient_Laboratories) && $patient_Laboratories->count() > 0)
@@ -872,11 +810,11 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>الوصف/الطلب</th>
-                                                    <th>الطبيب الطالب</th>
-                                                    <th>تاريخ الطلب</th>
-                                                    <th class="text-center">الحالة</th>
-                                                    <th class="text-center no-print">النتيجة</th>
+                                                    <th>{{ trans('AdminSb.description_request') }}</th>
+                                                    <th>{{ trans('AdminSb.requesting_physician') }}</th>
+                                                    <th>{{ trans('AdminSb.request_date') }}</th>
+                                                    <th class="text-center">{{ trans('AdminSb.status') }}</th>
+                                                    <th class="text-center no-print">{{ trans('AdminSb.result') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -890,20 +828,20 @@
                                                         <td class="text-center">
                                                             @if ($lab->case == 1)
                                                                 <span
-                                                                    class="status-badge-sm status-completed">مكتملة</span>
+                                                                    class="status-badge-sm status-completed">{{ trans('AdminSb.completed') }}</span>
                                                             @else
-                                                                <span class="status-badge-sm status-pending">قيد
-                                                                    التنفيذ</span>
+                                                                <span
+                                                                    class="status-badge-sm status-pending">{{ trans('AdminSb.in_progress') }}</span>
                                                             @endif
                                                         </td>
                                                         <td class="text-center no-print">
                                                             @if ($lab->case == 1 && isset($lab->employee_id) && $lab->image && $lab->image->filename)
-                                                                {{-- افترض أن لديك مسار لتخزين صور المختبر --}}
                                                                 <a href="{{ asset('Dashboard/img/laboratories/' . $lab->image->filename) }}"
                                                                     data-lightbox="lab-images-{{ $patient->id }}"
-                                                                    data-title="تحليل: {{ $lab->description }} - تاريخ: {{ $lab->created_at ? $lab->created_at->translatedFormat('d M Y') : '' }}"
+                                                                    data-title="{{ trans('AdminSb.lab_test') }}: {{ $lab->description }} - {{ trans('AdminSb.date') }}: {{ $lab->created_at ? $lab->created_at->translatedFormat('d M Y') : '' }}"
                                                                     class="btn btn-xs btn-outline-info px-2 py-1"
-                                                                    data-toggle="tooltip" title="عرض نتيجة التحليل">
+                                                                    data-toggle="tooltip"
+                                                                    title="{{ trans('AdminSb.view_lab_result') }}">
                                                                     <i class="fas fa-file-alt fa-fw"></i>
                                                                 </a>
                                                             @else
@@ -917,7 +855,7 @@
                                     </div>
                                 @else
                                     <div class="empty-state-compact p-3 m-3"><i class="fas fa-vial-virus"></i>
-                                        <p>لا توجد طلبات مختبر سابقة.</p>
+                                        <p>{{ trans('AdminSb.no_previous_lab_requests') }}</p>
                                     </div>
                                 @endif
                             </div>
@@ -929,12 +867,10 @@
     </div>
 
     <!-- Floating Action Button -->
-    <a href="#" class="floating-action-btn" data-toggle="tooltip" title="إجراء سريع">
+    <a href="#" class="floating-action-btn" data-toggle="tooltip" title="{{ trans('AdminSb.quick_action') }}">
         <i class="fas fa-plus"></i>
     </a>
-
 @endsection
-
 @section('js')
     <!-- AOS Animation -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

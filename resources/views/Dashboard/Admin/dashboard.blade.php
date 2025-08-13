@@ -162,13 +162,13 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-shield-alt fa-2x text-primary me-3"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto"> لوحة التحكم الرئيسية</h4>
-                    <span class="text-muted mt-0 tx-13 op-8">نظرة شاملة على أداء وفعاليات النظام.</span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.main_dashboard') }}</h4>
+                    <span class="text-muted mt-0 tx-13 op-8">{{ trans('AdminSb.dashboard_overview_subtitle') }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content align-items-center gap-2">
-            <span class="text-muted small"><i class="far fa-calendar-alt me-1"></i> {{ now()->translatedFormat('l، j F Y') }}</span>
+            <span class="text-muted small"><i class="far fa-calendar-alt me-1"></i> {{ now()->translatedFormat('l, j F Y') }}</span>
         </div>
     </div>
 @endsection
@@ -177,139 +177,132 @@
     @include('Dashboard.messages_alert')
 
     <div class="users-management-container">
-        {{-- 1. Stats Cards - تم توزيعهم على 4 في الصف ليكونوا أكبر --}}
         <div class="row g-3 mb-4">
-            {{-- بطاقة المواعيد التي تنتظر التأكيد --}}
+            {{-- Pending Appointments Card --}}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up">
                 <a href="{{ route('admin.appointments.index') }}" class="stats-card pending-appointments-card">
                     <div class="icon pending-appointments"><i class="fas fa-hourglass-half"></i></div>
                     <div class="info">
                         <span class="count">{{ $pendingAppointmentsCount ?? 0 }}</span>
-                        <span class="label">مواعيد تنتظر تأكيد</span>
+                        <span class="label">{{ trans('AdminSb.appointments_waiting_confirmation') }}</span>
                     </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">مراجعة الآن</span></div>
+                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.review_now') }}</span></div>
                 </a>
             </div>
-            {{-- بطاقة الأطباء --}}
+            {{-- Doctors Card --}}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="50">
                 <a href="{{ route('admin.Doctors.index') }}" class="stats-card doctors-card">
                     <div class="icon doctors"><i class="fas fa-user-md"></i></div>
                     <div class="info">
                         <span class="count">{{ $doctorsCount ?? 0 }}</span>
-                        <span class="label">الأطباء</span>
+                        <span class="label">{{ trans('AdminSb.Doctors') }}</span>
                     </div>
-                     <div class="stat-actions align-self-end"><span class="stat-link">إدارة الأطباء</span></div>
+                     <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.manage_doctors') }}</span></div>
                 </a>
             </div>
-            {{-- بطاقة المرضى --}}
+            {{-- Patients Card --}}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="100">
                  <a href="{{ route('admin.Patients.index') }}" class="stats-card patients-card">
                     <div class="icon patients"><i class="fas fa-procedures"></i></div>
                     <div class="info">
                         <span class="count">{{ $patientsCount ?? 0 }}</span>
-                        <span class="label">المرضى</span>
+                        <span class="label">{{ trans('AdminSb.patients') }}</span>
                     </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">إدارة المرضى</span></div>
+                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.manage_patients') }}</span></div>
                 </a>
             </div>
-            {{-- بطاقةالأقسام --}}
+            {{-- Sections Card --}}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="150">
                 <a href="{{ route('admin.Sections.index') }}" class="stats-card sections-card">
                     <div class="icon sections"><i class="fas fa-hospital-symbol"></i></div>
                     <div class="info">
                         <span class="count">{{ $sectionsCount ?? 0 }}</span>
-                        <span class="label">الأقسام الطبية</span>
+                        <span class="label">{{ trans('AdminSb.medical_sections') }}</span>
                     </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">إدارة الأقسام</span></div>
+                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.manage_sections') }}</span></div>
                 </a>
             </div>
-            {{-- بطاقة مديري الصيدليات --}}
+            {{-- Pharmacy Managers Card --}}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="200">
                 <a href="{{ route('admin.pharmacy_manager.index') }}" class="stats-card pharmacy_managers-card">
                     <div class="icon pharmacy_managers"><i class="fas fa-store-alt"></i></div>
                     <div class="info">
                         <span class="count">{{ $pharmacyManagersCount ?? (\App\Models\PharmacyManager::count() ?? 0) }}</span>
-                        <span class="label">مديرو الصيدلية</span>
+                        <span class="label">{{ trans('AdminSb.pharmacy_managers') }}</span>
                     </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">إدارة الصيدليات</span></div>
+                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.manage_pharmacies') }}</span></div>
                 </a>
             </div>
-            {{-- بطاقة موظفي الصيدلية --}}
+            {{-- Pharmacy Employees Card --}}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="250">
                 <a href="{{ route('admin.pharmacy_employee.index') }}" class="stats-card pharmacy_employees-card">
                     <div class="icon pharmacy_employees"><i class="fas fa-pills"></i></div>
                     <div class="info">
                         <span class="count">{{ $pharmacyEmployeesCount ?? (\App\Models\PharmacyEmployee::count() ?? 0) }}</span>
-                        <span class="label">موظفو الصيدلية</span>
+                        <span class="label">{{ trans('AdminSb.pharmacy_employees') }}</span>
                     </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">الموظفون</span></div>
+                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.employees') }}</span></div>
                 </a>
             </div>
-            {{-- بطاقة موظفي الأشعة --}}
+            {{-- Ray Employees Card --}}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="300">
                 <a href="{{ route('admin.ray_employee.index') }}" class="stats-card ray_employees-card">
                     <div class="icon ray_employees"><i class="fas fa-x-ray"></i></div>
                     <div class="info">
                         <span class="count">{{ $rayEmployeesCount ?? (\App\Models\RayEmployee::count() ?? 0) }}</span>
-                        <span class="label">موظفو الأشعة</span>
+                        <span class="label">{{ trans('AdminSb.radiology_staff') }}</span>
                     </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">قسم الأشعة</span></div>
+                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.radiology_department') }}</span></div>
                 </a>
             </div>
-            {{-- بطاقة موظفي المختبر --}}
+            {{-- Lab Employees Card --}}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="350">
                 <a href="{{ route('admin.laboratorie_employee.index') }}" class="stats-card lab_employees-card">
                     <div class="icon lab_employees"><i class="fas fa-flask"></i></div>
                     <div class="info">
                         <span class="count">{{ $laboratorieEmployeesCount ?? (\App\Models\LaboratorieEmployee::count() ?? 0) }}</span>
-                        <span class="label">موظفو المختبر</span>
+                        <span class="label">{{ trans('AdminSb.lab_staff') }}</span>
                     </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">قسم المختبر</span></div>
+                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.lab_department') }}</span></div>
                 </a>
             </div>
         </div>
 
-        {{-- قسم التنبيهات الهامة --}}
         @if(isset($hasAdminAlerts) && $hasAdminAlerts)
         <div class="row mt-2 admin-alert-section">
             <div class="col-12 mb-2" data-aos="fade-up" data-aos-delay="50">
-                <h5 class="section-heading" style="border-bottom-color: var(--admin-warning); color:var(--admin-warning);"><i class="fas fa-bell"></i>إجراءات وتنبيهات عاجلة للنظام</h5>
+                <h5 class="section-heading" style="border-bottom-color: var(--admin-warning); color:var(--admin-warning);"><i class="fas fa-bell"></i>{{ trans('AdminSb.urgent_actions_and_alerts') }}</h5>
             </div>
             @if(isset($pendingAppointmentsCount) && $pendingAppointmentsCount > 0)
             <div class="col-lg-6 col-md-12 mb-3" data-aos="fade-up" data-aos-delay="100">
                 <div class="admin-alert-card alert-warning-custom">
                     <i class="fas fa-hourglass-half alert-icon"></i>
                     <div class="alert-message">
-                        <strong class="d-block mb-1">طلبات مواعيد جديدة تنتظر التأكيد</strong>
-                        يوجد <span class="fw-bold">{{ $pendingAppointmentsCount }}</span>
-                        {{ $pendingAppointmentsCount == 1 ? 'طلب موعد' : 'طلبات مواعيد' }}
-                        بحاجة إلى مراجعتك وتأكيدها لإضافتها لجداول الأطباء.
-                        <a href="{{ route('admin.appointments.index') }}" class="alert-link d-block mt-2">مراجعة كل طلبات المواعيد <i class="fas fa-arrow-left fa-xs"></i></a>
+                        <strong class="d-block mb-1">{{ trans('AdminSb.new_appointment_requests_waiting') }}</strong>
+                        {{ trans('AdminSb.there_are_appointments_that_need_review', ['count' => $pendingAppointmentsCount]) }}
+                        <a href="{{ route('admin.appointments.index') }}" class="alert-link d-block mt-2">{{ trans('AdminSb.review_all_appointment_requests') }} <i class="fas fa-arrow-left fa-xs"></i></a>
                     </div>
                 </div>
             </div>
             @endif
-            {{-- يمكنك إضافة تنبيهات أخرى هنا مثل: طلبات إلغاء من المرضى، إلخ --}}
         </div>
         @else
          <div class="row mt-2" data-aos="fade-up" data-aos-delay="50">
              <div class="col-12">
                  <div class="alert alert-success text-center" role="alert">
-                     <i class="fas fa-check-circle me-2"></i> لا توجد تنبيهات عاجلة حاليًا.
+                     <i class="fas fa-check-circle me-2"></i> {{ trans('AdminSb.no_urgent_alerts') }}
                  </div>
              </div>
          </div>
         @endif
 
-
-        {{-- أقسام إضافية (قوائم مختصرة) --}}
         <div class="row row-deck mt-3">
              <div class="col-lg-7 col-md-12 mb-4" data-aos="fade-right" data-aos-delay="200">
                 <div class="card h-100 shadow-sm summary-list-card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title-css mb-0"><i class="far fa-calendaroplus-alt me-2 text-primary op-8"></i>آخر المواعيد التي تنتظر التأكيد (أحدث 5)</h4>
+                        <h4 class="card-title-css mb-0"><i class="far fa-calendaroplus-alt me-2 text-primary op-8"></i>{{ trans('AdminSb.latest_pending_appointments_5') }}</h4>
                          @if(isset($latestPendingAppointments) && $latestPendingAppointments->count() > 0)
-                            <a href="{{ route('admin.appointments.index') }}" class="btn btn-sm btn-outline-primary ripple">عرض كل الطلبات</a>
+                            <a href="{{ route('admin.appointments.index') }}" class="btn btn-sm btn-outline-primary ripple">{{ trans('AdminSb.view_all_requests') }}</a>
                          @endif
                     </div>
                     <div class="card-body pt-2 pb-2">
@@ -320,12 +313,12 @@
                                         <div class="d-flex w-100 justify-content-between align-items-center">
                                             <div class="flex-grow-1">
                                                 <span class="item-main">{{ $appointment->patient->name ?? $appointment->name }}</span>
-                                                 <span class="text-muted mx-1 small">يريد موعدًا مع</span>
+                                                 <span class="text-muted mx-1 small">{{ trans('AdminSb.wants_an_appointment_with') }}</span>
                                                  <span class="item-main text-primary-dark">{{ $appointment->doctor->name ?? '-' }}</span>
                                                 <div class="item-meta">
-                                                    <i class="far fa-clock fa-xs"></i> لـ {{ $appointment->appointment }}
+                                                    <i class="far fa-clock fa-xs"></i> {{ trans('AdminSb.for_date') }} {{ $appointment->appointment }}
                                                     <span class="mx-1">|</span>
-                                                    <i class="fas fa-tag fa-xs"></i> طلب منذ: {{ $appointment->created_at->diffForHumans() }}
+                                                    <i class="fas fa-tag fa-xs"></i> {{ trans('AdminSb.requested_since') }} {{ $appointment->created_at->diffForHumans() }}
                                                 </div>
                                             </div>
                                         </div>
@@ -335,7 +328,7 @@
                         @else
                             <div class="text-center text-muted p-4">
                                 <i class="fas fa-calendar-check fa-2x opacity-50 mb-2"></i>
-                                <p class="mb-0">لا توجد طلبات مواعيد جديدة تنتظر التأكيد حاليًا.</p>
+                                <p class="mb-0">{{ trans('AdminSb.no_new_appointment_requests_pending') }}</p>
                             </div>
                         @endif
                     </div>
@@ -345,9 +338,9 @@
             <div class="col-lg-5 col-md-12 mb-4" data-aos="fade-left" data-aos-delay="300">
                  <div class="card h-100 shadow-sm summary-list-card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title-css mb-0"><i class="fas fa-users me-2 text-primary op-8"></i>أحدث المرضى المسجلين (آخر 5)</h4>
+                        <h4 class="card-title-css mb-0"><i class="fas fa-users me-2 text-primary op-8"></i>{{ trans('AdminSb.latest_registered_patients_5') }}</h4>
                           @if(isset($recentPatients) && $recentPatients->count() > 0)
-                            <a href="{{ route('admin.Patients.index') }}" class="btn btn-sm btn-outline-primary ripple">كل المرضى</a>
+                            <a href="{{ route('admin.Patients.index') }}" class="btn btn-sm btn-outline-primary ripple">{{ trans('AdminSb.all_patients') }}</a>
                          @endif
                     </div>
                     <div class="card-body pt-2 pb-2">
@@ -356,26 +349,19 @@
                                 @foreach($recentPatients as $patientRec)
                                 <li class="list-group-item">
                                     <div class="d-flex align-items-center">
-                                         <img src="{{ $patientRec->image ? asset('Dashboard/img/patients/' . $patientRec->image->filename) : asset('Dashboard/img/default_patient_avatar.png') }}"
-                                             alt="{{ $patientRec->name }}"
-                                             style="width:35px; height:35px; border-radius:50%; object-fit:cover; margin-left:10px; border:2px solid var(--admin-border-color);">
+                                         <img src="{{ $patientRec->image ? asset('Dashboard/img/patients/' . $patientRec->image->filename) : asset('Dashboard/img/default_patient_avatar.png') }}" alt="{{ $patientRec->name }}" style="width:35px; height:35px; border-radius:50%; object-fit:cover; margin-left:10px; border:2px solid var(--admin-border-color);">
                                         <div class="flex-grow-1">
                                             <a href="{{ route('admin.Patients.show', $patientRec->id) }}" class="item-main text-decoration-none hover-underline">{{ $patientRec->name }}</a>
                                             <div class="item-meta">
-                                                <i class="far fa-calendar-plus fa-xs"></i> انضم: {{ $patientRec->created_at->diffForHumans() }}
+                                                <i class="far fa-calendar-plus fa-xs"></i> {{ trans('AdminSb.joined') }}: {{ $patientRec->created_at->diffForHumans() }}
                                             </div>
                                         </div>
-                                        {{-- <div class="item-action">
-                                            <a href="{{ route('admin.Patients.show', $patientRec->id) }}" class="btn btn-sm btn-outline-info py-1 px-2" data-bs-toggle="tooltip" title="عرض ملف المريض">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        </div> --}}
                                     </div>
                                 </li>
                                 @endforeach
                             </ul>
                         @else
-                            <p class="text-center text-muted p-4">لا يوجد مرضى مسجلون حديثاً.</p>
+                            <p class="text-center text-muted p-4">{{ trans('AdminSb.no_recently_registered_patients') }}</p>
                         @endif
                     </div>
                 </div>

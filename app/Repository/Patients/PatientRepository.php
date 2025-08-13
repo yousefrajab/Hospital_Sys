@@ -22,7 +22,7 @@ use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use Illuminate\Http\Request;
 use App\Interfaces\Patients\PatientRepositoryInterface;
-use App\Models\PatientChronicDisease; 
+use App\Models\PatientChronicDisease;
 
 class PatientRepository implements PatientRepositoryInterface
 {
@@ -34,7 +34,7 @@ class PatientRepository implements PatientRepositoryInterface
         $totalPatients = Patient::count();
         $admittedPatientsCount = PatientAdmission::where('status', PatientAdmission::STATUS_ADMITTED)
             ->whereNull('discharge_date')
-            ->distinct('patient_id') // تأكد أن هذا يعطي العدد الصحيح للمرضى المقيمين وليس عدد سجلات الدخول النشطة
+            ->distinct('patient_id')
             ->count('patient_id');
         $newPatientsThisMonth = Patient::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
@@ -43,17 +43,14 @@ class PatientRepository implements PatientRepositoryInterface
         $query = Patient::with([
             'image',
             'currentAdmission' => function ($q) {
-                // لا نحتاج لتحميل كل هذه العلاقات هنا إذا كان الهدف فقط معرفة ID الإقامة
-                // $q->with(['bed.room.section']);
-                // يكفي تحميل الـ ID أو حتى عدم تحميل أي شيء إذا كان hasOne يعمل بدون eager loading للشرط
-                $q->select('id', 'patient_id'); // تحميل ID الإقامة و patient_id فقط
+
+                $q->select('id', 'patient_id');
             }
         ]);
 
         if ($request->filled('search_patient')) {
             $searchTerm = $request->search_patient;
             $query->where(function ($q) use ($searchTerm) {
-                // إذا كان name مترجمًا
                 $q->whereTranslationLike('name', "%{$searchTerm}%")
                     ->orWhere('national_id', 'like', "%{$searchTerm}%")
                     ->orWhere('email', 'like', "%{$searchTerm}%")
@@ -76,11 +73,11 @@ class PatientRepository implements PatientRepositoryInterface
 
         $Patients = $query->orderBy('created_at', 'desc')->paginate(20)->appends($request->query());
 
-        $genders = [1 => 'ذكر', 2 => 'أنثى'];
+        $genders = [1 => trans('AdminSb.male'), 2 =>  trans('AdminSb.female')];
         $bloodGroups = ['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
         $admissionStatusesFilter = [
-            'admitted' => 'مقيم حاليًا',
-            'not_admitted' => 'غير مقيم حاليًا',
+            'admitted' => trans('AdminSb.currently_admitted'),
+            'not_admitted' => trans('AdminSb.not_admitted'),
         ];
 
         return view('Dashboard.Patients.index', compact(
@@ -97,9 +94,8 @@ class PatientRepository implements PatientRepositoryInterface
 
     public function create()
     {
-        // جلب قائمة الأمراض المزمنة فقط للاختيار منها
         $diseases_list = Disease::where('is_chronic', true)
-            ->orderBy('name') // افترض أن name عمود عادي في Disease
+            ->orderBy('name') 
             ->pluck('name', 'id');
 
         // جلب قيم Enum لحالة المرض المزمن للمريض

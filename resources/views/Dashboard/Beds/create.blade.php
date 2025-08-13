@@ -203,15 +203,15 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-bed-pulse fa-lg me-2" style="color: var(--admin-primary, #4f46e5);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">إدارة الأسرة</h4>
-                    <span class="text-muted mt-0 tx-13">/ إضافة سرير جديد</span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.beds_management') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('AdminSb.add_new_bed') }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('admin.beds.index') }}" class="btn btn-outline-secondary btn-sm"
                 style="border-radius: var(--admin-radius-md);">
-                <i class="fas fa-arrow-left me-1"></i> العودة لقائمة الأسرة
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('AdminSb.back_to_beds_list') }}
             </a>
         </div>
     </div>
@@ -223,27 +223,27 @@
     <div class="row justify-content-center animate__animated animate__fadeInUp">
         <div class="col-lg-8 col-md-10">
             <div class="form-container-card">
-                <div class="card-header card-header-custom" >
-                    <h3 class="card-title mb-0" style="color: white"><i class="fas fa-plus-circle" style="color: white"></i> بيانات السرير الجديد</h3>
+                <div class="card-header card-header-custom">
+                    <h3 class="card-title mb-0" style="color: white"><i class="fas fa-plus-circle" style="color: white"></i>
+                        {{ trans('AdminSb.new_bed_data') }}</h3>
                 </div>
                 <div class="card-body p-4 p-md-5">
                     <form action="{{ route('admin.beds.store') }}" method="POST" class="needs-validation" novalidate
                         autocomplete="off">
                         @csrf
                         <div class="row g-3">
-                            {{-- الغرفة --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="room_id" class="form-label">الغرفة <span
+                                    <label for="room_id" class="form-label">{{ trans('AdminSb.room') }} <span
                                             class="text-danger">*</span></label>
                                     <select name="room_id" id="room_id"
                                         class="form-select select2 @error('room_id') is-invalid @enderror" required
-                                        data-placeholder="-- اختر الغرفة --">
+                                        data-placeholder="{{ trans('AdminSb.select_room_placeholder') }}">
                                         <option value=""></option>
                                         @foreach ($rooms as $room)
                                             <option value="{{ $room->id }}"
                                                 {{ old('room_id') == $room->id ? 'selected' : '' }}>
-                                                {{ $room->display_name }} {{-- عرض الاسم الوصفي للغرفة --}}
+                                                {{ $room->display_name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -253,28 +253,27 @@
                                 </div>
                             </div>
 
-                            {{-- رقم/كود السرير --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="bed_number" class="form-label">رقم/كود السرير <span
+                                    <label for="bed_number" class="form-label">{{ trans('AdminSb.bed_number_code') }} <span
                                             class="text-danger">*</span></label>
                                     <input type="text" name="bed_number" id="bed_number"
                                         class="form-control @error('bed_number') is-invalid @enderror"
-                                        value="{{ old('bed_number') }}" placeholder="مثال: A, 01, سرير النافذة" required>
+                                        value="{{ old('bed_number') }}"
+                                        placeholder="{{ trans('AdminSb.bed_number_placeholder_example') }}" required>
                                     @error('bed_number')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
 
-                            {{-- نوع السرير --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="type" class="form-label">نوع السرير <span
+                                    <label for="type" class="form-label">{{ trans('AdminSb.bed_type') }} <span
                                             class="text-danger">*</span></label>
                                     <select name="type" id="type"
                                         class="form-select select2 @error('type') is-invalid @enderror" required
-                                        data-placeholder="-- اختر النوع --">
+                                        data-placeholder="{{ trans('AdminSb.select_type_placeholder') }}">
                                         <option value=""></option>
                                         @foreach ($bedTypes as $key => $value)
                                             <option value="{{ $key }}"
@@ -288,14 +287,13 @@
                                 </div>
                             </div>
 
-                            {{-- الحالة الأولية للسرير --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="status" class="form-label">الحالة الأولية <span
+                                    <label for="status" class="form-label">{{ trans('AdminSb.initial_status') }} <span
                                             class="text-danger">*</span></label>
                                     <select name="status" id="status"
                                         class="form-select select2 @error('status') is-invalid @enderror" required
-                                        data-placeholder="-- اختر الحالة --">
+                                        data-placeholder="{{ trans('AdminSb.select_status_placeholder') }}">
                                         <option value=""></option>
                                         @foreach ($initialBedStatuses as $key => $value)
                                             <option value="{{ $key }}"
@@ -308,26 +306,14 @@
                                     @enderror
                                 </div>
                             </div>
-
-                            {{-- يمكنك إضافة حقول is_window_side و features هنا إذا أردت تفعيلها --}}
-                            {{-- مثال لـ is_window_side --}}
-                            {{-- <div class="col-md-12">
-                                <div class="form-check mt-2">
-                                    <input class="form-check-input" type="checkbox" name="is_window_side" id="is_window_side" value="1" {{ old('is_window_side') ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_window_side">
-                                        بجانب النافذة
-                                    </label>
-                                </div>
-                            </div> --}}
-
                         </div>
 
                         <div class="text-center mt-4 pt-3 border-top">
                             <button type="submit" class="btn btn-submit-form">
-                                <i class="fas fa-save me-2"></i> حفظ السرير
+                                <i class="fas fa-save me-2"></i> {{ trans('AdminSb.save_bed') }}
                             </button>
                             <a href="{{ route('admin.beds.index') }}" class="btn btn-cancel-form ms-2">
-                                <i class="fas fa-times me-2"></i> إلغاء
+                                <i class="fas fa-times me-2"></i> {{ trans('AdminSb.cancel') }}
                             </a>
                         </div>
                     </form>
