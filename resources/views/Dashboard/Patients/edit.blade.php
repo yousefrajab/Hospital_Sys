@@ -1087,7 +1087,7 @@
                     <div class="col-md-6">
                         <div class="form-group password-wrapper">
                             <label for="password_confirmation_edit"
-                                class="form-label">{{ trans('AdminSb.confirm_new_password') }}</label>
+                                class="form-label">{{ trans('patients.confirm_new_password') }}</label>
                             <input type="password" id="password_confirmation_edit" name="password_confirmation"
                                 class="form-control @error('password_confirmation') is-invalid @enderror"
                                 placeholder="{{ trans('AdminSb.re_enter_password') }}">

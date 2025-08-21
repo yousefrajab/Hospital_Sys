@@ -330,18 +330,19 @@
     <div class="breadcrumb-header justify-content-between no-print">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-file-medical-alt text-primary me-2"></i>الوصفات
-                    الطبية</h4>
+                <h4 class="content-title mb-0 my-auto"><i
+                        class="fas fa-file-medical-alt text-primary me-2"></i>{{ trans('doctors.prescriptions') }}</h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="text-muted mt-1 tx-13">تفاصيل الوصفة رقم: {{ $prescription->prescription_number }}</span>
+                <span
+                    class="text-muted mt-1 tx-13">{{ trans('doctors.prescription_details_for_number', ['number' => $prescription->prescription_number]) }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('prescriptions.index') }}" class="btn btn-outline-secondary btn-sm ripple-effect me-2">
-                <i class="fas fa-list-ul me-1"></i> عرض كل الوصفات
+                <i class="fas fa-list-ul me-1"></i> {{ trans('doctors.view_all_prescriptions') }}
             </a>
             <button onclick="window.print();" class="btn btn-info btn-sm ripple-effect me-2">
-                <i class="fas fa-print me-1"></i> طباعة الوصفة
+                <i class="fas fa-print me-1"></i> {{ trans('doctors.print_prescription') }}
             </button>
         </div>
     </div>
@@ -354,8 +355,10 @@
         <div class="prescription-card">
             <div class="prescription-header">
                 <div>
-                    <h4>وصفة طبية رقم: {{ $prescription->prescription_number }}</h4>
-                    <p>تاريخ الإنشاء: {{ $prescription->prescription_date->translatedFormat('l، j F Y') }}</p>
+                    <h4>{{ trans('doctors.prescription_number_header', ['number' => $prescription->prescription_number]) }}
+                    </h4>
+                    <p>{{ trans('doctors.created_on') }}:
+                        {{ $prescription->prescription_date->translatedFormat('l، j F Y') }}</p>
                 </div>
                 <div>
                     @php
@@ -382,37 +385,39 @@
                 <div class="info-grid">
                     {{-- معلومات المريض --}}
                     <div class="info-block">
-                        <h6><i class="fas fa-user-injured"></i>معلومات المريض</h6>
+                        <h6><i class="fas fa-user-injured"></i>{{ trans('doctors.patient_information') }}</h6>
                         @if ($prescription->patient)
                             <div class="d-flex align-items-center mb-2">
                                 <img src="{{ $prescription->patient->image ? asset('Dashboard/img/patients/' . $prescription->patient->image->filename) : URL::asset('Dashboard/img/default_patient_avatar.png') }}"
                                     alt="{{ $prescription->patient->name }}" class="patient-avatar-display">
                                 <div>
-                                    <p class="mb-0"><strong>الاسم:</strong> {{ $prescription->patient->name }}</p>
-                                    <p class="mb-0"><small class="text-muted">رقم الهوية:
+                                    <p class="mb-0"><strong>{{ trans('doctors.name_label') }}</strong>
+                                        {{ $prescription->patient->name }}</p>
+                                    <p class="mb-0"><small class="text-muted">{{ trans('doctors.national_id_label') }}
                                             {{ $prescription->patient->national_id }}</small></p>
                                 </div>
                             </div>
                             <p><i class="fas fa-phone fa-fw me-2 text-muted"></i>{{ $prescription->patient->Phone ?: '-' }}
                             </p>
                             <p><i
-                                    class="fas fa-birthday-cake fa-fw me-2 text-muted"></i>{{ $prescription->patient->Date_Birth ? $prescription->patient->Date_Birth->translatedFormat('j M Y') . ' (' . $prescription->patient->Date_Birth->age . ' سنة)' : '-' }}
+                                    class="fas fa-birthday-cake fa-fw me-2 text-muted"></i>{{ $prescription->patient->Date_Birth ? $prescription->patient->Date_Birth->translatedFormat('j M Y') . ' (' . $prescription->patient->Date_Birth->age . ' ' . trans('doctors.years_old') . ')' : '-' }}
                             </p>
                         @else
-                            <p class="text-muted"><em>معلومات المريض غير متوفرة أو تم حذفه.</em></p>
+                            <p class="text-muted"><em>{{ trans('doctors.patient_info_unavailable') }}</em></p>
                         @endif
                     </div>
 
                     {{-- معلومات الطبيب --}}
                     <div class="info-block">
-                        <h6><i class="fas fa-user-md"></i>معلومات الطبيب</h6>
+                        <h6><i class="fas fa-user-md"></i>{{ trans('doctors.doctor_information') }}</h6>
                         @if ($prescription->doctor)
                             <div class="d-flex align-items-center mb-2">
                                 <img src="{{ $prescription->doctor->image ? asset('Dashboard/img/doctors/' . $prescription->doctor->image->filename) : URL::asset('Dashboard/img/doctor_default.png') }}"
                                     alt="{{ $prescription->doctor->name }}" class="doctor-avatar-display">
                                 <div>
-                                    <p class="mb-0"><strong>الاسم:</strong> {{ $prescription->doctor->name }}</p>
-                                    <p class="mb-0"><small class="text-muted">القسم:
+                                    <p class="mb-0"><strong>{{ trans('doctors.name_label') }}</strong>
+                                        {{ $prescription->doctor->name }}</p>
+                                    <p class="mb-0"><small class="text-muted">{{ trans('doctors.department_label') }}
                                             {{ $prescription->doctor->section->name ?? '-' }}</small></p>
                                 </div>
                             </div>
@@ -420,7 +425,7 @@
                                     class="fas fa-envelope fa-fw me-2 text-muted"></i>{{ $prescription->doctor->email ?: '-' }}
                             </p>
                         @else
-                            <p class="text-muted"><em>معلومات الطبيب غير متوفرة.</em></p>
+                            <p class="text-muted"><em>{{ trans('doctors.doctor_info_unavailable') }}</em></p>
                         @endif
                     </div>
                 </div>
@@ -430,10 +435,12 @@
                     <div class="info-grid" style="margin-top: -0.5rem;"> {{-- تقليل الهامش العلوي إذا كانت هناك معلومات إضافية --}}
                         @if ($prescription->is_chronic_prescription)
                             <div class="info-block bg-light border-warning">
-                                <h6><i class="fas fa-history text-warning"></i>وصفة مزمنة</h6>
-                                <p class="mb-0">هذه الوصفة مخصصة لمرض مزمن.</p>
+                                <h6><i
+                                        class="fas fa-history text-warning"></i>{{ trans('doctors.chronic_prescription_title') }}
+                                </h6>
+                                <p class="mb-0">{{ trans('doctors.chronic_prescription_message') }}</p>
                                 @if ($prescription->next_refill_due_date)
-                                    <p><strong>تاريخ إعادة الصرف التالي:</strong>
+                                    <p><strong>{{ trans('doctors.next_refill_due_date_label') }}</strong>
                                         {{ \Carbon\Carbon::parse($prescription->next_refill_due_date)->translatedFormat('j M Y') }}
                                     </p>
                                 @endif
@@ -441,11 +448,12 @@
                         @endif
                         @if ($prescription->patientAdmission)
                             <div class="info-block bg-light border-info">
-                                <h6><i class="fas fa-procedures text-info"></i>مرتبطة بإقامة رقم:
-                                    {{ $prescription->patientAdmission->id }}</h6>
-                                <p><strong>سبب الدخول:</strong>
+                                <h6><i
+                                        class="fas fa-procedures text-info"></i>{{ trans('doctors.linked_to_admission_number', ['id' => $prescription->patientAdmission->id]) }}
+                                </h6>
+                                <p><strong>{{ trans('doctors.admission_reason_label') }}</strong>
                                     {{ Str::limit($prescription->patientAdmission->reason_for_admission, 50) ?: '-' }}</p>
-                                <p><strong>تاريخ الدخول:</strong>
+                                <p><strong>{{ trans('doctors.admission_date_label') }}</strong>
                                     {{ $prescription->patientAdmission->admission_date->translatedFormat('j M Y') }}</p>
                             </div>
                         @endif
@@ -453,25 +461,25 @@
                 @endif
 
 
-                <h5 class="form-section-title mt-4"><i class="fas fa-tablets"></i>الأدوية الموصوفة</h5>
+                <h5 class="form-section-title mt-4"><i
+                        class="fas fa-tablets"></i>{{ trans('doctors.prescribed_medications_title') }}</h5>
                 @if ($prescription->items->isNotEmpty())
                     <div class="table-responsive-custom">
                         <table class="table table-custom table-striped medications-table">
                             <thead>
                                 <tr>
-                                    <th>الدواء</th>
-                                    <th class="text-center">الجرعة</th>
-                                    <th class="text-center">التكرار</th>
-                                    <th class="text-center">المدة</th>
-                                    <th class="text-center">الكمية</th>
-                                    {{-- <th>تعليمات</th> --}}
+                                    <th>{{ trans('doctors.medication_header') }}</th>
+                                    <th class="text-center">{{ trans('doctors.dose_header') }}</th>
+                                    <th class="text-center">{{ trans('doctors.frequency_header') }}</th>
+                                    <th class="text-center">{{ trans('doctors.duration_header') }}</th>
+                                    <th class="text-center">{{ trans('doctors.quantity_header') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($prescription->items as $item)
                                     <tr>
                                         <td>
-                                            <strong>{{ $item->medication->name ?? 'دواء غير معروف' }}</strong>
+                                            <strong>{{ $item->medication->name ?? trans('doctors.unknown_medication') }}</strong>
                                             <small class="d-block text-muted">
                                                 {{ $item->medication->strength ? $item->medication->strength . ' - ' : '' }}
                                                 {{ $item->medication->dosage_form ? \App\Models\Medication::getCommonDosageForms()[$item->medication->dosage_form] ?? $item->medication->dosage_form : '' }}
@@ -482,46 +490,50 @@
                                                 </p>
                                             @endif
                                             @if ($item->is_prn)
-                                                <span class="badge bg-light text-dark border mt-1">عند اللزوم</span>
+                                                <span
+                                                    class="badge bg-light text-dark border mt-1">{{ trans('doctors.as_needed_badge') }}</span>
                                             @endif
                                         </td>
                                         <td class="text-center dosage-details">{{ $item->dosage }}</td>
                                         <td class="text-center dosage-details">{{ $item->frequency }}</td>
                                         <td class="text-center">{{ $item->duration ?: '-' }}</td>
                                         <td class="text-center">{{ $item->quantity_prescribed ?: '-' }}</td>
-                                        {{-- <td>{{ $item->instructions_for_patient ?: '-' }}</td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                 @else
-                    <p class="text-muted text-center my-3">لم يتم إضافة أي أدوية لهذه الوصفة.</p>
+                    <p class="text-muted text-center my-3">{{ trans('doctors.no_medications_added') }}</p>
                 @endif
 
                 @if ($prescription->doctor_notes)
                     <div class="notes-section">
-                        <h6><i class="fas fa-sticky-note"></i>ملاحظات الطبيب للصيدلي:</h6>
+                        <h6><i class="fas fa-sticky-note"></i>{{ trans('doctors.doctor_notes_for_pharmacist_label') }}</h6>
                         <p>{{ $prescription->doctor_notes }}</p>
                     </div>
                 @endif
 
                 @if ($prescription->pharmacy_notes)
                     <div class="notes-section">
-                        <h6><i class="fas fa-prescription-bottle-alt"></i>ملاحظات الصيدلية:</h6>
+                        <h6><i class="fas fa-prescription-bottle-alt"></i>{{ trans('doctors.pharmacy_notes_label') }}</h6>
                         <p>{{ $prescription->pharmacy_notes }}</p>
                     </div>
                 @endif
 
                 @if ($prescription->dispensed_at)
                     <div class="notes-section">
-                        <h6><i class="fas fa-check-double text-success"></i> معلومات الصرف:</h6>
-                        <p class="mb-1"><strong>تم الصرف بواسطة:</strong> @if ($prescription->dispensedByPharmacyEmployee) {{ $prescription->dispensedByPharmacyEmployee->name }}
+                        <h6><i class="fas fa-check-double text-success"></i>
+                            {{ trans('doctors.dispensing_information_title') }}</h6>
+                        <p class="mb-1"><strong>{{ trans('doctors.dispensed_by_label') }}</strong>
+                            @if ($prescription->dispensedByPharmacyEmployee)
+                                {{ $prescription->dispensedByPharmacyEmployee->name }}
                             @else
-                                موظف غير معروف (ID: {{ $prescription->dispensed_by_pharmacy_employee_id }})
+                                {{ trans('doctors.unknown_employee_with_id', ['id' => $prescription->dispensed_by_pharmacy_employee_id]) }}
                             @endif
                         </p>
-                        <p><strong>تاريخ ووقت الصرف:</strong> {{ $prescription->dispensed_at->translatedFormat('l، j F Y - H:i') }}</p>
+                        <p><strong>{{ trans('doctors.dispensing_date_time_label') }}</strong>
+                            {{ $prescription->dispensed_at->translatedFormat('l، j F Y - H:i') }}</p>
                     </div>
                 @endif
 
@@ -542,22 +554,21 @@
                 @if (in_array($prescription->status, $editableStatusesFooter) &&
                         Auth::guard('doctor')->id() === $prescription->doctor_id)
                     <a href="{{ route('prescriptions.edit', $prescription->id) }}" class="btn btn-primary ripple">
-                        <i class="fas fa-edit me-1"></i> تعديل الوصفة
+                        <i class="fas fa-edit me-1"></i> {{ trans('doctors.edit_prescription_action') }}
                     </a>
                 @endif
 
                 @if (in_array($prescription->status, $cancellableStatusesFooter) &&
                         Auth::guard('doctor')->id() === $prescription->doctor_id)
-                    <form action="{{ route('prescriptions.destroy', $prescription->id) }}" method="POST"
-                        class="d-inline" onsubmit="return confirm('هل أنت متأكد من رغبتك في إلغاء هذه الوصفة؟');">
+                    <form action="{{ route('prescriptions.destroy', $prescription->id) }}" method="POST" class="d-inline"
+                        onsubmit="return confirm('{{ trans('doctors.confirm_cancellation_prompt') }}');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger ripple">
-                            <i class="fas fa-times-circle me-1"></i> إلغاء الوصفة
+                            <i class="fas fa-times-circle me-1"></i> {{ trans('doctors.cancel_prescription_action') }}
                         </button>
                     </form>
                 @endif
-                {{-- يمكنك إضافة زر للصيدلي لتأكيد الصرف هنا إذا كانت هذه الصفحة مشتركة --}}
             </div>
 
         </div>

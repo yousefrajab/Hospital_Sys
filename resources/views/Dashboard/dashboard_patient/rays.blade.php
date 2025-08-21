@@ -13,8 +13,8 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">عمليات المريض</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/
-                    الاشعة</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('patients.patient_operations') }}</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/
+                    {{ trans('patients.radiology') }}</span>
             </div>
         </div>
     </div>
@@ -35,11 +35,11 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>المطلوب</th>
-                                    <th>اسم الدكتور</th>
-                                    <th>اسم دكتور الاشعة</th>
-                                    <th>ملاحظة دكتور الاشعة</th>
-                                    <th>العمليات</th>
+                                    <th>{{ trans('patients.required_scan') }}</th>
+                                    <th>{{ trans('patients.doctor_name') }}</th>
+                                    <th>{{ trans('patients.radiology_doctor_name') }}</th>
+                                    <th>{{ trans('patients.radiology_doctor_notes') }}</th>
+                                    <th>{{ trans('patients.actions_col') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -53,7 +53,7 @@
                                         <td>
                                             @if ($ray->employee_id !== null)
                                                 <a class="btn btn-primary btn-sm" href="{{ route('rays.view', $ray->id) }}"
-                                                    role="button">عرض الاشعة</a>
+                                                    role="button">{{ trans('patients.view_scan') }}</a>
                                             @endif
                                         </td>
                                     </tr>

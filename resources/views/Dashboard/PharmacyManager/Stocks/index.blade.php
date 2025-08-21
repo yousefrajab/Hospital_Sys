@@ -295,19 +295,19 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-boxes-stacked fa-lg me-2" style="color: var(--admin-primary);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">إدارة مخزون الصيدلية</h4>
-                    <span class="text-muted mt-0 tx-13">/ دفعات الدواء: <strong>{{ $medication->name }}</strong></span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('phrM.pharmacy_stock_management') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('phrM.medication_batches_for') }} <strong>{{ $medication->name }}</strong></span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('pharmacy_manager.medications.stocks.create', $medication->id) }}"
                 class="btn btn-primary ripple">
-                <i class="fas fa-plus-circle me-1"></i> إضافة دفعة جديدة
+                <i class="fas fa-plus-circle me-1"></i> {{ trans('phrM.add_new_batch_button') }}
             </a>
             <a href="{{ route('pharmacy_manager.medications.index') }}" class="btn btn-outline-secondary btn-sm ms-2"
                 style="border-radius: var(--admin-radius-md);">
-                <i class="fas fa-arrow-left me-1"></i> العودة لقائمة الأدوية
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('phrM.back_to_medications_list') }}
             </a>
         </div>
     </div>
@@ -316,28 +316,26 @@
 @section('content')
     @include('Dashboard.messages_alert')
 
-    {{-- بطاقة ملخص المخزون للدواء الحالي --}}
-    {{-- بطاقة ملخص المخزون للدواء الحالي (بتصميم محسن ومتقارب) --}}
     <div class="card stock-summary-card-revised animate__animated animate__fadeInDown">
         <div class="summary-header-revised">
             <div class="icon-wrapper-revised">
                 <i class="fas fa-tablets"></i>
             </div>
             <div>
-                <h4>ملخص مخزون الدواء</h4>
+                <h4>{{ trans('phrM.medication_stock_summary') }}</h4>
                 <span class="medication-name-revised">{{ $medication->name }}</span>
             </div>
         </div>
-        <div class="summary-grid-revised row g-3"> {{-- استخدام row و g-3 (gap) من Bootstrap --}}
+        <div class="summary-grid-revised row g-3">
             <div class="col-md-4 col-sm-6">
                 <div class="summary-item-revised">
                     <div class="item-icon-revised bg-success-soft">
                         <i class="fas fa-cubes text-success"></i>
                     </div>
                     <div class="item-content-revised">
-                        <span class="label">إجمالي المتوفر (صالح)</span>
+                        <span class="label">{{ trans('phrM.total_available_valid') }}</span>
                         <span class="value">{{ $totalQuantityOnHand ?? 0 }}</span>
-                        <span class="unit-label">{{ $medication->unit_of_measure ?? 'وحدة' }}</span>
+                        <span class="unit-label">{{ $medication->unit_of_measure ?? trans('phrM.unit') }}</span>
                     </div>
                 </div>
             </div>
@@ -348,37 +346,36 @@
                             class="fas fa-thermometer-half {{ $medication->is_low_stock ? 'text-warning' : 'text-info' }}"></i>
                     </div>
                     <div class="item-content-revised">
-                        <span class="label">حد الطلب الأدنى</span>
+                        <span class="label">{{ trans('phrM.minimum_stock_level') }}</span>
                         <span class="value {{ $medication->is_low_stock ? 'low-stock-value' : '' }}">
                             {{ $medication->minimum_stock_level }}
                             @if ($medication->is_low_stock)
-                                <i class="fas fa-exclamation-triangle ms-1" title="المخزون منخفض!"></i>
+                                <i class="fas fa-exclamation-triangle ms-1" title="{{ trans('phrM.low_stock_alert') }}"></i>
                             @endif
                         </span>
-                        <span class="unit-label">{{ $medication->unit_of_measure ?? 'وحدة' }}</span>
+                        <span class="unit-label">{{ $medication->unit_of_measure ?? trans('phrM.unit') }}</span>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 col-sm-6">
                 <div class="summary-item-revised">
-                    <div class="item-icon-revised bg-secondary-soft"> {{-- استخدام لون مختلف --}}
+                    <div class="item-icon-revised bg-secondary-soft">
                         <i class="fas fa-flask text-secondary"></i>
                     </div>
                     <div class="item-content-revised">
-                        <span class="label">الاسم العلمي</span>
+                        <span class="label">{{ trans('phrM.generic_name') }}</span>
                         <span class="value">{{ $medication->generic_name ?: '-' }}</span>
-                        <span class="unit-label"> </span> {{-- للمحاذاة الرأسية إذا لزم الأمر --}}
+                        <span class="unit-label"> </span>
                     </div>
                 </div>
             </div>
-            {{-- يمكنك إضافة الباركود كعنصر رابع إذا أردت --}}
             <div class="col-md-4 col-sm-6">
                 <div class="summary-item-revised">
                     <div class="item-icon-revised bg-light-grey">
                         <i class="fas fa-barcode text-dark-grey"></i>
                     </div>
                     <div class="item-content-revised">
-                        <span class="label">باركود</span>
+                        <span class="label">{{ trans('phrM.barcode') }}</span>
                         <span class="value">{{ $medication->barcode ?: '-' }}</span>
                         <span class="unit-label"> </span>
                     </div>
@@ -387,28 +384,27 @@
         </div>
     </div>
 
-    {{-- بطاقة الفلترة لدفعات المخزون --}}
     <div class="card mb-4 animate__animated animate__fadeIn">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة البحث عن الدفعات</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>{{ trans('phrM.filter_batches_search') }}</h5>
         </div>
         <div class="card-body">
             <form action="{{ route('pharmacy_manager.medications.stocks.index', $medication->id) }}" method="GET">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label for="batch_search" class="form-label">بحث برقم الدفعة:</label>
+                        <label for="batch_search" class="form-label">{{ trans('phrM.search_by_batch_number') }}</label>
                         <input type="text" name="batch_search" id="batch_search" class="form-control"
-                            placeholder="أدخل رقم الدفعة..." value="{{ $request->batch_search }}">
+                            placeholder="{{ trans('phrM.batch_number_placeholder') }}" value="{{ $request->batch_search }}">
                     </div>
                     <div class="col-md-4">
-                        <label for="supplier_search" class="form-label">بحث باسم المورد:</label>
+                        <label for="supplier_search" class="form-label">{{ trans('phrM.search_by_supplier_name') }}</label>
                         <input type="text" name="supplier_search" id="supplier_search" class="form-control"
-                            placeholder="أدخل اسم المورد..." value="{{ $request->supplier_search }}">
+                            placeholder="{{ trans('phrM.supplier_name_placeholder') }}" value="{{ $request->supplier_search }}">
                     </div>
                     <div class="col-md-4">
-                        <label for="expired_filter" class="form-label">حالة الصلاحية:</label>
+                        <label for="expired_filter" class="form-label">{{ trans('phrM.expiry_status') }}</label>
                         <select name="expired_filter" id="expired_filter" class="form-select select2"
-                            data-placeholder="الكل">
+                            data-placeholder="{{ trans('phrM.all_placeholder') }}">
                             @foreach ($expiryFilterOptions as $key => $value)
                                 <option value="{{ $key }}"
                                     {{ $request->expired_filter == $key ? 'selected' : '' }}>
@@ -420,11 +416,10 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12 text-center">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-search me-1"></i> تطبيق
-                            الفلتر</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search me-1"></i> {{ trans('phrM.apply_filter') }}</button>
                         @if (request()->hasAny(['batch_search', 'supplier_search', 'expired_filter']))
                             <a href="{{ route('pharmacy_manager.medications.stocks.index', $medication->id) }}"
-                                class="btn btn-outline-secondary"><i class="fas fa-eraser me-1"></i> مسح الفلتر</a>
+                                class="btn btn-outline-secondary"><i class="fas fa-eraser me-1"></i> {{ trans('phrM.clear_filter') }}</a>
                         @endif
                     </div>
                 </div>
@@ -432,11 +427,9 @@
         </div>
     </div>
 
-    {{-- بطاقة جدول دفعات المخزون --}}
     <div class="card animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
         <div class="card-header">
-            <h5 class="card-title mb-0"><i class="fas fa-archive me-2"></i>دفعات المخزون للدواء: {{ $medication->name }}
-                ({{ $stocks->total() }} دفعة)</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-archive me-2"></i>{{ trans('phrM.medication_stock_batches_title', ['name' => $medication->name, 'count' => $stocks->total()]) }}</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -444,14 +437,14 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>رقم الدفعة</th>
-                            <th>الكمية الأولية</th>
-                            <th>الكمية الحالية</th>
-                            <th>تاريخ الصلاحية</th>
-                            <th>سعر التكلفة/وحدة</th>
-                            <th>المورد</th>
-                            <th>تاريخ الاستلام</th>
-                            <th class="text-center">إجراءات</th>
+                            <th>{{ trans('phrM.batch_number_col') }}</th>
+                            <th>{{ trans('phrM.initial_quantity') }}</th>
+                            <th>{{ trans('phrM.current_quantity') }}</th>
+                            <th>{{ trans('phrM.expiry_date_col') }}</th>
+                            <th>{{ trans('phrM.cost_price_per_unit') }}</th>
+                            <th>{{ trans('phrM.supplier') }}</th>
+                            <th>{{ trans('phrM.received_date') }}</th>
+                            <th class="text-center">{{ trans('phrM.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -464,11 +457,11 @@
                                 <td>
                                     {{ $stock->expiry_date->format('Y-m-d') }}
                                     @if ($stock->is_expired)
-                                        <span class="badge badge-light-danger ms-1">منتهية</span>
+                                        <span class="badge badge-light-danger ms-1">{{ trans('phrM.expired') }}</span>
                                     @elseif($stock->is_expiring_soon)
-                                        <span class="badge badge-light-warning ms-1">قريبة من الانتهاء</span>
+                                        <span class="badge badge-light-warning ms-1">{{ trans('phrM.expiring_soon') }}</span>
                                     @else
-                                        <span class="badge badge-light-success ms-1">سارية</span>
+                                        <span class="badge badge-light-success ms-1">{{ trans('phrM.valid') }}</span>
                                     @endif
                                 </td>
                                 <td>{{ $stock->cost_price_per_unit !== null ? number_format($stock->cost_price_per_unit, 2) : '-' }}
@@ -476,18 +469,16 @@
                                 <td>{{ $stock->supplier_name ?: '-' }}</td>
                                 <td>{{ $stock->received_date ? $stock->received_date->format('Y-m-d') : '-' }}</td>
                                 <td class="text-center action-buttons">
-                                    {{-- لا يوجد Route::resource لـ stocks، الروابط محددة بشكل منفصل --}}
-                                    {{-- <a href="{{ route('pharmacy_manager.stocks.show', $stock->id) }}" class="btn btn-sm btn-outline-success" title="عرض التفاصيل"><i class="fas fa-eye"></i></a> --}}
                                     <a href="{{ route('pharmacy_manager.stocks.edit', $stock->id) }}"
-                                        class="btn btn-sm btn-outline-primary" title="تعديل الدفعة"><i
+                                        class="btn btn-sm btn-outline-primary" title="{{ trans('phrM.edit_batch') }}"><i
                                             class="fas fa-edit"></i></a>
                                     <form action="{{ route('pharmacy_manager.stocks.destroy', $stock->id) }}"
                                         method="POST" class="d-inline"
-                                        onsubmit="return confirm('هل أنت متأكد من رغبتك في حذف دفعة المخزون هذه؟');">
+                                        onsubmit="return confirm('{{ trans('phrM.confirm_delete_batch_message') }}');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger"
-                                            title="حذف الدفعة"><i class="fas fa-trash-alt"></i></button>
+                                            title="{{ trans('phrM.delete_batch') }}"><i class="fas fa-trash-alt"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -495,14 +486,13 @@
                             <tr>
                                 <td colspan="9" class="text-center py-4">
                                     <i class="fas fa-box-open fa-2x text-muted mb-2"></i><br>
-                                    لا توجد دفعات مخزون مسجلة لهذا الدواء حاليًا.
+                                    {{ trans('phrM.no_stock_batches_registered') }}
                                     @if (!request()->hasAny(['batch_search', 'supplier_search', 'expired_filter']))
                                         <br> <a
                                             href="{{ route('pharmacy_manager.medications.stocks.create', $medication->id) }}"
-                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-plus"></i> أضف دفعة
-                                            جديدة</a>
+                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-plus"></i> {{ trans('phrM.add_new_batch_button') }}</a>
                                     @else
-                                        <br> <span class="text-muted">حاول تعديل معايير الفلترة.</span>
+                                        <br> <span class="text-muted">{{ trans('phrM.try_adjusting_filters') }}</span>
                                     @endif
                                 </td>
                             </tr>
@@ -531,7 +521,7 @@
         $(document).ready(function() {
             // تهيئة Select2
             $('#expired_filter').select2({
-                placeholder: $(this).data('placeholder') || "الكل",
+                placeholder: $(this).data('placeholder') || "{{ trans('AdminSb.View All') }}",
                 width: '100%',
                 dir: "rtl",
                 theme: "bootstrap-5",

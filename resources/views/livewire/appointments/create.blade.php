@@ -379,8 +379,8 @@
             class="appointment-alert success animate__animated animate__fadeInDown" x-transition>
             <i class="fas fa-check-circle"></i>
             <div>
-                <h4>تم تأكيد الحجز بنجاح!</h4>
-                <p>سيتم التواصل معك لتأكيد التفاصيل النهائية.</p>
+                <h4>{{ trans('patients.livewire_booking_success_title') }}</h4>
+                <p>{{ trans('patients.livewire_booking_success_text') }}</p>
             </div>
             <button wire:click="dismissMessage" @click="show = false" class="close-btn">×</button>
         </div>
@@ -392,12 +392,12 @@
             <div>
                 <h4>
                     @if ($errorMessage)
-                        خطأ أو تنبيه
+                        {{ trans('patients.livewire_error_or_warning') }}
                     @else
-                        لا توجد مواعيد متاحة
+                        {{ trans('patients.livewire_no_appointments_available_title') }}
                     @endif
                 </h4>
-                <p>{{ $errorMessage ?: 'عذرًا، لا توجد مواعيد متاحة لهذا اليوم. يرجى اختيار يوم آخر' }}</p>
+                <p>{{ $errorMessage ?: trans('patients.livewire_no_appointments_for_day') }}</p>
             </div>
             <button wire:click="dismissMessage" @click="show = false" class="close-btn">×</button>
         </div>
@@ -406,7 +406,7 @@
         <div class="appointment-alert warning animate__animated animate__fadeInDown mb-3">
             <i class="fas fa-exclamation-circle"></i>
             <div>
-                <h4 class="alert-heading">الرجاء مراجعة الحقول التالية:</h4>
+                <h4 class="alert-heading">{{ trans('patients.livewire_please_review_fields') }}</h4>
                 <ul class="list-unstyled mb-0">
                     @foreach ($errors->all() as $error)
                         <li>- {{ $error }}</li>
@@ -419,8 +419,8 @@
     <!-- بطاقة نموذج الحجز -->
     <div class="appointment-card">
         <div class="appointment-header">
-            <h2><i class="fas fa-calendar-plus"></i> حجز موعد طبي</h2>
-            <p>املأ النموذج التالي لحجز موعد مع طبيبك المختار</p>
+            <h2><i class="fas fa-calendar-plus"></i> {{ trans('patients.livewire_book_medical_appointment') }}</h2>
+            <p>{{ trans('patients.livewire_fill_form_to_book') }}</p>
         </div>
 
         <form wire:submit.prevent="store" class="appointment-form">
@@ -429,11 +429,12 @@
                 <!-- قسم تفاصيل الموعد -->
                 <div class="form-section appointment-info">
                     <div class="section-header"> <i class="fas fa-calendar-alt"></i>
-                        <h3>تفاصيل الموعد</h3>
+                        <h3>{{ trans('patients.livewire_appointment_details') }}</h3>
                     </div>
-                    <div class="form-group"> <label for="section">القسم الطبي</label>
+                    <div class="form-group"> <label
+                            for="section">{{ trans('patients.livewire_medical_department') }}</label>
                         <div class="select-with-icon"> <select id="section" wire:model="section" required>
-                                <option value="">-- اختر القسم --</option>
+                                <option value="">{{ trans('patients.livewire_select_department') }}</option>
                                 @foreach ($sections as $s)
                                     <option value="{{ $s->id }}">{{ $s->name }}</option>
                                 @endforeach
@@ -441,10 +442,11 @@
                             <span class="error-validation">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="form-group"> <label for="doctor">الطبيب المعالج</label>
+                    <div class="form-group"> <label
+                            for="doctor">{{ trans('patients.livewire_attending_physician') }}</label>
                         <div class="select-with-icon"> <select id="doctor" wire:model="doctor" required
                                 {{ empty($section) ? 'disabled' : '' }}>
-                                <option value="">-- اختر الطبيب أولاً --</option>
+                                <option value="">{{ trans('patients.livewire_select_doctor_first') }}</option>
                                 @foreach ($doctors as $d)
                                     <option value="{{ $d->id }}">{{ $d->name }}</option>
                                 @endforeach
@@ -453,11 +455,12 @@
                         @enderror
                     </div>
 
-                    {{-- حقل التاريخ الجديد --}}
                     <div class="form-group">
-                        <label for="appointment_flatpickr">اختر تاريخ الموعد</label>
+                        <label
+                            for="appointment_flatpickr">{{ trans('patients.livewire_select_appointment_date') }}</label>
                         <div class="input-with-icon" wire:ignore>
-                            <input type="text" id="appointment_flatpickr" placeholder="الرجاء اختيار طبيب أولاً..."
+                            <input type="text" id="appointment_flatpickr"
+                                placeholder="{{ trans('patients.livewire_please_select_doctor_first') }}"
                                 readonly="readonly" class="form-control flatpickr-input">
                             <i class="fas fa-calendar-day"></i>
                         </div>
@@ -466,10 +469,9 @@
                         @enderror
                     </div>
 
-                    {{-- منطقة عرض الفترات الزمنية --}}
                     <div class="form-group" id="time-slots-container">
                         @if (!empty($selected_date))
-                            <label>اختر وقت الموعد:</label>
+                            <label>{{ trans('patients.livewire_select_appointment_time') }}</label>
                             <div class="time-slots">
                                 @if (!empty($available_time_slots))
                                     @foreach ($available_time_slots as $slot)
@@ -480,7 +482,8 @@
                                     @endforeach
                                 @else
                                     @if (empty($errorMessage) && empty($message2))
-                                        <p class="no-slots-message">لا توجد أوقات متاحة في هذا اليوم.</p>
+                                        <p class="no-slots-message">
+                                            {{ trans('patients.livewire_no_available_times_for_day') }}</p>
                                     @endif
                                 @endif
                             </div>
@@ -494,31 +497,37 @@
                 <!-- قسم معلومات المريض -->
                 <div class="form-section patient-info">
                     <div class="section-header"> <i class="fas fa-user-injured"></i>
-                        <h3>معلومات المريض</h3>
+                        <h3>{{ trans('patients.livewire_patient_information') }}</h3>
                     </div>
-                    <div class="form-group"> <label for="name">الاسم الكامل</label>
+                    <div class="form-group"> <label for="name">{{ trans('patients.livewire_full_name') }}</label>
                         <div class="input-with-icon"> <input type="text" id="name" wire:model.defer="form.name"
-                                placeholder="أدخل اسمك الثلاثي" required> <i class="fas fa-user"></i> </div>
+                                placeholder="{{ trans('patients.livewire_enter_full_name') }}" required> <i
+                                class="fas fa-user"></i> </div>
                         @error('form.name')
                             <span class="error-validation">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="form-group"> <label for="email">البريد الإلكتروني</label>
+                    <div class="form-group"> <label for="email">{{ trans('patients.livewire_email') }}</label>
                         <div class="input-with-icon"> <input type="email" id="email" wire:model.defer="form.email"
-                                placeholder="example@domain.com" required> <i class="fas fa-envelope"></i> </div>
+                                placeholder="{{ trans('patients.email_placeholder') }}" required> <i
+                                class="fas fa-envelope"></i> </div>
                         @error('form.email')
                             <span class="error-validation">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="form-group"> <label for="phone">رقم الهاتف</label>
+                    <div class="form-group"> <label
+                            for="phone">{{ trans('patients.livewire_phone_number') }}</label>
                         <div class="input-with-icon"> <input type="tel" id="Phone" wire:model.defer="form.Phone"
-                                placeholder="05XXXXXXXX" required> <i class="fas fa-phone-alt"></i> </div>
+                                placeholder="{{ trans('patients.phone_placeholder_sa') }}" required> <i
+                                class="fas fa-phone-alt"></i> </div>
                         @error('form.Phone')
                             <span class="error-validation">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="form-group"> <label for="notes">ملاحظات إضافية (اختياري)</label>
-                        <textarea id="notes" wire:model.defer="notes" placeholder="أي معلومات إضافية تريد إضافتها..."></textarea> @error('notes')
+                    <div class="form-group"> <label
+                            for="notes">{{ trans('patients.livewire_additional_notes') }}</label>
+                        <textarea id="notes" wire:model.defer="notes"
+                            placeholder="{{ trans('patients.livewire_additional_info_placeholder') }}"></textarea> @error('notes')
                             <span class="error-validation">{{ $message }}</span>
                         @enderror
                     </div>
@@ -526,13 +535,14 @@
 
             </div>
 
-            {{-- زر الإرسال --}}
             <div class="form-actions">
                 <button type="submit" class="submit-btn" {{ empty($selected_time) ? 'disabled' : '' }}
                     wire:loading.attr="disabled" wire:target="store">
-                    <span wire:loading.remove wire:target="store"> <i class="fas fa-calendar-check"></i> تأكيد الحجز
+                    <span wire:loading.remove wire:target="store"> <i class="fas fa-calendar-check"></i>
+                        {{ trans('patients.livewire_confirm_booking') }}
                     </span>
-                    <span wire:loading wire:target="store"> <i class="fas fa-spinner fa-spin"></i> جاري الحجز...
+                    <span wire:loading wire:target="store"> <i class="fas fa-spinner fa-spin"></i>
+                        {{ trans('patients.livewire_booking_in_progress') }}
                     </span>
                 </button>
             </div>

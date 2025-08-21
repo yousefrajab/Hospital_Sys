@@ -187,17 +187,17 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-history me-2 text-secondary"></i>مواعيـدي</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ المواعيد السابقة</span>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-history me-2 text-secondary"></i>{{ trans('patients.my_appointments') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('patients.past_appointments') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('appointments.upcoming') }}" class="btn btn-outline-success btn-sm me-2" style="border-radius:var(--admin-radius-md);">
-                <i class="fas fa-calendar-check me-1"></i> المواعيد القادمة
+                <i class="fas fa-calendar-check me-1"></i> {{ trans('patients.upcoming_appointments') }}
             </a>
             @if(Route::has('appointments.book'))
             <a href="{{ route('appointments.book') }}" class="btn btn-primary btn-sm" style="border-radius:var(--admin-radius-md);">
-                <i class="fas fa-plus-circle me-1"></i> طلب موعد جديد
+                <i class="fas fa-plus-circle me-1"></i> {{ trans('patients.request_new_appointment') }}
             </a>
             @endif
         </div>
@@ -209,7 +209,7 @@
 
     <div class="appointments-page-container">
         <div class="page-header-flex animate__animated animate__fadeInDown">
-            <h1 class="page-title-flex"><i class="fas fa-archive"></i> سجل مواعيدك السابقة</h1>
+            <h1 class="page-title-flex"><i class="fas fa-archive"></i> {{ trans('patients.past_appointments_record') }}</h1>
             {{-- يمكنك إضافة فلاتر هنا (مثلاً، حسب السنة أو الشهر) --}}
         </div>
 
@@ -217,11 +217,9 @@
             <div class="past-appointments-timeline">
                 @foreach ($appointments as $appointment)
                     @php
-                        // تحديد حالة الخط الزمني لعكسها في data-attribute
                         $timelineStatus = match($appointment->type) {
                             \App\Models\Appointment::STATUS_COMPLETED => 'completed',
                             \App\Models\Appointment::STATUS_CANCELLED => 'cancelled',
-                            // \App\Models\Appointment::STATUS_NO_SHOW => 'no_show', // إذا أضفت هذه الحالة
                             default => 'other'
                         };
                     @endphp
@@ -234,7 +232,6 @@
                                 $timelineIconClass = match($appointment->type) {
                                     \App\Models\Appointment::STATUS_COMPLETED => 'fas fa-check-double',
                                     \App\Models\Appointment::STATUS_CANCELLED => 'fas fa-ban',
-                                    // \App\Models\Appointment::STATUS_NO_SHOW => 'fas fa-calendar-times',
                                     default => 'far fa-calendar-alt'
                                 };
                             @endphp
@@ -247,22 +244,19 @@
                                     @if($appointment->section)
                                         {{ $appointment->section->name }}
                                     @else
-                                        موعد عام
+                                        {{ trans('patients.general_appointment') }}
                                     @endif
-                                    {{-- إذا كان لديك حقل 'type' لنوع الموعد غير حالته --}}
-                                    {{-- {{ $appointment->appointment_type_description ? ' - ' . $appointment->appointment_type_description : '' }} --}}
                                 </h5>
                                 <span class="appointment-date-past">
-                                    {{ $appointment->appointment ? $appointment->appointment->translatedFormat('l، j F Y - h:i A') : 'تاريخ غير محدد' }}
+                                    {{ $appointment->appointment ? $appointment->appointment->translatedFormat('l، j F Y - h:i A') : trans('patients.undefined_date') }}
                                 </span>
                             </div>
                             <div class="appointment-status-past">
                                 @php
-                                    $statusTextPast = $appointment->status_display ?? $appointment->type; // استخدام type مباشرة إذا لم يكن status_display
+                                    $statusTextPast = $appointment->status_display ?? $appointment->type;
                                     $statusBadgeClassPast = match($appointment->type) {
                                         \App\Models\Appointment::STATUS_COMPLETED => 'badge-completed-past',
                                         \App\Models\Appointment::STATUS_CANCELLED => 'badge-cancelled-past',
-                                        // \App\Models\Appointment::STATUS_NO_SHOW => 'badge-noshow-past',
                                         default => 'badge-default-past'
                                     };
                                 @endphp
@@ -272,18 +266,16 @@
                         <div class="appointment-card-body-past">
                             <ul class="appointment-details-list-past">
                                 @if($appointment->doctor)
-                                <li><i class="fas fa-user-md"></i> <span class="detail-label">الطبيب:</span> <strong>{{ $appointment->doctor->name }}</strong></li>
+                                <li><i class="fas fa-user-md"></i> <span class="detail-label">{{ trans('patients.doctor_label') }}</span> <strong>{{ $appointment->doctor->name }}</strong></li>
                                 @endif
                                 @if($appointment->notes_by_staff)
-                                    <li><i class="fas fa-clinic-medical"></i> <span class="detail-label">ملاحظات العيادة/الطبيب:</span> <strong>{{ Str::limit($appointment->notes_by_staff, 150) }}</strong></li>
+                                    <li><i class="fas fa-clinic-medical"></i> <span class="detail-label">{{ trans('patients.clinic_doctor_notes_label') }}</span> <strong>{{ Str::limit($appointment->notes_by_staff, 150) }}</strong></li>
                                 @endif
                                 @if($appointment->notes_by_patient && $appointment->type != \App\Models\Appointment::STATUS_CANCELLED)
-                                    <li><i class="fas fa-sticky-note"></i> <span class="detail-label">ملاحظاتك (عند الحجز):</span> <strong>{{ Str::limit($appointment->notes_by_patient, 150) }}</strong></li>
+                                    <li><i class="fas fa-sticky-note"></i> <span class="detail-label">{{ trans('patients.your_notes_on_booking_label') }}</span> <strong>{{ Str::limit($appointment->notes_by_patient, 150) }}</strong></li>
                                 @endif
-                                {{-- <li><i class="fas fa-clock"></i> <span class="detail-label">المدة:</span> <strong>{{ $appointment->duration_minutes ?? 'غير محددة' }} دقيقة</strong></li> --}}
                             </ul>
                         </div>
-                        {{-- لا يوجد فوتر أزرار عادة هنا، لكن يمكن إضافة زر لـ "طلب نفس الموعد" مثلاً --}}
                     </div>
                 @endforeach
             </div>
@@ -296,7 +288,7 @@
         @else
             <div class="no-appointments-patient text-center py-5">
                 <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
-                <p>لا توجد لديك مواعيد سابقة مسجلة.</p>
+                <p>{{ trans('patients.no_past_appointments_message') }}</p>
             </div>
         @endif
     </div>

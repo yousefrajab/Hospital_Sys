@@ -356,8 +356,8 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">موظف الأشعة</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ الملف الشخصي</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('ray.ray_employee') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('ray.profile') }}</span>
             </div>
         </div>
     </div>
@@ -375,12 +375,12 @@
                      alt="{{ $employee->name }}">
                 <h2 class="ray-profile-name">{{ $employee->name }}</h2>
                 <span class="ray-profile-title">
-                    <i class="fas fa-x-ray me-2"></i> موظف قسم الأشعة
+                    <i class="fas fa-x-ray me-2"></i> {{ trans('ray.ray_department_employee') }}
                 </span>
                 @if(property_exists($employee, 'status'))
                     <span class="ray-profile-status {{ $employee->status ? 'active' : 'inactive' }}">
                         <i class="fas fa-circle"></i>
-                        {{ $employee->status ? 'نشط' : 'غير نشط' }}
+                        {{ $employee->status ? trans('ray.status_active') : trans('ray.status_inactive') }}
                     </span>
                 @endif
             </div>
@@ -388,13 +388,13 @@
             <!-- جسم الملف الشخصي -->
             <div class="ray-profile-body">
                 <!-- قسم المعلومات الأساسية -->
-                <h3 class="ray-section-title ray-animate ray-delay-1">المعلومات الشخصية</h3>
+                <h3 class="ray-section-title ray-animate ray-delay-1">{{ trans('ray.personal_information') }}</h3>
                 <div class="ray-info-grid">
                     <div class="ray-info-card ray-animate ray-delay-2">
                         <div class="ray-info-icon">
                             <i class="fas fa-envelope"></i>
                         </div>
-                        <div class="ray-info-label">البريد الإلكتروني</div>
+                        <div class="ray-info-label">{{ trans('ray.email') }}</div>
                         <div class="ray-info-value">{{ $employee->email }}</div>
                     </div>
 
@@ -403,7 +403,7 @@
                         <div class="ray-info-icon" style="background: linear-gradient(135deg, #11cdef, #1171ef);">
                             <i class="fas fa-phone-alt"></i>
                         </div>
-                        <div class="ray-info-label">رقم الهاتف</div>
+                        <div class="ray-info-label">{{ trans('ray.phone_number') }}</div>
                         <div class="ray-info-value" dir="ltr">{{ $employee->phone }}</div>
                     </div>
                     @endif
@@ -413,7 +413,7 @@
                         <div class="ray-info-icon" style="background: linear-gradient(135deg, #fb6340, #fbb140);">
                             <i class="fas fa-id-card"></i>
                         </div>
-                        <div class="ray-info-label">رقم الهوية</div>
+                        <div class="ray-info-label">{{ trans('ray.national_id') }}</div>
                         <div class="ray-info-value">{{ $employee->national_id }}</div>
                     </div>
                     @endif
@@ -422,28 +422,28 @@
                         <div class="ray-info-icon" style="background: linear-gradient(135deg, #2dce89, #2dcecc);">
                             <i class="fas fa-calendar-alt"></i>
                         </div>
-                        <div class="ray-info-label">تاريخ الانضمام</div>
+                        <div class="ray-info-label">{{ trans('ray.join_date') }}</div>
                         <div class="ray-info-value">
                             {{ $employee->created_at ? $employee->created_at->translatedFormat('d M Y') : '-' }}
                         </div>
                     </div>
                 </div>
 
-                <!-- قسم الإحصائيات (يمكن تفعيله إذا كانت هناك بيانات) -->
+                {{-- قسم الإحصائيات (يمكن تفعيله إذا كانت هناك بيانات) --}}
                 {{--
-                <h3 class="ray-section-title ray-animate ray-delay-1">إحصائيات العمل</h3>
+                <h3 class="ray-section-title ray-animate ray-delay-1">{{ trans('ray.work_statistics') }}</h3>
                 <div class="ray-stats-grid">
                     <div class="ray-stat-card ray-animate ray-delay-2">
                         <div class="ray-stat-number">24</div>
-                        <div class="ray-stat-label">طلبات اليوم</div>
+                        <div class="ray-stat-label">{{ trans('ray.today_requests') }}</div>
                     </div>
                     <div class="ray-stat-card ray-animate ray-delay-3">
                         <div class="ray-stat-number">128</div>
-                        <div class="ray-stat-label">طلبات الأسبوع</div>
+                        <div class="ray-stat-label">{{ trans('ray.week_requests') }}</div>
                     </div>
                     <div class="ray-stat-card ray-animate ray-delay-4">
                         <div class="ray-stat-number">98%</div>
-                        <div class="ray-stat-label">إنجاز الطلبات</div>
+                        <div class="ray-stat-label">{{ trans('ray.completion_rate') }}</div>
                     </div>
                 </div>
                 --}}
@@ -452,13 +452,12 @@
             <!-- أزرار التحكم -->
             <div class="ray-profile-actions">
                 <a href="{{ route('ray_employee.profile.edit') }}" class="ray-edit-btn">
-                    <i class="fas fa-edit"></i> تعديل الملف الشخصي
+                    <i class="fas fa-edit"></i> {{ trans('ray.edit_profile') }}
                 </a>
             </div>
         </div>
     </div>
 @endsection
-
 @section('js')
     @parent
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>

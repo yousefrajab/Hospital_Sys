@@ -54,15 +54,14 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-pills text-primary me-2"></i>الصيدلية</h4>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-pills text-primary me-2"></i>{{ trans('phrE.pharmacist') }}</h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="text-muted mt-1 tx-13">وصفات طبية قيد الانتظار</span>
+                <span class="text-muted mt-1 tx-13">{{ trans('phrE.on_hold_medical_prescriptions') }}</span>
             </div>
         </div>
-        {{-- يمكنك إضافة زر لـ "الوصفات الواردة" إذا أردت سهولة التنقل --}}
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('pharmacy_employee.prescriptions.index') }}" class="btn btn-outline-primary btn-sm ripple-effect">
-                 <i class="fas fa-inbox me-1"></i> عرض الوصفات الواردة
+                 <i class="fas fa-inbox me-1"></i> {{ trans('phrE.view_incoming_prescriptions_button') }}
             </a>
         </div>
     </div>
@@ -73,26 +72,26 @@
 
     <div class="card card-custom filter-card" data-aos="fade-down">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة الوصفات قيد الانتظار</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>{{ trans('phrE.filter_on_hold_prescriptions') }}</h5>
         </div>
         <div class="card-body">
             <form method="GET" action="{{ route('pharmacy_employee.prescriptions.on_hold') }}">
                 <div class="row g-3 align-items-end">
                     <div class="col-lg-5 col-md-6">
-                        <label for="search_on_hold" class="form-label">بحث برقم الوصفة / اسم المريض / الطبيب:</label>
+                        <label for="search_on_hold" class="form-label">{{ trans('phrE.search_by_prescription_patient_doctor_onhold') }}</label>
                         <input type="text" name="search_term" id="search_on_hold" class="form-control"
-                               placeholder="أدخل مصطلح البحث..." value="{{ $request->input('search_term') }}">
+                               placeholder="{{ trans('phrE.search_term_placeholder') }}" value="{{ $request->input('search_term') }}">
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <label for="date_filter_onhold_page" class="form-label">تاريخ وضعها قيد الانتظار (تاريخ التحديث):</label>
+                        <label for="date_filter_onhold_page" class="form-label">{{ trans('phrE.date_put_on_hold') }}</label>
                         <input type="text" name="date_filter_onhold" id="date_filter_onhold_page" class="form-control flatpickr-date"
                                placeholder="YYYY-MM-DD" value="{{ $request->input('date_filter_onhold') }}">
                     </div>
                     <div class="col-lg-3 col-md-12">
-                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> بحث</button>
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> {{ trans('phrE.search') }}</button>
                         @if(request()->hasAny(['search_term', 'date_filter_onhold']))
                             <a href="{{ route('pharmacy_employee.prescriptions.on_hold') }}" class="btn btn-outline-secondary w-100 mt-2 btn-sm">
-                                <i class="fas fa-eraser me-1"></i> مسح
+                                <i class="fas fa-eraser me-1"></i> {{ trans('phrE.clear') }}
                             </a>
                         @endif
                     </div>
@@ -103,7 +102,7 @@
 
     <div class="card card-custom mt-4" data-aos="fade-up" data-aos-delay="100">
         <div class="card-header">
-            <h4 class="card-title">قائمة الوصفات قيد الانتظار ({{ $onHoldPrescriptions->total() }})</h4>
+            <h4 class="card-title">{{ trans('phrE.on_hold_prescriptions_list_title', ['count' => $onHoldPrescriptions->total()]) }}</h4>
         </div>
         <div class="card-body p-0">
             @if($onHoldPrescriptions->isNotEmpty())
@@ -112,13 +111,13 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>رقم الوصفة</th>
-                                <th>اسم المريض</th>
-                                <th>الطبيب المعالج</th>
-                                <th>تاريخ الوصفة</th>
-                                <th class="text-center">الحالة</th>
-                                <th>آخر تحديث (سبب التعليق المحتمل)</th>
-                                <th class="text-center">الإجراء</th>
+                                <th>{{ trans('phrE.prescription_number_col') }}</th>
+                                <th>{{ trans('phrE.patient_name_col') }}</th>
+                                <th>{{ trans('phrE.attending_doctor_col') }}</th>
+                                <th>{{ trans('phrE.prescription_date_col') }}</th>
+                                <th class="text-center">{{ trans('phrE.status_col') }}</th>
+                                <th>{{ trans('phrE.last_update_reason_col') }}</th>
+                                <th class="text-center">{{ trans('phrE.action_col') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -126,25 +125,23 @@
                                 <tr>
                                     <td>{{ $loop->iteration + $onHoldPrescriptions->firstItem() - 1 }}</td>
                                     <td><strong>{{ $prescription->prescription_number }}</strong></td>
-                                    <td>{{ $prescription->patient->name ?? 'مريض غير معروف' }}</td>
-                                    <td>{{ $prescription->doctor->name ?? 'طبيب غير محدد' }}</td>
+                                    <td>{{ $prescription->patient->name ?? trans('phrE.unknown_patient') }}</td>
+                                    <td>{{ $prescription->doctor->name ?? trans('phrE.unspecified_doctor') }}</td>
                                     <td>{{ $prescription->prescription_date->translatedFormat('d M Y') }}</td>
                                     <td class="text-center">
-                                        <span class="status-badge status-on_hold">قيد الانتظار</span>
+                                        <span class="status-badge status-on_hold">{{ trans('phrE.status_on_hold') }}</span>
                                     </td>
                                     <td>
                                         {{ $prescription->updated_at->translatedFormat('d M Y H:i') }}
                                         @if($prescription->pharmacy_notes)
-                                            <small class="d-block text-muted" data-bs-toggle="tooltip" title="ملاحظات الصيدلية: {{ $prescription->pharmacy_notes }}"><i class="fas fa-info-circle text-info me-1"></i>{{ Str::limit($prescription->pharmacy_notes, 30) }}</small>
+                                            <small class="d-block text-muted" data-bs-toggle="tooltip" title="{{ trans('phrE.pharmacy_notes_tooltip', ['notes' => $prescription->pharmacy_notes]) }}"><i class="fas fa-info-circle text-info me-1"></i>{{ Str::limit($prescription->pharmacy_notes, 30) }}</small>
                                         @endif
                                     </td>
                                     <td class="text-center">
                                         <a href="{{ route('pharmacy_employee.prescriptions.dispense.form', $prescription->id) }}"
-                                           class="btn btn-warning action-btn btn-sm"> {{-- زر بلون مختلف --}}
-                                            <i class="fas fa-play-circle"></i> متابعة الصرف
+                                           class="btn btn-warning action-btn btn-sm">
+                                            <i class="fas fa-play-circle"></i> {{ trans('phrE.resume_dispensing') }}
                                         </a>
-                                        {{-- يمكنك إضافة زر لعرض تفاصيل الوصفة إذا أردت --}}
-                                        {{-- <a href="#" class="btn btn-outline-info btn-sm action-btn"><i class="fas fa-eye"></i></a> --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -159,7 +156,7 @@
             @else
                 <div class="empty-state p-5">
                     <i class="fas fa-pause-circle fa-3x text-warning"></i>
-                    <h5 class="mt-3">لا توجد وصفات طبية قيد الانتظار حاليًا.</h5>
+                    <h5 class="mt-3">{{ trans('phrE.no_on_hold_prescriptions') }}</h5>
                 </div>
             @endif
         </div>
@@ -181,7 +178,7 @@
             AOS.init({ duration: 700, once: true, offset: 50 });
 
             $('.select2').select2({ // استهدف الكلاس العام إذا كان لديك فلتر بالحالة هنا
-                placeholder: $(this).data('placeholder') || "اختر...",
+                placeholder: $(this).data('placeholder') || "{{ trans('phrM.select_placeholder') }}",
                 width: '100%',
                 dir: "rtl",
                 theme: "bootstrap-5",

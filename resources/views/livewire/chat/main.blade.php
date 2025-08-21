@@ -115,8 +115,8 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">المحادثات</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ مركز الرسائل</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('doctors.conversations') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('doctors.message_center') }}</span>
             </div>
         </div>
         {{-- يمكنك إضافة أزرار إجراءات هنا --}}
@@ -130,15 +130,15 @@
         <div class="chat-sidebar" id="chatSidebar">
             {{-- يمكن إضافة هيدر للشريط الجانبي هنا (بحث، زر محادثة جديدة) --}}
             <div class="p-3 border-bottom">
-                <h5 class="mb-0 font-weight-semibold">المحادثات</h5>
+                <h5 class="mb-0 font-weight-semibold">{{ trans('doctors.conversations') }}</h5>
                 {{-- مثال لزر بدء محادثة جديدة إذا كنت طبيبًا --}}
                 @if (Auth::guard('doctor')->check())
                     <a href="{{ route('doctor.chat.patients') }}" class="btn btn-primary btn-sm w-100 mt-2">
-                        <i class="fas fa-plus-circle me-1"></i> محادثة جديدة مع مريض
+                        <i class="fas fa-plus-circle me-1"></i> {{ trans('doctors.new_conversation_with_patient') }}
                     </a>
                 @elseif(Auth::guard('patient')->check())
                     <a href="{{ route('chat.doctors') }}" class="btn btn-info btn-sm w-100 mt-2">
-                        <i class="fas fa-plus-circle me-1"></i> محادثة جديدة مع طبيب
+                        <i class="fas fa-plus-circle me-1"></i> {{ trans('doctors.new_conversation_with_doctor') }}
                     </a>
                 @endif
             </div>

@@ -46,11 +46,11 @@ class PharmacyStockController extends Controller
                                         ->sum('quantity_on_hand');
 
         $expiryFilterOptions = [
-            '' => 'الكل',
-            'not_expired' => 'سارية الصلاحية',
-            'expired_soon' => 'قريبة من الانتهاء (خلال ' . config('pharmacy.stock_expiry_warning_days', 90) . ' يوم)',
-            'expired' => 'منتهية الصلاحية'
-        ];
+    '' => trans('phrM.filter_expiry_all'),
+    'not_expired' => trans('phrM.filter_expiry_valid'),
+    'expired_soon' => trans('phrM.filter_expiry_soon', ['days' => config('pharmacy.stock_expiry_warning_days', 90)]),
+    'expired' => trans('phrM.filter_expiry_expired'),
+];
         return view('Dashboard.PharmacyManager.Stocks.index', compact(
             'medication',
             'stocks',

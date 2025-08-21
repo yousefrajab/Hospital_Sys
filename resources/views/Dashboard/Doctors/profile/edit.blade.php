@@ -464,16 +464,16 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">الملف الشخصي</h4>
+                <h4 class="content-title mb-0 my-auto">{{ trans('doctors.profile') }}</h4>
                 <span class="text-muted mt-1 tx-13 fw-light mx-2">/</span> {{-- استخدام فاصل أخف --}}
-                <span class="text-muted tx-13">تعديل البيانات</span>
+                <span class="text-muted tx-13">{{ trans('doctors.edit_data') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content align-items-center gap-2"> {{-- استخدام gap --}}
             {{-- رابط العودة لصفحة العرض --}}
             <a href="{{ route('doctor.profile.show') }}"
                 class="btn btn-outline-light btn-sm d-inline-flex align-items-center">
-                <i class="fas fa-arrow-left me-1 tx-11"></i> العودة للملف الشخصي
+                <i class="fas fa-arrow-left me-1 tx-11"></i> {{ trans('doctors.back_to_profile') }}
             </a>
         </div>
     </div>
@@ -491,7 +491,7 @@
             <div class="edit-card-header">
                 <h3 class="edit-card-title">
                     <i class="fas fa-user-edit"></i> {{-- تغيير الأيقونة --}}
-                    تعديل بيانات الملف الشخصي
+                    {{ trans('doctors.edit_profile_data') }}
                 </h3>
             </div>
 
@@ -507,33 +507,33 @@
                     {{-- الاسم الكامل --}}
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name" class="form-label">الاسم الكامل <span class="text-danger">*</span></label>
+                            <label for="name" class="form-label">{{ trans('doctors.full_name') }} <span class="text-danger">*</span></label>
                             <input type="text" id="name" name="name"
                                 class="form-control @error('name') is-invalid @enderror" value="{{ $doctor->name }}"
                                 required aria-describedby="nameHelp">
                             @error('name')
                                 <div class="invalid-feedback" id="nameError">{{ $message }}</div>
                             @else
-                                <div class="invalid-feedback" id="nameError">حقل الاسم مطلوب.</div>
+                                <div class="invalid-feedback" id="nameError">{{ trans('doctors.name_field_required') }}</div>
                             @enderror
-                            <small id="nameHelp" class="form-text text-muted">الاسم كما سيظهر للمرضى.</small>
+                            <small id="nameHelp" class="form-text text-muted">{{ trans('doctors.name_help_text') }}</small>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="floating-label">
                             <label>{{ trans('doctors.national_id') }}</label>
                             <input class="form-control" id="national_id" name="national_id"
-                                placeholder="ادخل رقم الهوية (9 أرقام)" type="text" value="{{ $doctor->national_id }}"
-                                pattern="[0-9]{9}" title="يجب أن يتكون رقم الهوية من 9 أرقام" maxlength="9" required
+                                placeholder="{{ trans('doctors.national_id_placeholder') }}" type="text" value="{{ $doctor->national_id }}"
+                                pattern="[0-9]{9}" title="{{ trans('doctors.national_id_validation_message') }}" maxlength="9" required
                                 oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                            <div class="invalid-feedback">يجب أن يتكون رقم الهوية من 9 أرقام</div>
-                            <div class="valid-feedback"><i class="fas fa-check"></i> صحيح</div>
+                            <div class="invalid-feedback">{{ trans('doctors.national_id_validation_message') }}</div>
+                            <div class="valid-feedback"><i class="fas fa-check"></i> {{ trans('doctors.valid_input') }}</div>
                         </div>
                     </div>
                     {{-- البريد الإلكتروني --}}
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="email" class="form-label">البريد الإلكتروني <span
+                            <label for="email" class="form-label">{{ trans('doctors.email') }} <span
                                     class="text-danger">*</span></label>
                             <input type="email" id="email" name="email"
                                 class="form-control @error('email') is-invalid @enderror"
@@ -541,7 +541,7 @@
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @else
-                                <div class="invalid-feedback">يرجى إدخال بريد إلكتروني صحيح.</div>
+                                <div class="invalid-feedback">{{ trans('doctors.email_validation_message') }}</div>
                             @enderror
                         </div>
                     </div>
@@ -549,15 +549,15 @@
                     {{-- رقم الهاتف --}}
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="phone" class="form-label">رقم الهاتف <span class="text-danger">*</span></label>
+                            <label for="phone" class="form-label">{{ trans('doctors.phone_number') }} <span class="text-danger">*</span></label>
                             <input type="tel" id="phone" name="phone"
                                 class="form-control @error('phone') is-invalid @enderror"
                                 value="{{ old('phone', $doctor->phone) }}" required placeholder="05xxxxxxxx"
-                                pattern="^05\d{8}$" title="يجب أن يبدأ بـ 05 ويتكون من 10 أرقام">
+                                pattern="^05\d{8}$" title="{{ trans('doctors.phone_validation_message') }}">
                             @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @else
-                                <div class="invalid-feedback">صيغة رقم الهاتف غير صحيحة (مثال: 05xxxxxxxx).</div>
+                                <div class="invalid-feedback">{{ trans('doctors.phone_validation_message') }}</div>
                             @enderror
                         </div>
                     </div>
@@ -565,7 +565,7 @@
                     {{-- رفع صورة الملف الشخصي --}}
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="image" class="form-label">الصورة الشخصية</label>
+                            <label for="image" class="form-label">{{ trans('doctors.profile_picture') }}</label>
                             <div class="avatar-upload mb-4">
                                 @if ($doctor->image)
                                     <img id="output"
@@ -573,7 +573,7 @@
                                         alt="{{ trans('doctors.img') }}">
                                 @else
                                     <img id="output" src="{{ URL::asset('Dashboard/img/doctor_default.png') }}"
-                                        alt="صورة الطبيب">
+                                        alt="{{ trans('doctors.doctor_picture_alt') }}">
                                 @endif
                                 <label for="avatar-upload">
                                     <i class="fas fa-camera"></i>
@@ -590,27 +590,25 @@
                     {{-- فاصل قسم كلمة المرور --}}
                     <div class="col-12">
                         <hr class="my-4">
-                        <p class="text-muted small mb-3">لتغيير كلمة المرور، أدخل كلمة المرور الحالية والجديدة (اترك الحقول
-                            فارغة إذا لم تكن تريد التغيير):</p>
+                        <p class="text-muted small mb-3">{{ trans('doctors.password_change_instructions') }}</p>
                     </div>
 
                     {{-- كلمة المرور الحالية --}}
                     <div class="col-md-6">
                         <div class="form-group password-wrapper">
-                            <label for="current_password" class="form-label">كلمة المرور الحالية</label>
+                            <label for="current_password" class="form-label">{{ trans('doctors.current_password') }}</label>
                             <input type="password" id="current_password" name="current_password"
                                 class="form-control @error('current_password') is-invalid @enderror"
                                 autocomplete="current-password" aria-describedby="currentPasswordHelp">
                             <button type="button" class="toggle-password-btn"
                                 onclick="togglePasswordVisibility('current_password')" tabindex="-1"
-                                aria-label="إظهار / إخفاء كلمة المرور الحالية">
+                                aria-label="{{ trans('doctors.toggle_current_password_visibility') }}">
                                 <i class="fas fa-eye"></i>
                             </button>
                             @error('current_password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small id="currentPasswordHelp" class="form-text text-muted">مطلوبة فقط إذا أردت تغيير كلمة
-                                المرور.</small>
+                            <small id="currentPasswordHelp" class="form-text text-muted">{{ trans('doctors.current_password_help') }}</small>
                         </div>
                     </div>
                     {{-- ترك عمود فارغ للمباعدة إن أردت --}}
@@ -619,38 +617,36 @@
                     {{-- كلمة المرور الجديدة --}}
                     <div class="col-md-6">
                         <div class="form-group password-wrapper">
-                            <label for="new_password" class="form-label">كلمة المرور الجديدة</label>
+                            <label for="new_password" class="form-label">{{ trans('doctors.new_password') }}</label>
                             <input type="password" id="new_password" name="new_password"
                                 class="form-control @error('new_password') is-invalid @enderror"
                                 autocomplete="new-password" aria-describedby="newPasswordHelp">
                             <button type="button" class="toggle-password-btn"
                                 onclick="togglePasswordVisibility('new_password')" tabindex="-1"
-                                aria-label="إظهار / إخفاء كلمة المرور الجديدة">
+                                aria-label="{{ trans('doctors.toggle_new_password_visibility') }}">
                                 <i class="fas fa-eye"></i>
                             </button>
                             @error('new_password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <small id="newPasswordHelp" class="form-text text-muted">8 أحرف على الأقل، تحتوي حروف
-                                وأرقام.</small>
+                            <small id="newPasswordHelp" class="form-text text-muted">{{ trans('doctors.new_password_help') }}</small>
                         </div>
                     </div>
 
                     {{-- تأكيد كلمة المرور الجديدة --}}
                     <div class="col-md-6">
                         <div class="form-group password-wrapper">
-                            <label for="new_password_confirmation" class="form-label">تأكيد كلمة المرور الجديدة</label>
+                            <label for="new_password_confirmation" class="form-label">{{ trans('doctors.confirm_new_password') }}</label>
                             <input type="password" id="new_password_confirmation" name="new_password_confirmation"
                                 class="form-control" {{-- لا نحتاج is-invalid هنا مباشرة --}} autocomplete="new-password"
                                 aria-describedby="newPasswordConfirmationHelp">
                             <button type="button" class="toggle-password-btn"
                                 onclick="togglePasswordVisibility('new_password_confirmation')" tabindex="-1"
-                                aria-label="إظهار / إخفاء تأكيد كلمة المرور">
+                                aria-label="{{ trans('doctors.toggle_confirm_password_visibility') }}">
                                 <i class="fas fa-eye"></i>
                             </button>
                             {{-- رسالة الخطأ لعدم التطابق تأتي من 'new_password.confirmed' وتعرض تحت حقل new_password --}}
-                            <small id="newPasswordConfirmationHelp" class="form-text text-muted">أعد كتابة كلمة المرور
-                                الجديدة للتأكيد.</small>
+                            <small id="newPasswordConfirmationHelp" class="form-text text-muted">{{ trans('doctors.confirm_new_password_help') }}</small>
                         </div>
                     </div>
 
@@ -659,10 +655,10 @@
                 {{-- أزرار الحفظ والإلغاء --}}
                 <div class="form-actions">
                     <a href="{{ route('doctor.profile.show') }}" class="btn-cancel"> {{-- تأكد من اسم مسار عرض ملف الطبيب --}}
-                        <i class="fas fa-times me-1"></i> إلغاء
+                        <i class="fas fa-times me-1"></i> {{ trans('doctors.cancel') }}
                     </a>
                     <button type="submit" class="btn-submit">
-                        <i class="fas fa-save me-1"></i> حفظ التغييرات
+                        <i class="fas fa-save me-1"></i> {{ trans('doctors.save_changes') }}
                     </button>
                 </div>
 

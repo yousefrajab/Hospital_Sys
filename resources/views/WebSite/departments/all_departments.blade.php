@@ -4,8 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>الأقسام الطبية - {{ config('app.name', 'اسم المستشفى/المنصة') }}</title>
-
+<title>{{ trans('patients.medical_departments') }} - {{ config('app.name', trans('patients.medical_platform')) }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -20,12 +19,9 @@
         :root {
             /* يمكنك استبدال هذه القيم بالألوان المفضلة لديك لهذه الصفحة المستقلة */
             --deptpage-primary-color: {{ $settings['deptpage_primary_color'] ?? '#1E88E5' }};
-            /* A strong, professional blue */
             --deptpage-primary-color-rgb: {{ implode(',', sscanf($settings['deptpage_primary_color'] ?? '#1E88E5', '#%02x%02x%02x')) ?? '30, 136, 229' }};
             --deptpage-secondary-color: {{ $settings['deptpage_secondary_color'] ?? '#43A047' }};
-            /* A complementary green */
             --deptpage-text-color: #37474F;
-            /* Darker text for readability */
             --deptpage-heading-color: #263238;
             /* Even darker for headings */
             --deptpage-light-text: #78909C;
@@ -42,8 +38,6 @@
             --deptpage-font-secondary: 'Tajawal', sans-serif;
             /* Tajawal for headings for sharpness */
         }
-
-        html,
         body {
             margin: 0;
             padding: 0;
@@ -341,64 +335,59 @@
 
 <body>
 
-    <header class="standalone-dept-header">
+     <header class="standalone-dept-header">
         <div class="container-fluid">
             <div class="site-branding">
-                <a href="{{ route('home') }}" class="site-title" title="العودة إلى الرئيسية {{ config('app.name') }}">
-                    {{-- {{ config('app.name', 'المنصة الطبية') }} --}}
-                    الأقسام الطبية
+                <a href="{{ route('home') }}" class="site-title" title="{{ trans('patients.back_to_home_title', ['appName' => config('app.name')]) }}">
+                    {{ trans('patients.medical_departments') }}
                 </a>
             </div>
             <div class="back-to-home">
-                <a href="{{ route('home') }}"><i class="fas fa-home"></i> العودة للرئيسية</a>
+                <a href="{{ route('home') }}"><i class="fas fa-home"></i> {{ trans('patients.back_to_home') }}</a>
             </div>
         </div>
     </header>
 
+
     <main class="departments-standalone-container">
         <section class="departments-page-title-standalone">
             <div class="page-icon animate__animated animate__zoomIn" data-wow-delay="0.1s">
-                <i class="fas fa-sitemap"></i> {{-- Or a more medical-specific icon for departments --}}
+                <i class="fas fa-sitemap"></i>
             </div>
-            <h1 class="animate__animated animate__fadeInDown" data-wow-delay="0.2s">الأقسام الطبية المتخصصة</h1>
+            <h1 class="animate__animated animate__fadeInDown" data-wow-delay="0.2s">{{ trans('patients.specialized_medical_departments') }}</h1>
             <p class="title-description-standalone animate__animated animate__fadeInUp" data-wow-delay="0.3s">
-                اكتشف مجموعة واسعة من الأقسام الطبية التي نقدمها، والمصممة لتلبية كافة احتياجاتك الصحية بأعلى معايير
-                الجودة.
+                {{ trans('patients.departments_page_description') }}
             </p>
         </section>
 
-        <div class="row g-4"> {{-- Bootstrap 5 row with gutters --}}
+        <div class="row g-4">
             @forelse ($sections as $section)
                 <div class="col-lg-4 col-md-6 col-sm-12 animate__animated animate__fadeInUp"
                     data-wow-delay="{{ ($loop->index % 3) * 0.1 + 0.4 }}s">
                     <div class="department-card-standalone">
                         <div class="icon-wrapper-standalone">
                             <span class="department-icon {{ $section->icon_class ?? 'fas fa-clinic-medical' }}"></span>
-                            {{-- Default icon if not provided --}}
                         </div>
                         <div class="content-wrapper-standalone">
                             <h3 class="department-name-standalone">
                                 <a href="{{ route('website.department.details', $section->id) }}"
-                                    title="تفاصيل قسم {{ $section->name }}">
+                                    title="{{ trans('patients.department_details_title', ['name' => $section->name]) }}">
                                     {{ $section->name }}
                                 </a>
                             </h3>
                             <p class="department-description-standalone">
-                                {{ Str::limit(strip_tags($section->description ?? 'معلومات عن هذا القسم ستكون متاحة قريباً.'), 100) }}
+                                {{ Str::limit(strip_tags($section->description ?? trans('patients.department_info_coming_soon')), 100) }}
                             </p>
                             @if ($section->doctors_count > 0)
                                 <div class="doctors-count-badge-standalone">
                                     <i class="fas fa-user-md"></i>
                                     {{ $section->doctors_count }}
-                                    {{ trans_choice('messages.doctors_count', $section->doctors_count, ['value' => $section->doctors_count]) }}
-                                    {{-- Assuming you have a translation file like resources/lang/ar/messages.php
-                                         'doctors_count' => '{0} لا يوجد أطباء|{1} طبيب واحد|[2,*] أطباء',
-                                    --}}
+                                    {{ trans_choice('patients.doctors_count', $section->doctors_count, ['value' => $section->doctors_count]) }}
                                 </div>
                             @endif
                             <a href="{{ route('website.department.details', $section->id) }}"
                                 class="btn-details-standalone">
-                                اقرأ المزيد <i
+                                {{ trans('patients.read_more') }} <i
                                     class="fas {{ LaravelLocalization::getCurrentLocaleDirection() == 'rtl' ? 'fa-arrow-left' : 'fa-arrow-right' }}"></i>
                             </a>
                         </div>
@@ -408,8 +397,8 @@
                 <div class="col-12">
                     <div class="no-departments-standalone animate__animated animate__fadeInUp" data-wow-delay="0.4s">
                         <div class="no-dept-icon"><i class="fas fa-hospital-slash"></i></div>
-                        <h3>لا توجد أقسام متاحة حاليًا</h3>
-                        <p>نعمل باستمرار على إضافة وتحديث أقسامنا. يرجى التحقق مرة أخرى قريبًا.</p>
+                        <h3>{{ trans('patients.no_departments_available') }}</h3>
+                        <p>{{ trans('patients.no_departments_message') }}</p>
                     </div>
                 </div>
             @endforelse
@@ -422,7 +411,7 @@
         @endif
     </main>
 
-    <footer class="standalone-dept-footer">
+    {{-- <footer class="standalone-dept-footer">
         <p style="margin: 0; font-size: 14px;">© حقوق النشر {{ date('Y') }} ، جميع الحقوق محفوظة لـ <a
                 href="{{ route('home') }}" style="color: #00bcd4; text-decoration: none;">نظام إدارة
                 المستشفيات</a>.
@@ -430,7 +419,7 @@
             تصميم وتطوير <a href="https://www.facebook.com/Momensarsour" target="_blank"
                 style="color: #00bcd4; text-decoration: none;">Mo'men Sarsour & Yousef Rajab</a>
         </p>
-    </footer>
+    </footer> --}}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     {{--

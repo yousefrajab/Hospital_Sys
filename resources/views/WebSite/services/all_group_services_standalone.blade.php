@@ -3,8 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>باقات الخدمات - {{ config('app.name', 'المنصة الطبية') }}</title>
-
+<title>{{ trans('patients.package_services_title') }} - {{ config('app.name', trans('patients.medical_platform')) }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -81,25 +80,23 @@
 </head>
 <body>
     <header class="page-header-minimal">
-        {{-- ... (Header content remains the same) ... --}}
-         <div class="container-fluid">
+        <div class="container-fluid">
             <div class="site-branding">
                 <a href="{{ route('home') }}" class="site-title-minimal">
-                    {{ config('app.name', 'المنصة الطبية') }}
+                    {{ config('app.name', trans('patients.medical_platform')) }}
                 </a>
             </div>
             <div class="nav-links-minimal">
-                <a href="{{ route('website.services.all') }}" class="me-3"><i class="fas fa-medkit"></i> الخدمات الفردية</a>
-                <a href="{{ route('home') }}"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="{{ route('website.services.all') }}" class="me-3"><i class="fas fa-medkit"></i> {{ trans('patients.individual_services') }}</a>
+                <a href="{{ route('home') }}"><i class="fas fa-home"></i> {{ trans('patients.nav_home') }}</a>
             </div>
         </div>
     </header>
 
     <main class="page-container">
         <section class="page-main-title">
-             {{-- ... (Title section remains the same) ... --}}
-            <h1>باقات الخدمات المتاحة</h1>
-            <p>تصفح مجموعات الخدمات المتكاملة التي نقدمها لتلبية احتياجاتك الصحية الشاملة.</p>
+            <h1>{{ trans('patients.available_service_packages_title') }}</h1>
+            <p>{{ trans('patients.browse_our_integrated_packages_subtitle') }}</p>
         </section>
 
         <div class="row g-4">
@@ -111,7 +108,7 @@
                             @if(isset($group->Total_with_tax))
                             <span class="group-price">
                                 {{ number_format($group->Total_with_tax, 2) }}
-                                <small>{{  config('app.currency', 'ر.س') }}</small>
+                                <small>{{  config('app.currency', trans('patients.currency_sar')) }}</small>
                             </span>
                             @endif
                         </div>
@@ -121,51 +118,48 @@
                             @endif
 
                             @if($group->service_group && $group->service_group instanceof \Illuminate\Support\Collection && $group->service_group->isNotEmpty())
-                                <h4 class="services-list-title">تشمل هذه الباقة:</h4>
+                                <h4 class="services-list-title">{{ trans('patients.this_package_includes_title') }}</h4>
                                 <ul class="services-list">
                                     @foreach($group->service_group->take(4) as $service)
                                         <li>
                                             <div class="service-item-name">
                                                 <i class="fas fa-check"></i> {{ $service->name }}
                                                 @if(isset($service->pivot) && isset($service->pivot->quantity) && $service->pivot->quantity > 1)
-                                                    <small class="text-muted ms-1">(الكمية: {{ $service->pivot->quantity }})</small>
+                                                    <small class="text-muted ms-1">{{ trans('patients.quantity_prefix', ['quantity' => $service->pivot->quantity]) }}</small>
                                                 @endif
                                             </div>
-                                            {{-- Display Doctor and Section for each service in the group --}}
                                             @if ($service->doctor)
                                                 <div class="service-item-meta">
-                                                    <span data-bs-toggle="tooltip" title="مقدم الخدمة"><i class="fas fa-user-md"></i> {{ $service->doctor->name }}</span>
+                                                    <span data-bs-toggle="tooltip" title="{{ trans('patients.service_provider_tooltip') }}"><i class="fas fa-user-md"></i> {{ $service->doctor->name }}</span>
                                                     @if ($service->doctor->section)
-                                                        <span data-bs-toggle="tooltip" title="القسم الطبي"><i class="fas fa-clinic-medical"></i> {{ $service->doctor->section->name }}</span>
+                                                        <span data-bs-toggle="tooltip" title="{{ trans('patients.medical_department_tooltip') }}"><i class="fas fa-clinic-medical"></i> {{ $service->doctor->section->name }}</span>
                                                     @endif
                                                 </div>
                                             @endif
                                         </li>
                                     @endforeach
                                     @if($group->service_group->count() > 4)
-                                        <li class="text-muted mt-1"><i class="fas fa-ellipsis-h"></i> وخدمات أخرى...</li>
+                                        <li class="text-muted mt-1"><i class="fas fa-ellipsis-h"></i> {{ trans('patients.and_other_services') }}</li>
                                     @endif
                                 </ul>
                             @else
-                                <p class="text-muted small mt-2">لا توجد تفاصيل للخدمات المتضمنة في هذه الباقة حالياً.</p>
+                                <p class="text-muted small mt-2">{{ trans('patients.no_package_details_available_message') }}</p>
                             @endif
                         </div>
-                       
+
                     </div>
                 </div>
             @empty
-                {{-- ... (No grouped services message remains the same) ... --}}
                 <div class="col-12">
                     <div class="no-results-message">
                         <i class="fas fa-archive"></i>
-                        <h4>لا توجد باقات خدمات متاحة حاليًا.</h4>
-                        <p>يرجى التحقق مرة أخرى قريبًا، أو تصفح <a href="{{ route('website.services.all') }}">خدماتنا الفردية</a>.</p>
+                        <h4>{{ trans('patients.no_packages_available_title') }}</h4>
+                        <p>{{ trans('patients.no_packages_available_message') }} <a href="{{ route('website.services.all') }}">{{ trans('patients.our_individual_services_link_text') }}</a>.</p>
                     </div>
                 </div>
             @endforelse
         </div>
 
-        {{-- Pagination for Grouped Services --}}
         @if ($groupedServices->hasPages())
             <div class="d-flex justify-content-center mt-5 pagination-block">
                 {{ $groupedServices->links('pagination::bootstrap-5') }}
@@ -173,10 +167,7 @@
         @endif
     </main>
 
-    <footer class="page-footer-minimal">
-        {{-- ... (Footer content remains the same) ... --}}
-        <p>© {{ date('Y') }} جميع الحقوق محفوظة - {{ config('app.name', 'المنصة الطبية') }}.</p>
-    </footer>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>

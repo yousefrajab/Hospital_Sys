@@ -109,14 +109,14 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-file-medical-alt text-primary me-2"></i>الوصفات الطبية</h4>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-file-medical-alt text-primary me-2"></i>{{ trans('doctors.prescriptions') }}</h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="text-muted mt-1 tx-13">إنشاء وصفة جديدة</span>
+                <span class="text-muted mt-1 tx-13">{{ trans('doctors.create_new_prescription') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('doctor.patients.search_for_prescription') }}" class="btn btn-outline-secondary btn-sm ripple-effect">
-                 <i class="fas fa-search me-1"></i> بحث عن مريض آخر
+                 <i class="fas fa-search me-1"></i> {{ trans('doctors.search_another_patient') }}
             </a>
         </div>
     </div>
@@ -135,22 +135,22 @@
                              alt="{{ $patient->name }}" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover; border: 2px solid var(--bs-primary);">
                     </div>
                     <div class="col">
-                        <h5 class="mb-1">وصفة طبية للمريض: <strong class="text-dark">{{ $patient->name }}</strong></h5>
-                        <p class="mb-0"><strong>الهوية:</strong> {{ $patient->national_id }} | <strong>العمر:</strong> {{ $patient->Date_Birth ? $patient->Date_Birth->age : '-' }} سنة</p>
+                        <h5 class="mb-1">{{ trans('doctors.prescription_for_patient') }} <strong class="text-dark">{{ $patient->name }}</strong></h5>
+                        <p class="mb-0"><strong>{{ trans('doctors.national_id') }}</strong> {{ $patient->national_id }} | <strong>{{ trans('doctors.age') }}</strong> {{ $patient->Date_Birth ? $patient->Date_Birth->age : '-' }} {{ trans('doctors.years_old') }}</p>
                         @if($patient->diagnosedChronicDiseases && $patient->diagnosedChronicDiseases->isNotEmpty())
                             <div class="mt-2 allergies-section">
-                                <strong class="text-danger"><i class="fas fa-biohazard me-1"></i>أمراض مزمنة:</strong>
+                                <strong class="text-danger"><i class="fas fa-biohazard me-1"></i>{{ trans('doctors.chronic_diseases') }}</strong>
                                 @foreach($patient->diagnosedChronicDiseases->take(3) as $cd)
                                     <span class="badge rounded-pill bg-danger-light text-danger-emphasis">{{ $cd->disease->name ?? $cd->name }}</span>
                                 @endforeach
                                 @if($patient->diagnosedChronicDiseases->count() > 3)
-                                <a href="{{ route('admin.Patients.show', $patient->id) }}#chronic-diseases-section" target="_blank" class="small text-primary">(المزيد)</a>
+                                <a href="{{ route('admin.Patients.show', $patient->id) }}#chronic-diseases-section" target="_blank" class="small text-primary">{{ trans('doctors.more_details') }}</a>
                                 @endif
                             </div>
                         @endif
                         @if($patient->initial_allergies_text)
                              <div class="mt-1 allergies-section">
-                                <strong class="text-warning"><i class="fas fa-allergies me-1"></i>حساسيات:</strong>
+                                <strong class="text-warning"><i class="fas fa-allergies me-1"></i>{{ trans('doctors.allergies') }}</strong>
                                 <span class="badge rounded-pill bg-warning-light text-warning-emphasis border">{{ Str::limit($patient->initial_allergies_text, 50) }}</span>
                             </div>
                         @endif
@@ -170,7 +170,7 @@
                     {{-- ... (حقول تاريخ الوصفة ونوع الوصفة كما هي) ... --}}
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="prescription_date" class="form-label required">تاريخ الوصفة</label>
+                            <label for="prescription_date" class="form-label required">{{ trans('doctors.prescription_date') }}</label>
                             <input type="text" name="prescription_date" id="prescription_date"
                                    value="{{ old('prescription_date', now()->format('Y-m-d')) }}"
                                    class="form-control flatpickr-date @error('prescription_date') is-invalid @enderror" required
@@ -180,56 +180,56 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label">نوع الوصفة</label>
+                            <label class="form-label">{{ trans('doctors.prescription_type') }}</label>
                             <div class="form-check form-switch mt-2 pt-1">
                                 <input class="form-check-input" type="checkbox" name="is_chronic_prescription" value="1" id="is_chronic_prescription_check" {{ old('is_chronic_prescription') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="is_chronic_prescription_check">
-                                    وصفة لمرض مزمن (تسمح بإعادة الصرف)
+                                    {{ trans('doctors.chronic_prescription_label') }}
                                 </label>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <h5 class="form-section-title"><i class="fas fa-pills"></i>الأدوية الموصوفة</h5>
-                <p class="text-muted small mb-3">قم بإضافة الأدوية المطلوبة للوصفة. يجب إضافة دواء واحد على الأقل.</p>
+                <h5 class="form-section-title"><i class="fas fa-pills"></i>{{ trans('doctors.prescribed_medications') }}</h5>
+                <p class="text-muted small mb-3">{{ trans('doctors.prescribed_medications_desc') }}</p>
                 @error('items') <div class="alert alert-danger py-2 px-3 small">{{ $message }}</div> @enderror
-                @error('items.*.medication_id') <div class="alert alert-danger py-2 px-3 small">خطأ في أحد الأدوية: {{ $message }}</div> @enderror
+                @error('items.*.medication_id') <div class="alert alert-danger py-2 px-3 small">{{ trans('doctors.medication_item_error', ['message' => $message]) }}</div> @enderror
 
                 <div id="medication_items_wrapper">
                     @if(is_array(old('items')))
                         @foreach(old('items') as $index => $oldItem)
                             <div class="medication-item-row animate__animated animate__fadeIn">
-                                <button type="button" class="remove-medication-item-btn" title="إزالة الدواء"><i class="fas fa-times"></i></button>
+                                <button type="button" class="remove-medication-item-btn" title="{{ trans('doctors.remove_medication') }}"><i class="fas fa-times"></i></button>
                                 <input type="hidden" name="items[{{$index}}][medication_id]" value="{{ $oldItem['medication_id'] ?? '' }}" class="selected-medication-id">
                                 <div class="row g-3">
                                     <div class="col-md-12 mb-2">
-                                         <label class="form-label required">الدواء</label>
-                                        <select class="form-select select2-medications @error('items.'.$index.'.medication_id') is-invalid @enderror" data-item-index="{{$index}}" data-placeholder="ابحث واختر الدواء..." required>
+                                         <label class="form-label required">{{ trans('doctors.medication') }}</label>
+                                        <select class="form-select select2-medications @error('items.'.$index.'.medication_id') is-invalid @enderror" data-item-index="{{$index}}" data-placeholder="{{ trans('doctors.search_and_select_medication_placeholder') }}" required>
                                             @if(isset($oldItem['medication_id']) && ($selectedOldMed = collect($medications)->firstWhere('id', $oldItem['medication_id'])))
                                                 <option value="{{ $selectedOldMed->id }}" selected>{{ $selectedOldMed->display_text_for_select2 }}</option>
                                             @endif
                                         </select>
-                                         @error('items.'.$index.'.medication_id') <div class="invalid-feedback d-block">{{ $message }}</div> @else <div class="valid-feedback">تم الاختيار</div> @enderror
-                                         <div class="invalid-feedback custom-invalid-feedback-select2" style="display: none;">يرجى اختيار دواء لهذا البند.</div>
+                                         @error('items.'.$index.'.medication_id') <div class="invalid-feedback d-block">{{ $message }}</div> @else <div class="valid-feedback">{{ trans('doctors.choice_made') }}</div> @enderror
+                                         <div class="invalid-feedback custom-invalid-feedback-select2" style="display: none;">{{ trans('doctors.please_select_medication_for_item') }}</div>
                                     </div>
 
                                     {{-- الجرعة --}}
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="form-label required">الجرعة</label>
+                                            <label class="form-label required">{{ trans('doctors.dose_label') }}</label>
                                             <div class="input-group input-group-custom-select"> {{-- لتنسيق Select2 مع حقل نصي --}}
-                                                <select class="form-select select2-common-options dosage-select" name="items[{{$index}}][dosage_select]" data-placeholder="اختر أو اكتب...">
+                                                <select class="form-select select2-common-options dosage-select" name="items[{{$index}}][dosage_select]" data-placeholder="{{ trans('doctors.select_or_write_placeholder') }}">
                                                     <option></option>
-                                                    <option value="قرص واحد">قرص واحد</option>
-                                                    <option value="قرصان">قرصان</option>
-                                                    <option value="نصف قرص">نصف قرص</option>
-                                                    <option value="5 مل">5 مل</option>
-                                                    <option value="10 مل">10 مل</option>
-                                                    <option value="حقنة واحدة">حقنة واحدة</option>
-                                                    <option value="other">أخرى (اكتب يدويًا)</option>
+                                                    <option value="{{ trans('doctors.one_tablet') }}">{{ trans('doctors.one_tablet') }}</option>
+                                                    <option value="{{ trans('doctors.two_tablets') }}">{{ trans('doctors.two_tablets') }}</option>
+                                                    <option value="{{ trans('doctors.half_tablet') }}">{{ trans('doctors.half_tablet') }}</option>
+                                                    <option value="{{ trans('doctors.5_ml') }}">{{ trans('doctors.5_ml') }}</option>
+                                                    <option value="{{ trans('doctors.10_ml') }}">{{ trans('doctors.10_ml') }}</option>
+                                                    <option value="{{ trans('doctors.one_injection') }}">{{ trans('doctors.one_injection') }}</option>
+                                                    <option value="other">{{ trans('doctors.other_manual_entry') }}</option>
                                                 </select>
-                                                <input type="text" name="items[{{$index}}][dosage_text]" value="{{ old('items.'.$index.'.dosage_text', $oldItem['dosage'] ?? '') }}" class="form-control dosage-text-input @error('items.'.$index.'.dosage') is-invalid @enderror" placeholder="أو اكتب هنا" style="display: none;" {{-- required إذا كانت "أخرى" مختارة --}}>
+                                                <input type="text" name="items[{{$index}}][dosage_text]" value="{{ old('items.'.$index.'.dosage_text', $oldItem['dosage'] ?? '') }}" class="form-control dosage-text-input @error('items.'.$index.'.dosage') is-invalid @enderror" placeholder="{{ trans('doctors.write_here_placeholder') }}" style="display: none;" {{-- required إذا كانت "أخرى" مختارة --}}>
                                                 <input type="hidden" name="items[{{$index}}][dosage]" class="final-dosage-value" value="{{ old('items.'.$index.'.dosage', $oldItem['dosage'] ?? '') }}">
                                             </div>
                                              @error('items.'.$index.'.dosage') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
@@ -239,20 +239,20 @@
                                     {{-- التكرار --}}
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="form-label required">التكرار</label>
+                                            <label class="form-label required">{{ trans('doctors.frequency_label') }}</label>
                                              <div class="input-group input-group-custom-select">
-                                                <select class="form-select select2-common-options frequency-select" name="items[{{$index}}][frequency_select]" data-placeholder="اختر أو اكتب...">
+                                                <select class="form-select select2-common-options frequency-select" name="items[{{$index}}][frequency_select]" data-placeholder="{{ trans('doctors.select_or_write_placeholder') }}">
                                                     <option></option>
-                                                    <option value="مرة واحدة يوميًا">مرة واحدة يوميًا</option>
-                                                    <option value="مرتين يوميًا">مرتين يوميًا</option>
-                                                    <option value="3 مرات يوميًا">3 مرات يوميًا</option>
-                                                    <option value="كل 6 ساعات">كل 6 ساعات</option>
-                                                    <option value="كل 8 ساعات">كل 8 ساعات</option>
-                                                    <option value="كل 12 ساعة">كل 12 ساعة</option>
-                                                    <option value="عند اللزوم">عند اللزوم</option>
-                                                    <option value="other">أخرى (اكتب يدويًا)</option>
+                                                    <option value="{{ trans('doctors.once_daily') }}">{{ trans('doctors.once_daily') }}</option>
+                                                    <option value="{{ trans('doctors.twice_daily') }}">{{ trans('doctors.twice_daily') }}</option>
+                                                    <option value="{{ trans('doctors.thrice_daily') }}">{{ trans('doctors.thrice_daily') }}</option>
+                                                    <option value="{{ trans('doctors.every_6_hours') }}">{{ trans('doctors.every_6_hours') }}</option>
+                                                    <option value="{{ trans('doctors.every_8_hours') }}">{{ trans('doctors.every_8_hours') }}</option>
+                                                    <option value="{{ trans('doctors.every_12_hours') }}">{{ trans('doctors.every_12_hours') }}</option>
+                                                    <option value="{{ trans('doctors.as_needed') }}">{{ trans('doctors.as_needed') }}</option>
+                                                    <option value="other">{{ trans('doctors.other_manual_entry') }}</option>
                                                 </select>
-                                                <input type="text" name="items[{{$index}}][frequency_text]" value="{{ old('items.'.$index.'.frequency_text', $oldItem['frequency'] ?? '') }}" class="form-control frequency-text-input @error('items.'.$index.'.frequency') is-invalid @enderror" placeholder="أو اكتب هنا" style="display: none;">
+                                                <input type="text" name="items[{{$index}}][frequency_text]" value="{{ old('items.'.$index.'.frequency_text', $oldItem['frequency'] ?? '') }}" class="form-control frequency-text-input @error('items.'.$index.'.frequency') is-invalid @enderror" placeholder="{{ trans('doctors.write_here_placeholder') }}" style="display: none;">
                                                 <input type="hidden" name="items[{{$index}}][frequency]" class="final-frequency-value" value="{{ old('items.'.$index.'.frequency', $oldItem['frequency'] ?? '') }}">
                                             </div>
                                             @error('items.'.$index.'.frequency') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
@@ -262,20 +262,20 @@
                                     {{-- المدة --}}
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="form-label">المدة</label>
+                                            <label class="form-label">{{ trans('doctors.duration_label') }}</label>
                                             <div class="input-group input-group-custom-select">
-                                                <select class="form-select select2-common-options duration-select" name="items[{{$index}}][duration_select]" data-placeholder="اختر أو اكتب...">
+                                                <select class="form-select select2-common-options duration-select" name="items[{{$index}}][duration_select]" data-placeholder="{{ trans('doctors.select_or_write_placeholder') }}">
                                                     <option></option>
-                                                    <option value="3 أيام">3 أيام</option>
-                                                    <option value="5 أيام">5 أيام</option>
-                                                    <option value="7 أيام">7 أيام</option>
-                                                    <option value="10 أيام">10 أيام</option>
-                                                    <option value="أسبوعان">أسبوعان</option>
-                                                    <option value="شهر واحد">شهر واحد</option>
-                                                    <option value="حتى إشعار آخر">حتى إشعار آخر</option>
-                                                    <option value="other">أخرى (اكتب يدويًا)</option>
+                                                    <option value="{{ trans('doctors.3_days') }}">{{ trans('doctors.3_days') }}</option>
+                                                    <option value="{{ trans('doctors.5_days') }}">{{ trans('doctors.5_days') }}</option>
+                                                    <option value="{{ trans('doctors.7_days') }}">{{ trans('doctors.7_days') }}</option>
+                                                    <option value="{{ trans('doctors.10_days') }}">{{ trans('doctors.10_days') }}</option>
+                                                    <option value="{{ trans('doctors.two_weeks') }}">{{ trans('doctors.two_weeks') }}</option>
+                                                    <option value="{{ trans('doctors.one_month') }}">{{ trans('doctors.one_month') }}</option>
+                                                    <option value="{{ trans('doctors.until_further_notice') }}">{{ trans('doctors.until_further_notice') }}</option>
+                                                    <option value="other">{{ trans('doctors.other_manual_entry') }}</option>
                                                 </select>
-                                                <input type="text" name="items[{{$index}}][duration_text]" value="{{ old('items.'.$index.'.duration_text', $oldItem['duration'] ?? '') }}" class="form-control duration-text-input @error('items.'.$index.'.duration') is-invalid @enderror" placeholder="أو اكتب هنا" style="display: none;">
+                                                <input type="text" name="items[{{$index}}][duration_text]" value="{{ old('items.'.$index.'.duration_text', $oldItem['duration'] ?? '') }}" class="form-control duration-text-input @error('items.'.$index.'.duration') is-invalid @enderror" placeholder="{{ trans('doctors.write_here_placeholder') }}" style="display: none;">
                                                 <input type="hidden" name="items[{{$index}}][duration]" class="final-duration-value" value="{{ old('items.'.$index.'.duration', $oldItem['duration'] ?? '') }}">
                                             </div>
                                             @error('items.'.$index.'.duration') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
@@ -283,19 +283,19 @@
                                     </div>
 
                                     {{-- بقية الحقول كما هي --}}
-                                    <div class="col-md-3"><div class="form-group"><label class="form-label">طريقة الإعطاء</label><input type="text" name="items[{{$index}}][route_of_administration]" value="{{ $oldItem['route_of_administration'] ?? ''}}" class="form-control @error('items.'.$index.'.route_of_administration') is-invalid @enderror" placeholder="فموي، حقن..."></div></div>
-                                    <div class="col-md-2"><div class="form-group"><label class="form-label">الكمية</label><input type="number" name="items[{{$index}}][quantity_prescribed]" value="{{ $oldItem['quantity_prescribed'] ?? ''}}" class="form-control @error('items.'.$index.'.quantity_prescribed') is-invalid @enderror" min="1" placeholder="وحدات"></div></div>
-                                    <div class="col-md-2"><div class="form-group"><label class="form-label">إعادة صرف</label><input type="number" name="items[{{$index}}][refills_allowed]" value="{{ $oldItem['refills_allowed'] ?? 0 }}" class="form-control @error('items.'.$index.'.refills_allowed') is-invalid @enderror" min="0" placeholder="0"></div></div>
+                                    <div class="col-md-3"><div class="form-group"><label class="form-label">{{ trans('doctors.route_of_administration_label') }}</label><input type="text" name="items[{{$index}}][route_of_administration]" value="{{ $oldItem['route_of_administration'] ?? ''}}" class="form-control @error('items.'.$index.'.route_of_administration') is-invalid @enderror" placeholder="{{ trans('doctors.route_of_administration_placeholder') }}"></div></div>
+                                    <div class="col-md-2"><div class="form-group"><label class="form-label">{{ trans('doctors.quantity_label') }}</label><input type="number" name="items[{{$index}}][quantity_prescribed]" value="{{ $oldItem['quantity_prescribed'] ?? ''}}" class="form-control @error('items.'.$index.'.quantity_prescribed') is-invalid @enderror" min="1" placeholder="{{ trans('doctors.quantity_placeholder') }}"></div></div>
+                                    <div class="col-md-2"><div class="form-group"><label class="form-label">{{ trans('doctors.refills_label') }}</label><input type="number" name="items[{{$index}}][refills_allowed]" value="{{ $oldItem['refills_allowed'] ?? 0 }}" class="form-control @error('items.'.$index.'.refills_allowed') is-invalid @enderror" min="0" placeholder="0"></div></div>
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label class="form-label">عند اللزوم؟</label>
+                                            <label class="form-label">{{ trans('doctors.is_prn_label') }}</label>
                                             <div class="form-check form-switch mt-1">
                                                 <input class="form-check-input" type="checkbox" name="items[{{$index}}][is_prn]" value="1" id="is_prn_old_{{$index}}" {{ (old('items.'.$index.'.is_prn', $oldItem['is_prn'] ?? false)) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="is_prn_old_{{$index}}">نعم</label>
+                                                <label class="form-check-label" for="is_prn_old_{{$index}}">{{ trans('doctors.yes') }}</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12"><div class="form-group mb-0"><label class="form-label">تعليمات للمريض</label><textarea name="items[{{$index}}][instructions_for_patient]" class="form-control @error('items.'.$index.'.instructions_for_patient') is-invalid @enderror" rows="2" placeholder="تعليمات خاصة بالدواء...">{{ $oldItem['instructions_for_patient'] ?? ''}}</textarea></div></div>
+                                    <div class="col-md-12"><div class="form-group mb-0"><label class="form-label">{{ trans('doctors.patient_instructions_label') }}</label><textarea name="items[{{$index}}][instructions_for_patient]" class="form-control @error('items.'.$index.'.instructions_for_patient') is-invalid @enderror" rows="2" placeholder="{{ trans('doctors.patient_instructions_placeholder') }}">{{ $oldItem['instructions_for_patient'] ?? ''}}</textarea></div></div>
                                 </div>
                             </div>
                         @endforeach
@@ -303,23 +303,23 @@
                 </div>
 
                 <button type="button" class="btn" id="add_medication_item_btn">
-                    <i class="fas fa-plus-circle me-1"></i> إضافة دواء آخر للوصفة
+                    <i class="fas fa-plus-circle me-1"></i> {{ trans('doctors.add_another_medication') }}
                 </button>
 
                 <hr class="my-4">
                 {{-- ... (ملاحظات الطبيب وزر الحفظ كما هما) ... --}}
                  <div class="form-group">
-                    <label for="doctor_notes" class="form-label">ملاحظات الطبيب للصيدلي (اختياري)</label>
-                    <textarea name="doctor_notes" id="doctor_notes" class="form-control @error('doctor_notes') is-invalid @enderror" rows="3" placeholder="أي تعليمات أو ملاحظات إضافية للصيدلي (مثال: بدائل مسموحة، تأكيد الجرعة)...">{{ old('doctor_notes') }}</textarea>
+                    <label for="doctor_notes" class="form-label">{{ trans('doctors.doctor_notes_to_pharmacist') }}</label>
+                    <textarea name="doctor_notes" id="doctor_notes" class="form-control @error('doctor_notes') is-invalid @enderror" rows="3" placeholder="{{ trans('doctors.doctor_notes_placeholder') }}">{{ old('doctor_notes') }}</textarea>
                     @error('doctor_notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="form-actions-footer mt-4">
                     <a href="{{ route('doctor.patients.search_for_prescription') }}" class="btn btn-outline-secondary me-2">
-                        <i class="fas fa-arrow-left me-1"></i> العودة للبحث عن مريض
+                        <i class="fas fa-arrow-left me-1"></i> {{ trans('doctors.back_to_patient_search') }}
                     </a>
                     <button type="submit" class="btn btn-primary btn-submit-prescription" id="submitPrescriptionBtn">
-                        <span class="btn-text"><i class="fas fa-paper-plane me-2"></i> حفظ وإرسال الوصفة</span>
+                        <span class="btn-text"><i class="fas fa-paper-plane me-2"></i> {{ trans('doctors.save_and_send_prescription') }}</span>
                         <i class="fas fa-spinner fa-spin spinner-icon"></i>
                     </button>
                 </div>
@@ -329,65 +329,88 @@
 
     <template id="medication_item_template">
         <div class="medication-item-row animate__animated animate__fadeIn">
-            <button type="button" class="remove-medication-item-btn" title="إزالة الدواء"><i class="fas fa-times"></i></button>
+            <button type="button" class="remove-medication-item-btn" title="{{ trans('doctors.remove_medication') }}"><i class="fas fa-times"></i></button>
             <input type="hidden" name="items[__INDEX__][medication_id]" class="selected-medication-id">
             <div class="row g-3">
                 <div class="col-md-12 mb-2">
-                    <label class="form-label required">الدواء</label>
-                    <select class="form-select select2-medications-dynamic" name="items[__INDEX__][medication_id_select]" data-item-index="__INDEX__" data-placeholder="ابحث واختر الدواء..." required></select>
-                    <div class="invalid-feedback custom-invalid-feedback-select2" style="display: none;">يرجى اختيار دواء.</div>
+                    <label class="form-label required">{{ trans('doctors.medication') }}</label>
+                    <select class="form-select select2-medications-dynamic" name="items[__INDEX__][medication_id_select]" data-item-index="__INDEX__" data-placeholder="{{ trans('doctors.search_and_select_medication_placeholder') }}" required></select>
+                    <div class="invalid-feedback custom-invalid-feedback-select2" style="display: none;">{{ trans('doctors.please_select_medication_validation') }}</div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label required">الجرعة</label>
+                        <label class="form-label required">{{ trans('doctors.dose_label') }}</label>
                         <div class="input-group input-group-custom-select">
-                            <select class="form-select select2-common-options dosage-select" name="items[__INDEX__][dosage_select]" data-placeholder="اختر أو اكتب...">
-                                <option></option><option value="قرص واحد">قرص واحد</option><option value="قرصان">قرصان</option><option value="نصف قرص">نصف قرص</option><option value="5 مل">5 مل</option><option value="10 مل">10 مل</option><option value="حقنة واحدة">حقنة واحدة</option><option value="other">أخرى</option>
+                            <select class="form-select select2-common-options dosage-select" name="items[__INDEX__][dosage_select]" data-placeholder="{{ trans('doctors.select_or_write_placeholder') }}">
+                                <option></option>
+                                <option value="{{ trans('doctors.one_tablet') }}">{{ trans('doctors.one_tablet') }}</option>
+                                <option value="{{ trans('doctors.two_tablets') }}">{{ trans('doctors.two_tablets') }}</option>
+                                <option value="{{ trans('doctors.half_tablet') }}">{{ trans('doctors.half_tablet') }}</option>
+                                <option value="{{ trans('doctors.5_ml') }}">{{ trans('doctors.5_ml') }}</option>
+                                <option value="{{ trans('doctors.10_ml') }}">{{ trans('doctors.10_ml') }}</option>
+                                <option value="{{ trans('doctors.one_injection') }}">{{ trans('doctors.one_injection') }}</option>
+                                <option value="other">{{ trans('doctors.other') }}</option>
                             </select>
-                            <input type="text" name="items[__INDEX__][dosage_text]" class="form-control dosage-text-input" placeholder="أو اكتب هنا" style="display: none;">
+                            <input type="text" name="items[__INDEX__][dosage_text]" class="form-control dosage-text-input" placeholder="{{ trans('doctors.write_here_placeholder') }}" style="display: none;">
                             <input type="hidden" name="items[__INDEX__][dosage]" class="final-dosage-value">
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label required">التكرار</label>
+                        <label class="form-label required">{{ trans('doctors.frequency_label') }}</label>
                          <div class="input-group input-group-custom-select">
-                            <select class="form-select select2-common-options frequency-select" name="items[__INDEX__][frequency_select]" data-placeholder="اختر أو اكتب...">
-                                <option></option><option value="مرة واحدة يوميًا">مرة واحدة يوميًا</option><option value="مرتين يوميًا">مرتين يوميًا</option><option value="3 مرات يوميًا">3 مرات يوميًا</option><option value="كل 6 ساعات">كل 6 ساعات</option><option value="كل 8 ساعات">كل 8 ساعات</option><option value="كل 12 ساعة">كل 12 ساعة</option><option value="عند اللزوم">عند اللزوم</option><option value="other">أخرى</option>
+                            <select class="form-select select2-common-options frequency-select" name="items[__INDEX__][frequency_select]" data-placeholder="{{ trans('doctors.select_or_write_placeholder') }}">
+                                <option></option>
+                                <option value="{{ trans('doctors.once_daily') }}">{{ trans('doctors.once_daily') }}</option>
+                                <option value="{{ trans('doctors.twice_daily') }}">{{ trans('doctors.twice_daily') }}</option>
+                                <option value="{{ trans('doctors.thrice_daily') }}">{{ trans('doctors.thrice_daily') }}</option>
+                                <option value="{{ trans('doctors.every_6_hours') }}">{{ trans('doctors.every_6_hours') }}</option>
+                                <option value="{{ trans('doctors.every_8_hours') }}">{{ trans('doctors.every_8_hours') }}</option>
+                                <option value="{{ trans('doctors.every_12_hours') }}">{{ trans('doctors.every_12_hours') }}</option>
+                                <option value="{{ trans('doctors.as_needed') }}">{{ trans('doctors.as_needed') }}</option>
+                                <option value="other">{{ trans('doctors.other') }}</option>
                             </select>
-                            <input type="text" name="items[__INDEX__][frequency_text]" class="form-control frequency-text-input" placeholder="أو اكتب هنا" style="display: none;">
+                            <input type="text" name="items[__INDEX__][frequency_text]" class="form-control frequency-text-input" placeholder="{{ trans('doctors.write_here_placeholder') }}" style="display: none;">
                             <input type="hidden" name="items[__INDEX__][frequency]" class="final-frequency-value">
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="form-label">المدة</label>
+                        <label class="form-label">{{ trans('doctors.duration_label') }}</label>
                         <div class="input-group input-group-custom-select">
-                            <select class="form-select select2-common-options duration-select" name="items[__INDEX__][duration_select]" data-placeholder="اختر أو اكتب...">
-                                <option></option><option value="3 أيام">3 أيام</option><option value="5 أيام">5 أيام</option><option value="7 أيام">7 أيام</option><option value="10 أيام">10 أيام</option><option value="أسبوعان">أسبوعان</option><option value="شهر واحد">شهر واحد</option><option value="حتى إشعار آخر">حتى إشعار آخر</option><option value="other">أخرى</option>
+                            <select class="form-select select2-common-options duration-select" name="items[__INDEX__][duration_select]" data-placeholder="{{ trans('doctors.select_or_write_placeholder') }}">
+                                <option></option>
+                                <option value="{{ trans('doctors.3_days') }}">{{ trans('doctors.3_days') }}</option>
+                                <option value="{{ trans('doctors.5_days') }}">{{ trans('doctors.5_days') }}</option>
+                                <option value="{{ trans('doctors.7_days') }}">{{ trans('doctors.7_days') }}</option>
+                                <option value="{{ trans('doctors.10_days') }}">{{ trans('doctors.10_days') }}</option>
+                                <option value="{{ trans('doctors.two_weeks') }}">{{ trans('doctors.two_weeks') }}</option>
+                                <option value="{{ trans('doctors.one_month') }}">{{ trans('doctors.one_month') }}</option>
+                                <option value="{{ trans('doctors.until_further_notice') }}">{{ trans('doctors.until_further_notice') }}</option>
+                                <option value="other">{{ trans('doctors.other') }}</option>
                             </select>
-                            <input type="text" name="items[__INDEX__][duration_text]" class="form-control duration-text-input" placeholder="أو اكتب هنا" style="display: none;">
+                            <input type="text" name="items[__INDEX__][duration_text]" class="form-control duration-text-input" placeholder="{{ trans('doctors.write_here_placeholder') }}" style="display: none;">
                             <input type="hidden" name="items[__INDEX__][duration]" class="final-duration-value">
                         </div>
                     </div>
                 </div>
                 {{-- بقية الحقول كما هي في القالب --}}
-                 <div class="col-md-3"><div class="form-group"><label class="form-label">طريقة الإعطاء</label><input type="text" name="items[__INDEX__][route_of_administration]" class="form-control" placeholder="فموي، حقن..."></div></div>
-                <div class="col-md-2"><div class="form-group"><label class="form-label">الكمية</label><input type="number" name="items[__INDEX__][quantity_prescribed]" class="form-control" min="1" placeholder="عدد"></div></div>
-                <div class="col-md-2"><div class="form-group"><label class="form-label">إعادة صرف</label><input type="number" name="items[__INDEX__][refills_allowed]" class="form-control" value="0" min="0" placeholder="0"></div></div>
+                 <div class="col-md-3"><div class="form-group"><label class="form-label">{{ trans('doctors.route_of_administration_label') }}</label><input type="text" name="items[__INDEX__][route_of_administration]" class="form-control" placeholder="{{ trans('doctors.route_of_administration_placeholder') }}"></div></div>
+                <div class="col-md-2"><div class="form-group"><label class="form-label">{{ trans('doctors.quantity_label') }}</label><input type="number" name="items[__INDEX__][quantity_prescribed]" class="form-control" min="1" placeholder="{{ trans('doctors.quantity_placeholder_number') }}"></div></div>
+                <div class="col-md-2"><div class="form-group"><label class="form-label">{{ trans('doctors.refills_label') }}</label><input type="number" name="items[__INDEX__][refills_allowed]" class="form-control" value="0" min="0" placeholder="0"></div></div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label class="form-label">عند اللزوم؟</label>
+                        <label class="form-label">{{ trans('doctors.is_prn_label') }}</label>
                         <div class="form-check form-switch mt-1">
                             <input class="form-check-input" type="checkbox" name="items[__INDEX__][is_prn]" value="1" id="is_prn___INDEX__">
-                            <label class="form-check-label" for="is_prn___INDEX__">نعم</label>
+                            <label class="form-check-label" for="is_prn___INDEX__">{{ trans('doctors.yes') }}</label>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12"><div class="form-group mb-0"><label class="form-label">تعليمات للمريض</label><textarea name="items[__INDEX__][instructions_for_patient]" class="form-control" rows="2" placeholder="تعليمات خاصة بالدواء..."></textarea></div></div>
+                <div class="col-md-12"><div class="form-group mb-0"><label class="form-label">{{ trans('doctors.patient_instructions_label') }}</label><textarea name="items[__INDEX__][instructions_for_patient]" class="form-control" rows="2" placeholder="{{ trans('doctors.patient_instructions_placeholder') }}"></textarea></div></div>
             </div>
         </div>
     </template>
@@ -508,9 +531,9 @@
                 const $newRow = $(newRowHtml).appendTo('#medication_items_wrapper');
 
                 initializeMedicationSelect2($newRow.find('.select2-medications-dynamic'), uniqueIndex);
-                initializeCommonOptionsSelect2($newRow.find('.dosage-select'), "اختر الجرعة أو اكتب", $newRow.find('.dosage-select').closest('.form-group'));
-                initializeCommonOptionsSelect2($newRow.find('.frequency-select'), "اختر التكرار أو اكتب", $newRow.find('.frequency-select').closest('.form-group'));
-                initializeCommonOptionsSelect2($newRow.find('.duration-select'), "اختر المدة أو اكتب", $newRow.find('.duration-select').closest('.form-group'));
+                initializeCommonOptionsSelect2($newRow.find('.dosage-select'), "{{ trans('doctors.Choose the dose or write') }}", $newRow.find('.dosage-select').closest('.form-group'));
+                initializeCommonOptionsSelect2($newRow.find('.frequency-select'), "{{ trans('doctors.Choose the frequency or write') }}", $newRow.find('.frequency-select').closest('.form-group'));
+                initializeCommonOptionsSelect2($newRow.find('.duration-select'), "{{ trans('doctors.Choose the duration or write') }}", $newRow.find('.duration-select').closest('.form-group'));
 
                 if (oldItemData) {
                     $newRow.find('.selected-medication-id').val(oldItemData.medication_id || '');

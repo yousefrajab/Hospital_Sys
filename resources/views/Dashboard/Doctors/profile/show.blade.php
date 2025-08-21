@@ -301,8 +301,8 @@
         <div class="my-auto">
             <div class="d-flex align-items-center">
                 {{-- يمكنك تعديل مسار التنقل هنا --}}
-                <h4 class="content-title mb-0 my-auto">لوحة تحكم الطبيب</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ الملف الشخصي</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('doctors.doctor_dashboard') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('doctors.profile') }}</span>
             </div>
         </div>
     </div>
@@ -319,10 +319,10 @@
                 <div class="profile-info-modern">
                     <h3>{{ $doctor->name }}</h3>
                     {{-- افترض أن لديك حقل تخصص أو يمكنك عرض اسم القسم --}}
-                    <span class="specialty">{{ $doctor->section->name ?? 'تخصص غير محدد' }}</span>
+                    <span class="specialty">{{ $doctor->section->name ?? trans('doctors.unspecified_specialty') }}</span>
                     <span class="profile-status-modern {{ $doctor->status ? 'active' : 'inactive' }}">
                         <i class="fas fa-circle"></i>
-                        {{ $doctor->status ? 'نشط' : 'غير نشط' }}
+                        {{ $doctor->status ? trans('doctors.status_active') : trans('doctors.status_inactive') }}
                     </span>
                 </div>
             </div>
@@ -332,7 +332,7 @@
 
                 {{-- قسم معلومات الاتصال والمعلومات الأساسية --}}
                 <div class="info-section">
-                    <h5 class="info-section-title">المعلومات الأساسية والشخصية</h5>
+                    <h5 class="info-section-title">{{ trans('doctors.basic_and_personal_info') }}</h5>
                     <div class="info-grid">
                         <div class="info-card">
                             <div class="info-icon"><i class="fas fa-envelope"></i></div>
@@ -345,28 +345,28 @@
                             <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
                             <div class="info-content">
                                 <label>{{ trans('doctors.phone') }}</label>
-                                <p dir="ltr">{{ $doctor->phone ?: 'غير محدد' }}</p> {{-- استخدام dir="ltr" للهاتف --}}
+                                <p dir="ltr">{{ $doctor->phone ?: trans('doctors.unspecified') }}</p> {{-- استخدام dir="ltr" للهاتف --}}
                             </div>
                         </div>
                         <div class="info-card">
                             <div class="info-icon"><i class="fas fa-id-card"></i></div>
                             <div class="info-content">
                                 <label>{{ trans('doctors.national_id') }}</label>
-                                <p>{{ $doctor->national_id ?: 'غير محدد' }}</p>
+                                <p>{{ $doctor->national_id ?: trans('doctors.unspecified') }}</p>
                             </div>
                         </div>
                         <div class="info-card">
                             <div class="info-icon"><i class="fas fa-building"></i></div>
                             <div class="info-content">
                                 <label>{{ trans('doctors.section') }}</label>
-                                <p>{{ $doctor->section->name ?? 'غير محدد' }}</p>
+                                <p>{{ $doctor->section->name ?? trans('doctors.unspecified') }}</p>
                             </div>
                         </div>
                         <div class="info-card">
                             <div class="info-icon"><i class="fas fa-clipboard-list"></i></div>
                             <div class="info-content">
                                 <label>{{ trans('doctors.number_of_statements') }}</label>
-                                <p>{{ $doctor->number_of_statements }} (الحد الأقصى للمواعيد اليومية)</p>
+                                <p>{{ $doctor->number_of_statements }} {{ trans('doctors.max_daily_appointments_note') }}</p>
                             </div>
                         </div>
                         <div class="info-card">
@@ -383,7 +383,7 @@
             <div class="form-actions">
                 <button type="button" class="btn edit-profile-btn">
                     <a href="{{ route('doctor.profile.edit') }}" class="btn-cancel" style="color: white"> {{-- تأكد من اسم مسار عرض ملف الطبيب --}}
-                        <i class="fas fa-edit"></i> تعديل الملف الشخصي
+                        <i class="fas fa-edit"></i> {{ trans('doctors.edit_profile') }}
                     </a>
                 </button>
             </div>
@@ -391,7 +391,6 @@
         </div>
     </div>
 @endsection
-
 @section('js')
     {{-- يمكنك إضافة أي JS خاص بهذه الصفحة هنا --}}
     <script>

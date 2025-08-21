@@ -64,14 +64,13 @@
             <div class="d-flex align-items-center">
                 <h4 class="content-title mb-0 my-auto">
                     <a href="{{ route('patient.pharmacy.index') }}" class="text-primary-dark tx-16 hover-underline ">
-                        <i class="fas fa-pills me-2 opacity-75"></i> وصفاتي الطبية
+                        <i class="fas fa-pills me-2 opacity-75"></i> {{ trans('patients.my_prescriptions') }}
                     </a>
                 </h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="mt-1 tx-13"> طلبات إعادة الصرف المعلقة</span>
+                <span class="mt-1 tx-13"> {{ trans('patients.pending_refill_requests') }}</span>
             </div>
         </div>
-        {{-- لا يوجد زر إجراء رئيسي هنا عادةً للمريض في هذه الصفحة --}}
     </div>
 @endsection
 
@@ -80,26 +79,26 @@
 
     <div class="card" data-aos="fade-up">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h4 class="card-title-css mb-0"><i class="fas fa-hourglass-start text-warning me-2"></i>طلباتي المعلقة لإعادة الصرف</h4>
+            <h4 class="card-title-css mb-0"><i class="fas fa-hourglass-start text-warning me-2"></i>{{ trans('patients.my_pending_refill_requests') }}</h4>
             @if($pendingRefills->total() > 0)
              <span class="badge bg-warning-transparent text-warning rounded-pill">
-                 {{ $pendingRefills->total() }} طلب معلق
+                 {{ $pendingRefills->total() }} {{ trans('patients.pending_request_unit') }}
              </span>
             @endif
         </div>
-        <div class="card-body p-0"> {{-- p-0 ليلتصق الجدول --}}
+        <div class="card-body p-0">
             @if ($pendingRefills->isNotEmpty())
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th style="min-width: 140px;">رقم الوصفة الأصلية</th>
-                                <th style="min-width: 180px;">الطبيب</th>
-                                <th style="min-width: 130px;">تاريخ طلب الصرف</th>
-                                <th style="min-width: 160px;">حالة الطلب الحالية</th>
-                                <th class="text-center">عدد الأدوية</th>
-                                <th class="text-center" style="min-width: 120px;">الإجراءات</th>
+                                <th style="min-width: 140px;">{{ trans('patients.original_prescription_number_col') }}</th>
+                                <th style="min-width: 180px;">{{ trans('patients.doctor_col') }}</th>
+                                <th style="min-width: 130px;">{{ trans('patients.refill_request_date_col') }}</th>
+                                <th style="min-width: 160px;">{{ trans('patients.current_request_status_col') }}</th>
+                                <th class="text-center">{{ trans('patients.medication_count_col') }}</th>
+                                <th class="text-center" style="min-width: 120px;">{{ trans('patients.actions_col') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -107,16 +106,15 @@
                                 <tr>
                                     <td>{{ $loop->iteration + $pendingRefills->firstItem() - 1 }}</td>
                                     <td>
-                                        <a href="{{ route('patient.pharmacy.show', $prescription->id) }}" class="text-primary fw-500" data-bs-toggle="tooltip" title="عرض تفاصيل الوصفة الأصلية">
+                                        <a href="{{ route('patient.pharmacy.show', $prescription->id) }}" class="text-primary fw-500" data-bs-toggle="tooltip" title="{{ trans('patients.view_original_prescription_details') }}">
                                             {{ $prescription->prescription_number }}
                                         </a>
                                     </td>
                                     <td class="doctor-name">
                                         <i class="fas fa-user-md text-muted me-1 opacity-75"></i>
-                                        {{ $prescription->doctor ? $prescription->doctor->name : 'غير محدد' }}
+                                        {{ $prescription->doctor ? $prescription->doctor->name : trans('patients.unspecified') }}
                                     </td>
                                     <td class="prescription-date">
-                                        {{-- تاريخ آخر تحديث للوصفة (وقت إرسال الطلب أو تغيير حالته) --}}
                                         {{ $prescription->updated_at->translatedFormat('d M Y, h:i A') }}
                                     </td>
                                     <td>
@@ -128,7 +126,7 @@
                                          @if (isset($prescription->items_count) && $prescription->items_count > 0)
                                              <span class="badge bg-light text-dark border">
                                                {{ $prescription->items_count }}
-                                               دواء{{ $prescription->items_count == 1 ? '' : ($prescription->items_count == 2 ? 'ان' : ($prescription->items_count > 10 ? '' : ' أدوية')) }}
+                                               {{ $prescription->items_count == 1 ? trans('patients.medication_unit_singular') : ($prescription->items_count == 2 ? trans('patients.medication_unit_dual') : trans('patients.medication_unit_plural')) }}
                                              </span>
                                          @else
                                              <span class="text-muted small"> --- </span>
@@ -137,15 +135,14 @@
                                     <td class="text-center action-buttons">
                                         <a href="{{ route('patient.pharmacy.show', $prescription->id) }}"
                                             class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" title="عرض تفاصيل الوصفة الأصلية ومتابعة الحالة">
-                                            <i class="fas fa-eye"></i> <span class="d-none d-md-inline">متابعة</span>
+                                            data-bs-toggle="tooltip" title="{{ trans('patients.view_original_prescription_and_track_status') }}">
+                                            <i class="fas fa-eye"></i> <span class="d-none d-md-inline">{{ trans('patients.follow_up_button') }}</span>
                                         </a>
-                                        {{-- هل يمكن للمريض إلغاء طلب إعادة الصرف؟ (إذا كانت الحالة تسمح) --}}
                                         @if($prescription->status === \App\Models\Prescription::STATUS_REFILL_REQUESTED)
-                                             {{-- <form action="{{ route('patient.pharmacy.cancel-refill-request', $prescription->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من إلغاء هذا الطلب؟')">
+                                             {{-- <form action="{{ route('patient.pharmacy.cancel-refill-request', $prescription->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ trans('patients.confirm_cancellation_message') }}')">
                                                  @csrf
-                                                 @method('DELETE') // أو PATCH
-                                                 <button type="submit" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="إلغاء طلب إعادة الصرف">
+                                                 @method('DELETE')
+                                                 <button type="submit" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="{{ trans('patients.cancel_refill_request_tooltip') }}">
                                                      <i class="fas fa-times-circle"></i>
                                                  </button>
                                              </form> --}}
@@ -164,12 +161,12 @@
             @else
                 <div class="empty-state-container p-5" data-aos="zoom-in-up">
                     <i class="fas fa-check-double empty-icon text-success opacity-75"></i>
-                    <h5 class="mt-3 fw-bold">لا توجد طلبات إعادة صرف معلقة حاليًا</h5>
+                    <h5 class="mt-3 fw-bold">{{ trans('patients.no_pending_refills_title') }}</h5>
                     <p class="text-muted col-md-8 mx-auto mt-2">
-                        طلبات إعادة الصرف التي تقوم بإرسالها ستظهر هنا حتى يتم معالجتها من قبل الصيدلية.
+                        {{ trans('patients.no_pending_refills_message') }}
                     </p>
                     <a href="{{ route('patient.pharmacy.index') }}" class="btn btn-primary-transparent mt-2">
-                        <i class="fas fa-receipt me-1"></i> عرض كل وصفاتي
+                        <i class="fas fa-receipt me-1"></i> {{ trans('patients.view_all_my_prescriptions') }}
                     </a>
                 </div>
             @endif

@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سند قبض رقم #{{ $receiptAccount->id }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<title>{{ trans('patients.receipt_print_title', ['id' => $receiptAccount->id]) }}</title>    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Cairo:wght@400;600;700&display=swap"
@@ -266,96 +265,91 @@
 <body>
 
 
-    <div class="print-container">
+   <div class="print-container">
         <header class="receipt-header">
             <div class="logo">
                 @if (!empty($hospitalSettings['logo']))
-                    <img src="{{ $hospitalSettings['logo'] }}" alt="{{ $hospitalSettings['name'] ?? 'شعار المنشأة' }}">
+                    <img src="{{ $hospitalSettings['logo'] }}" alt="{{ $hospitalSettings['name'] ?? trans('patients.facility_logo_alt') }}">
                 @else
-                    <h2>{{ $hospitalSettings['name'] ?? config('app.name', 'المنصة الطبية') }}</h2>
+                    <h2>{{ $hospitalSettings['name'] ?? config('app.name', trans('patients.medical_platform')) }}</h2>
                 @endif
             </div>
             <div class="hospital-info-print">
-                <h3>{{ $hospitalSettings['name'] ?? config('app.name', 'المنصة الطبية') }}</h3>
-                @if (!empty($hospitalSettings['address']))
+                <h3>{{ $hospitalSettings['name'] ?? config('app.name', trans('patients.medical_platform')) }}</h3>
+                {{-- @if (!empty($hospitalSettings['address']))
                     <p>{{ $hospitalSettings['address'] }}</p>
-                @endif
+                @endif --}}
                 @if (!empty($hospitalSettings['phone']))
-                    <p>الهاتف: {{ $hospitalSettings['phone'] }}</p>
+                    <p>{{ trans('patients.phone') }}: {{ $hospitalSettings['phone'] }}</p>
                 @endif
                 @if (!empty($hospitalSettings['email']))
-                    <p>البريد: {{ $hospitalSettings['email'] }}</p>
+                    <p>{{ trans('patients.email') }}: {{ $hospitalSettings['email'] }}</p>
                 @endif
-                @if (!empty($hospitalSettings['tax_number']))
-                    <p>الرقم الضريبي: {{ $hospitalSettings['tax_number'] }}</p>
-                @endif
+                {{-- @if (!empty($hospitalSettings['tax_number']))
+                    <p>{{ trans('patients.tax_number') }}: {{ $hospitalSettings['tax_number'] }}</p>
+                @endif --}}
             </div>
         </header>
 
         <section class="receipt-title-section">
-            <h1>سند قبض</h1>
+            <h1>{{ trans('patients.receipt_voucher') }}</h1>
         </section>
 
         <section class="receipt-details-grid">
             <div class="detail-group patient-details">
-                <h5>بيانات المريض:</h5>
-                <p><strong>الاسم:</strong> <span>{{ $receiptAccount->patients->name ?? 'غير محدد' }}</span></p>
-                <p><strong>رقم الهاتف:</strong> <span>{{ $receiptAccount->patients->Phone ?? 'غير محدد' }}</span></p>
-                <p><strong>رقم الهوية:</strong> <span>{{ $receiptAccount->patients->national_id ?? 'غير محدد' }}</span></p>
-                <p><strong> العنوان: </strong> <span> {{ $receiptAccount->patients->Address ?? 'غير محدد' }} </span></p>
-                <p><strong> البريد الاكتروني: </strong> <span> {{ $receiptAccount->patients->email ?? 'غير محدد' }} </span></p>
-
-                <p><strong>رقم الملف:</strong> <span>{{ $receiptAccount->patient_id ?? 'غير محدد' }}</span></p>
-
-                {{-- يمكنك إضافة المزيد من تفاصيل المريض إذا لزم الأمر --}}
+                <h5>{{ trans('patients.patient_data') }}</h5>
+                <p><strong>{{ trans('patients.name_label') }}</strong> <span>{{ $receiptAccount->patients->name ?? trans('patients.unspecified') }}</span></p>
+                <p><strong>{{ trans('patients.phone_number_label_receipt') }}</strong> <span>{{ $receiptAccount->patients->Phone ?? trans('patients.unspecified') }}</span></p>
+                <p><strong>{{ trans('patients.national_id_label_receipt') }}</strong> <span>{{ $receiptAccount->patients->national_id ?? trans('patients.unspecified') }}</span></p>
+                <p><strong> {{ trans('patients.address_label_receipt') }} </strong> <span> {{ $receiptAccount->patients->Address ?? trans('patients.unspecified') }} </span></p>
+                <p><strong> {{ trans('patients.email_label_receipt') }} </strong> <span> {{ $receiptAccount->patients->email ?? trans('patients.unspecified') }} </span></p>
+                <p><strong>{{ trans('patients.file_number_label') }}</strong> <span>{{ $receiptAccount->patient_id ?? trans('patients.unspecified') }}</span></p>
             </div>
             <div class="detail-group receipt-info">
-                <h5>بيانات السند:</h5>
-                <p><strong>رقم السند:</strong> <span>#{{ $receiptAccount->id }}</span></p>
-                <p><strong>تاريخ السند:</strong>
+                <h5>{{ trans('patients.voucher_data') }}</h5>
+                <p><strong>{{ trans('patients.voucher_number_label') }}</strong> <span>#{{ $receiptAccount->id }}</span></p>
+                <p><strong>{{ trans('patients.voucher_date_label') }}</strong>
                     <span>{{ \Carbon\Carbon::parse($receiptAccount->date)->translatedFormat('d F Y') }}</span></p>
-                <p><strong>تاريخ الإصدار:</strong>
+                <p><strong>{{ trans('patients.issue_date_label_receipt') }}</strong>
                     <span>{{ $receiptAccount->created_at->translatedFormat('d F Y - H:i A') }}</span></p>
             </div>
         </section>
 
         <section class="receipt-body">
-            <h4>تفاصيل الدفعة</h4>
+            <h4>{{ trans('patients.payment_details') }}</h4>
             <div class="amount-section">
-                المبلغ المدفوع: {{ number_format($receiptAccount->amount, 2) }}
-                <span class="currency">{{ config('app.currency_symbol', 'ر.س') }}</span>
+                {{ trans('patients.amount_paid_label') }} {{ number_format($receiptAccount->amount, 2) }}
+                <span class="currency">{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</span>
             </div>
 
             @if ($receiptAccount->description)
                 <div class="description-section mt-4">
-                    <p><strong>البيان / الوصف:</strong></p>
+                    <p><strong>{{ trans('patients.description_statement_label') }}</strong></p>
                     <p>{{ nl2br(e($receiptAccount->description)) }}</p>
                 </div>
             @endif
         </section>
 
-        {{-- يمكنك إضافة قسم للتوقيعات إذا لزم الأمر --}}
         {{-- <section class="signatures-section mt-5">
             <div class="row">
                 <div class="col-6 text-center">
                     <p class="mb-5">_________________________</p>
-                    <p>توقيع المستلم (المريض)</p>
+                    <p>{{ trans('patients.recipient_signature') }}</p>
                 </div>
                 <div class="col-6 text-center">
                     <p class="mb-5">_________________________</p>
-                    <p>توقيع أمين الصندوق</p>
+                    <p>{{ trans('patients.cashier_signature') }}</p>
                 </div>
             </div>
         </section> --}}
 
         <footer class="receipt-footer">
-            <p>هذا السند بمثابة إيصال استلام للمبلغ المذكور أعلاه.</p>
-            <p>{{ $hospitalSettings['name'] ?? config('app.name') }} - {{ $hospitalSettings['address'] ?? 'العنوان' }}
+            <p>{{ trans('patients.footer_notice') }}</p>
+            <p>{{ $hospitalSettings['name'] ?? config('app.name') }} - {{ $hospitalSettings['address'] ?? trans('patients.Address') }}
             </p>
-            <p> شكراً لتعاملكم معنا.</p>
+            <p> {{ trans('patients.footer_thank_you') }}</p>
         </footer>
     </div>
-
     <script>
         // لإخفاء زر الطباعة تلقائيًا بعد الطباعة أو الإلغاء (اختياري)
         // (function () {
@@ -390,7 +384,7 @@
         // }
     </script>
     <div class="print-button-container">
-        <button onclick="window.print()" class="print-button"><i class="fas fa-print"></i> طباعة السند</button>
+        <button onclick="window.print()" class="print-button"><i class="fas fa-print"></i> {{ trans('patients.Print the bond') }}</button>
     </div>
 </body>
 

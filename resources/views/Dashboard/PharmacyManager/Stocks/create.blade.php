@@ -200,14 +200,14 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-dolly-flatbed fa-lg me-2" style="color: var(--admin-primary);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto" >إدارة مخزون الصيدلية</h4>
-                    <span class="text-muted mt-0 tx-13">/ إضافة دفعة جديدة للدواء: <strong>{{ $medication->name }}</strong></span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('phrM.pharmacy_stock_management') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('phrM.add_new_batch_for_medication') }} <strong>{{ $medication->name }}</strong></span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('pharmacy_manager.medications.stocks.index', $medication->id) }}" class="btn btn-outline-secondary btn-sm" style="border-radius: var(--admin-radius-md);">
-                <i class="fas fa-arrow-left me-1"></i> العودة لمخزون الدواء
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('phrM.back_to_medication_stock') }}
             </a>
         </div>
     </div>
@@ -220,7 +220,7 @@
         <div class="col-lg-8 col-md-10">
             <div class="form-container-card animate__animated animate__fadeInUp">
                 <div class="card-header card-header-custom">
-                    <h3 class="card-title mb-0" style="color: white"><i class="fas fa-plus-circle"></i> إضافة دفعة مخزون جديدة لـ "{{ $medication->name }}"</h3>
+                    <h3 class="card-title mb-0" style="color: white"><i class="fas fa-plus-circle"></i> {{ trans('phrM.add_new_stock_batch_for', ['name' => $medication->name]) }}</h3>
                 </div>
                 <div class="card-body card-body-custom">
                     <form action="{{ route('pharmacy_manager.medications.stocks.store', $medication->id) }}" method="POST" class="needs-validation" novalidate autocomplete="off">
@@ -228,57 +228,57 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="batch_number" class="form-label">رقم الدفعة</label>
-                                    <input type="text" name="batch_number" id="batch_number" class="form-control @error('batch_number') is-invalid @enderror" value="{{ old('batch_number') }}" placeholder="رقم أو كود الدفعة (اختياري)">
+                                    <label for="batch_number" class="form-label">{{ trans('phrM.batch_number_label') }}</label>
+                                    <input type="text" name="batch_number" id="batch_number" class="form-control @error('batch_number') is-invalid @enderror" value="{{ old('batch_number') }}" placeholder="{{ trans('phrM.batch_code_placeholder_optional') }}">
                                     @error('batch_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="expiry_date" class="form-label">تاريخ انتهاء الصلاحية <span class="text-danger">*</span></label>
+                                    <label for="expiry_date" class="form-label">{{ trans('phrM.expiry_date_label') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="expiry_date" id="expiry_date" class="form-control flatpickr-date @error('expiry_date') is-invalid @enderror" value="{{ old('expiry_date') }}" required placeholder="YYYY-MM-DD">
                                     @error('expiry_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="initial_quantity" class="form-label">الكمية الأولية <span class="text-danger">*</span></label>
+                                    <label for="initial_quantity" class="form-label">{{ trans('phrM.initial_quantity_label') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="initial_quantity" id="initial_quantity" class="form-control @error('initial_quantity') is-invalid @enderror" value="{{ old('initial_quantity') }}" required min="1">
                                     @error('initial_quantity') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="quantity_on_hand" class="form-label">الكمية الحالية <span class="text-danger">*</span></label>
+                                    <label for="quantity_on_hand" class="form-label">{{ trans('phrM.current_quantity_label') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="quantity_on_hand" id="quantity_on_hand" class="form-control @error('quantity_on_hand') is-invalid @enderror" value="{{ old('quantity_on_hand') }}" required min="0">
                                     @error('quantity_on_hand') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                    <small class="form-text text-muted">عادةً ما تكون هذه الكمية هي نفسها الكمية الأولية عند الإضافة.</small>
+                                    <small class="form-text text-muted">{{ trans('phrM.current_quantity_help_text') }}</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="cost_price_per_unit" class="form-label">سعر تكلفة الوحدة</label>
+                                    <label for="cost_price_per_unit" class="form-label">{{ trans('phrM.cost_price_per_unit_label') }}</label>
                                     <input type="text" name="cost_price_per_unit" id="cost_price_per_unit" class="form-control @error('cost_price_per_unit') is-invalid @enderror" value="{{ old('cost_price_per_unit') }}" placeholder="0.00">
                                     @error('cost_price_per_unit') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="supplier_name" class="form-label">اسم المورد</label>
+                                    <label for="supplier_name" class="form-label">{{ trans('phrM.supplier_name_label') }}</label>
                                     <input type="text" name="supplier_name" id="supplier_name" class="form-control @error('supplier_name') is-invalid @enderror" value="{{ old('supplier_name') }}">
                                     @error('supplier_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="received_date" class="form-label">تاريخ استلام الدفعة</label>
+                                    <label for="received_date" class="form-label">{{ trans('phrM.batch_received_date_label') }}</label>
                                     <input type="text" name="received_date" id="received_date" class="form-control flatpickr-date @error('received_date') is-invalid @enderror" value="{{ old('received_date') }}" placeholder="YYYY-MM-DD">
                                     @error('received_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="stock_notes" class="form-label">ملاحظات على الدفعة</label>
+                                    <label for="stock_notes" class="form-label">{{ trans('phrM.notes_on_batch') }}</label>
                                     <textarea name="stock_notes" id="stock_notes" class="form-control @error('stock_notes') is-invalid @enderror" rows="3">{{ old('stock_notes') }}</textarea>
                                     @error('stock_notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
@@ -287,10 +287,10 @@
 
                         <div class="form-actions">
                             <a href="{{ route('pharmacy_manager.medications.stocks.index', $medication->id) }}" class="btn btn-cancel-form">
-                                <i class="fas fa-times me-2"></i> إلغاء
+                                <i class="fas fa-times me-2"></i> {{ trans('phrM.cancel') }}
                             </a>
                             <button type="submit" class="btn btn-submit-form">
-                                <i class="fas fa-plus-circle me-2"></i> إضافة الدفعة
+                                <i class="fas fa-plus-circle me-2"></i> {{ trans('phrM.add_batch_button') }}
                             </button>
                         </div>
                     </form>
@@ -299,7 +299,6 @@
         </div>
     </div>
 @endsection
-
 @section('js')
     @parent
     <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.full.min.js') }}"></script>

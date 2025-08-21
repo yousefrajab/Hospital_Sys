@@ -1,26 +1,28 @@
 <!-- Modal -->
-<div class="modal fade" id="edit_laboratorie_conversion{{$patient_Laboratorie->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="edit_laboratorie_conversion{{ $patient_Laboratorie->id }}" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">تحويل الي قسم المختبر</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="exampleModalLabel">{{ trans('doctors.convert_to_lab_department') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('doctors.close') }}">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('doctor.Laboratories.update',$patient_Laboratorie->id)}}" method="POST">
+            <form action="{{ route('doctor.Laboratories.update', $patient_Laboratorie->id) }}" method="POST">
                 @method('PUT')
-            @csrf
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="exampleFormControlTextarea1">المطلوب</label>
-                    <textarea class="form-control" name="description" rows="6">{{$patient_Laboratorie->description}}</textarea>
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">{{ trans('doctors.request_description') }}</label>
+                        <textarea class="form-control" name="description" rows="6">{{ $patient_Laboratorie->description }}</textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                <button type="submit" class="btn btn-primary">حفظ البيانات</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">{{ trans('doctors.close') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ trans('doctors.save_data') }}</button>
+                </div>
             </form>
         </div>
     </div>

@@ -4,8 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>{{ $doctor->name ?? 'ملف طبيب' }} - {{ config('app.name', 'اسم المستشفى/المنصة') }}</title>
-    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+<title>{{ $doctor->name ?? trans('patients.doctor_profile_title') }} - {{ config('app.name', trans('patients.medical_platform')) }}</title>    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('Dashboard/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('Dashboard/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('Dashboard/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
@@ -794,13 +793,12 @@
     <header class="standalone-profile-header">
         <div class="container-fluid">
             <div class="site-branding">
-                <a href="{{ route('home') }}" class="site-title" title="العودة إلى الرئيسية {{ config('app.name') }}">
-                    {{-- <img src="{{ asset('path/to/your/logo.png') }}" alt="Logo"> --}}
-                    {{ config('app.name', 'المنصة الطبية') }}
+                <a href="{{ route('home') }}" class="site-title" title="{{ trans('patients.back_to_home_title', ['appName' => config('app.name')]) }}">
+                    {{ config('app.name', trans('patients.medical_platform')) }}
                 </a>
             </div>
             <div class="back-to-doctors">
-                <a href="{{ route('website.doctors.all') }}"><i class="fas fa-users"></i> عرض كل الأطباء</a>
+                <a href="{{ route('website.doctors.all') }}"><i class="fas fa-users"></i> {{ trans('patients.view_all_doctors') }}</a>
             </div>
         </div>
     </header>
@@ -814,7 +812,7 @@
                         class="doctor-avatar" alt="{{ trans('doctors.img') }}">
                 @else
                     <img src="{{ Url::asset('Dashboard/img/doctor_default.png') }}" class="doctor-avatar"
-                        alt="صورة افتراضية">
+                        alt="{{ trans('patients.default_image_alt') }}">
                 @endif
             </div>
             <div class="profile-info-details">
@@ -823,17 +821,16 @@
                     <p class="department-link">
                         <i class="fas fa-hospital-symbol"></i>
                         <a href="{{ route('website.department.details', $doctor->section->id) }}"
-                            title="المزيد عن قسم {{ $doctor->section->name }}">
+                            title="{{ trans('patients.more_about_department', ['name' => $doctor->section->name]) }}">
                             {{ $doctor->section->name }}
                         </a>
                     </p>
                 @endif
-                {{-- Add Qualifications/Title if available, e.g., $doctor->title or $doctor->qualifications --}}
-                {{-- <p class="doctor-title-qualifications text-muted">{{ $doctor->title_or_qualifications ?? 'أخصائي/استشاري' }}</p> --}}
+                {{-- <p class="doctor-title-qualifications text-muted">{{ $doctor->title_or_qualifications ?? trans('patients.specialist_consultant') }}</p> --}}
 
                 <ul class="profile-breadcrumb">
-                    <li><a href="{{ route('home') }}">الرئيسية</a></li>
-                    <li><a href="{{ route('website.doctors.all') }}">الأطباء</a></li>
+                    <li><a href="{{ route('home') }}">{{ trans('patients.nav_home') }}</a></li>
+                    <li><a href="{{ route('website.doctors.all') }}">{{ trans('patients.nav_doctors') }}</a></li>
                     <li>{{ $doctor->name }}</li>
                 </ul>
             </div>
@@ -850,43 +847,41 @@
                             <button class="nav-link active" id="bio-tab" data-bs-toggle="tab"
                                 data-bs-target="#tab-bio-content" type="button" role="tab"
                                 aria-controls="tab-bio-content" aria-selected="true">
-                                <i class="fas fa-user-tie"></i> السيرة الذاتية
+                                <i class="fas fa-user-tie"></i> {{ trans('patients.biography') }}
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="schedule-tab" data-bs-toggle="tab"
                                 data-bs-target="#tab-schedule-content" type="button" role="tab"
                                 aria-controls="tab-schedule-content" aria-selected="false">
-                                <i class="fas fa-calendar-alt"></i> جدول العمل
+                                <i class="fas fa-calendar-alt"></i> {{ trans('patients.work_schedule') }}
                             </button>
                         </li>
-                        {{-- Add more tabs if needed: Education, Reviews, etc. --}}
                     </ul>
                     <div class="tab-content" id="doctorProfileTabContent">
                         <!-- Tab: Bio -->
                         <div class="tab-pane fade show active" id="tab-bio-content" role="tabpanel"
                             aria-labelledby="bio-tab">
                             <div class="tab-content-section">
-                                <h4 class="section-title"><i class="fas fa-info-circle"></i> نبذة تعريفية عن الطبيب</h4>
+                                <h4 class="section-title"><i class="fas fa-info-circle"></i> {{ trans('patients.about_the_doctor') }}</h4>
                                 <div class="doctor-bio-fulltext">
                                     @if ($doctor->bio)
                                         {!! nl2br(e($doctor->bio)) !!}
                                     @else
-                                        <p class="empty-state-profile"><i class="fas fa-feather-alt"></i> لا توجد نبذة
-                                            تعريفية متاحة حاليًا لهذا الطبيب.</p>
+                                        <p class="empty-state-profile"><i class="fas fa-feather-alt"></i> {{ trans('patients.no_biography_available') }}</p>
                                     @endif
                                 </div>
 
                                 @if ($doctor->phone || $doctor->email)
-                                    <h4 class="section-title mt-4"><i class="fas fa-address-book"></i> معلومات الاتصال
+                                    <h4 class="section-title mt-4"><i class="fas fa-address-book"></i> {{ trans('patients.contact_information') }}
                                     </h4>
                                     <ul class="contact-info-list-profile">
                                         @if ($doctor->phone)
-                                            <li><i class="fas fa-phone-alt"></i> <strong>الهاتف:</strong> <a
+                                            <li><i class="fas fa-phone-alt"></i> <strong>{{ trans('patients.phone_label') }}</strong> <a
                                                     href="tel:{{ $doctor->phone }}">{{ $doctor->phone }}</a></li>
                                         @endif
                                         @if ($doctor->email)
-                                            <li><i class="fas fa-envelope"></i> <strong>البريد الإلكتروني:</strong> <a
+                                            <li><i class="fas fa-envelope"></i> <strong>{{ trans('patients.email_label') }}</strong> <a
                                                     href="mailto:{{ $doctor->email }}">{{ $doctor->email }}</a></li>
                                         @endif
                                     </ul>
@@ -897,24 +892,24 @@
                         <div class="tab-pane fade" id="tab-schedule-content" role="tabpanel"
                             aria-labelledby="schedule-tab">
                             <div class="tab-content-section">
-                                <h4 class="section-title"><i class="fas fa-user-clock"></i> جدول عمل الطبيب</h4>
+                                <h4 class="section-title"><i class="fas fa-user-clock"></i> {{ trans('patients.doctor_work_schedule') }}</h4>
                                 @if (collect($scheduleData)->where('active', true)->isNotEmpty())
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover schedule-table-profile">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th>اليوم</th>
-                                                    <th>وقت البدء</th>
-                                                    <th>وقت الانتهاء</th>
-                                                    <th>مدة الكشف (دقيقة)</th>
-                                                    <th>الاستراحات</th>
+                                                    <th>{{ trans('patients.day_col') }}</th>
+                                                    <th>{{ trans('patients.start_time_col') }}</th>
+                                                    <th>{{ trans('patients.end_time_col') }}</th>
+                                                    <th>{{ trans('patients.consultation_duration_min') }}</th>
+                                                    <th>{{ trans('patients.breaks_col') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($scheduleData as $day => $data)
                                                     @if ($data['active'])
                                                         <tr>
-                                                            <td>{{ trans('doctors.' . $day) ?? $day }}
+                                                            <td>{{ trans('doctors.days.' . strtolower($day)) ?? $day }}
                                                             </td>
                                                             <td>{{ $data['start_time'] }}</td>
                                                             <td>{{ $data['end_time'] }}</td>
@@ -933,7 +928,7 @@
                                                                         @endforeach
                                                                     </ul>
                                                                 @else
-                                                                    <span>لا توجد</span>
+                                                                    <span>{{ trans('patients.no_breaks') }}</span>
                                                                 @endif
                                                             </td>
                                                         </tr>
@@ -943,11 +938,10 @@
                                         </table>
                                     </div>
                                     <p class="schedule-notice-profile mt-3"><i class="fas fa-exclamation-circle"></i>
-                                        المواعيد المذكورة هي حسب التوقيت المحلي وقد تخضع للتغيير. يفضل التأكيد المسبق.
+                                        {{ trans('patients.schedule_notice') }}
                                     </p>
                                 @else
-                                    <p class="empty-state-profile"><i class="fas fa-calendar-times"></i> لا يوجد جدول
-                                        عمل مفصل متاح حاليًا لهذا الطبيب.</p>
+                                    <p class="empty-state-profile"><i class="fas fa-calendar-times"></i> {{ trans('patients.no_detailed_schedule_available') }}</p>
                                 @endif
                             </div>
                         </div>
@@ -960,7 +954,7 @@
                 <aside class="doctor-profile-sidebar">
                     <div class="sidebar-widget card-styled working-hours-widget animate__animated animate__fadeInUp"
                         data-wow-delay="0.3s">
-                        <h5 class="widget-title-sidebar"><i class="far fa-clock"></i> ساعات العمل المتاحة</h5>
+                        <h5 class="widget-title-sidebar"><i class="far fa-clock"></i> {{ trans('patients.available_working_hours') }}</h5>
                         <ul class="working-hours-summary-list">
                             @php $activeDaysFound = false; @endphp
                             @forelse ($scheduleData as $day => $data)
@@ -968,17 +962,16 @@
                                     @php $activeDaysFound = true; @endphp
                                     <li
                                         class="{{ \Carbon\Carbon::now()->englishDayOfWeek == $day ? 'is-today' : '' }}">
-                                        <span class="day-name">{{ trans('doctors.' . $day) ?? $day }}</span>
+                                        <span class="day-name">{{ trans('doctors.days.' . strtolower($day)) ?? $day }}</span>
                                         <span class="day-time">{{ $data['start_time'] }} -
                                             {{ $data['end_time'] }}</span>
                                     </li>
                                 @endif
                             @empty
-                                <li>لا توجد أيام عمل مجدولة حاليًا.</li>
+                                <li>{{ trans('patients.no_scheduled_work_days') }}</li>
                             @endforelse
                             @if (!$activeDaysFound && !empty($scheduleData))
-                                <li><span class="text-warning fw-bold">الطبيب في إجازة حاليًا أو لا توجد أيام عمل
-                                        محددة.</span></li>
+                                <li><span class="text-warning fw-bold">{{ trans('patients.doctor_on_leave') }}</span></li>
                             @endif
                         </ul>
                     </div>
@@ -986,19 +979,17 @@
                     @if ($doctor->section)
                         <div class="sidebar-widget card-styled department-info-widget-profile animate__animated animate__fadeInUp"
                             data-wow-delay="0.4s">
-                            <h5 class="widget-title-sidebar"><i class="fas fa-building"></i> عن القسم</h5>
+                            <h5 class="widget-title-sidebar"><i class="fas fa-building"></i> {{ trans('patients.about_the_department') }}</h5>
                             <h5><a
                                     href="{{ route('website.department.details', $doctor->section->id) }}">{{ $doctor->section->name }}</a>
                             </h5>
-                            <p>{{ Str::limit(strip_tags($doctor->section->description ?? 'معلومات إضافية عن هذا القسم ستكون متاحة قريباً.'), 150) }}
+                            <p>{{ Str::limit(strip_tags($doctor->section->description ?? trans('patients.more_info_about_department_soon')), 150) }}
                             </p>
                             <a href="{{ route('website.department.details', $doctor->section->id) }}"
-                                class="read-more-profile-link">اقرأ المزيد عن القسم <i
+                                class="read-more-profile-link">{{ trans('patients.read_more_about_department') }} <i
                                     class="fas fa-arrow-left"></i></a>
                         </div>
                     @endif
-
-                    {{-- Add more widgets: Map, Contact Form, etc. --}}
                 </aside>
             </div> <!-- End Sidebar Side -->
         </div> <!-- End Row -->
@@ -1007,7 +998,7 @@
             <section class="related-doctors-section-profile animate__animated animate__fadeInUp"
                 data-wow-delay="0.5s">
                 <div class="section-title-centered">
-                    <h2>أطباء مشابهون في نفس التخصص</h2>
+                    <h2>{{ trans('patients.similar_doctors_in_specialty') }}</h2>
                     <div class="separator-line"></div>
                 </div>
                 <div class="doctors-grid">
@@ -1026,12 +1017,12 @@
                                         class="availability-badge-standalone {{ $rdoctor->status ? 'status-available' : 'status-unavailable' }}">
                                         <i
                                             class="fas fa-{{ $rdoctor->status ? 'check-circle' : 'times-circle' }}"></i>
-                                        {{ $rdoctor->status ? 'متاح' : 'غير متاح' }}
+                                        {{ $rdoctor->status ? trans('patients.available') : trans('patients.not_available') }}
                                     </span>
 
                                     @if ($rdoctor->is_featured)
                                         <span class="availability-badge-standalone featured-badge">
-                                            <i class="fas fa-star"></i> مميز
+                                            <i class="fas fa-star"></i> {{ trans('patients.featured_badge') }}
                                         </span>
                                     @endif
                                 </div>
@@ -1060,7 +1051,7 @@
                             <div class="action-footer-standalone">
                                 <a href="{{ route('website.doctor.details', $rdoctor->id) }}"
                                     class="btn btn-outline-primary view-profile-btn">
-                                    <i class="fas fa-id-badge"></i> عرض الملف الشخصي
+                                    <i class="fas fa-id-badge"></i> {{ trans('patients.view_profile_button') }}
                                 </a>
                             </div>
                         </div>
@@ -1068,10 +1059,9 @@
                 </div>
             </section>
         @endif
-
     </main>
 
-    <footer class="standalone-profile-footer">
+    {{-- <footer class="standalone-profile-footer">
         <p style="margin: 0; font-size: 14px;">© حقوق النشر {{ date('Y') }} ، جميع الحقوق محفوظة لـ <a
                 href="{{ route('home') }}" style="color: #00bcd4; text-decoration: none;">نظام إدارة
                 المستشفيات</a>.
@@ -1079,7 +1069,7 @@
             تصميم وتطوير <a href="https://www.facebook.com/Momensarsour" target="_blank"
                 style="color: #00bcd4; text-decoration: none;">Mo'men Sarsour & Yousef Rajab</a>
         </p>
-    </footer>
+    </footer> --}}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     {{-- Add WOW.js or other JS if needed and initialized --}}

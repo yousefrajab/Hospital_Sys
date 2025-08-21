@@ -8,7 +8,6 @@
 </head>
 
 <body style="font-family: 'Cairo', sans-serif;">
-
     <div class="page-wrapper {{ LaravelLocalization::getCurrentLocale() === 'ar' ? 'rtl' : '' }}">
         <!-- Preloader -->
         <div class="preloader"></div>
@@ -133,16 +132,15 @@
                                 <a href="index.html"><img src="images/logo-3.png" alt="" /></a>
                             </div>
                             <div class="content-box">
-                                <h2>من نحن</h2>
-                                <p class="text">أين أنت في قلب مهمتنا. نأمل أن تعتبرنا منزلك الطبي - المكان الذي تشعر
-                                    فيه بالأمان والراحة والرعاية. كمجموعة طبية متعددة التخصصات.</p>
-                                <a href="mailto:momensarsour5@gmail.com" class="theme-btn btn-style-two"><span class="txt">تواصل معنا يعمري
+                                <h2>{{ trans('patients.sidebar_about_us_title') }}</h2>
+                                <p class="text">{{ trans('patients.sidebar_about_us_text') }}</p>
+                                <a href="mailto:momensarsour5@gmail.com" class="theme-btn btn-style-two"><span class="txt">{{ trans('patients.sidebar_contact_us_button') }}
                                     </span></a>
                             </div>
                             <div class="contact-info">
-                                <h2>: تواصل عبر </h2>
+                                <h2>{{ trans('patients.sidebar_contact_via_title') }}</h2>
                                 <ul class="list-style-two">
-                                    <li><span class="icon flaticon-map"></span>النصيرات - غزة </li>
+                                    <li><span class="icon flaticon-map"></span>{{ trans('patients.sidebar_address') }}</li>
                                     <li><span class="icon flaticon-telephone"></span><a href="tel:+970567077179"
                                             style="text-decoration: none; color: inherit; direction: ltr; display: inline-block;">+970
                                             56 707 7179</a></li>
@@ -150,17 +148,11 @@
                                             href="mailto:momensarsour5@gmail.com"
                                             style="text-decoration: none; color: inherit;">momensarsour5@gmail.com</a>
                                     </li>
-                                    <li><span class="icon flaticon-timetable"></span>من السبت إلى الخميس: من 9:00 صباحًا
-                                        حتى 5:00 مساءً </li>
+                                    <li><span class="icon flaticon-timetable"></span>{{ trans('patients.sidebar_working_hours') }}</li>
                                 </ul>
                             </div>
                             <!-- Social Box -->
                             <ul class="social-box">
-                                {{-- <li class="facebook"><a href="#" class="fab fa-facebook-f"></a></li>
-                            <li class="twitter"><a href="#" class="fab fa-twitter"></a></li>
-                            <li class="linkedin"><a href="#" class="fab fa-linkedin-in"></a></li>
-                            <li class="instagram"><a href="#" class="fab fa-instagram"></a></li>
-                            <li class="youtube"><a href="#" class="fab fa-youtube"></a></li> --}}
                                 <li class="facebook"><a href="https://facebook.com/Momensarsour" target="_blank"
                                         title="Facebook" class="fab fa-facebook-f"></a></li>
                                 <li class="twitter"><a href="https://x.com/Momensarsour" target="_blank"
@@ -171,7 +163,6 @@
                                         title="Instagram" class="fab fa-instagram"></a></li>
                                 <li class="youtube"><a href="https://wa.me/970567077179" target="_blank"
                                         title="WhatsApp" class="fab fa-youtube"></a></li>
-
                             </ul>
                         </div>
                     </div>

@@ -3,7 +3,7 @@
 
 @php
     // استخدام $patient->name مباشرة لأنه يعمل معك لعرض الاسم
-    $patientName = $patient->name ?? 'ملفي الشخصي';
+    $patientName = $patient->name;
 @endphp
 @section('title', 'تعديل الملف الشخصي | ' . $patientName)
 
@@ -256,16 +256,10 @@
         <div class="my-auto">
             <div class="d-flex align-items-center">
                 <h4 class="content-title mb-0 my-auto"><i class="fas fa-user-circle me-2"
-                        style="color:var(--primary-color);"></i>ملفي الشخصي</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل بياناتي</span>
+                        style="color:var(--primary-color);"></i>{{ trans('patients.my_profile') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('patients.edit_my_data') }}</span>
             </div>
         </div>
-        {{-- يمكنك إضافة زر للعودة إلى لوحة تحكم المريض الرئيسية هنا إذا كانت مختلفة عن صفحة الملف الشخصي --}}
-        {{-- <div class="d-flex my-xl-auto right-content">
-            <a href="{{ route('patient.dashboard') }}" class="btn btn-outline-primary btn-sm">
-                <i class="fas fa-tachometer-alt me-1"></i> لوحة التحكم
-            </a>
-        </div> --}}
     </div>
 @endsection
 
@@ -273,32 +267,29 @@
     @include('Dashboard.messages_alert')
 
     <div class="row justify-content-center">
-        <div class="col-lg-10 col-md-12"> {{-- تعديل عرض العمود --}}
+        <div class="col-lg-10 col-md-12">
             <div class="patient-profile-form-container">
                 <div class="form-header">
-                    <h3><i class="fas fa-edit"></i> تعديل الملف الشخصي</h3>
-                    <p class="mb-0">أهلاً بك {{ $patientName }}، قم بتحديث بياناتك هنا.</p>
+                    <h3><i class="fas fa-edit"></i> {{ trans('patients.edit_profile') }}</h3>
+                    <p class="mb-0">{{ trans('patients.welcome_and_update_prompt', ['name' => $patientName]) }}</p>
                 </div>
                 <div class="form-section">
                     <form action="{{ route('profile.update') }}" method="post" autocomplete="off"
                         id="patientProfileForm" enctype="multipart/form-data" class="needs-validation" novalidate>
-                        @method('PUT') {{-- أو PATCH --}}
+                        @method('PUT')
                         @csrf
-                        {{-- لا نحتاج حقل ID مخفي هنا لأننا نستخدم Auth::guard('patient')->id() في الـ Controller --}}
 
                         <div class="row mb-4">
                             <div class="col-12 text-center">
                                 <div class="avatar-upload-profile">
-                                    {{-- تأكد من مسار صور المرضى الصحيح --}}
                                     <img id="profile_photo_output"
                                         src="{{ $patient->image ? asset('Dashboard/img/patients/' . $patient->image->filename) : URL::asset('Dashboard/img/default_patient_avatar.png') }}"
-                                        alt="الصورة الشخصية">
-                                    <label for="profile_photo_input_field" title="تغيير الصورة">
+                                        alt="{{ trans('patients.personal_photo') }}">
+                                    <label for="profile_photo_input_field" title="{{ trans('patients.change_photo') }}">
                                         <i class="fas fa-camera"></i>
                                     </label>
                                     <input id="profile_photo_input_field" type="file" name="photo"
                                         onchange="previewPatientProfileImage(event, 'profile_photo_output')">
-                                    {{-- اسم دالة JS مختلف --}}
                                 </div>
                                 @error('photo')
                                     <small class="text-danger d-block mt-1">{{ $message }}</small>
@@ -311,12 +302,12 @@
                             <!-- الاسم الكامل -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name_pat_profile" class="form-label">الاسم الكامل <span
+                                    <label for="name_pat_profile" class="form-label">{{ trans('patients.full_name') }} <span
                                             class="text-danger">*</span></label>
                                     <input type="text" id="name_pat_profile" name="name"
                                         value="{{ old('name', $patient->getTranslation('name', app()->getLocale(), false) ?: $patient->name) }}"
                                         class="form-control @error('name') is-invalid @enderror"
-                                        placeholder="أدخل الاسم الكامل" required>
+                                        placeholder="{{ trans('patients.enter_full_name_placeholder') }}" required>
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -326,12 +317,12 @@
                             <!-- البريد الإلكتروني -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="email_pat_profile" class="form-label">البريد الإلكتروني <span
+                                    <label for="email_pat_profile" class="form-label">{{ trans('patients.email') }} <span
                                             class="text-danger">*</span></label>
                                     <input type="email" id="email_pat_profile" name="email"
                                         value="{{ old('email', $patient->email) }}"
                                         class="form-control @error('email') is-invalid @enderror"
-                                        placeholder="example@domain.com" required>
+                                        placeholder="{{ trans('patients.email_placeholder') }}" required>
                                     @error('email')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -341,13 +332,13 @@
                             <!-- تاريخ الميلاد -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="Date_Birth_pat_profile">تاريخ الميلاد <span
+                                    <label class="form-label" for="Date_Birth_pat_profile">{{ trans('patients.Date_Birth') }} <span
                                             class="text-danger">*</span></label>
                                     <div class="datepicker-input">
                                         <input class="form-control @error('Date_Birth') is-invalid @enderror"
                                             id="Date_Birth_pat_profile" name="Date_Birth"
                                             value="{{ old('Date_Birth', $patient->Date_Birth) }}" type="text"
-                                            autocomplete="off" required placeholder="اختر تاريخ ميلادك">
+                                            autocomplete="off" required placeholder="{{ trans('patients.select_your_birth_date') }}">
                                         <i class="fas fa-calendar-alt"></i>
                                     </div>
                                     @error('Date_Birth')
@@ -358,28 +349,27 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">رقم الهوية</label>
-                                    <input type="text" name="national_id" title="يجب أن يتكون من 9 أرقام فقط"
+                                    <label class="form-label">{{ trans('patients.national_id') }}</label>
+                                    <input type="text" name="national_id" title="{{ trans('patients.must_be_9_digits_only') }}"
                                         value="{{ $patient->national_id }}" pattern="[0-9]{9}"
                                         oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="9"
                                         class="form-control @error('national_id') is-invalid @enderror"
-                                        placeholder="أدخل رقم الهوية" required>
+                                        placeholder="{{ trans('patients.enter_national_id') }}" required>
                                 </div>
                             </div>
 
                             <!-- رقم الهاتف -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="Phone_pat_profile" class="form-label">رقم الهاتف <span
+                                    <label for="Phone_pat_profile" class="form-label">{{ trans('patients.phone') }} <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        {{-- <span class="input-group-text">+966</span> --}}
                                         <input type="tel" id="Phone_pat_profile" name="Phone"
                                             value="{{ old('Phone', $patient->Phone) }}"
                                             class="form-control phone-input @error('Phone') is-invalid @enderror"
                                             placeholder="5xxxxxxxx" required>
                                     </div>
-                                    <small class="form-text text-muted">أدخل 9 أرقام تبدأ بـ 5 (مثال: 501234567).</small>
+                                    <small class="form-text text-muted">{{ trans('patients.phone_help_text_sa') }}</small>
                                     @error('Phone')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -389,16 +379,16 @@
                             <!-- الجنس -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="Gender_pat_profile" class="form-label">الجنس <span
+                                    <label for="Gender_pat_profile" class="form-label">{{ trans('patients.gender_label') }} <span
                                             class="text-danger">*</span></label>
                                     <select class="form-select @error('Gender') is-invalid @enderror" name="Gender"
                                         id="Gender_pat_profile" required>
                                         <option value="" disabled
-                                            {{ old('Gender', $patient->Gender) ? '' : 'selected' }}>-- اختر --</option>
+                                            {{ old('Gender', $patient->Gender) ? '' : 'selected' }}>{{ trans('patients.choose_placeholder') }}</option>
                                         <option value="1"
-                                            {{ old('Gender', $patient->Gender) == 1 ? 'selected' : '' }}>ذكر</option>
+                                            {{ old('Gender', $patient->Gender) == 1 ? 'selected' : '' }}>{{ trans('patients.male') }}</option>
                                         <option value="2"
-                                            {{ old('Gender', $patient->Gender) == 2 ? 'selected' : '' }}>أنثى</option>
+                                            {{ old('Gender', $patient->Gender) == 2 ? 'selected' : '' }}>{{ trans('patients.female') }}</option>
                                     </select>
                                     @error('Gender')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -409,12 +399,11 @@
                             <!-- فصيلة الدم -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label" for="Blood_Group_pat_profile">فصيلة الدم</label>
+                                    <label class="form-label" for="Blood_Group_pat_profile">{{ trans('patients.Blood_Group') }}</label>
                                     <select class="form-select @error('Blood_Group') is-invalid @enderror"
                                         name="Blood_Group" id="Blood_Group_pat_profile">
                                         <option value=""
-                                            {{ old('Blood_Group', $patient->Blood_Group) ? '' : 'selected' }}>-- اختر --
-                                        </option>
+                                            {{ old('Blood_Group', $patient->Blood_Group) ? '' : 'selected' }}>{{ trans('patients.choose_placeholder') }}</option>
                                         @foreach (['O-', 'O+', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'] as $bloodType)
                                             <option value="{{ $bloodType }}"
                                                 {{ old('Blood_Group', $patient->Blood_Group) == $bloodType ? 'selected' : '' }}>
@@ -430,9 +419,9 @@
                             <!-- العنوان -->
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-label" for="Address_pat_profile">العنوان</label>
+                                    <label class="form-label" for="Address_pat_profile">{{ trans('patients.Address') }}</label>
                                     <textarea rows="3" class="form-control @error('Address') is-invalid @enderror" name="Address"
-                                        id="Address_pat_profile" placeholder="الحي، الشارع، المدينة">{{ old('Address', $patient->getTranslation('Address', app()->getLocale(), false) ?: $patient->Address) }}</textarea>
+                                        id="Address_pat_profile" placeholder="{{ trans('patients.address_placeholder_details') }}">{{ old('Address', $patient->getTranslation('Address', app()->getLocale(), false) ?: $patient->Address) }}</textarea>
                                     @error('Address')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -443,22 +432,20 @@
                         <hr class="section-title-divider">
 
                         <!-- قسم كلمة المرور -->
-                        <h5 class="section-title mb-4" style="font-size: 1.2rem;"><i class="fas fa-key"></i> تغيير كلمة
-                            المرور</h5>
+                        <h5 class="section-title mb-4" style="font-size: 1.2rem;"><i class="fas fa-key"></i> {{ trans('patients.change_password') }}</h5>
                         <div class="alert alert-info bg-light border-info text-info-emphasis" role="alert"
                             style="font-size: 0.9rem;">
                             <i class="fas fa-info-circle me-2"></i>
-                            اترك حقول كلمة المرور فارغة إذا كنت لا تريد تغييرها.
+                            {{ trans('patients.leave_password_fields_blank_note') }}
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="current_password_pat_profile" class="form-label">كلمة المرور
-                                        الحالية</label>
+                                    <label for="current_password_pat_profile" class="form-label">{{ trans('patients.current_password') }}</label>
                                     <div class="password-toggle-group">
                                         <input type="password" id="current_password_pat_profile" name="current_password"
                                             class="form-control @error('current_password') is-invalid @enderror"
-                                            placeholder="كلمة المرور الحالية (مطلوبة للتغيير)"
+                                            placeholder="{{ trans('patients.current_password_placeholder_required') }}"
                                             autocomplete="current-password">
                                         <button class="btn toggle-password" type="button"
                                             data-target="current_password_pat_profile" tabindex="-1"><i
@@ -471,11 +458,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="password_pat_profile" class="form-label">كلمة المرور الجديدة</label>
+                                    <label for="password_pat_profile" class="form-label">{{ trans('patients.new_password') }}</label>
                                     <div class="password-toggle-group">
                                         <input type="password" id="password_pat_profile" name="password"
                                             class="form-control @error('password') is-invalid @enderror"
-                                            placeholder="8 أحرف على الأقل" autocomplete="new-password" minlength="8">
+                                            placeholder="{{ trans('patients.at_least_8_chars_placeholder') }}" autocomplete="new-password" minlength="8">
                                         <button class="btn toggle-password" type="button"
                                             data-target="password_pat_profile" tabindex="-1"><i
                                                 class="fas fa-eye"></i></button>
@@ -487,13 +474,12 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="password_confirmation_pat_profile" class="form-label">تأكيد كلمة المرور
-                                        الجديدة</label>
+                                    <label for="password_confirmation_pat_profile" class="form-label">{{ trans('patients.confirm_new_password') }}</label>
                                     <div class="password-toggle-group">
                                         <input type="password" id="password_confirmation_pat_profile"
                                             name="password_confirmation"
                                             class="form-control @error('password_confirmation') is-invalid @enderror"
-                                            placeholder="أعد إدخال كلمة المرور" autocomplete="new-password"
+                                            placeholder="{{ trans('patients.re_enter_password_placeholder') }}" autocomplete="new-password"
                                             minlength="8">
                                         <button class="btn toggle-password" type="button"
                                             data-target="password_confirmation_pat_profile" tabindex="-1"><i
@@ -508,7 +494,7 @@
 
                         <div class="text-center mt-4 pt-3 border-top">
                             <button type="submit" class="btn btn-submit-profile btn-lg">
-                                <i class="fas fa-save me-2"></i> حفظ التغييرات
+                                <i class="fas fa-save me-2"></i> {{ trans('patients.save_changes') }}
                             </button>
                         </div>
                     </form>

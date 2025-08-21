@@ -12,7 +12,7 @@
      <div class="breadcrumb-header justify-content-between">
          <div class="my-auto">
              <div class="d-flex">
-                 <h4 class="content-title mb-0 my-auto">الكشوفات</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ الفواتير</span>
+                 <h4 class="content-title mb-0 my-auto">{{ trans('lab.statements') }}</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('lab.invoices') }}</span>
              </div>
          </div>
      </div>
@@ -31,12 +31,12 @@
                              <thead>
                              <tr>
                                  <th>#</th>
-                                 <th>تاريخ الفاتورة</th>
-                                 <th>اسم المريض</th>
-                                 <th>اسم الدكتور</th>
-                                 <th>المطلوب</th>
-                                 <th>حالة الفاتورة</th>
-                                 <th>العمليات</th>
+                                 <th>{{ trans('lab.invoice_date') }}</th>
+                                 <th>{{ trans('lab.patient_name') }}</th>
+                                 <th>{{ trans('lab.doctor_name') }}</th>
+                                 <th>{{ trans('lab.required_test') }}</th>
+                                 <th>{{ trans('lab.invoice_status') }}</th>
+                                 <th>{{ trans('lab.actions') }}</th>
                              </tr>
                              </thead>
                              <tbody>
@@ -49,17 +49,17 @@
                                      <td>{{ $invoice->description }}</td>
                                      <td>
                                          @if($invoice->case == 0)
-                                             <span class="badge badge-danger">تحت الاجراء</span>
+                                             <span class="badge badge-danger">{{ trans('lab.status_in_progress') }}</span>
                                          @else
-                                             <span class="badge badge-success">مكتملة</span>
+                                             <span class="badge badge-success">{{ trans('lab.status_completed') }}</span>
                                          @endif
                                      </td>
 
                                      <td>
                                          <div class="dropdown">
-                                             <button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-outline-primary btn-sm" data-toggle="dropdown" type="button">{{trans('doctors.Processes')}}<i class="fas fa-caret-down mr-1"></i></button>
+                                             <button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-outline-primary btn-sm" data-toggle="dropdown" type="button">{{trans('lab.processes')}}<i class="fas fa-caret-down mr-1"></i></button>
                                              <div class="dropdown-menu tx-13">
-                                                 <a class="dropdown-item" href="{{route('laboratorie_employee.invoices_laboratorie_employee.edit',$invoice->id)}}"><i class="text-primary fa fa-stethoscope"></i>&nbsp;&nbsp;اضافة تشخيص </a>
+                                                 <a class="dropdown-item" href="{{route('laboratorie_employee.invoices_laboratorie_employee.edit',$invoice->id)}}"><i class="text-primary fa fa-stethoscope"></i>&nbsp;&nbsp;{{ trans('lab.add_diagnosis') }} </a>
                                              </div>
                                          </div>
                                      </td>

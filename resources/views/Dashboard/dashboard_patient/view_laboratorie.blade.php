@@ -57,7 +57,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">نتائج التحاليل</h4>
+                <h4 class="content-title mb-0 my-auto">{{ trans('patients.analysis_results') }}</h4>
             </div>
         </div>
     </div>
@@ -68,12 +68,12 @@
 
     @if ($laboratorie)
         <div class="notes-section">
-            <label for="lab_notes">ملاحظات قسم المختبر:</label>
-            <textarea readonly class="form-control" id="lab_notes" rows="3">{{ $laboratorie->description_employee ?? 'لا توجد ملاحظات.' }}</textarea>
+            <label for="lab_notes">{{ trans('patients.lab_department_notes') }}</label>
+            <textarea readonly class="form-control" id="lab_notes" rows="3">{{ $laboratorie->description_employee ?? trans('patients.no_notes_available') }}</textarea>
         </div>
 
         @if ($laboratorie->images && $laboratorie->images->count() > 0)
-            <h4>صور التحاليل:</h4>
+            <h4>{{ trans('patients.analysis_images') }}</h4>
             <div class="demo-gallery">
                 <ul id="lightgallery" class="list-unstyled row row-sm pr-0">
                     @foreach ($laboratorie->images as $image)
@@ -88,10 +88,10 @@
                 </ul>
             </div>
         @else
-            <div class="alert alert-info">لا توجد صور مرفقة لهذا التحليل.</div>
+            <div class="alert alert-info">{{ trans('patients.no_images_attached') }}</div>
         @endif
     @else
-        <div class="alert alert-warning">لم يتم العثور على تفاصيل التحليل المطلوب.</div>
+        <div class="alert alert-warning">{{ trans('patients.analysis_details_not_found') }}</div>
     @endif
 
     <script>

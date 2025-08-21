@@ -8,69 +8,70 @@
      <link href="{{URL::asset('dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
 
  @section('page-header')
-     <!-- breadcrumb -->
-     <div class="breadcrumb-header justify-content-between">
-         <div class="my-auto">
-             <div class="d-flex">
-                 <h4 class="content-title mb-0 my-auto">الفواتير المكتملة</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ الفواتير</span>
-             </div>
-         </div>
-     </div>
-     <!-- breadcrumb -->
- @endsection
- @section('content')
-     @include('Dashboard.messages_alert')
-     <!-- row -->
-     <!-- row opened -->
-     <div class="row row-sm">
-         <div class="col-xl-12">
-             <div class="card">
-                 <div class="card-body">
-                     <div class="table-responsive">
-                         <table class="table text-md-nowrap" id="example1">
-                             <thead>
-                             <tr>
-                                 <th>#</th>
-                                 <th>تاريخ الفاتورة</th>
-                                 <th>اسم المريض</th>
-                                 <th>اسم الدكتور</th>
-                                 <th>المطلوب</th>
-                                 <th>حالة الفاتورة</th>
-                             </tr>
-                             </thead>
-                             <tbody>
-                             @foreach($invoices as $invoice)
-                                 <tr>
-                                     <td>{{ $loop->iteration}}</td>
-                                     <td>{{ $invoice->created_at }}</td>
-                                     <td>{{ $invoice->Patient->name }}</td>
-                                     <td>{{ $invoice->doctor->name }}</td>
-                                     <td>{{ $invoice->description }}</td>
-                                     <td>
-                                         @if($invoice->case == 0)
-                                             <span class="badge badge-danger">تحت الاجراء</span>
-                                         @else
-                                             <span class="badge badge-success">مكتملة</span>
-                                         @endif
-                                     </td>
-                                 </tr>
-                             @endforeach
-                             </tbody>
-                         </table>
-                     </div>
-                 </div><!-- bd -->
-             </div><!-- bd -->
-         </div>
-         <!--/div-->
+    <!-- breadcrumb -->
+    <div class="breadcrumb-header justify-content-between">
+        <div class="my-auto">
+            <div class="d-flex">
+                <h4 class="content-title mb-0 my-auto">{{ trans('lab.completed_invoices') }}</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/
+                    {{ trans('lab.invoices') }}</span>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb -->
+@endsection
+@section('content')
+    @include('Dashboard.messages_alert')
+    <!-- row -->
+    <!-- row opened -->
+    <div class="row row-sm">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table text-md-nowrap" id="example1">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>{{ trans('lab.invoice_date') }}</th>
+                                    <th>{{ trans('lab.patient_name') }}</th>
+                                    <th>{{ trans('lab.doctor_name') }}</th>
+                                    <th>{{ trans('lab.required_test') }}</th>
+                                    <th>{{ trans('lab.invoice_status') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($invoices as $invoice)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $invoice->created_at }}</td>
+                                        <td>{{ $invoice->Patient->name }}</td>
+                                        <td>{{ $invoice->doctor->name }}</td>
+                                        <td>{{ $invoice->description }}</td>
+                                        <td>
+                                            @if ($invoice->case == 0)
+                                                <span class="badge badge-danger">{{ trans('lab.status_in_progress') }}</span>
+                                            @else
+                                                <span class="badge badge-success">{{ trans('lab.status_completed') }}</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- bd -->
+            </div><!-- bd -->
+        </div>
+        <!--/div-->
 
-         <!-- /row -->
-     </div>
-     <!-- row closed -->
+        <!-- /row -->
+    </div>
+    <!-- row closed -->
 
-     <!-- Container closed -->
+    <!-- Container closed -->
 
-     <!-- main-content closed -->
- @endsection
+    <!-- main-content closed -->
+@endsection
  @section('js')
 
      <!--Internal  Notify js -->

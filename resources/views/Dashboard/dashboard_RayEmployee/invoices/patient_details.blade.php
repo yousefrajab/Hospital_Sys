@@ -24,7 +24,7 @@
          <textarea readonly class="form-control" id="exampleFormControlTextarea1" rows="3">{{$rays->description_employee}}</textarea>
      </div>
 
- 
+
 
     <div class="demo-gallery">
         <ul id="lightgallery" class="list-unstyled row row-sm pr-0">
@@ -53,6 +53,4 @@
 
  @endsection
  @section('js')
-
-
  @endsection

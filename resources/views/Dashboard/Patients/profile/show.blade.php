@@ -373,15 +373,14 @@
         <div class="my-auto">
             <div class="d-flex align-items-center">
                 <h4 class="content-title mb-0 my-auto"><i class="fas fa-id-card me-2"
-                        style="color:var(--primary-color);"></i>ملفي الشخصي</h4>
+                        style="color:var(--primary-color);"></i>{{ trans('patients.my_profile') }}</h4>
                 <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ $patientName }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
-            {{-- افترض أن لديك route لتعديل ملف المريض الشخصي --}}
             @if (Route::has('patient.profile.edit'))
                 <a href="{{ route('patient.profile.edit') }}" class="edit-profile-action-button">
-                    <i class="fas fa-user-pen"></i> تعديل بياناتي
+                    <i class="fas fa-user-pen"></i> {{ trans('patients.edit_my_data') }}
                 </a>
             @endif
         </div>
@@ -393,20 +392,18 @@
 
     <div class="patient-profile-view-container">
         <div class="row justify-content-center">
-            <div class="col-lg-10 col-md-11"> {{-- تعديل بسيط لعرض البطاقة --}}
+            <div class="col-lg-10 col-md-11">
                 <div class="profile-card-view animate__animated animate__fadeIn">
                     <div class="profile-header-view">
-                        {{-- يمكن ترك هذا فارغًا أو إضافة نص ترحيبي صغير --}}
                     </div>
 
-                    {{-- الصورة والاسم والإيميل يتم وضعهم بعد الهيدر وقبل بقية التفاصيل --}}
                     <div class="text-center" style="margin-top: -65px; position: relative; z-index: 3;">
                         @if ($patient->image && $patient->image->filename)
                             <img src="{{ asset('Dashboard/img/patients/' . $patient->image->filename) }}"
-                                {{-- استخدام storage path --}} class="profile-avatar-view" alt="{{ $patientName }}">
+                                class="profile-avatar-view" alt="{{ $patientName }}">
                         @else
                             <img src="{{ URL::asset('Dashboard/img/default_doctor.png') }}" class="profile-avatar-view"
-                                alt="صورة افتراضية">
+                                alt="{{ trans('patients.default_image_alt') }}">
                         @endif
                         <h2 class="patient-name-view mt-2">{{ $patientName }}</h2>
                         @if ($patient->email)
@@ -417,50 +414,48 @@
                     </div>
 
                     <div class="profile-content-wrapper">
-                        {{-- قسم معلومات QR --}}
                         <div class="qr-section-profile" data-aos="fade-up">
-                            <h5 class="section-title-profile"><i class="fas fa-qrcode"></i> بطاقتك الرقمية (QR)</h5>
+                            <h5 class="section-title-profile"><i class="fas fa-qrcode"></i> {{ trans('patients.digital_card_qr') }}</h5>
                             @if ($patient && $patient->id && isset($qrCodeSvg))
-                                {{-- ** استخدام $qrCodeSvg ** --}}
                                 <div class="qr-code-image-profile">
                                     {!! $qrCodeSvg !!}
                                 </div>
-                                <p class="qr-code-instructions mt-2">امسح الرمز للوصول السريع إلى معلوماتك الأساسية.</p>
+                                <p class="qr-code-instructions mt-2">{{ trans('patients.scan_qr_instructions') }}</p>
                                 <div class="qr-download-buttons-profile mt-2 no-print">
                                     <a href="#" class="btn btn-sm btn-outline-primary me-2" id="downloadPNGProfile">
-                                        <i class="fas fa-download"></i> PNG
+                                        <i class="fas fa-download"></i> {{ trans('patients.download_png') }}
                                     </a>
                                     <a href="#" class="btn btn-sm btn-outline-success" id="downloadSVGProfile">
-                                        <i class="fas fa-download"></i> SVG
+                                        <i class="fas fa-download"></i> {{ trans('patients.download_svg') }}
                                     </a>
                                 </div>
                             @else
-                                <p class="text-muted my-3">تعذر إنشاء رمز QR حاليًا.</p>
+                                <p class="text-muted my-3">{{ trans('patients.qr_code_creation_failed') }}</p>
                             @endif
                         </div>
 
                         <hr class="my-4">
 
-                        <h5 class="section-title-profile"><i class="fas fa-info-circle"></i> المعلومات الشخصية</h5>
+                        <h5 class="section-title-profile"><i class="fas fa-info-circle"></i> {{ trans('patients.personal_information') }}</h5>
                         <div class="details-grid" data-aos="fade-up" data-aos-delay="100">
                             <div class="detail-item-card">
                                 <div class="detail-icon"><i class="fas fa-id-badge"></i></div>
                                 <div class="detail-content">
-                                    <span class="detail-label">الرقم الوطني</span>
+                                    <span class="detail-label">{{ trans('patients.national_number_label') }}</span>
                                     <span class="detail-value">{{ $patient->national_id ?? '-' }}</span>
                                 </div>
                             </div>
                             <div class="detail-item-card">
                                 <div class="detail-icon"><i class="fas fa-phone-alt"></i></div>
                                 <div class="detail-content">
-                                    <span class="detail-label">رقم الهاتف</span>
+                                    <span class="detail-label">{{ trans('patients.phone_number_label') }}</span>
                                     <span class="detail-value">{{ $patient->Phone ?? '-' }}</span>
                                 </div>
                             </div>
                             <div class="detail-item-card">
                                 <div class="detail-icon"><i class="fas fa-calendar-day"></i></div>
                                 <div class="detail-content">
-                                    <span class="detail-label">تاريخ الميلاد</span>
+                                    <span class="detail-label">{{ trans('patients.birth_date_label') }}</span>
                                     <span
                                         class="detail-value">{{ $patient->Date_Birth ? \Carbon\Carbon::parse($patient->Date_Birth)->translatedFormat('d F Y') : '-' }}</span>
                                 </div>
@@ -469,16 +464,16 @@
                                 <div class="detail-icon"><i
                                         class="fas {{ $patient->Gender == 1 ? 'fa-mars' : 'fa-venus' }}"></i></div>
                                 <div class="detail-content">
-                                    <span class="detail-label">الجنس</span>
+                                    <span class="detail-label">{{ trans('patients.gender_label') }}</span>
                                     <span
-                                        class="detail-value">{{ $patient->Gender == 1 ? 'ذكر' : ($patient->Gender == 2 ? 'أنثى' : '-') }}</span>
+                                        class="detail-value">{{ $patient->Gender == 1 ? trans('patients.male') : ($patient->Gender == 2 ? trans('patients.female') : '-') }}</span>
                                 </div>
                             </div>
                             @if ($patientAddress)
-                                <div class="detail-item-card" style="grid-column: span 2 / span 2;"> {{-- لجعل العنوان يأخذ عمودين --}}
+                                <div class="detail-item-card" style="grid-column: span 2 / span 2;">
                                     <div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div>
                                     <div class="detail-content">
-                                        <span class="detail-label">العنوان</span>
+                                        <span class="detail-label">{{ trans('patients.address_label') }}</span>
                                         <span class="detail-value">{{ $patientAddress }}</span>
                                     </div>
                                 </div>
@@ -486,42 +481,38 @@
                         </div>
 
                         <hr class="my-4">
-                        <h5 class="section-title-profile"><i class="fas fa-heartbeat"></i> المعلومات الطبية</h5>
+                        <h5 class="section-title-profile"><i class="fas fa-heartbeat"></i> {{ trans('patients.medical_information') }}</h5>
 
                         @if ($patient->Blood_Group)
                             <div class="detail-item-card mb-3" data-aos="fade-up" data-aos-delay="200">
                                 <div class="detail-icon" style="color: var(--error-color);"><i class="fas fa-tint"></i>
                                 </div>
                                 <div class="detail-content">
-                                    <span class="detail-label">فصيلة الدم</span>
+                                    <span class="detail-label">{{ trans('patients.blood_type_label') }}</span>
                                     <span class="detail-value"
                                         style="font-weight: 700;">{{ $patient->Blood_Group }}</span>
                                 </div>
                             </div>
                         @endif
 
-                        {{-- عرض الحساسيات (من الحقل النصي في جدول patients) --}}
                         @if ($patient->allergies)
                             <div class="allergies-section mt-3" data-aos="fade-up" data-aos-delay="300">
-                                <h6><i class="fas fa-allergies text-warning"></i> الحساسيات المسجلة</h6>
+                                <h6><i class="fas fa-allergies text-warning"></i> {{ trans('patients.registered_allergies') }}</h6>
                                 <p class="mb-0">{{ $patient->allergies }}</p>
                             </div>
                         @endif
 
-                        {{-- عرض الأمراض المزمنة (من الحقل النصي في جدول patients) --}}
                         @if ($patient->chronic_diseases && !$patient->diagnosedChronicDiseases->isNotEmpty())
-                            {{-- اعرض فقط إذا لم تكن هناك أمراض منظمة --}}
                             <div class="medical-history-item mt-3" data-aos="fade-up" data-aos-delay="400">
-                                <h6><i class="fas fa-notes-medical text-danger"></i> الأمراض المزمنة المسجلة (كنص)</h6>
+                                <h6><i class="fas fa-notes-medical text-danger"></i> {{ trans('patients.chronic_diseases_as_text') }}</h6>
                                 <p class="mb-0">{{ $patient->chronic_diseases }}</p>
                             </div>
                         @endif
 
-                        {{-- عرض الأمراض المزمنة المنظمة (من العلاقة) --}}
                         @if ($patient->relationLoaded('diagnosedChronicDiseases') && $patient->diagnosedChronicDiseases->isNotEmpty())
                             <div class="mt-4" data-aos="fade-up" data-aos-delay="400">
                                 <h6 class="mb-3" style="font-weight:600; color:var(--primary-dark);"><i
-                                        class="fas fa-laptop-medical me-2"></i> قائمة الأمراض المشخصة:</h6>
+                                        class="fas fa-laptop-medical me-2"></i> {{ trans('patients.diagnosed_diseases_list') }}</h6>
                                 <div class="row g-3">
                                     @foreach ($patient->diagnosedChronicDiseases as $diagnosedDisease)
                                         <div class="col-md-6">
@@ -536,12 +527,12 @@
                                                     @endif
                                                 </h6>
                                                 @if ($diagnosedDisease->pivot->diagnosed_at)
-                                                    <p class="mb-1"><small class="text-muted">تاريخ التشخيص:
+                                                    <p class="mb-1"><small class="text-muted">{{ trans('patients.diagnosis_date') }}
                                                             {{ \Carbon\Carbon::parse($diagnosedDisease->pivot->diagnosed_at)->format('Y-m-d') }}</small>
                                                     </p>
                                                 @endif
                                                 @if ($diagnosedDisease->pivot->notes)
-                                                    <p class="mb-0"><small class="text-muted">ملاحظات:
+                                                    <p class="mb-0"><small class="text-muted">{{ trans('patients.notes') }}
                                                             {{ Str::limit($diagnosedDisease->pivot->notes, 70) }}</small>
                                                     </p>
                                                 @endif
@@ -552,15 +543,14 @@
                             </div>
                         @endif
 
-                        {{-- زر تعديل البيانات في الأسفل إذا لم يكن هناك زر عائم --}}
-                        @if (Route::has('patient.profile.edit'))
+                        {{-- @if (Route::has('patient.profile.edit')) --}}
                             <div class="text-center mt-5 no-print">
-                                <a href="{{ route('patient.profile.edit') }}"
+                                <a href="{{ route('profile.edit') }}"
                                     class="btn edit-profile-action-button px-5 py-3">
-                                    <i class="fas fa-user-pen"></i> تعديل بياناتي الشخصية والطبية
+                                    <i class="fas fa-user-pen"></i> {{ trans('patients.edit_personal_and_medical_data') }}
                                 </a>
                             </div>
-                        @endif
+                        {{-- @endif --}}
 
                     </div>
                 </div>

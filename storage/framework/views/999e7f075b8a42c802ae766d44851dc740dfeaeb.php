@@ -1,0 +1,174 @@
+<?php $__env->startSection('css'); ?>
+    <link href="<?php echo e(URL::asset('Dashboard/plugins/notify/css/notifIt.css')); ?>" rel="stylesheet" />
+    <link href="<?php echo e(URL::asset('Dashboard/plugins/notify/css/notifIt.css')); ?>" rel="stylesheet" />
+    <link href="<?php echo e(URL::asset('Dashboard/plugins/select2/css/select2.min.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(URL::asset('Dashboard/plugins/datatable/css/dataTables.bootstrap4.min.css')); ?>" rel="stylesheet" />
+    <link href="<?php echo e(URL::asset('Dashboard/plugins/datatable/css/buttons.bootstrap4.min.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(URL::asset('Dashboard/plugins/datatable/css/responsive.bootstrap4.min.css')); ?>" rel="stylesheet" />
+    <style>
+        <style> :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+        }
+
+        .employee-table-card {
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: none;
+        }
+
+        .employee-table-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .table thead th {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(72, 149, 239, 0.05);
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.5rem;
+            font-size: 0.875rem;
+            border-radius: 8px;
+        }
+
+        .doctor-avatar {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('page-header'); ?>
+    <div class="breadcrumb-header justify-content-between">
+        <div class="my-auto">
+            <div class="d-flex">
+                <h4 class="content-title mb-0 my-auto"><?php echo e(trans('AdminSb.Radiology staff')); ?></h4><span
+                    class="text-muted mt-1 tx-13 mr-2 mb-0">/ <?php echo e(trans('AdminSb.list of employees')); ?></span>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb -->
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php echo $__env->make('Dashboard.messages_alert', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+    <div class="row row-sm">
+        <div class="col-xl-12">
+            <div class="card employee-table-card">
+                <div class="card-header employee-table-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="card-title mb-0 text-white"><?php echo e(trans('AdminSb.list of employees')); ?></h3>
+                        <button type="button" class="btn btn-add-employee" data-toggle="modal" data-target="#add">
+                            <i class="fas fa-user-plus"></i> <?php echo e(trans('AdminSb.Add a new employee')); ?>
+
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="dataTable" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th><?php echo e(trans('AdminSb.image')); ?></th>
+                                    <th><?php echo e(trans('AdminSb.name')); ?></th>
+                                    <th><?php echo e(trans('AdminSb.national_id')); ?></th>
+                                    <th><?php echo e(trans('AdminSb.email')); ?></th>
+                                    <th><?php echo e(trans('AdminSb.phone')); ?></th>
+                                    <th><?php echo e(trans('AdminSb.status')); ?></th>
+                                    <th><?php echo e(trans('AdminSb.Date joined')); ?></th>
+                                    <th><?php echo e(trans('AdminSb.operations')); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $__currentLoopData = $ray_employees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ray_employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <tr>
+                                        <td><?php echo e($loop->iteration); ?></td>
+                                        <td>
+                                            <img src="<?php echo e(asset('Dashboard/img/rayEmployees/' . ($ray_employee->image ? $ray_employee->image->filename : 'default.png'))); ?>"
+                                                class="doctor-avatar" alt="<?php echo e(trans('AdminSb.employee_image')); ?>">
+                                        </td>
+                                        <td><?php echo e($ray_employee->name); ?></td>
+                                        <td><?php echo e($ray_employee->national_id); ?></td>
+                                        <td><?php echo e($ray_employee->email); ?></td>
+                                        <td><?php echo e($ray_employee->phone); ?></td>
+                                        <td>
+                                            <span
+                                                class="badge badge-<?php echo e($ray_employee->status == 1 ? 'success' : 'danger'); ?>">
+                                                <?php echo e($ray_employee->status == 1 ? trans('AdminSb.active') : trans('AdminSb.inactive')); ?>
+
+                                            </span>
+                                        </td>
+                                        <td><?php echo e($ray_employee->created_at->diffForHumans()); ?></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="<?php echo e(route('admin.ray_employee.edit', $ray_employee->id)); ?>"
+                                                    class="btn btn-sm btn-info" title="<?php echo e(trans('AdminSb.edit')); ?>">
+                                                    <i class="las la-pen"></i>
+                                                </a>
+                                                <button class="btn btn-sm btn-danger" data-toggle="modal"
+                                                    data-target="#delete<?php echo e($ray_employee->id); ?>"><i
+                                                        class="las la-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <?php echo $__env->make('Dashboard.ray_employee.delete', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?php echo $__env->make('Dashboard.ray_employee.add', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('js'); ?>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.13.6/b-2.4.2/b-html5-2.4.2/datatables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Arabic.json"
+                },
+                responsive: true,
+                dom: '<"top"lf>rt<"bottom"ip><"clear">'
+            });
+        });
+    </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('Dashboard.layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH H:\Hospital_Sys\resources\views/Dashboard/ray_employee/index.blade.php ENDPATH**/ ?>

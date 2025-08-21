@@ -4,8 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>@yield('title', 'فريق أطبائنا المتميز') - {{ config('app.name') }}</title>
-
+<title>@yield('title', trans('patients.our_distinguished_doctors_team')) - {{ config('app.name') }}</title>
     <!-- Preconnects for faster loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -812,10 +811,10 @@
         <div class="doctors-standalone-container">
             <div class="header-content">
                 <h2 class="site-title animate__animated animate__fadeIn">
-                    <i class="fas fa-user-md"></i> فريق الأطباء
+                    <i class="fas fa-user-md"></i> {{ trans('patients.doctors_team') }}
                 </h2>
                 <a href="{{ route('home') }}" class="back-to-home animate__animated animate__fadeIn">
-                    <i class="fas fa-arrow-left"></i> العودة للرئيسية
+                    <i class="fas fa-arrow-left"></i> {{ trans('patients.back_to_home') }}
                 </a>
             </div>
         </div>
@@ -824,16 +823,16 @@
     <main class="doctors-standalone-container">
         <!-- Page Title Section -->
         <section class="doctors-page-title-standalone animate__animated animate__fadeIn">
-            <h1>ابحث عن طبيبك المثالي</h1>
+            <h1>{{ trans('patients.find_your_perfect_doctor') }}</h1>
             <p class="title-description-standalone">
-                استخدم الفلاتر المتقدمة للعثور على الأخصائي المناسب لاحتياجاتك الصحية من بين نخبة أطبائنا المعتمدين.
+                {{ trans('patients.find_doctor_description') }}
             </p>
 
             @if (request()->hasAny(['doctor_name', 'section_id', 'rating', 'gender', 'available_today']))
                 <div class="search-tags animate__animated animate__fadeIn">
                     @if (request('doctor_name'))
                         <div class="search-tag">
-                            <span>الاسم: {{ request('doctor_name') }}</span>
+                            <span>{{ trans('patients.filter_tag_name') }} {{ request('doctor_name') }}</span>
                             <a href="{{ remove_query_param('doctor_name') }}" class="remove-tag">
                                 <i class="fas fa-times"></i>
                             </a>
@@ -842,7 +841,7 @@
 
                     @if (request('section_id') && ($selectedSection = $sectionsForFilter->where('id', request('section_id'))->first()))
                         <div class="search-tag">
-                            <span>القسم: {{ $selectedSection->name }}</span>
+                            <span>{{ trans('patients.filter_tag_department') }} {{ $selectedSection->name }}</span>
                             <a href="{{ remove_query_param('section_id') }}" class="remove-tag">
                                 <i class="fas fa-times"></i>
                             </a>
@@ -851,7 +850,7 @@
 
                     @if (request('rating'))
                         <div class="search-tag">
-                            <span>التقييم: {{ request('rating') }} <i class="fas fa-star"></i></span>
+                            <span>{{ trans('patients.filter_tag_rating') }} {{ request('rating') }} <i class="fas fa-star"></i></span>
                             <a href="{{ remove_query_param('rating') }}" class="remove-tag">
                                 <i class="fas fa-times"></i>
                             </a>
@@ -860,7 +859,7 @@
 
                     @if (request('gender'))
                         <div class="search-tag">
-                            <span>الجنس: {{ request('gender') == 'male' ? 'ذكر' : 'أنثى' }}</span>
+                            <span>{{ trans('patients.filter_tag_gender') }} {{ request('gender') == 'male' ? trans('patients.male') : trans('patients.female') }}</span>
                             <a href="{{ remove_query_param('gender') }}" class="remove-tag">
                                 <i class="fas fa-times"></i>
                             </a>
@@ -869,7 +868,7 @@
 
                     @if (request('available_today'))
                         <div class="search-tag">
-                            <span>متاح اليوم</span>
+                            <span>{{ trans('patients.filter_tag_available_today') }}</span>
                             <a href="{{ remove_query_param('available_today') }}" class="remove-tag">
                                 <i class="fas fa-times"></i>
                             </a>
@@ -883,26 +882,26 @@
         <section class="doctors-filter-panel-standalone animate__animated animate__fadeIn">
             <form method="get" action="{{ route('website.doctors.all') }}" id="doctorsFilterForm">
                 <div class="filter-header">
-                    <h3 class="filter-title"><i class="fas fa-filter"></i> فلتر الأطباء</h3>
+                    <h3 class="filter-title"><i class="fas fa-filter"></i> {{ trans('patients.doctors_filter_title') }}</h3>
                     <button type="button" class="filter-toggle" id="toggleAdvancedFilters">
-                        <i class="fas fa-sliders-h"></i> فلاتر متقدمة
+                        <i class="fas fa-sliders-h"></i> {{ trans('patients.advanced_filters') }}
                     </button>
                 </div>
 
                 <div class="row g-3 align-items-end">
                     <div class="col-lg-4 col-md-6">
                         <div class="filter-group">
-                            <label for="docNameFilterStandalone" class="filter-label">اسم الطبيب</label>
+                            <label for="docNameFilterStandalone" class="filter-label">{{ trans('patients.doctor_name_label') }}</label>
                             <input type="text" class="form-control" id="docNameFilterStandalone" name="doctor_name"
-                                value="{{ request('doctor_name') }}" placeholder="ابحث باسم الطبيب...">
+                                value="{{ request('doctor_name') }}" placeholder="{{ trans('patients.search_by_doctor_name_placeholder') }}">
                         </div>
                     </div>
 
                     <div class="col-lg-3 col-md-6">
                         <div class="filter-group">
-                            <label for="sectionFilterStandalone" class="filter-label">القسم الطبي</label>
+                            <label for="sectionFilterStandalone" class="filter-label">{{ trans('patients.medical_section') }}</label>
                             <select class="form-select" id="sectionFilterStandalone" name="section_id">
-                                <option value="">كل الأقسام</option>
+                                <option value="">{{ trans('patients.all_departments_option') }}</option>
                                 @foreach ($sectionsForFilter as $section)
                                     <option value="{{ $section->id }}"
                                         {{ request('section_id') == $section->id ? 'selected' : '' }}>
@@ -915,7 +914,7 @@
 
                     <div class="col-lg-3 col-md-6">
                         <div class="filter-group">
-                            <label class="filter-label">التقييم</label>
+                            <label class="filter-label">{{ trans('patients.rating_label') }}</label>
                             <input type="hidden" id="ratingInput" name="rating" value="{{ request('rating') }}">
                             <div class="rating-filter">
                                 <div class="star-rating" id="starRating">
@@ -930,7 +929,7 @@
 
                     <div class="col-lg-2 col-md-6 d-flex gap-2">
                         <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-search"></i> بحث
+                            <i class="fas fa-search"></i> {{ trans('patients.search_button') }}
                         </button>
                     </div>
                 </div>
@@ -941,24 +940,24 @@
                     <div class="row g-3">
                         <div class="col-md-4">
                             <div class="filter-group">
-                                <label class="filter-label">الجنس</label>
+                                <label class="filter-label">{{ trans('patients.gender_label') }}</label>
                                 <div class="d-flex gap-3">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="gender" id="genderAll"
                                             value="" {{ !request('gender') ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="genderAll">الكل</label>
+                                        <label class="form-check-label" for="genderAll">{{ trans('patients.gender_all_option') }}</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="gender"
                                             id="genderMale" value="male"
                                             {{ request('gender') == 'male' ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="genderMale">ذكر</label>
+                                        <label class="form-check-label" for="genderMale">{{ trans('patients.male') }}</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="gender"
                                             id="genderFemale" value="female"
                                             {{ request('gender') == 'female' ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="genderFemale">أنثى</label>
+                                        <label class="form-check-label" for="genderFemale">{{ trans('patients.female') }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -966,17 +965,13 @@
 
                         <div class="col-md-4">
                             <div class="filter-group">
-                                <label for="experienceFilter" class="filter-label">سنوات الخبرة</label>
+                                <label for="experienceFilter" class="filter-label">{{ trans('patients.years_of_experience') }}</label>
                                 <select class="form-select" id="experienceFilter" name="experience">
-                                    <option value="">أي خبرة</option>
-                                    <option value="5" {{ request('experience') == '5' ? 'selected' : '' }}>5+
-                                        سنوات</option>
-                                    <option value="10" {{ request('experience') == '10' ? 'selected' : '' }}>10+
-                                        سنوات</option>
-                                    <option value="15" {{ request('experience') == '15' ? 'selected' : '' }}>15+
-                                        سنوات</option>
-                                    <option value="20" {{ request('experience') == '20' ? 'selected' : '' }}>20+
-                                        سنوات</option>
+                                    <option value="">{{ trans('patients.any_experience') }}</option>
+                                    <option value="5" {{ request('experience') == '5' ? 'selected' : '' }}>5+ {{ trans('patients.years_suffix') }}</option>
+                                    <option value="10" {{ request('experience') == '10' ? 'selected' : '' }}>10+ {{ trans('patients.years_suffix') }}</option>
+                                    <option value="15" {{ request('experience') == '15' ? 'selected' : '' }}>15+ {{ trans('patients.years_suffix') }}</option>
+                                    <option value="20" {{ request('experience') == '20' ? 'selected' : '' }}>20+ {{ trans('patients.years_suffix') }}</option>
                                 </select>
                             </div>
                         </div>
@@ -987,13 +982,13 @@
                                     <input class="form-check-input" type="checkbox" id="availableToday"
                                         name="available_today" value="1"
                                         {{ request('available_today') ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="availableToday">متاح اليوم فقط</label>
+                                    <label class="form-check-label" for="availableToday">{{ trans('patients.available_today_only') }}</label>
                                 </div>
 
                                 <div class="form-check mt-2">
                                     <input class="form-check-input" type="checkbox" id="featuredDoctors"
                                         name="featured" value="1" {{ request('featured') ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="featuredDoctors">الأطباء المميزين فقط</label>
+                                    <label class="form-check-label" for="featuredDoctors">{{ trans('patients.featured_doctors_only') }}</label>
                                 </div>
                             </div>
                         </div>
@@ -1001,7 +996,7 @@
 
                     <div class="mt-3">
                         <a href="{{ route('website.doctors.all') }}" class="reset-filters">
-                            <i class="fas fa-undo-alt"></i> إعادة تعيين الفلاتر
+                            <i class="fas fa-undo-alt"></i> {{ trans('patients.reset_filters') }}
                         </a>
                     </div>
                 </div>
@@ -1025,12 +1020,12 @@
                                 <span
                                     class="availability-badge-standalone {{ $doctor->status ? 'status-available' : 'status-unavailable' }}">
                                     <i class="fas fa-{{ $doctor->status ? 'check-circle' : 'times-circle' }}"></i>
-                                    {{ $doctor->status ? 'متاح' : 'غير متاح' }}
+                                    {{ $doctor->status ? trans('patients.available') : trans('patients.not_available') }}
                                 </span>
 
                                 @if ($doctor->is_featured)
                                     <span class="availability-badge-standalone featured-badge">
-                                        <i class="fas fa-star"></i> مميز
+                                        <i class="fas fa-star"></i> {{ trans('patients.featured_badge') }}
                                     </span>
                                 @endif
                             </div>
@@ -1058,7 +1053,7 @@
                         <div class="action-footer-standalone">
                             <a href="{{ route('website.doctor.details', $doctor->id) }}"
                                 class="btn btn-outline-primary view-profile-btn">
-                                <i class="fas fa-id-badge"></i> عرض الملف الشخصي
+                                <i class="fas fa-id-badge"></i> {{ trans('patients.view_profile_button') }}
                             </a>
                         </div>
                     </div>
@@ -1066,24 +1061,24 @@
             </div>
 
             @if ($doctors->hasPages())
-                <nav class="pagination-standalone" aria-label="Doctor list pagination">
+                <nav class="pagination-standalone" aria-label="{{ trans('patients.doctor_list_pagination_aria') }}">
                     {{ $doctors->appends(request()->query())->onEachSide(1)->links() }}
                 </nav>
             @endif
         @else
             <div class="no-results-standalone animate__animated animate__fadeIn">
-                <img src="{{ asset('WebSite/images/icons/search-not-found.svg') }}" alt="لا يوجد أطباء">
-                <h3>لم يتم العثور على أطباء</h3>
-                <p>عذرًا، لا يوجد أطباء يطابقون معايير البحث الحالية. حاول تعديل الفلاتر أو <a
-                        href="{{ route('website.doctors.all') }}">عرض كل الأطباء</a>.</p>
+                <img src="{{ asset('WebSite/images/icons/search-not-found.svg') }}" alt="{{ trans('patients.no_doctors_found_title') }}">
+                <h3>{{ trans('patients.no_doctors_found_title') }}</h3>
+                <p>{{ trans('patients.no_doctors_found_message') }} <a
+                        href="{{ route('website.doctors.all') }}">{{ trans('patients.view_all_doctors_link') }}</a>.</p>
                 <a href="{{ route('website.doctors.all') }}" class="btn btn-primary">
-                    <i class="fas fa-undo-alt"></i> إعادة تعيين الفلاتر
+                    <i class="fas fa-undo-alt"></i> {{ trans('patients.reset_filters') }}
                 </a>
             </div>
         @endif
     </main>
 
-    <footer class="standalone-footer">
+    {{-- <footer class="standalone-footer">
         <div class="doctors-standalone-container">
             <div class="footer-content">
                 <div class="footer-links">
@@ -1110,7 +1105,7 @@
 
             </div>
         </div>
-    </footer>
+    </footer> --}}
 
     <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

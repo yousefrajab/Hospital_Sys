@@ -383,18 +383,18 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="left-content welcome-area">
             <div>
-                <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">أهلاً بك، <span
-                        class="text-gradient-primary">{{ $patient->name ?? 'زائرنا الكريم' }}</span>!</h2>
-                <p class="mg-b-0 sub-text-breadcrumb">نظرة سريعة على صحتك وخدماتك في منصتنا المتكاملة.</p>
+                <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">{{ trans('patients.welcome_back') }} <span
+                        class="text-gradient-primary">{{ $patient->name ?? trans('patients.our_dear_visitor') }}</span>!</h2>
+                <p class="mg-b-0 sub-text-breadcrumb">{{ trans('patients.welcome_subheader') }}</p>
             </div>
         </div>
         <div class="right-content d-flex my-auto ms-auto welcome-area">
             <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-primary-gradient ripple shadow-sm me-2"
                 data-aos="fade-left" data-aos-delay="100">
-                <i class="fas fa-calendar-plus me-1"></i> حجز موعد جديد
+                <i class="fas fa-calendar-plus me-1"></i> {{ trans('patients.book_new_appointment') }}
             </a>
             <a href="{{ url('/home') }}" class="btn btn-outline-secondary ripple" target="_blank" data-aos="fade-left">
-                <i class="fas fa-home me-1"></i> العودة للرئيسية
+                <i class="fas fa-home me-1"></i> {{ trans('patients.back_to_home') }}
             </a>
         </div>
     </div>
@@ -405,60 +405,57 @@
 
     <div class="row row-sm">
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="50">
-            {{-- الرابط يشير الآن إلى صفحة الفواتير الجديدة --}}
             <a href="{{ route('website.my.invoices') }}" class="stat-card-patient">
                 <div class="stat-icon-bg bg-primary-gradient"><i class="fas fa-file-invoice-dollar"></i></div>
                 <div class="stat-info">
-                    <h6>فواتيري المستحقة</h6>
-                    <span class="stat-number">{{ number_format($totalDueInvoices ?? 0, 2) }} <small>ر.س</small></span>
-                    <span class="stat-link">عرض الفواتير <i class="fas fa-arrow-left tx-10"></i></span>
+                    <h6>{{ trans('patients.my_due_invoices') }}</h6>
+                    <span class="stat-number">{{ number_format($totalDueInvoices ?? 0, 2) }} <small>{{ trans('patients.currency_sar') }}</small></span>
+                    <span class="stat-link">{{ trans('patients.view_invoices') }} <i class="fas fa-arrow-left tx-10"></i></span>
                 </div>
             </a>
         </div>
 
-        {{-- بطاقة كشف الحساب / إجمالي المدفوعات الجديدة --}}
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="100">
             <a href="{{ route('website.my.account') }}" class="stat-card-patient">
                 <div class="stat-icon-bg" style="background: linear-gradient(135deg, #fd7e14 0%, #ff9a44 100%);"><i
-                        class="fas fa-receipt"></i></div> {{-- برتقالي --}}
+                        class="fas fa-receipt"></i></div>
                 <div class="stat-info">
-                    <h6>إجمالي مدفوعاتي</h6>
-                    <span class="stat-number">{{ number_format($totalPaidByPatient ?? 0, 2) }} <small>ر.س</small></span>
-                    <span class="stat-link">عرض كشف الحساب <i class="fas fa-arrow-left tx-10"></i></span>
+                    <h6>{{ trans('patients.my_total_payments') }}</h6>
+                    <span class="stat-number">{{ number_format($totalPaidByPatient ?? 0, 2) }} <small>{{ trans('patients.currency_sar') }}</small></span>
+                    <span class="stat-link">{{ trans('patients.view_account_statement') }} <i class="fas fa-arrow-left tx-10"></i></span>
                 </div>
             </a>
         </div>
 
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="150">
-            <a href="{{ route('appointments.upcoming') }}" class="stat-card-patient"> {{-- أو route('appointments.upcoming') إذا كان هذا هو الصحيح --}}
+            <a href="{{ route('appointments.upcoming') }}" class="stat-card-patient">
                 <div class="stat-icon-bg bg-success-gradient"><i class="fas fa-calendar-check"></i></div>
                 <div class="stat-info">
-                    <h6>مواعيدي القادمة</h6>
-                    <span class="stat-number">{{ $upcomingAppointmentsCount ?? 0 }} <small>موعد</small></span>
-                    <span class="stat-link">إدارة المواعيد <i class="fas fa-arrow-left tx-10"></i></span>
+                    <h6>{{ trans('patients.my_upcoming_appointments') }}</h6>
+                    <span class="stat-number">{{ $upcomingAppointmentsCount ?? 0 }} <small>{{ trans('patients.appointment_unit') }}</small></span>
+                    <span class="stat-link">{{ trans('patients.manage_appointments') }} <i class="fas fa-arrow-left tx-10"></i></span>
                 </div>
             </a>
         </div>
 
-        {{-- تم تعديل الترتيب ليكون 4 بطاقات --}}
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="250">
             <a href="{{ route('patient.pharmacy.index', ['quick_filter' => \App\Models\Prescription::STATUS_READY_FOR_PICKUP]) }}" class="stat-card-patient">
                 <div class="stat-icon-bg bg-info-gradient"><i class="fas fa-pills"></i></div>
                 <div class="stat-info">
-                    <h6>وصفات جاهزة للاستلام</h6>
-                    <span class="stat-number">{{ $readyPrescriptionsCount ?? 0 }} <small>وصفة</small></span>
-                    <span class="stat-link">متابعة الصيدلية <i class="fas fa-arrow-left tx-10"></i></span>
+                    <h6>{{ trans('patients.prescriptions_ready_for_pickup') }}</h6>
+                    <span class="stat-number">{{ $readyPrescriptionsCount ?? 0 }} <small>{{ trans('patients.prescription_unit') }}</small></span>
+                    <span class="stat-link">{{ trans('patients.follow_up_pharmacy') }} <i class="fas fa-arrow-left tx-10"></i></span>
                 </div>
             </a>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="200"> {{-- تعديل delay --}}
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="200">
             <a href="{{ route('chat.doctors') }}" class="stat-card-patient">
                 <div class="stat-icon-bg bg-chat-gradient"><i class="fas fa-comments"></i></div>
                 <div class="stat-info">
-                    <h6>رسائل جديدة</h6>
-                    <span class="stat-number">{{ $unreadChatMessagesCount ?? 0 }} <small>رسالة</small></span>
-                    <span class="stat-link">عرض المحادثات <i class="fas fa-arrow-left tx-10"></i></span>
+                    <h6>{{ trans('patients.new_messages') }}</h6>
+                    <span class="stat-number">{{ $unreadChatMessagesCount ?? 0 }} <small>{{ trans('patients.message_unit') }}</small></span>
+                    <span class="stat-link">{{ trans('patients.view_conversations') }} <i class="fas fa-arrow-left tx-10"></i></span>
                 </div>
             </a>
         </div>
@@ -467,7 +464,7 @@
     <!-- Row: Important Alerts -->
     <div class="row row-sm mt-2">
         <div class="col-12 mb-3" data-aos="fade-up" data-aos-delay="50">
-            <h5 class="section-heading"><i class="fas fa-bell text-warning"></i>تنبيهات وإجراءات مهمة</h5>
+            <h5 class="section-heading"><i class="fas fa-bell text-warning"></i>{{ trans('patients.important_alerts_and_actions') }}</h5>
         </div>
 
         @if (isset($unreadChatMessagesCount) && $unreadChatMessagesCount > 0)
@@ -475,15 +472,15 @@
                 <div class="alert-card-patient alert-chat">
                     <div class="alert-icon-box"><i class="fas fa-envelope-open-text fa-fw"></i></div>
                     <div class="alert-content">
-                        <h6 class="alert-title">لديك رسائل جديدة!</h6>
+                        <h6 class="alert-title">{{ trans('patients.you_have_new_messages') }}</h6>
                         <p class="alert-text mb-1">
-                            لديك <strong style="color: #805ad5;">{{ $unreadChatMessagesCount }}</strong>
-                            {{ $unreadChatMessagesCount == 1 ? 'رسالة جديدة' : ($unreadChatMessagesCount == 2 ? 'رسالتان' : ($unreadChatMessagesCount >= 3 && $unreadChatMessagesCount <= 10 ? 'رسائل جديدة' : 'رسالة جديدة')) }}
-                            من فريقنا الطبي.
+                            {{ trans('patients.you_have') }} <strong style="color: #805ad5;">{{ $unreadChatMessagesCount }}</strong>
+                            {{ $unreadChatMessagesCount == 1 ? trans('patients.new_message_singular') : ($unreadChatMessagesCount == 2 ? trans('patients.new_messages_dual') : trans('patients.new_messages_plural')) }}
+                            {{ trans('patients.from_our_medical_team') }}
                         </p>
                         <a href="{{ route('chat.doctors') }}" class="btn btn-sm btn-outline-primary shadow-sm mt-2"
                             style="border-color: #805ad5; color: #805ad5;">
-                            <i class="fas fa-comments me-1"></i> عرض المحادثات الآن
+                            <i class="fas fa-comments me-1"></i> {{ trans('patients.view_conversations_now') }}
                         </a>
                     </div>
                 </div>
@@ -495,11 +492,11 @@
                 <div class="alert-card-patient alert-warning">
                     <div class="alert-icon-box text-warning"><i class="fas fa-history fa-fw"></i></div>
                     <div class="alert-content">
-                        <h6 class="alert-title">تجديد وصفة مزمنة</h6>
+                        <h6 class="alert-title">{{ trans('patients.renew_chronic_prescription') }}</h6>
                         <p class="alert-text">
-                            الوصفة <a href="{{ route('patient.pharmacy.show', $upcomingChronicRefill->id) }}"
+                            {{ trans('patients.the_prescription') }} <a href="{{ route('patient.pharmacy.show', $upcomingChronicRefill->id) }}"
                                 class="fw-bold text-dark hover-underline">{{ $upcomingChronicRefill->prescription_number }}</a>
-                            تحتاج لإعادة صرف
+                            {{ trans('patients.needs_refill') }}
                             {{ $upcomingChronicRefill->next_refill_due_date->locale(app()->getLocale())->diffForHumans() }}.
                         </p>
                         @if (method_exists($upcomingChronicRefill, 'can_request_refill') && $upcomingChronicRefill->can_request_refill)
@@ -507,10 +504,10 @@
                                 method="POST" class="mt-2">
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-warning text-dark shadow-sm"><i
-                                        class="fas fa-redo-alt me-1"></i> طلب إعادة الصرف</button>
+                                        class="fas fa-redo-alt me-1"></i> {{ trans('patients.request_refill') }}</button>
                             </form>
                         @else
-                            <small class="text-muted d-block mt-2">تم طلب التجديد أو راجع الصيدلية.</small>
+                            <small class="text-muted d-block mt-2">{{ trans('patients.refill_requested_or_check_pharmacy') }}</small>
                         @endif
                     </div>
                 </div>
@@ -518,41 +515,37 @@
         @endif
 
         @if (isset($readyPrescriptionsCount) && $readyPrescriptionsCount > 0)
-            {{--  لا يتم إخفاء هذا التنبيه حتى لو كان هناك تنبيهات أخرى --}}
             <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
                 <div class="alert-card-patient alert-success">
                     <div class="alert-icon-box text-success"><i class="fas fa-check-circle fa-fw"></i></div>
                     <div class="alert-content">
-                        <h6 class="alert-title">وصفات جاهزة للاستلام</h6>
+                        <h6 class="alert-title">{{ trans('patients.prescriptions_ready_for_pickup') }}</h6>
                         <p class="alert-text">
-                            لديك <strong class="text-gradient-success">{{ $readyPrescriptionsCount }}</strong> وصفة/وصفات
-                            جاهزة للاستلام من الصيدلية.
+                            {{ trans('patients.you_have') }} <strong class="text-gradient-success">{{ $readyPrescriptionsCount }}</strong> {{ trans('patients.prescriptions_are_ready_for_pickup') }}
                         </p>
                         <a href="{{ route('patient.pharmacy.index', ['quick_filter' => \App\Models\Prescription::STATUS_READY_FOR_PICKUP]) }}"
-                            class="btn btn-sm btn-success shadow-sm mt-2"><i class="fas fa-clinic-medical me-1"></i> عرض
-                            الوصفات</a>
+                            class="btn btn-sm btn-success shadow-sm mt-2"><i class="fas fa-clinic-medical me-1"></i> {{ trans('patients.view_prescriptions') }}</a>
                     </div>
                 </div>
             </div>
         @endif
-
 
         @if ($imminentAppointment)
             <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="250">
                 <div class="alert-card-patient alert-info">
                     <div class="alert-icon-box text-primary"><i class="fas fa-calendar-day fa-fw"></i></div>
                     <div class="alert-content">
-                        <h6 class="alert-title">تذكير بموعدك القادم!</h6>
+                        <h6 class="alert-title">{{ trans('patients.upcoming_appointment_reminder') }}</h6>
                         <p class="alert-text">
-                            موعدك مع د. <strong>{{ $imminentAppointment->doctor->name ?? 'الطبيب' }}</strong>
-                            هو <span
-                                class="text-danger fw-bold">{{ $imminentAppointment->appointment->isToday() ? 'اليوم' : ($imminentAppointment->appointment->isTomorrow() ? 'غداً' : $imminentAppointment->appointment->translatedFormat('l')) }}</span>
-                            الساعة
+                            {{ trans('patients.your_appointment_with_dr') }} <strong>{{ $imminentAppointment->doctor->name ?? trans('patients.the_doctor') }}</strong>
+                            {{ trans('patients.is_on') }} <span
+                                class="text-danger fw-bold">{{ $imminentAppointment->appointment->isToday() ? trans('patients.today') : ($imminentAppointment->appointment->isTomorrow() ? trans('patients.tomorrow') : $imminentAppointment->appointment->translatedFormat('l')) }}</span>
+                            {{ trans('patients.at_time') }}
                             {{ \Carbon\Carbon::parse($imminentAppointment->appointment)->translatedFormat('h:i A') }}.
                         </p>
                         <a href="{{ route('appointments.upcoming') }}"
-                            class="btn btn-sm btn-primary shadow-sm mt-2"> {{-- أو route('appointments.upcoming') --}}
-                            <i class="fas fa-eye me-1"></i> عرض مواعيدي
+                            class="btn btn-sm btn-primary shadow-sm mt-2">
+                            <i class="fas fa-eye me-1"></i> {{ trans('patients.view_my_appointments') }}
                         </a>
                     </div>
                 </div>
@@ -560,14 +553,13 @@
         @endif
 
         @if (!$hasImportantAlerts)
-            {{-- تم تعديل الشرط ليشمل جميع التنبيهات --}}
             <div class="col-12" data-aos="fade-up" data-aos-delay="100">
                 <div class="card no-alerts-card shadow-sm">
                     <div class="card-body text-center p-4 d-flex align-items-center justify-content-center">
                         <i class="fas fa-shield-alt fa-3x opacity-75 me-3"></i>
                         <div>
-                            <h5 class="mb-1">لا توجد تنبيهات عاجلة!</h5>
-                            <p class="mb-0 text-muted">كل أمورك الصحية تحت السيطرة في الوقت الحالي. يومك سعيد!</p>
+                            <h5 class="mb-1">{{ trans('patients.no_urgent_alerts') }}</h5>
+                            <p class="mb-0 text-muted">{{ trans('patients.health_under_control_message') }}</p>
                         </div>
                     </div>
                 </div>
@@ -575,34 +567,31 @@
         @endif
     </div>
 
-
     <!-- Row: Appointments and Quick Access -->
     <div class="row row-sm row-deck mt-3 dashboard-section">
         <div class="col-lg-7 col-md-12 mb-4" data-aos="fade-right" data-aos-delay="100">
             <div class="card h-100 shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title-main mb-0"><i class="far fa-calendar-alt me-2"></i> مواعيدي القادمة (أحدث 5)
+                    <h4 class="card-title-main mb-0"><i class="far fa-calendar-alt me-2"></i> {{ trans('patients.upcoming_appointments_latest_5') }}
                     </h4>
-                    <a href="{{ route('appointments.upcoming') }}" class="btn btn-sm btn-outline-primary ripple">عرض
-                        الكل <i class="fas fa-angle-double-left"></i></a> {{-- أو route('appointments.upcoming') --}}
+                    <a href="{{ route('appointments.upcoming') }}" class="btn btn-sm btn-outline-primary ripple">{{ trans('patients.view_all') }} <i class="fas fa-angle-double-left"></i></a>
                 </div>
                 <div class="card-body pt-2 pb-2">
                     @if ($upcoming_appointments_list->isNotEmpty())
                         <ul class="list-group list-group-flush appointment-list">
                             @foreach ($upcoming_appointments_list as $appointment_item)
-                                {{-- تغيير اسم المتغير لتجنب التعارض --}}
                                 <li class="list-group-item appointment-item">
                                     <div class="d-flex w-100 justify-content-between align-items-center">
                                         <div class="appointment-details flex-grow-1">
                                             <span
                                                 class="time-badge mb-1 d-inline-block">{{ \Carbon\Carbon::parse($appointment_item->appointment)->translatedFormat('D، j M Y - g:i A') }}</span>
-                                            <div class="mt-1"><i class="fas fa-user-md text-muted me-1 op-7"></i>د.
+                                            <div class="mt-1"><i class="fas fa-user-md text-muted me-1 op-7"></i>{{ trans('patients.dr_prefix') }}
                                                 <strong
-                                                    class="doctor-name">{{ $appointment_item->doctor->name ?? 'غير محدد' }}</strong>
+                                                    class="doctor-name">{{ $appointment_item->doctor->name ?? trans('doctors.unspecified') }}</strong>
                                             </div>
                                             <div class="section-name"><i
-                                                    class="fas fa-clinic-medical text-muted me-1 op-7"></i>القسم:
-                                                {{ $appointment_item->section->name ?? 'غير محدد' }}</div>
+                                                    class="fas fa-clinic-medical text-muted me-1 op-7"></i>{{ trans('patients.section_prefix') }}
+                                                {{ $appointment_item->section->name ?? trans('doctors.unspecified') }}</div>
                                         </div>
                                         <div class="text-center ms-2 appointment-actions">
                                             <span
@@ -613,7 +602,7 @@
                                     </div>
                                     @if ($appointment_item->notes)
                                         <p class="mb-0 mt-2 text-muted small border-top pt-2" style="font-size: 0.9rem"><i
-                                                class="fas fa-info-circle me-1 text-info"></i> ملاحظاتك:
+                                                class="fas fa-info-circle me-1 text-info"></i> {{ trans('patients.your_notes_prefix') }}
                                             {{ Str::limit($appointment_item->notes, 100) }}</p>
                                     @endif
                                 </li>
@@ -622,8 +611,8 @@
                     @else
                         <div class="text-center text-muted p-5">
                             <i class="fas fa-calendar-times fa-3x opacity-50 mb-3"></i>
-                            <h5 class="mb-2">لا توجد لديك مواعيد قادمة.</h5>
-                            <p class="mb-3">يمكنك حجز موعد جديد بسهولة من خلال الضغط على الزر في الأعلى.</p>
+                            <h5 class="mb-2">{{ trans('patients.no_upcoming_appointments') }}</h5>
+                            <p class="mb-3">{{ trans('patients.you_can_book_easily') }}</p>
                         </div>
                     @endif
                 </div>
@@ -633,26 +622,24 @@
         <div class="col-lg-5 col-md-12 mb-4" data-aos="fade-left" data-aos-delay="200">
             <div class="card quick-access-links h-100 shadow-sm">
                 <div class="card-header">
-                    <h4 class="card-title-main mb-0"><i class="fas fa-paperclip me-2"></i> وصول سريع لخدماتك</h4>
+                    <h4 class="card-title-main mb-0"><i class="fas fa-paperclip me-2"></i> {{ trans('patients.quick_access_to_services') }}</h4>
                 </div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
-                        {{-- تعديل رابط الفواتير ليشير إلى الصفحة الجديدة --}}
                         <li class="list-group-item"><a href="{{ route('website.my.invoices') }}"><i
-                                    class="fas fa-file-invoice-dollar fa-fw"></i> فواتيري</a></li>
-                        {{-- إضافة رابط كشف الحساب --}}
+                                    class="fas fa-file-invoice-dollar fa-fw"></i> {{ trans('patients.my_invoices') }}</a></li>
                         <li class="list-group-item"><a href="{{ route('website.my.account') }}"><i
-                                    class="fas fa-cash-register fa-fw"></i> كشف حسابي</a></li>
+                                    class="fas fa-cash-register fa-fw"></i> {{ trans('patients.my_account_statement') }}</a></li>
                         <li class="list-group-item"><a href="{{ route('patient.pharmacy.index') }}"><i
-                                    class="fas fa-pills fa-fw"></i> وصفاتي الطبية والصيدلية</a></li>
+                                    class="fas fa-pills fa-fw"></i> {{ trans('patients.my_prescriptions_and_pharmacy') }}</a></li>
                         <li class="list-group-item"><a href="{{ route('laboratories.patient') }}"><i
-                                    class="fas fa-microscope fa-fw"></i> نتائج فحوصاتي المعملية</a></li>
+                                    class="fas fa-microscope fa-fw"></i> {{ trans('patients.my_lab_results') }}</a></li>
                         <li class="list-group-item"><a href="{{ route('rays.patient') }}"><i
-                                    class="fas fa-x-ray fa-fw"></i> تقارير الأشعة الخاصة بي</a></li>
+                                    class="fas fa-x-ray fa-fw"></i> {{ trans('patients.my_radiology_reports') }}</a></li>
                         <li class="list-group-item"><a href="{{ route('chat.doctors') ?? '#' }}"><i
-                                    class="fas fa-comments fa-fw"></i> محادثاتي مع الأطباء</a></li>
+                                    class="fas fa-comments fa-fw"></i> {{ trans('patients.my_conversations_with_doctors') }}</a></li>
                         <li class="list-group-item"><a href="{{ route('profile.edit') }}"><i
-                                    class="fas fa-user-edit fa-fw"></i> تعديل بيانات ملفي الشخصي</a></li>
+                                    class="fas fa-user-edit fa-fw"></i> {{ trans('patients.edit_my_profile_data') }}</a></li>
                     </ul>
                 </div>
             </div>

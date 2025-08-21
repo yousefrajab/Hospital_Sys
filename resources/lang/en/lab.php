@@ -1,0 +1,78 @@
+<?php
+
+return [
+    'dashboard_title' => 'Laboratory Employee Dashboard',
+    'welcome_back_message' => 'Welcome back, :name!',
+    'total_lab_requests' => 'Total Lab Requests',
+    'pending_requests' => 'Pending Requests',
+    'completed_requests' => 'Completed Requests',
+    'monthly_lab_requests_chart_title' => 'Monthly Lab Requests (:year)',
+    'latest_5_requests_title' => 'Latest 5 Requests',
+    'patient_col' => 'Patient',
+    'doctor_col' => 'Doctor',
+    'status_col' => 'Status',
+    'view_col' => 'View',
+    'not_available' => 'N/A',
+    'status_pending' => 'Pending',
+    'status_completed' => 'Completed',
+    'no_recent_requests' => 'No recent requests.',
+
+    'lab_employee' => 'Laboratory Employee',
+    'profile' => 'Profile',
+    'lab_department_employee' => 'Laboratory Department Employee',
+    'status_active' => 'Active',
+    'status_inactive' => 'Inactive',
+    'personal_information' => 'Personal Information',
+    'email' => 'Email',
+    'phone_number' => 'Phone Number',
+    'national_id' => 'National ID',
+    'join_date' => 'Join Date',
+    'work_statistics' => 'Work Statistics',
+    'today_requests' => 'Today\'s Requests',
+    'week_requests' => 'This Week\'s Requests',
+    'completion_rate' => 'Completion Rate',
+    'edit_profile' => 'Edit Profile',
+
+    'edit_profile_header' => 'Edit Profile',
+    'personal_photo' => 'Profile Picture',
+    'choose_photo' => 'Choose Photo',
+    'no_file_chosen' => 'No file chosen',
+    'photo_help_text' => 'Optional. A square image is preferred (Max 2MB).',
+    'full_name' => 'Full Name',
+    'phone_placeholder' => '05xxxxxxxx',
+    'national_id_placeholder' => '9 digits',
+    'password_change_instructions' => 'To change the password, enter the current, new, and confirmation passwords.',
+    'current_password' => 'Current Password',
+    'new_password' => 'New Password',
+    'password_help_text' => 'At least 8 characters.',
+    'confirm_new_password' => 'Confirm New Password',
+    'cancel' => 'Cancel',
+    'save_changes' => 'Save Changes',
+
+    'statements' => 'Tests',
+    'invoices' => 'Invoices',
+    'invoice_date' => 'Invoice Date',
+    'patient_name' => 'Patient Name',
+    'doctor_name' => 'Doctor Name',
+    'required_test' => 'Test Required',
+    'invoice_status' => 'Invoice Status',
+    'actions' => 'Actions',
+    'status_in_progress' => 'In Progress',
+    // 'status_completed' is already defined as 'Completed'
+    'processes' => 'Processes',
+    'add_diagnosis' => 'Add Diagnosis',
+
+    'analysis_images' => 'Analysis Images',
+    'lab_doctor_notes' => 'Lab Doctor Notes',
+
+    'completed_invoices' => 'Completed Invoices',
+    'view_profile' => 'View Profile',
+    'edit_profile_menu' => 'Edit Profile',
+    'lab_tests' => 'Laboratory Tests',
+    'tests_list' => 'Tests List',
+    'completed_tests_list' => 'Completed Tests List',
+
+
+
+
+];

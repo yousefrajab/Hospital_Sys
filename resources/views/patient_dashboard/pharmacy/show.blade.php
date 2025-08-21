@@ -194,14 +194,13 @@
             <div class="d-flex align-items-center">
                 <h4 class="content-title mb-0 my-auto">
                     <a href="{{ route('patient.pharmacy.index') }}" class="text-primary-dark tx-16 hover-underline">
-                        <i class="fas fa-arrow-left me-2 opacity-75"></i> وصفاتي الطبية
+                        <i class="fas fa-arrow-left me-2 opacity-75"></i> {{ trans('patients.my_prescriptions') }}
                     </a>
                 </h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="mt-1 tx-13"> تفاصيل الوصفة</span>
+                <span class="mt-1 tx-13"> {{ trans('patients.prescription_details') }}</span>
             </div>
         </div>
-        {{-- Placeholder for any top-right actions if needed --}}
     </div>
 @endsection
 
@@ -209,12 +208,11 @@
     @include('Dashboard.messages_alert')
 
     <div class="card prescription-details-card" data-aos="fade-up">
-        {{-- Header with Prescription Number, Date, and Status --}}
         <div class="prescription-main-header">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h3>وصفة طبية رقم: {{ $prescription->prescription_number }}</h3>
-                    <p><i class="fas fa-calendar-alt me-1 opacity-75"></i>تاريخ الإصدار: {{ $prescription->prescription_date->translatedFormat('l، d F Y') }}</p>
+                    <h3>{{ trans('patients.prescription_number_header') }} {{ $prescription->prescription_number }}</h3>
+                    <p><i class="fas fa-calendar-alt me-1 opacity-75"></i>{{ trans('patients.issue_date') }} {{ $prescription->prescription_date->translatedFormat('l، d F Y') }}</p>
                 </div>
                 <div>
                      <span class="status-badge {{ $prescription->status_badge_class }}">
@@ -225,79 +223,70 @@
         </div>
 
         <div class="card-body p-4">
-            {{-- Section 1: Basic Prescription and Doctor Info --}}
-            <h5 class="section-title mb-3"><i class="fas fa-file-invoice text-primary me-2"></i>معلومات الوصفة الأساسية</h5>
+            <h5 class="section-title mb-3"><i class="fas fa-file-invoice text-primary me-2"></i>{{ trans('patients.basic_prescription_info') }}</h5>
             <div class="info-grid">
                 <div class="info-item">
-                    <p class="info-label">الطبيب المُصدر:</p>
-                    <span class="info-value"><i class="fas fa-user-md"></i>{{ $prescription->doctor ? $prescription->doctor->name : 'غير محدد' }}</span>
+                    <p class="info-label">{{ trans('patients.issuing_doctor') }}</p>
+                    <span class="info-value"><i class="fas fa-user-md"></i>{{ $prescription->doctor ? $prescription->doctor->name : trans('patients.unspecified') }}</span>
                 </div>
-                {{-- You can add patient name and ID too if desired, though it's the patient's page --}}
-                {{-- <div class="info-item">
-                    <p class="info-label">اسم المريض:</p>
-                    <span class="info-value"><i class="fas fa-user"></i>{{ $prescription->patient->name ?? 'N/A' }}</span>
-                </div> --}}
                  <div class="info-item">
-                    <p class="info-label">وصفة مزمنة:</p>
+                    <p class="info-label">{{ trans('patients.chronic_prescription') }}</p>
                     <span class="info-value">
                         @if($prescription->is_chronic_prescription)
-                            <i class="fas fa-check-circle text-success"></i> نعم
+                            <i class="fas fa-check-circle text-success"></i> {{ trans('patients.yes') }}
                         @else
-                            <i class="fas fa-times-circle text-danger"></i> لا
+                            <i class="fas fa-times-circle text-danger"></i> {{ trans('patients.no') }}
                         @endif
                     </span>
                 </div>
                 @if ($prescription->admission)
                     <div class="info-item">
-                        <p class="info-label">مرتبطة بتنويم رقم:</p>
+                        <p class="info-label">{{ trans('patients.linked_to_admission_num') }}</p>
                         <span class="info-value"><i class="fas fa-hospital-user"></i>{{ $prescription->admission->admission_uid ?? 'N/A' }}</span>
                     </div>
                 @endif
                  @if ($prescription->next_refill_due_date)
                     <div class="info-item">
-                        <p class="info-label">تاريخ إعادة الصرف القادم:</p>
+                        <p class="info-label">{{ trans('patients.next_refill_date') }}</p>
                         <span class="info-value"><i class="fas fa-calendar-check"></i>{{ $prescription->next_refill_due_date->translatedFormat('d F Y') }}</span>
                     </div>
                @endif
             </div>
 
-            {{-- Dispensing Information (if applicable) --}}
             @if ($prescription->dispensed_at && $prescription->dispensedByPharmacyEmployee)
                 <hr class="my-4">
-                <h5 class="section-title mb-3"><i class="fas fa-user-nurse text-success me-2"></i>معلومات الصرف</h5>
+                <h5 class="section-title mb-3"><i class="fas fa-user-nurse text-success me-2"></i>{{ trans('patients.dispensing_information') }}</h5>
                 <div class="info-grid">
                     <div class="info-item">
-                        <p class="info-label">تم الصرف بواسطة:</p>
+                        <p class="info-label">{{ trans('patients.dispensed_by') }}</p>
                         <span class="info-value"><i class="fas fa-user-tag"></i>{{ $prescription->dispensedByPharmacyEmployee->name }}</span>
                     </div>
                     <div class="info-item">
-                        <p class="info-label">تاريخ ووقت الصرف:</p>
+                        <p class="info-label">{{ trans('patients.dispensing_date_time') }}</p>
                         <span class="info-value"><i class="fas fa-clock"></i>{{ $prescription->dispensed_at->translatedFormat('d M Y, h:i A') }}</span>
                     </div>
                 </div>
             @endif
 
-            {{-- Notes --}}
             @if ($prescription->doctor_notes || $prescription->pharmacy_notes)
                 <hr class="my-4">
             @endif
             @if ($prescription->doctor_notes)
             <div class="mb-3 notes-section" data-aos="fade-left" data-aos-delay="100">
-                <h6 class="card-subtitle mb-2 text-muted fw-500"><i class="fas fa-user-doctor me-2 text-primary opacity-75"></i>ملاحظات الطبيب:</h6>
+                <h6 class="card-subtitle mb-2 text-muted fw-500"><i class="fas fa-user-doctor me-2 text-primary opacity-75"></i>{{ trans('patients.doctor_notes') }}</h6>
                 <p>{{ $prescription->doctor_notes }}</p>
             </div>
             @endif
 
             @if ($prescription->pharmacy_notes)
              <div class="mb-3 notes-section" data-aos="fade-left" data-aos-delay="150">
-                <h6 class="card-subtitle mb-2 text-muted fw-500"><i class="fas fa-clinic-medical me-2 text-success opacity-75"></i>ملاحظات الصيدلية:</h6>
+                <h6 class="card-subtitle mb-2 text-muted fw-500"><i class="fas fa-clinic-medical me-2 text-success opacity-75"></i>{{ trans('patients.pharmacy_notes') }}</h6>
                 <p style="background-color: #f2f9f3; border-color: #d4ebd6;">{{ $prescription->pharmacy_notes }}</p>
             </div>
             @endif
 
-            {{-- Section 2: Medication Items --}}
             <hr class="my-4">
-            <h5 class="section-title mb-3"><i class="fas fa-pills text-primary me-2"></i>الأدوية الموصوفة ({{ $prescription->items->count() }})</h5>
+            <h5 class="section-title mb-3"><i class="fas fa-pills text-primary me-2"></i>{{ trans('patients.prescribed_medications_count', ['count' => $prescription->items->count()]) }}</h5>
             @if($prescription->items->isNotEmpty())
                 <div class="list-group medication-list">
                     @foreach($prescription->items as $index => $item)
@@ -305,16 +294,16 @@
                             <div class="d-flex w-100 justify-content-between mb-2">
                                 <h5 class="mb-1 med-name">
                                      <span class="badge bg-primary-transparent me-2">{{ $loop->iteration }}</span>
-                                     {{ $item->medication->name ?? 'دواء غير متوفر' }}
+                                     {{ $item->medication->name ?? trans('patients.medication_not_available') }}
                                      @if($item->is_prn)
-                                         <span class="badge rounded-pill bg-warning-transparent text-warning ms-2" data-bs-toggle="tooltip" title="يُستخدم هذا الدواء فقط عند اللزوم حسب إرشادات الطبيب">
-                                            <i class="fas fa-exclamation-circle"></i> عند اللزوم
+                                         <span class="badge rounded-pill bg-warning-transparent text-warning ms-2" data-bs-toggle="tooltip" title="{{ trans('patients.prn_tooltip') }}">
+                                            <i class="fas fa-exclamation-circle"></i> {{ trans('doctors.as_needed') }}
                                          </span>
                                      @endif
                                 </h5>
                                 @if(isset($item->refills_allowed) && $item->refills_allowed > ($item->refills_done ?? 0))
-                                    <small class="text-info fw-500" data-bs-toggle="tooltip" title="عدد مرات إعادة الصرف المتبقية لهذا الدواء">
-                                        <i class="fas fa-sync-alt"></i> متبقي: {{ $item->refills_allowed - ($item->refills_done ?? 0) }} إعادة صرف
+                                    <small class="text-info fw-500" data-bs-toggle="tooltip" title="{{ trans('patients.remaining_refills_tooltip') }}">
+                                        <i class="fas fa-sync-alt"></i> {{ trans('patients.remaining_refills_text', ['count' => $item->refills_allowed - ($item->refills_done ?? 0)]) }}
                                     </small>
                                  @endif
                             </div>
@@ -328,18 +317,18 @@
                             @endif
 
                             <div class="med-info-grid">
-                                <div><strong>الجرعة:</strong> {{ $item->dosage ?? 'غير محدد' }}</div>
-                                <div><strong>التكرار:</strong> {{ $item->frequency ?? 'غير محدد' }}</div>
-                                <div><strong>المدة:</strong> {{ $item->duration ?? 'حسب الحاجة/تعليمات الطبيب' }}</div>
-                                <div><strong>طريقة الإعطاء:</strong> {{ $item->route_of_administration ?? 'غير محدد' }}</div>
+                                <div><strong>{{ trans('patients.dosage_label') }}</strong> {{ $item->dosage ?? trans('patients.unspecified') }}</div>
+                                <div><strong>{{ trans('patients.frequency_label') }}</strong> {{ $item->frequency ?? trans('patients.unspecified') }}</div>
+                                <div><strong>{{ trans('patients.duration_label') }}</strong> {{ $item->duration ?? trans('patients.as_needed_or_instructed') }}</div>
+                                <div><strong>{{ trans('patients.route_of_administration_label') }}</strong> {{ $item->route_of_administration ?? trans('patients.unspecified') }}</div>
                                 @if($item->quantity_prescribed)
-                                <div><strong>الكمية الموصوفة:</strong> {{ $item->quantity_prescribed }} {{ $item->medication->unit_of_measure_display ?? '' }}</div>
+                                <div><strong>{{ trans('patients.prescribed_quantity') }}</strong> {{ $item->quantity_prescribed }} {{ $item->medication->unit_of_measure_display ?? '' }}</div>
                                 @endif
                             </div>
 
                             @if($item->instructions_for_patient)
                             <div class="mt-2 med-instructions">
-                                <i class="fas fa-info-circle me-1"></i> <strong>تعليمات خاصة:</strong> {{ $item->instructions_for_patient }}
+                                <i class="fas fa-info-circle me-1"></i> <strong>{{ trans('patients.special_instructions') }}</strong> {{ $item->instructions_for_patient }}
                             </div>
                             @endif
                         </div>
@@ -348,18 +337,17 @@
             @else
                 <div class="alert alert-light text-center border p-4">
                     <i class="fas fa-capsules fa-2x text-muted mb-2"></i>
-                    <p class="mb-0">لا توجد أدوية مدرجة في هذه الوصفة حالياً.</p>
+                    <p class="mb-0">{{ trans('patients.no_medications_in_prescription') }}</p>
                 </div>
             @endif
 
-             {{-- Action Buttons Area --}}
             @if ($prescription->can_request_refill)
                 <div class="action-button-container mt-4">
                     <form action="{{ route('patient.pharmacy.request-refill', $prescription->id) }}" method="POST" class="d-inline"
-                          onsubmit="return confirm('هل أنت متأكد من رغبتك في طلب إعادة صرف لهذه الوصفة؟ سيتم إخطار الصيدلية.\n\nملاحظة: هذا الإجراء خاص بطلب إعادة صرف الأدوية المحددة في هذه الوصفة والتي تسمح بذلك.')">
+                          onsubmit="return confirm('{{ trans('patients.confirm_refill_request_message') }}')">
                         @csrf
                         <button type="submit" class="btn btn-success btn-lg ripple shadow-sm">
-                            <i class="fas fa-prescription-bottle me-2"></i> طلب إعادة صرف الوصفة
+                            <i class="fas fa-prescription-bottle me-2"></i> {{ trans('patients.request_prescription_refill') }}
                         </button>
                     </form>
                 </div>
@@ -367,7 +355,6 @@
         </div>
     </div>
 @endsection
-
 @section('js')
     @parent
     {{-- AlpineJS (لا حاجة له إذا لم نستخدم توسيع/طي تفاعلي هنا) --}}

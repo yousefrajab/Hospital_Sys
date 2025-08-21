@@ -196,13 +196,13 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="left-content">
             <div class="welcome-header">
-                <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">لوحة تحكم مدير الصيدلية</h2>
-                <p class="mg-b-0">مرحباً بعودتك، {{ Auth::guard('pharmacy_manager')->user()->name ?? 'مدير الصيدلية' }}! 👋</p>
+                <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">{{ trans('phrM.dashboard_title') }}</h2>
+                <p class="mg-b-0">{{ trans('phrM.welcome_back_message', ['name' => Auth::guard('pharmacy_manager')->user()->name ?? 'مدير الصيدلية']) }}</p>
             </div>
         </div>
         <div class="right-content">
             <div class="d-flex align-items-center">
-                <span class="me-2">اليوم:</span>
+                <span class="me-2">{{ trans('phrM.today') }}</span>
                 <span class="badge bg-light text-dark">{{ now()->format('d F Y') }}</span>
             </div>
         </div>
@@ -218,12 +218,12 @@
             <div class="stat-card bg-primary">
                 <div class="card-icon"><i class="fas fa-pills"></i></div>
                 <div class="card-body">
-                    <h6 class="stat-title">إجمالي أصناف الأدوية</h6>
+                    <h6 class="stat-title">{{ trans('phrM.total_medication_items') }}</h6>
                     <h3 class="stat-value">{{ number_format($activeMedications->count()) }}</h3>
-                    <p class="stat-desc">الأدوية المسجلة بالنظام</p>
+                    <p class="stat-desc">{{ trans('phrM.medications_registered') }}</p>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ route('admin.medications.index') }}">إدارة الأدوية <i class="fas fa-arrow-left ms-1"></i></a>
+                    <a href="{{ route('admin.medications.index') }}">{{ trans('phrM.manage_medications') }} <i class="fas fa-arrow-left ms-1"></i></a>
                 </div>
             </div>
         </div>
@@ -233,12 +233,12 @@
             <div class="stat-card bg-danger">
                 <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
                 <div class="card-body">
-                    <h6 class="stat-title">أدوية منخفضة المخزون</h6>
+                    <h6 class="stat-title">{{ trans('phrM.low_stock_medications') }}</h6>
                     <h3 class="stat-value">{{ $lowStockMedicationsCount ?? 0 }}</h3>
-                    <p class="stat-desc">تحتاج لإعادة طلب</p>
+                    <p class="stat-desc">{{ trans('phrM.need_reordering') }}</p>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ route('pharmacy_employee.medications.search', ['stock_status_filter' => 'low_stock']) }}">عرض القائمة <i class="fas fa-arrow-left ms-1"></i></a>
+                    <a href="{{ route('pharmacy_employee.medications.search', ['stock_status_filter' => 'low_stock']) }}">{{ trans('phrM.view_list') }} <i class="fas fa-arrow-left ms-1"></i></a>
                 </div>
             </div>
         </div>
@@ -248,12 +248,12 @@
             <div class="stat-card bg-warning">
                 <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
                 <div class="card-body">
-                    <h6 class="stat-title">أدوية قريبة الانتهاء</h6>
+                    <h6 class="stat-title">{{ trans('phrM.medications_nearing_expiry') }}</h6>
                     <h3 class="stat-value">{{ $soonToExpireMedicationsCount ?? 0 }}</h3>
-                    <p class="stat-desc">خلال {{ $expiryWarningDays ?? 90 }} يوم</p>
+                    <p class="stat-desc">{{ trans('phrM.within_x_days', ['days' => $expiryWarningDays ?? 90]) }}</p>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ route('pharmacy_employee.medications.search', ['expiry_status_filter' => 'expired_soon']) }}">عرض القائمة <i class="fas fa-arrow-left ms-1"></i></a>
+                    <a href="{{ route('pharmacy_employee.medications.search', ['expiry_status_filter' => 'expired_soon']) }}">{{ trans('phrM.view_list') }} <i class="fas fa-arrow-left ms-1"></i></a>
                 </div>
             </div>
         </div>
@@ -263,12 +263,12 @@
             <div class="stat-card bg-info">
                 <div class="card-icon"><i class="fas fa-receipt"></i></div>
                 <div class="card-body">
-                    <h6 class="stat-title">وصفات تنتظر المعالجة</h6>
+                    <h6 class="stat-title">{{ trans('phrM.prescriptions_awaiting_processing') }}</h6>
                     <h3 class="stat-value">{{ $pendingPrescriptionsCountForManager ?? 0 }}</h3>
-                    <p class="stat-desc">جديدة، معتمدة أو معلقة</p>
+                    <p class="stat-desc">{{ trans('phrM.new_approved_or_on_hold') }}</p>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ route('pharmacy_employee.prescriptions.index') }}">مراجعة الوصفات <i class="fas fa-arrow-left ms-1"></i></a>
+                    <a href="{{ route('pharmacy_employee.prescriptions.index') }}">{{ trans('phrM.review_prescriptions') }} <i class="fas fa-arrow-left ms-1"></i></a>
                 </div>
             </div>
         </div>
@@ -279,26 +279,26 @@
         <div class="col-lg-8" data-aos="fade-up" data-aos-delay="500">
             <div class="content-card">
                 <div class="card-header">
-                    <h5 class="card-title"><i class="fas fa-chart-bar me-2"></i>حالة المخزون</h5>
+                    <h5 class="card-title"><i class="fas fa-chart-bar me-2"></i>{{ trans('phrM.stock_status') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="row text-center mb-4">
                         <div class="col-md-4">
                             <div class="border p-3 rounded">
                                 <h4 class="text-success">{{ $inStockForChart ?? 0 }}</h4>
-                                <small class="text-muted">أدوية متوفرة</small>
+                                <small class="text-muted">{{ trans('phrM.medications_in_stock') }}</small>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="border p-3 rounded">
                                 <h4 class="text-warning">{{ $lowStockMedicationsCount ?? 0 }}</h4>
-                                <small class="text-muted">أدوية منخفضة</small>
+                                <small class="text-muted">{{ trans('phrM.low_stock') }}</small>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="border p-3 rounded">
                                 <h4 class="text-danger">{{ $outOfStockForChart ?? 0 }}</h4>
-                                <small class="text-muted">أدوية نفذت</small>
+                                <small class="text-muted">{{ trans('phrM.out_of_stock') }}</small>
                             </div>
                         </div>
                     </div>
@@ -311,7 +311,7 @@
         <div class="col-lg-4" data-aos="fade-up" data-aos-delay="600">
             <div class="content-card">
                 <div class="card-header">
-                    <h5 class="card-title"><i class="fas fa-history me-2"></i>آخر دفعات الأدوية</h5>
+                    <h5 class="card-title"><i class="fas fa-history me-2"></i>{{ trans('phrM.latest_medication_batches') }}</h5>
                 </div>
                 <div class="card-body p-0">
                     @if($recentStockEntries->isNotEmpty())
@@ -321,10 +321,10 @@
                                class="list-group-item list-group-item-action">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h6 class="med-name mb-1">{{ $stock->medication->name ?? 'غير معروف' }}</h6>
+                                        <h6 class="med-name mb-1">{{ $stock->medication->name ?? trans('phrM.unknown_medication') }}</h6>
                                         <small class="med-details d-block">
-                                            دفعة: {{ $stock->batch_number ?: 'N/A' }} |
-                                            كمية: {{ $stock->initial_quantity }}
+                                            {{ trans('phrM.batch_number') }} {{ $stock->batch_number ?: 'N/A' }} |
+                                            {{ trans('phrM.quantity') }} {{ $stock->initial_quantity }}
                                         </small>
                                     </div>
                                     <small class="med-date">
@@ -336,13 +336,13 @@
                         </div>
                         <div class="card-footer text-center">
                             <a href="{{ route('admin.medications.index') }}" class="text-primary">
-                                عرض كل الدفعات <i class="fas fa-arrow-left ms-1"></i>
+                                {{ trans('phrM.view_all_batches') }} <i class="fas fa-arrow-left ms-1"></i>
                             </a>
                         </div>
                     @else
                         <div class="text-center py-4">
                             <i class="fas fa-box-open fa-2x text-muted mb-3"></i>
-                            <p class="text-muted">لا توجد دفعات أدوية حديثة</p>
+                            <p class="text-muted">{{ trans('phrM.no_recent_batches') }}</p>
                         </div>
                     @endif
                 </div>

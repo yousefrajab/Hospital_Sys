@@ -48,9 +48,14 @@ class MedicationController extends Controller
         // جلب البيانات لـ dropdowns الفلترة
         $categories = Medication::getCommonCategories(); // من الموديل
         $dosageForms = Medication::getCommonDosageForms(); // من الموديل
-        $statuses = ['1' => 'نشط', '0' => 'غير نشط'];
-        $prescriptionRequirement = ['1' => 'يتطلب وصفة', '0' => 'لا يتطلب وصفة'];
-
+        $statuses = [
+            '1' => trans('phrM.active'),
+            '0' => trans('phrM.inactive'),
+        ];
+        $prescriptionRequirement = [
+            '1' => trans('phrM.option_requires_prescription'),
+            '0' => trans('phrM.option_does_not_require_prescription'),
+        ];
 
         return view('Dashboard.PharmacyManager.Medications.index', compact(
             'medications',

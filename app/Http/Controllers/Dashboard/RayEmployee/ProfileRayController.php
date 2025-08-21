@@ -52,7 +52,7 @@ class ProfileRayController extends Controller // يمكنك تسميته Profile
         // تحويل أرقام الشهور إلى أسمائها (مثال بسيط)
         $monthLabels = [];
         $monthData = [];
-        $monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+        $monthNames = array_values(trans('ray.months'));
 
         for ($m = 1; $m <= 12; $m++) {
             $monthLabels[] = $monthNames[$m - 1];

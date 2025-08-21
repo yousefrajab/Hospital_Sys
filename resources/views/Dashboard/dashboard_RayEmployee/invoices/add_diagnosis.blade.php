@@ -10,7 +10,7 @@
      <div class="breadcrumb-header justify-content-between">
          <div class="my-auto">
              <div class="d-flex">
-                 <h4 class="content-title mb-0 my-auto">اضافة تشخيص</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ $invoice->Patient->name }}</span>
+                 <h4 class="content-title mb-0 my-auto">{{ trans('ray.add_diagnosis') }}</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ $invoice->Patient->name }}</span>
              </div>
          </div>
      </div>
@@ -26,14 +26,14 @@
                          @csrf
                          @method('PUT')
                          <div class="form-group">
-                             <label for="exampleFormControlTextarea1">التشخيص</label>
+                             <label for="exampleFormControlTextarea1">{{ trans('ray.diagnosis') }}</label>
                              <textarea class="form-control" id="exampleFormControlTextarea1" name="description_employee" rows="3" required></textarea>
                          </div>
                          <div class="form-group">
-                             <label for="exampleFormControlTextarea1">المرفقات</label>
+                             <label for="exampleFormControlTextarea1">{{ trans('ray.attachments') }}</label>
                              <input type="file" name="photos[]" accept="image/*" multiple required>
                          </div>
-                         <button type="submit" class="btn btn-primary">تاكيد</button>
+                         <button type="submit" class="btn btn-primary">{{ trans('ray.confirm') }}</button>
                      </form>
                  </div>
              </div>

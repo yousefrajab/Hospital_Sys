@@ -87,7 +87,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-tachometer-alt text-primary me-2"></i>متابعة الوصفات {{ $pageTitleSuffix ?? '' }}</h4>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-tachometer-alt text-primary me-2"></i>{{ trans('doctors.prescriptions_monitoring') }} {{ $pageTitleSuffix ?? '' }}</h4>
                 {{-- <span class="text-muted mt-1 tx-13 mx-2">/</span>
                 <span class="mt-1 tx-13">نظرة عامة على التزام المرضى</span> --}}
             </div>
@@ -95,11 +95,11 @@
          <div class="d-flex my-xl-auto right-content align-items-center">
              @if ($request->has('filter_type') || $request->has('patient_search_compliance') || $request->has('compliance_status_filter') )
                  <a href="{{ route('doctor.prescriptions.adherenceDashboard') }}" class="btn btn-outline-secondary btn-sm me-2 ripple">
-                     <i class="fas fa-undo me-1"></i> عرض كل المتابعات
+                     <i class="fas fa-undo me-1"></i> {{ trans('doctors.view_all_follow_ups') }}
                  </a>
              @endif
              <a href="{{ route('prescriptions.create') }}" class="btn btn-primary-gradient ripple">
-                 <i class="fas fa-plus-circle me-1"></i> وصفة جديدة
+                 <i class="fas fa-plus-circle me-1"></i> {{ trans('doctors.new_prescription') }}
              </a>
         </div>
     </div>
@@ -117,10 +117,10 @@
                      <div class="card-body stat-content">
                          <i class="fas fa-user-md-medical stat-icon"></i> {{-- أيقونة مختلفة --}}
                          <span class="stat-number">{{ $needsDecisionCount ?? 0 }}</span>
-                         <span class="stat-label">طلبات تنتظر مراجعتك</span>
+                         <span class="stat-label">{{ trans('doctors.stat_card_requests_awaiting_review') }}</span>
                      </div>
                      <div class="card-footer text-start">
-                         <span class="stat-link text-danger">عرض الطلبات <i class="fas fa-arrow-circle-left ms-1"></i></span>
+                         <span class="stat-link text-danger">{{ trans('doctors.stat_card_view_requests') }} <i class="fas fa-arrow-circle-left ms-1"></i></span>
                      </div>
                  </div>
             </a>
@@ -132,10 +132,10 @@
                      <div class="card-body stat-content">
                          <i class="fas fa-user-times stat-icon"></i> {{-- أيقونة مختلفة --}}
                          <span class="stat-number">{{ $nonCompliantPatientsCount ?? 0}}</span>
-                         <span class="stat-label">مرضى بحاجة لمتابعة التزام</span>
+                         <span class="stat-label">{{ trans('doctors.stat_card_patients_needing_follow_up') }}</span>
                      </div>
                      <div class="card-footer text-start">
-                         <span class="stat-link text-warning">عرض القائمة <i class="fas fa-arrow-circle-left ms-1"></i></span>
+                         <span class="stat-link text-warning">{{ trans('doctors.stat_card_view_list') }} <i class="fas fa-arrow-circle-left ms-1"></i></span>
                      </div>
                  </div>
              </a>
@@ -147,10 +147,10 @@
                      <div class="card-body stat-content">
                          <i class="fas fa-calendar-plus stat-icon"></i> {{-- أيقونة مختلفة --}}
                          <span class="stat-number">{{ $upcomingRefillsCount ?? 0}}</span>
-                         <span class="stat-label">وصفات مزمنة بتجديد قريب</span>
+                         <span class="stat-label">{{ trans('doctors.stat_card_upcoming_renewals') }}</span>
                      </div>
                      <div class="card-footer text-start">
-                         <span class="stat-link text-info">عرض القائمة <i class="fas fa-arrow-circle-left ms-1"></i></span>
+                         <span class="stat-link text-info">{{ trans('doctors.stat_card_view_list') }} <i class="fas fa-arrow-circle-left ms-1"></i></span>
                      </div>
                  </div>
              </a>
@@ -161,17 +161,17 @@
      @if($filter_type)
          <div class="alert filtered-by-info" role="alert" data-aos="fade-in" data-aos-delay="100">
              <i class="fas fa-info-circle me-2"></i>
-             أنت تعرض حاليًا قائمة مفلترة لـ:
+             {{ trans('doctors.filter_info_box_prefix') }}
              @if($filter_type === 'needs_decision')
-                 <strong>"طلبات تنتظر مراجعتك"</strong>.
+                 <strong>{{ trans('doctors.filter_info_box_needs_decision') }}</strong>.
              @elseif($filter_type === 'non_compliant')
-                 <strong>"مرضى بحاجة لمتابعة التزام"</strong>.
+                 <strong>{{ trans('doctors.filter_info_box_non_compliant') }}</strong>.
              @elseif($filter_type === 'upcoming_refills')
-                 <strong>"وصفات مزمنة بتجديد قريب"</strong>.
+                 <strong>{{ trans('doctors.filter_info_box_upcoming_refills') }}</strong>.
              @else
-                 <strong>"فلتر مخصص"</strong>.
+                 <strong>{{ trans('doctors.filter_info_box_custom') }}</strong>.
              @endif
-             <a href="{{ route('doctor.prescriptions.adherenceDashboard') }}" class="ms-2"> <i class="fas fa-times-circle me-1"></i>إزالة هذا الفلتر</a>
+             <a href="{{ route('doctor.prescriptions.adherenceDashboard') }}" class="ms-2"> <i class="fas fa-times-circle me-1"></i>{{ trans('doctors.remove_this_filter') }}</a>
          </div>
      @endif
 
@@ -182,13 +182,13 @@
             <h4 class="card-title-css mb-2 mb-md-0">
                 <i class="fas fa-clipboard-check text-primary me-2"></i>
                 @if($filter_type === 'needs_decision')
-                    قائمة الطلبات التي تنتظر مراجعتك
+                    {{ trans('doctors.title_list_requests_awaiting_review') }}
                 @elseif($filter_type === 'non_compliant')
-                    قائمة المرضى الذين يحتاجون متابعة التزام
+                    {{ trans('doctors.title_list_patients_needing_follow_up') }}
                 @elseif($filter_type === 'upcoming_refills')
-                    قائمة الوصفات المزمنة التي تحتاج تجديد قريب
+                    {{ trans('doctors.title_list_upcoming_renewals') }}
                 @else
-                    متابعة الوصفات النشطة للمرضى
+                    {{ trans('doctors.title_monitoring_active_prescriptions') }}
                 @endif
                 <span class="badge bg-light text-dark border ms-2">{{ $monitoredPrescriptions->total() }}</span>
             </h4>
@@ -197,7 +197,7 @@
                  @if($filter_type)
                      <input type="hidden" name="filter_type" value="{{ $filter_type }}">
                  @endif
-                 <input type="text" name="patient_search_compliance" class="form-control form-control-sm me-2" placeholder="بحث باسم المريض..." value="{{ $request->patient_search_compliance }}">
+                 <input type="text" name="patient_search_compliance" class="form-control form-control-sm me-2" placeholder="{{ trans('doctors.search_patient_placeholder') }}" value="{{ $request->patient_search_compliance }}">
                  <button type="submit" class="btn btn-sm btn-outline-primary ripple"><i class="fas fa-search"></i></button>
             </form>
         </div>
@@ -208,13 +208,13 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th style="min-width: 200px;">المريض</th>
-                                <th style="min-width: 180px;">الوصفة / الدواء الرئيسي</th>
-                                <th style="min-width: 130px;">تاريخ آخر صرف/طلب</th>
-                                <th style="min-width: 130px;">التجديد التالي المتوقع</th>
-                                <th style="min-width: 160px;">تقييم الالتزام</th>
-                                <th class="text-center">إعادات متبقية</th>
-                                <th class="text-center">الإجراءات</th>
+                                <th style="min-width: 200px;">{{ trans('doctors.table_header_patient') }}</th>
+                                <th style="min-width: 180px;">{{ trans('doctors.table_header_prescription_main_medication') }}</th>
+                                <th style="min-width: 130px;">{{ trans('doctors.table_header_last_dispense_request_date') }}</th>
+                                <th style="min-width: 130px;">{{ trans('doctors.table_header_next_expected_renewal') }}</th>
+                                <th style="min-width: 160px;">{{ trans('doctors.table_header_compliance_assessment') }}</th>
+                                <th class="text-center">{{ trans('doctors.table_header_refills_remaining') }}</th>
+                                <th class="text-center">{{ trans('doctors.table_header_actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -226,46 +226,46 @@
                                             <div class="d-flex align-items-center">
                                                  <img src="{{ $prescription->patient->image ? asset('Dashboard/img/patients/' . $prescription->patient->image->filename) : URL::asset('Dashboard/img/default_patient_avatar.png') }}" alt="patient" class="patient-avatar-sm">
                                                  <div>
-                                                     <a href="{{ route('doctor.patient.details', $prescription->patient->id) }}" class="fw-500 text-primary d-block" data-bs-toggle="tooltip" title="عرض ملف المريض الكامل وملخص حالته">
+                                                     <a href="{{ route('doctor.patient.details', $prescription->patient->id) }}" class="fw-500 text-primary d-block" data-bs-toggle="tooltip" title="{{ trans('doctors.view_patient_profile_summary') }}">
                                                          {{ $prescription->patient->name }}
                                                      </a>
                                                      <small class="text-muted">ID: {{ $prescription->patient->id }}</small>
                                                  </div>
                                              </div>
                                         @else
-                                             <span class="text-muted">مريض غير محدد</span>
+                                             <span class="text-muted">{{ trans('doctors.patient_not_specified') }}</span>
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('prescriptions.show', $prescription->id) }}" class="fw-500 d-block" data-bs-toggle="tooltip" title="عرض تفاصيل الوصفة كاملة">
+                                        <a href="{{ route('prescriptions.show', $prescription->id) }}" class="fw-500 d-block" data-bs-toggle="tooltip" title="{{ trans('doctors.view_full_prescription_details') }}">
                                             {{ $prescription->prescription_number }}
                                         </a>
                                         <small class="text-muted">
                                             @if($prescription->items->isNotEmpty())
                                                 <i class="fas fa-pills me-1 opacity-50"></i>
-                                                {{ $prescription->items->first()->medication->name ?? 'دواء غير محدد' }}
+                                                {{ $prescription->items->first()->medication->name ?? trans('doctors.unspecified_medication_in_list') }}
                                                 @if($prescription->items_count > 1)
                                                     (+{{ $prescription->items_count - 1 }})
                                                 @endif
                                             @else
-                                                 (لا أدوية)
+                                                 {{ trans('doctors.no_medications_in_prescription') }}
                                             @endif
                                         </small>
                                     </td>
                                     <td class="text-nowrap"> {{-- لمنع التفاف التاريخ --}}
-                                        {{ $prescription->dispensed_at ? $prescription->dispensed_at->translatedFormat('d M Y') : ($prescription->status == \App\Models\Prescription::STATUS_REFILL_REQUESTED ? ($prescription->updated_at ? $prescription->updated_at->translatedFormat('d M Y') . ' (طلب)' : 'N/A') : 'لم تُصرف بعد') }}
+                                        {{ $prescription->dispensed_at ? $prescription->dispensed_at->translatedFormat('d M Y') : ($prescription->status == \App\Models\Prescription::STATUS_REFILL_REQUESTED ? ($prescription->updated_at ? $prescription->updated_at->translatedFormat('d M Y') . ' ' . trans('doctors.date_suffix_request') : 'N/A') : trans('doctors.not_yet_dispensed')) }}
                                     </td>
                                     <td class="text-nowrap">
-                                       {{ $prescription->next_refill_due_date ? $prescription->next_refill_due_date->translatedFormat('d M Y') : 'غير محدد' }}
+                                       {{ $prescription->next_refill_due_date ? $prescription->next_refill_due_date->translatedFormat('d M Y') : trans('doctors.unspecified_medication') }}
                                        @if($prescription->next_refill_due_date && $prescription->next_refill_due_date->isPast() && !in_array($prescription->status, [\App\Models\Prescription::STATUS_DISPENSED, \App\Models\Prescription::STATUS_REFILL_REQUESTED, \App\Models\Prescription::STATUS_CANCELLED_BY_DOCTOR, \App\Models\Prescription::STATUS_EXPIRED]) )
-                                         <span class="badge bg-danger-transparent ms-1 px-1 py-0" data-bs-toggle="tooltip" title="تجاوز موعد إعادة الصرف"><i class="fas fa-exclamation-triangle tx-10"></i></span>
+                                         <span class="badge bg-danger-transparent ms-1 px-1 py-0" data-bs-toggle="tooltip" title="{{ trans('doctors.overdue_refill_tooltip') }}"><i class="fas fa-exclamation-triangle tx-10"></i></span>
                                        @elseif($prescription->next_refill_due_date && $prescription->next_refill_due_date->isBetween(now(), now()->addDays(config('your_config_file.upcoming_refill_window_days', 7))))
-                                         <span class="badge bg-warning-transparent ms-1 px-1 py-0" data-bs-toggle="tooltip" title="موعد إعادة الصرف قريب"><i class="fas fa-hourglass-half tx-10"></i></span>
+                                         <span class="badge bg-warning-transparent ms-1 px-1 py-0" data-bs-toggle="tooltip" title="{{ trans('doctors.upcoming_refill_tooltip') }}"><i class="fas fa-hourglass-half tx-10"></i></span>
                                        @endif
                                     </td>
                                     <td>
-                                         <span class="status-badge {{ $prescription->compliance_badge_class ?? 'status-default' }}" data-bs-toggle="tooltip" title="تحليل الالتزام: {{ $prescription->compliance_status ?? 'غير مقيم' }}">
-                                             {{ $prescription->compliance_status ?? 'غير مقيم' }}
+                                         <span class="status-badge {{ $prescription->compliance_badge_class ?? 'status-default' }}" data-bs-toggle="tooltip" title="{{ trans('doctors.compliance_analysis_tooltip', ['status' => $prescription->compliance_status ?? trans('doctors.not_assessed')]) }}">
+                                             {{ $prescription->compliance_status ?? trans('doctors.not_assessed') }}
                                          </span>
                                     </td>
                                     <td class="text-center">
@@ -276,19 +276,19 @@
                                                  $remainingRefills = $totalAllowed - $totalDone;
                                              @endphp
                                             <span class="{{ $remainingRefills <= 0 ? 'text-danger fw-bold' : ($remainingRefills <= 2 ? 'text-warning fw-500' : 'text-success') }}">
-                                                {{ $remainingRefills > 0 ? $remainingRefills : 'لا يوجد' }}
+                                                {{ $remainingRefills > 0 ? $remainingRefills : trans('doctors.no_refills_remaining') }}
                                             </span>
                                             <small class="text-muted d-block">/ {{ $totalAllowed }}</small>
                                         @else
-                                             <span class="text-muted small" data-bs-toggle="tooltip" title="لم يتم تحديد مرات إعادة صرف لهذه الوصفة">---</span>
+                                             <span class="text-muted small" data-bs-toggle="tooltip" title="{{ trans('doctors.no_refills_specified_tooltip') }}">---</span>
                                         @endif
                                     </td>
                                     <td class="text-center">
                                          <div class="btn-group" role="group">
-                                             <a href="{{ route('prescriptions.show', $prescription->id) }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="عرض/تعديل الوصفة">
+                                             <a href="{{ route('prescriptions.show', $prescription->id) }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="{{ trans('doctors.view_edit_prescription_tooltip') }}">
                                                  <i class="fas fa-eye"></i>
                                              </a>
-                                             <a href="{{ route('doctor.patient.details', $prescription->patient_id) }}" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="ملف المريض">
+                                             <a href="{{ route('doctor.patient.details', $prescription->patient_id) }}" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="{{ trans('doctors.patient_profile_tooltip') }}">
                                                  <i class="fas fa-user-alt"></i>
                                              </a>
                                          </div>
@@ -307,12 +307,12 @@
                 <div class="text-center p-5" data-aos="zoom-in">
                      @if($filter_type)
                         <i class="fas fa-filter fa-3x text-muted mb-3"></i>
-                        <h5 class="fw-bold">لا توجد وصفات تطابق هذا الفلتر حاليًا.</h5>
-                        <p class="text-muted">حاول تعديل معايير الفلترة أو <a href="{{ route('doctor.prescriptions.adherenceDashboard') }}">عرض كل المتابعات</a>.</p>
+                        <h5 class="fw-bold">{{ trans('doctors.empty_state_filtered_title') }}</h5>
+                        <p class="text-muted">{{ trans('doctors.empty_state_filtered_message') }} <a href="{{ route('doctor.prescriptions.adherenceDashboard') }}">{{ trans('doctors.view_all_follow_ups') }}</a>.</p>
                      @else
                         <i class="fas fa-clipboard-check fa-3x text-success mb-3"></i>
-                        <h5 class="fw-bold">لا توجد وصفات نشطة تحتاج لمتابعة التزام حاليًا.</h5>
-                        <p class="text-muted">سيتم عرض الوصفات المزمنة هنا عندما يتم إنشاؤها أو اقتراب مواعيد تجديدها.</p>
+                        <h5 class="fw-bold">{{ trans('doctors.empty_state_general_title') }}</h5>
+                        <p class="text-muted">{{ trans('doctors.empty_state_general_message') }}</p>
                      @endif
                 </div>
             @endif

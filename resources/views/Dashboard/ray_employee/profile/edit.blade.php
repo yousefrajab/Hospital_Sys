@@ -248,13 +248,13 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">موظف الأشعة</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل الملف الشخصي</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('ray.ray_employee') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('ray.edit_profile_header') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('ray_employee.profile.show') }}" class="btn btn-outline-secondary btn-sm">
-                <i class="fas fa-user me-1"></i> عرض الملف الشخصي
+                <i class="fas fa-user me-1"></i> {{ trans('ray.profile') }}
             </a>
         </div>
     </div>
@@ -266,7 +266,7 @@
     <div class="ray-edit-container">
         <div class="ray-edit-card ray-animate">
             <div class="ray-edit-header">
-                <h2><i class="fas fa-user-edit me-2"></i> تعديل الملف الشخصي</h2>
+                <h2><i class="fas fa-user-edit me-2"></i> {{ trans('ray.edit_profile_header') }}</h2>
             </div>
 
             <form action="{{ route('ray_employee.profile.update') }}" method="POST" enctype="multipart/form-data" class="ray-edit-body needs-validation" novalidate>
@@ -275,29 +275,29 @@
 
                 <!-- قسم الصورة -->
                 <div class="ray-form-group">
-                    <label class="ray-form-label">الصورة الشخصية</label>
+                    <label class="ray-form-label">{{ trans('ray.personal_photo') }}</label>
                     <div class="ray-avatar-edit">
                         <img id="rayImagePreviewEdit" class="ray-avatar-preview"
                              src="{{ $employee->image ? asset('Dashboard/img/rayEmployees/' . $employee->image->filename) : asset('Dashboard/img/default_avatar.png') }}"
                              alt="{{ $employee->name }}">
                         <div>
                             <label for="rayPhotoInputEdit" class="ray-upload-btn">
-                                <i class="fas fa-upload me-1"></i> اختيار صورة
+                                <i class="fas fa-upload me-1"></i> {{ trans('ray.choose_photo') }}
                             </label>
                             <input type="file" name="photo" id="rayPhotoInputEdit"
                                    onchange="rayDisplayFileNameAndPreview(this)">
-                            <span id="rayFileNameDisplayEdit" class="ray-file-name">لم يتم اختيار ملف</span>
+                            <span id="rayFileNameDisplayEdit" class="ray-file-name">{{ trans('ray.no_file_chosen') }}</span>
                             @error('photo') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
-                    <small class="text-muted">اختياري. يفضل صورة مربعة (الحد الأقصى 2MB).</small>
+                    <small class="text-muted">{{ trans('ray.photo_help_text') }}</small>
                 </div>
 
                 <div class="row">
                     <!-- الاسم -->
                     <div class="col-md-6">
                         <div class="ray-form-group">
-                            <label for="rayNameEdit" class="ray-form-label">الاسم الكامل <span class="text-danger">*</span></label>
+                            <label for="rayNameEdit" class="ray-form-label">{{ trans('ray.full_name') }} <span class="text-danger">*</span></label>
                             <input type="text" id="rayNameEdit" name="name" class="ray-form-control @error('name') is-invalid @enderror"
                                    value="{{ old('name', $employee->name) }}" required>
                             @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -307,7 +307,7 @@
                     <!-- البريد الإلكتروني -->
                     <div class="col-md-6">
                         <div class="ray-form-group">
-                            <label for="rayEmailEdit" class="ray-form-label">البريد الإلكتروني <span class="text-danger">*</span></label>
+                            <label for="rayEmailEdit" class="ray-form-label">{{ trans('ray.email') }} <span class="text-danger">*</span></label>
                             <input type="email" id="rayEmailEdit" name="email" class="ray-form-control @error('email') is-invalid @enderror"
                                    value="{{ old('email', $employee->email) }}" required>
                             @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -317,9 +317,9 @@
                     <!-- رقم الهاتف -->
                     <div class="col-md-6">
                         <div class="ray-form-group">
-                            <label for="rayPhoneEdit" class="ray-form-label">رقم الهاتف <span class="text-danger">*</span></label>
+                            <label for="rayPhoneEdit" class="ray-form-label">{{ trans('ray.phone_number') }} <span class="text-danger">*</span></label>
                             <input type="tel" id="rayPhoneEdit" name="phone" class="ray-form-control @error('phone') is-invalid @enderror"
-                                   value="{{ old('phone', $employee->phone) }}" required pattern="^05\d{8}$" placeholder="05xxxxxxxx">
+                                   value="{{ old('phone', $employee->phone) }}" required pattern="^05\d{8}$" placeholder="{{ trans('ray.phone_placeholder') }}">
                             @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
@@ -327,9 +327,9 @@
                     <!-- رقم الهوية -->
                     <div class="col-md-6">
                         <div class="ray-form-group">
-                            <label for="rayNationalIdEdit" class="ray-form-label">رقم الهوية</label>
+                            <label for="rayNationalIdEdit" class="ray-form-label">{{ trans('ray.national_id') }}</label>
                             <input type="text" id="rayNationalIdEdit" name="national_id" class="ray-form-control @error('national_id') is-invalid @enderror"
-                                   value="{{ old('national_id', $employee->national_id) }}"  maxlength="9" placeholder="9   أرقام">
+                                   value="{{ old('national_id', $employee->national_id) }}"  maxlength="9" placeholder="{{ trans('ray.national_id_placeholder') }}">
                             @error('national_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
@@ -337,13 +337,13 @@
                     <!-- قسم كلمة المرور -->
                     <div class="col-12">
                         <hr class="my-4">
-                        <p class="text-muted small mb-3">لتغيير كلمة المرور، أدخل كلمة المرور الحالية ثم الجديدة وتأكيدها.</p>
+                        <p class="text-muted small mb-3">{{ trans('ray.password_change_instructions') }}</p>
                     </div>
 
                     <!-- كلمة المرور الحالية -->
                     <div class="col-md-6">
                         <div class="ray-form-group ray-password-wrapper">
-                            <label for="rayCurrentPasswordEdit" class="ray-form-label">كلمة المرور الحالية</label>
+                            <label for="rayCurrentPasswordEdit" class="ray-form-label">{{ trans('ray.current_password') }}</label>
                             <input type="password" id="rayCurrentPasswordEdit" name="current_password"
                                    class="ray-form-control ray-password-field @error('current_password') is-invalid @enderror"
                                    autocomplete="current-password">
@@ -359,7 +359,7 @@
                     <!-- كلمة المرور الجديدة -->
                     <div class="col-md-6">
                         <div class="ray-form-group ray-password-wrapper">
-                            <label for="rayPasswordEdit" class="ray-form-label">كلمة المرور الجديدة</label>
+                            <label for="rayPasswordEdit" class="ray-form-label">{{ trans('ray.new_password') }}</label>
                             <input type="password" id="rayPasswordEdit" name="password"
                                    class="ray-form-control ray-password-field @error('password') is-invalid @enderror"
                                    autocomplete="new-password" minlength="8">
@@ -367,14 +367,14 @@
                                 <i class="fas fa-eye"></i>
                             </button>
                             @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            <small class="text-muted">8 أحرف على الأقل.</small>
+                            <small class="text-muted">{{ trans('ray.password_help_text') }}</small>
                         </div>
                     </div>
 
                     <!-- تأكيد كلمة المرور الجديدة -->
                     <div class="col-md-6">
                         <div class="ray-form-group ray-password-wrapper">
-                            <label for="rayPasswordConfirmEdit" class="ray-form-label">تأكيد كلمة المرور الجديدة</label>
+                            <label for="rayPasswordConfirmEdit" class="ray-form-label">{{ trans('ray.confirm_new_password') }}</label>
                             <input type="password" id="rayPasswordConfirmEdit" name="password_confirmation"
                                    class="ray-form-control ray-password-field" autocomplete="new-password" minlength="8">
                             <button type="button" class="ray-toggle-password" onclick="rayTogglePasswordVisibility('rayPasswordConfirmEdit')" tabindex="-1">
@@ -387,10 +387,10 @@
                 <!-- أزرار الإجراءات -->
                 <div class="ray-form-actions">
                     <a href="{{ route('ray_employee.profile.show') }}" class="ray-btn ray-btn-outline">
-                        <i class="fas fa-times me-1"></i> إلغاء
+                        <i class="fas fa-times me-1"></i> {{ trans('ray.cancel') }}
                     </a>
                     <button type="submit" class="ray-btn ray-btn-primary">
-                        <i class="fas fa-save me-1"></i> حفظ التغييرات
+                        <i class="fas fa-save me-1"></i> {{ trans('ray.save_changes') }}
                     </button>
                 </div>
             </form>

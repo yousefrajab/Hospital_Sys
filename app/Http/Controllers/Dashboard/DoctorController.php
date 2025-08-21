@@ -580,18 +580,13 @@ class DoctorController extends Controller
                 Log::warning("Cannot send doctor cancellation SMS for appt ID: {$appointment->id}. Phone missing.");
             }
 
-            // 2. (اختياري) إشعار للأدمن (إذا أردت إعلام الإدارة بإلغاء الطبيب)
-            // $adminEmail = 'admin@youremail.com'; // أو جلب إيميل الأدمن
-            // Mail::to($adminEmail)->send(new DoctorCancelledAppointmentNotification($appointment, $reason));
 
         } catch (\Exception $e) {
             Log::error("Failed sending doctor cancellation notifications for appt ID: {$appointment->id}. Error: " . $e->getMessage());
-            // لا تضع session()->flash هنا لأن هذا يُستدعى من AJAX
         }
     }
     protected function sendTwilioSms($receiverNumber, $message, $appointmentId, $context = 'message')
     {
-        // ... (نفس كود Twilio من الرد السابق مع التحققات وتسجيل Log) ...
         $account_sid = getenv("TWILIO_SID");
         $auth_token = getenv("TWILIO_TOKEN");
         $twilio_number = getenv("TWILIO_FROM");
@@ -649,4 +644,4 @@ class DoctorController extends Controller
 
         return view('Dashboard.Doctors.Patients.search_for_prescription', compact('patients', 'request'));
     }
-} // نهاية الكلاس DoctorController
+}

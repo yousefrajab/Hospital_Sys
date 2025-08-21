@@ -215,15 +215,15 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-file-medical-alt text-primary me-2"></i>الوصفات
-                    الطبية</h4>
+                <h4 class="content-title mb-0 my-auto"><i
+                        class="fas fa-file-medical-alt text-primary me-2"></i>{{ trans('doctors.prescriptions') }}</h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="text-muted mt-1 tx-13">قائمة وصفاتي</span>
+                <span class="text-muted mt-1 tx-13">{{ trans('doctors.my_prescriptions_list') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('doctor.patients.search_for_prescription') }}" class="btn btn-primary ripple shadow-sm">
-                <i class="fas fa-plus-circle me-1"></i> إنشاء وصفة جديدة
+                <i class="fas fa-plus-circle me-1"></i> {{ trans('doctors.create_new_prescription') }}
             </a>
         </div>
     </div>
@@ -234,46 +234,51 @@
 
     <div class="card filter-card" data-aos="fade-down">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter text-primary me-2"></i>فلترة الوصفات</h5>
+            <h5 class="card-title mb-0"><i
+                    class="fas fa-filter text-primary me-2"></i>{{ trans('doctors.filter_prescriptions') }}</h5>
         </div>
         <div class="card-body">
             <form method="GET" action="{{ route('prescriptions.index') }}">
                 <div class="row g-3 align-items-end">
                     <div class="col-lg-4 col-md-6">
-                        <label for="search_prescription_input" class="form-label">بحث برقم الوصفة / اسم المريض:</label>
+                        <label for="search_prescription_input"
+                            class="form-label">{{ trans('doctors.search_by_prescription_or_patient') }}</label>
                         <input type="text" name="search_prescription" id="search_prescription_input" class="form-control"
-                            placeholder="أدخل رقم أو اسم..." value="{{ $request->search_prescription }}">
+                            placeholder="{{ trans('doctors.enter_number_or_name_placeholder') }}"
+                            value="{{ $request->search_prescription }}">
                     </div>
                     <div class="col-lg-2 col-md-6">
-                        <label for="status_filter_select" class="form-label">حالة الوصفة:</label>
+                        <label for="status_filter_select"
+                            class="form-label">{{ trans('doctors.prescription_status_label') }}</label>
                         <select name="status_filter" id="status_filter_select" class="form-select select2-filter"
-                            data-placeholder="جميع الحالات">
-                            <option value="">جميع الحالات</option>
+                            data-placeholder="{{ trans('doctors.all_statuses') }}">
+                            <option value="">{{ trans('doctors.all_statuses') }}</option>
                             @if (isset($prescriptionStatuses) && count($prescriptionStatuses) > 0)
                                 @foreach ($prescriptionStatuses as $key => $value)
                                     <option value="{{ $key }}"
-                                        {{ $request->status_filter == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                        {{ $request->status_filter == $key ? 'selected' : '' }}>{{ $value }}
+                                    </option>
                                 @endforeach
                             @endif
                         </select>
                     </div>
                     <div class="col-lg-2 col-md-6">
-                        <label for="date_from_input" class="form-label">من تاريخ:</label>
+                        <label for="date_from_input" class="form-label">{{ trans('doctors.from_date') }}</label>
                         <input type="text" name="date_from" id="date_from_input" class="form-control flatpickr-date"
                             placeholder="YYYY-MM-DD" value="{{ $request->date_from }}">
                     </div>
                     <div class="col-lg-2 col-md-6">
-                        <label for="date_to_input" class="form-label">إلى تاريخ:</label>
+                        <label for="date_to_input" class="form-label">{{ trans('doctors.to_date') }}</label>
                         <input type="text" name="date_to" id="date_to_input" class="form-control flatpickr-date"
                             placeholder="YYYY-MM-DD" value="{{ $request->date_to }}">
                     </div>
                     <div class="col-lg-2 col-md-12">
                         <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i>
-                            تطبيق</button>
+                            {{ trans('doctors.apply_filters') }}</button>
                         @if (request()->hasAny(['search_prescription', 'status_filter', 'date_from', 'date_to']))
                             <a href="{{ route('prescriptions.index') }}"
                                 class="btn btn-outline-secondary w-100 mt-2 btn-sm">
-                                <i class="fas fa-eraser me-1"></i> مسح الفلتر
+                                <i class="fas fa-eraser me-1"></i> {{ trans('doctors.clear_filters') }}
                             </a>
                         @endif
                     </div>
@@ -284,8 +289,8 @@
 
     <div class="card mt-4" data-aos="fade-up" data-aos-delay="100">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h4 class="card-title mb-0"><i class="fas fa-list-alt me-2"></i>قائمة الوصفات الطبية <span
-                    class="badge bg-primary rounded-pill ms-2">{{ $prescriptions->total() }}</span></h4>
+            <h4 class="card-title mb-0"><i class="fas fa-list-alt me-2"></i>{{ trans('doctors.prescriptions_list_title') }}
+                <span class="badge bg-primary rounded-pill ms-2">{{ $prescriptions->total() }}</span></h4>
             {{-- يمكن إضافة زر تصدير هنا --}}
         </div>
         <div class="card-body p-0"> {{-- إزالة الحشو من card-body ليلتصق الجدول بالهيدر --}}
@@ -295,12 +300,12 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>رقم الوصفة</th>
-                                <th style="min-width: 150px;">اسم المريض</th>
-                                <th>تاريخ الوصفة</th>
-                                <th>الحالة</th>
-                                <th class="text-center">عدد الأدوية</th>
-                                <th class="text-center" style="min-width: 180px;">الإجراءات</th>
+                                <th>{{ trans('doctors.prescription_number') }}</th>
+                                <th style="min-width: 150px;">{{ trans('doctors.patient_name') }}</th>
+                                <th>{{ trans('doctors.prescription_date') }}</th>
+                                <th>{{ trans('doctors.Status') }}</th>
+                                <th class="text-center">{{ trans('doctors.number_of_medicines') }}</th>
+                                <th class="text-center" style="min-width: 180px;">{{ trans('doctors.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -313,11 +318,13 @@
                                             <img src="{{ $prescription->patient->image ? asset('Dashboard/img/patients/' . $prescription->patient->image->filename) : URL::asset('Dashboard/img/default_patient_avatar.png') }}"
                                                 alt="" class="patient-avatar-sm-table">
                                             <a href="{{ route('admin.Patients.show', $prescription->patient_id) }}"
-                                                target="_blank" data-bs-toggle="tooltip" title="عرض ملف المريض (للمشرف)">
+                                                target="_blank" data-bs-toggle="tooltip"
+                                                title="{{ trans('doctors.view_patient_profile_admin_tooltip') }}">
                                                 {{ $prescription->patient->name }}
                                             </a>
                                         @else
-                                            <span class="text-muted fst-italic">مريض محذوف</span>
+                                            <span
+                                                class="text-muted fst-italic">{{ trans('doctors.deleted_patient') }}</span>
                                         @endif
                                     </td>
                                     <td>{{ $prescription->prescription_date->translatedFormat('d M Y') }}</td>
@@ -338,8 +345,9 @@
                                     <td class="text-center action-buttons">
                                         <a href="{{ route('prescriptions.show', $prescription->id) }}"
                                             class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip"
-                                            title="عرض تفاصيل الوصفة">
-                                            <i class="fas fa-eye"></i> <span class="d-none d-md-inline">عرض</span>
+                                            title="{{ trans('doctors.view_prescription_details_tooltip') }}">
+                                            <i class="fas fa-eye"></i> <span
+                                                class="d-none d-md-inline">{{ trans('doctors.view_action') }}</span>
                                         </a>
 
                                         @php
@@ -351,8 +359,9 @@
                                         @if (in_array($prescription->status, $editableStatuses))
                                             <a href="{{ route('prescriptions.edit', $prescription->id) }}"
                                                 class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
-                                                title="تعديل الوصفة">
-                                                <i class="fas fa-edit"></i> <span class="d-none d-md-inline">تعديل</span>
+                                                title="{{ trans('doctors.edit_prescription_tooltip') }}">
+                                                <i class="fas fa-edit"></i> <span
+                                                    class="d-none d-md-inline">{{ trans('doctors.edit_action') }}</span>
                                             </a>
                                         @endif
 
@@ -366,13 +375,14 @@
                                         @if (in_array($prescription->status, $cancellableStatuses))
                                             <form action="{{ route('prescriptions.destroy', $prescription->id) }}"
                                                 method="POST" class="d-inline"
-                                                onsubmit="return confirm('هل أنت متأكد من رغبتك في إلغاء هذه الوصفة؟ قد لا يمكن التراجع عن هذا الإجراء.');">
+                                                onsubmit="return confirm('{{ trans('doctors.confirm_prescription_cancellation') }}');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="tooltip" title="إلغاء الوصفة">
+                                                    data-bs-toggle="tooltip"
+                                                    title="{{ trans('doctors.cancel_prescription_tooltip') }}">
                                                     <i class="fas fa-times-circle"></i> <span
-                                                        class="d-none d-md-inline">إلغاء</span>
+                                                        class="d-none d-md-inline">{{ trans('doctors.cancel_action') }}</span>
                                                 </button>
                                             </form>
                                         @endif
@@ -387,11 +397,12 @@
             @else
                 <div class="empty-state-container p-4">
                     <i class="fas fa-file-export fa-3x"></i>
-                    <h5 class="mt-3">لا توجد وصفات طبية لعرضها</h5>
-                    <p class="text-muted">لم تقم بإنشاء أي وصفات بعد، أو أن نتائج الفلترة فارغة.</p>
+                    <h5 class="mt-3">{{ trans('doctors.no_prescriptions_to_display_title') }}</h5>
+                    <p class="text-muted">{{ trans('doctors.no_prescriptions_to_display_message') }}</p>
                     @if (!request()->hasAny(['search_prescription', 'status_filter', 'date_from', 'date_to']))
                         <a href="{{ route('doctor.patients.search_for_prescription') }}" class="btn btn-primary mt-2">
-                            <i class="fas fa-plus-circle me-1"></i> ابدأ بإنشاء وصفة جديدة
+                            <i class="fas fa-plus-circle me-1"></i>
+                            {{ trans('doctors.start_by_creating_new_prescription') }}
                         </a>
                     @endif
                 </div>

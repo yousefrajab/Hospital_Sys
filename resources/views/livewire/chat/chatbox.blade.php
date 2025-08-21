@@ -5,52 +5,41 @@
                 <div class="avatar">
                     @php
                         $imagePath = null;
-                        // تحديد الصورة الافتراضية بناءً على نوع المستقبل
-                        $defaultImage = URL::asset('Dashboard/img/default_avatar.png'); // صورة افتراضية عامة جدًا
+                        $defaultImage = URL::asset('Dashboard/img/default_avatar.png');
 
-                        // التحقق من نوع $receviverUser لتحديد مجلد الصورة والصورة الافتراضية
                         if ($receviverUser instanceof \App\Models\Doctor) {
                             $defaultImage = URL::asset('Dashboard/img/faces/doctor_default.png');
                             if ($receviverUser->image && $receviverUser->image->filename) {
                                 $imagePath = URL::asset('Dashboard/img/doctors/' . $receviverUser->image->filename);
                             }
                         } elseif ($receviverUser instanceof \App\Models\Patient) {
-                            $defaultImage = URL::asset('Dashboard/img/default_patient_avatar.png'); // افترض وجود صورة افتراضية للمريض
+                            $defaultImage = URL::asset('Dashboard/img/default_patient_avatar.png');
                             if ($receviverUser->image && $receviverUser->image->filename) {
-                                // إذا كانت صور المرضى في storage/app/public/patients وتحتاج storage:link
-                                // $imagePath = asset('storage/patients/' . $receviverUser->image->filename);
-                                // إذا كانت في public/Dashboard/img/patients
                                 $imagePath = URL::asset('Dashboard/img/patients/' . $receviverUser->image->filename);
                             }
                         }
-                        // يمكنك إضافة المزيد من الشروط لأنواع المستخدمين الأخرى هنا
-                        // elseif ($receviverUser instanceof \App\Models\Admin) { ... }
                     @endphp
 
                     <img src="{{ $imagePath ?? $defaultImage }}"
-                         alt="صورة {{ $receviverUser->name ?? 'المستخدم' }}"
-                         width="40" height="40" {{-- حجم مناسب للهيدر --}}
+                         alt="{{ trans('doctors.chat_box_user_image_alt', ['name' => $receviverUser->name ?? trans('doctors.chat_box_username_placeholder')]) }}"
+                         width="40" height="40"
                          style="border-radius: 50%; object-fit: cover;">
                 </div>
                 <div class="user-details">
-                    <h6>{{ $receviverUser->name ?? 'اسم المستخدم' }}</h6>
-                    {{-- يمكنك عرض حالة الاتصال هنا إذا كانت متوفرة --}}
-                    {{-- <small class="user-status text-success">متصل الآن</small> --}}
+                    <h6>{{ $receviverUser->name ?? trans('doctors.chat_box_username_placeholder') }}</h6>
+                    {{-- <small class="user-status text-success">{{ trans('doctors.chat_box_status_online') }}</small> --}}
                 </div>
             </div>
             <div class="chat-actions">
-                {{-- يمكنك تخصيص هذه الأزرار أو إزالتها --}}
-                {{-- <button class="btn btn-sm btn-light rounded-circle"><i class="fas fa-phone"></i></button> --}}
-                {{-- <button class="btn btn-sm btn-light rounded-circle"><i class="fas fa-video"></i></button> --}}
                 <div class="dropdown">
                     <button class="btn btn-sm btn-light rounded-circle" type="button" id="chatActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="chatActionsDropdown">
-                        <li><a class="dropdown-item" href="#">عرض الملف الشخصي</a></li>
-                        <li><a class="dropdown-item" href="#">معلومات الاتصال</a></li>
+                        <li><a class="dropdown-item" href="#">{{ trans('doctors.chat_box_view_profile') }}</a></li>
+                        <li><a class="dropdown-item" href="#">{{ trans('doctors.chat_box_contact_info') }}</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="#">حذف المحادثة</a></li>
+                        <li><a class="dropdown-item text-danger" href="#">{{ trans('doctors.chat_box_delete_conversation') }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -60,14 +49,14 @@
             @if(isset($messages) && $messages->count() > 0)
                 @foreach ($messages as $message)
                     <div class="message-wrapper {{ $auth_email == $message->sender_email ? 'sent' : 'received' }}"
-                        wire:key="message-{{ $message->id }}-{{ $message->created_at->timestamp }}"> {{-- مفتاح أكثر تفردًا --}}
+                        wire:key="message-{{ $message->id }}-{{ $message->created_at->timestamp }}">
                         <div class="message-bubble">
                             <div class="message-content">
                                 {{ $message->body }}
                             </div>
                             <div class="message-meta">
                                 <span class="message-time">
-                                    {{ optional($message->created_at)->locale('ar')->translatedFormat('h:i A') }}
+                                    {{ optional($message->created_at)->locale(app()->getLocale())->translatedFormat('h:i A') }}
                                 </span>
                                 @if ($auth_email == $message->sender_email)
                                     <span class="message-status ms-1">
@@ -81,14 +70,14 @@
             @else
                 <div class="empty-chat" style="text-align: center; padding-top: 50px;">
                     <i class="far fa-comment" style="font-size: 2rem; margin-bottom: 10px;"></i>
-                    <p>لا توجد رسائل في هذه المحادثة بعد.</p>
+                    <p>{{ trans('doctors.chat_box_no_messages_yet') }}</p>
                 </div>
             @endif
         </div>
     @else
         <div class="empty-chat">
             <i class="far fa-comment-dots fa-3x"></i>
-            <p style="margin-top: 15px; font-size: 1.1rem;">اختر محادثة لبدء الدردشة</p>
+            <p style="margin-top: 15px; font-size: 1.1rem;">{{ trans('doctors.chat_box_select_conversation_prompt') }}</p>
         </div>
     @endif
 </div>
@@ -373,6 +362,6 @@
                 `;
                 previewContainer.appendChild(preview);
             });
-        }   
+        }
     }
 </script>

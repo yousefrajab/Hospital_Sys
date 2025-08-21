@@ -575,23 +575,23 @@
         }
     </style>
 @endsection
-
 @section('page-header')
     <div class="breadcrumb-header justify-content-between no-print">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-user-injured text-primary me-2"></i>ملف المريض</h4>
+                <h4 class="content-title mb-0 my-auto"><i
+                        class="fas fa-user-injured text-primary me-2"></i>{{ trans('doctors.patient_profile') }}</h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="text-muted mt-1 tx-13">{{ $patient->name ?? 'تفاصيل' }}</span>
+                <span class="text-muted mt-1 tx-13">{{ $patient->name ?? trans('doctors.details') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content align-items-center">
             <button onclick="printSelectedPatientSections()" class="btn btn-outline-primary btn-sm ripple-effect me-2">
-                <i class="fas fa-print me-1"></i> طباعة محددة
+                <i class="fas fa-print me-1"></i> {{ trans('doctors.print_selected') }}
             </button>
             <a href="{{ route('doctor.patients.search_for_prescription') }}"
                 class="btn btn-outline-secondary btn-sm ripple-effect">
-                <i class="fas fa-search me-1"></i> بحث عن مريض آخر
+                <i class="fas fa-search me-1"></i> {{ trans('doctors.search_another_patient') }}
             </a>
         </div>
     </div>
@@ -611,43 +611,45 @@
                     <div class="flex-grow-1">
                         <h1 class="profile-name">{{ $patient->name }}</h1>
                         <p class="profile-id">
-                            <i class="fas fa-id-card opacity-75"></i> معرف: {{ $patient->id }} |
-                            <i class="fas fa-venus-mars opacity-75 ms-2"></i> {{ $patient->Gender == 1 ? 'ذكر' : 'أنثى' }} |
-                            <i
-                                class="fas fa-birthday-cake opacity-75 ms-2"></i> {{ $patient->Date_Birth ? $patient->Date_Birth->age . ' سنة' : '-' }}
+                            <i class="fas fa-id-card opacity-75"></i> {{ trans('doctors.id_colon') }} {{ $patient->id }}
                             |
-
+                            <i class="fas fa-venus-mars opacity-75 ms-2"></i>
+                            {{ $patient->Gender == 1 ? trans('AdminSb.male') : trans('AdminSb.female') }} |
+                            <i class="fas fa-birthday-cake opacity-75 ms-2"></i>
+                            {{ $patient->Date_Birth ? $patient->Date_Birth->age . ' ' . trans('doctors.years_old') : '-' }}
+                            |
                             @if ($patient->Blood_Group)
-                                <i class="fas fa-tint opacity-75 ms-2"></i> {{ $patient->Blood_Group }} |
+                                <i class="fas fa-tint opacity-75 ms-2"></i> {{ $patient->Blood_Group }} |
                             @endif
                         </p>
                         <div class="profile-actions mt-3 no-print">
                             <a href="{{ route('prescriptions.create', ['patient_id' => $patient->id]) }}"
                                 class="btn btn-success shadow-sm">
-                                <i class="fas fa-file-medical-alt me-2"></i>إنشاء وصفة طبية جديدة
+                                <i class="fas fa-file-medical-alt me-2"></i>{{ trans('doctors.create_new_prescription') }}
                             </a>
                         </div>
                     </div>
                     <div class="qr-code-section">
-                    @if ( $patient &&  $patient->id)
-                        <div class="qr-code-image">
-                            {!!  $patient->generateQrCodeSvg(200) !!}
-                        </div>
-                        <p class="qr-code-instructions">امسح الرمز لعرض ملف المريض الكامل</p>
-                        <div class="qr-download-buttons mt-3 no-print">
-                            <a href="#" class="btn btn-sm btn-outline-primary" style="color: white" id="downloadPNG">
-                                <i class="fas fa-download"></i> تحميل PNG
-                            </a>
-                            <a href="#" class="btn btn-sm btn-outline-success" style="color: white" id="downloadSVG">
-                                <i class="fas fa-download"></i> تحميل SVG
-                            </a>
-                        </div>
-                    @else
-                        <p class="text-danger my-4">خطأ: لا يمكن إنشاء رمز QR لهذا المريض.</p>
-                    @endif
+                        @if ($patient && $patient->id)
+                            <div class="qr-code-image">
+                                {!! $patient->generateQrCodeSvg(200) !!}
+                            </div>
+                            <p class="qr-code-instructions">{{ trans('doctors.scan_qr_for_profile') }}</p>
+                            <div class="qr-download-buttons mt-3 no-print">
+                                <a href="#" class="btn btn-sm btn-outline-primary" style="color: white"
+                                    id="downloadPNG">
+                                    <i class="fas fa-download"></i> {{ trans('doctors.download_png') }}
+                                </a>
+                                <a href="#" class="btn btn-sm btn-outline-success" style="color: white"
+                                    id="downloadSVG">
+                                    <i class="fas fa-download"></i> {{ trans('doctors.download_svg') }}
+                                </a>
+                            </div>
+                        @else
+                            <p class="text-danger my-4">{{ trans('doctors.qr_code_error') }}</p>
+                        @endif
+                    </div>
                 </div>
-                </div>
-
             </div>
 
 
@@ -655,31 +657,36 @@
                 {{-- Left Column --}}
                 <div class="col-lg-5 col-xl-4" id="patientInfoAndDiseasesSection">
                     <div class="info-card card" data-aos="fade-right" data-aos-delay="100">
-                        <div class="card-header"><i class="fas fa-user-circle me-2"></i>المعلومات الشخصية</div>
+                        <div class="card-header"><i
+                                class="fas fa-user-circle me-2"></i>{{ trans('doctors.personal_information') }}</div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><span class="icon-label"><i class="fas fa-id-badge"></i><strong>رقم
-                                        الهوية:</strong></span> <span>{{ $patient->national_id ?? '-' }}</span></li>
                             <li class="list-group-item"><span class="icon-label"><i
-                                        class="fas fa-envelope"></i><strong>البريد:</strong></span> <span
-                                    class="text-truncate" style="max-width: 180px;">{{ $patient->email ?? '-' }}</span>
+                                        class="fas fa-id-badge"></i><strong>{{ trans('doctors.national_id_colon') }}</strong></span>
+                                <span>{{ $patient->national_id ?? '-' }}</span>
                             </li>
                             <li class="list-group-item"><span class="icon-label"><i
-                                        class="fas fa-phone"></i><strong>الهاتف:</strong></span>
+                                        class="fas fa-envelope"></i><strong>{{ trans('doctors.email_colon') }}</strong></span>
+                                <span class="text-truncate" style="max-width: 180px;">{{ $patient->email ?? '-' }}</span>
+                            </li>
+                            <li class="list-group-item"><span class="icon-label"><i
+                                        class="fas fa-phone"></i><strong>{{ trans('AdminSb.phone') }}</strong></span>
                                 <span>{{ $patient->Phone ?? '-' }}</span>
                             </li>
                             <li class="list-group-item"><span class="icon-label"><i
-                                        class="fas fa-map-marker-alt"></i><strong>العنوان:</strong></span> <span
-                                    class="text-truncate"
-                                    style="max-width: 180px;">{{ $patient->Address ?: 'غير محدد' }}</span></li>
+                                        class="fas fa-map-marker-alt"></i><strong>{{ trans('doctors.address_colon') }}</strong></span>
+                                <span class="text-truncate"
+                                    style="max-width: 180px;">{{ $patient->Address ?: trans('doctors.unspecified') }}</span>
+                            </li>
                             <li class="list-group-item"><span class="icon-label"><i
-                                        class="fas fa-calendar-plus"></i><strong>تسجيل:</strong></span>
+                                        class="fas fa-calendar-plus"></i><strong>{{ trans('doctors.registration_date_colon') }}</strong></span>
                                 <span>{{ $patient->created_at ? $patient->created_at->translatedFormat('j M Y') : '-' }}</span>
                             </li>
                         </ul>
                     </div>
 
                     <div class="info-card card" data-aos="fade-right" data-aos-delay="200">
-                        <div class="card-header"><i class="fas fa-notes-medical text-danger me-2"></i>الأمراض المزمنة
+                        <div class="card-header"><i
+                                class="fas fa-notes-medical text-danger me-2"></i>{{ trans('doctors.chronic_diseases') }}
                         </div>
                         <div class="card-body p-0">
                             @if ($patient->diagnosedChronicDiseases && $patient->diagnosedChronicDiseases->isNotEmpty())
@@ -687,8 +694,8 @@
                                     <table class="table table-custom table-sm table-hover mb-0">
                                         <thead>
                                             <tr>
-                                                <th>المرض</th>
-                                                <th>الحالة</th>
+                                                <th>{{ trans('doctors.disease') }}</th>
+                                                <th>{{ trans('doctors.status') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -696,11 +703,11 @@
                                             @foreach ($patient->diagnosedChronicDiseases as $cd)
                                                 <tr>
                                                     <td>
-                                                        {{ $cd->disease->name ?? ($cd->name ?? 'غير محدد') }}
+                                                        {{ $cd->disease->name ?? ($cd->name ?? trans('doctors.unspecified')) }}
                                                         @if ($cd->pivot && $cd->pivot->notes)
                                                             <small class="d-block text-muted" data-toggle="tooltip"
                                                                 title="{{ $cd->pivot->notes }}"><i
-                                                                    class="fas fa-info-circle fa-xs text-info me-1"></i>ملاحظة</small>
+                                                                    class="fas fa-info-circle fa-xs text-info me-1"></i>{{ trans('doctors.note_short') }}</small>
                                                         @endif
                                                     </td>
                                                     <td>
@@ -718,7 +725,7 @@
                                 </div>
                             @else
                                 <div class="empty-state-compact p-3 m-3"><i class="fas fa-shield-virus"></i>
-                                    <p>لا توجد أمراض مزمنة مسجلة.</p>
+                                    <p>{{ trans('doctors.no_chronic_diseases_registered') }}</p>
                                 </div>
                             @endif
                         </div>
@@ -726,7 +733,8 @@
 
                     @if (isset($patient->initial_allergies_text) && trim($patient->initial_allergies_text) !== '')
                         <div class="info-card card" data-aos="fade-right" data-aos-delay="300">
-                            <div class="card-header"><i class="fas fa-allergies text-warning me-2"></i>الحساسيات المسجلة
+                            <div class="card-header"><i
+                                    class="fas fa-allergies text-warning me-2"></i>{{ trans('doctors.registered_allergies') }}
                             </div>
                             <div class="card-body">
                                 <p class="text-muted" style="white-space: pre-wrap; font-size: 0.9rem;">
@@ -744,7 +752,7 @@
                                 <a class="nav-link active" id="diagnostics-tab-link" data-toggle="tab"
                                     href="#diagnosticsContent" role="tab" aria-controls="diagnosticsContent"
                                     aria-selected="true">
-                                    <i class="fas fa-stethoscope me-2"></i>التشخيصات
+                                    <i class="fas fa-stethoscope me-2"></i>{{ trans('doctors.diagnostics') }}
                                     @if ($patient_records)
                                         <span
                                             class="badge badge-pill badge-light ms-1">{{ $patient_records->count() }}</span>
@@ -755,7 +763,7 @@
                                 <a class="nav-link" id="prescriptions-tab-link" data-toggle="tab"
                                     href="#prescriptionsContent" role="tab" aria-controls="prescriptionsContent"
                                     aria-selected="false">
-                                    <i class="fas fa-file-prescription me-2"></i>الوصفات
+                                    <i class="fas fa-file-prescription me-2"></i>{{ trans('doctors.prescriptions') }}
                                     @if ($patient->prescriptions)
                                         <span
                                             class="badge badge-pill badge-light ms-1">{{ $patient->prescriptions->count() }}</span>
@@ -765,7 +773,7 @@
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" id="rays-tab-link" data-toggle="tab" href="#raysContent"
                                     role="tab" aria-controls="raysContent" aria-selected="false">
-                                    <i class="fas fa-x-ray me-2"></i>الأشعة
+                                    <i class="fas fa-x-ray me-2"></i>{{ trans('doctors.radiology') }}
                                     @if ($patient_rays)
                                         <span
                                             class="badge badge-pill badge-light ms-1">{{ $patient_rays->count() }}</span>
@@ -775,7 +783,7 @@
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" id="labs-tab-link" data-toggle="tab" href="#labsContent"
                                     role="tab" aria-controls="labsContent" aria-selected="false">
-                                    <i class="fas fa-flask me-2"></i>المختبر
+                                    <i class="fas fa-flask me-2"></i>{{ trans('doctors.laboratory') }}
                                     @if ($patient_Laboratories)
                                         <span
                                             class="badge badge-pill badge-light ms-1">{{ $patient_Laboratories->count() }}</span>
@@ -787,7 +795,7 @@
                                     <a class="nav-link" id="admissionsLogTab-link" data-toggle="tab"
                                         href="#admissionsLogContent" role="tab" aria-controls="admissionsLogContent"
                                         aria-selected="false">
-                                        <i class="fas fa-procedures me-2"></i>الإقامة
+                                        <i class="fas fa-procedures me-2"></i>{{ trans('doctors.admissions') }}
                                         <span
                                             class="badge badge-pill badge-light ms-1">{{ $patient->admissions->count() }}</span>
                                     </a>
@@ -801,10 +809,12 @@
                                 aria-labelledby="diagnostics-tab-link">
                                 <div class="info-section-card mb-0">
                                     <div class="card-header d-flex justify-content-between align-items-center">
-                                        <span><i class="fas fa-notes-medical me-2"></i>سجل التشخيصات والكشوفات</span>
+                                        <span><i
+                                                class="fas fa-notes-medical me-2"></i>{{ trans('doctors.diagnostics_and_examinations_log') }}</span>
                                         <button class="btn btn-sm btn-outline-secondary no-print"
                                             onclick="printPatientSection(['#patientProfileHeaderSection', '#diagnosticsContent'])"><i
-                                                class="fas fa-print fa-sm"></i> طباعة هذا القسم</button>
+                                                class="fas fa-print fa-sm"></i>
+                                            {{ trans('doctors.print_this_section') }}</button>
                                     </div>
                                     <div class="card-body">
                                         @if (isset($patient_records) && $patient_records->count() > 0)
@@ -816,17 +826,20 @@
                                                         </div>
                                                         <div class="timeline-panel">
                                                             <div class="timeline-heading">
-                                                                <h6 class="timeline-title">كشف بتاريخ:
-                                                                    {{ $record->date ? \Carbon\Carbon::parse($record->date)->translatedFormat('d M Y') : 'غير محدد' }}
+                                                                <h6 class="timeline-title">
+                                                                    {{ trans('doctors.examination_on_date') }}
+                                                                    {{ $record->date ? \Carbon\Carbon::parse($record->date)->translatedFormat('d M Y') : trans('doctors.unspecified') }}
                                                                 </h6>
-                                                                <small class="text-muted">بواسطة:
-                                                                    {{ $record->Doctor->name ?? 'طبيب غير محدد' }}</small>
+                                                                <small class="text-muted">{{ trans('doctors.by_doctor') }}
+                                                                    {{ $record->Doctor->name ?? trans('doctors.unspecified_doctor') }}</small>
                                                             </div>
                                                             <div class="timeline-body">
-                                                                <p class="mb-1"><strong>التشخيص:</strong>
+                                                                <p class="mb-1">
+                                                                    <strong>{{ trans('doctors.diagnosis_colon') }}</strong>
                                                                     {{ $record->diagnosis ?: '-' }}</p>
                                                                 @if ($record->medicine)
-                                                                    <p class="mb-0"><strong>العلاج (من الكشف):</strong>
+                                                                    <p class="mb-0">
+                                                                        <strong>{{ trans('doctors.treatment_from_examination') }}</strong>
                                                                         {{ $record->medicine }}</p>
                                                                 @endif
                                                             </div>
@@ -836,7 +849,7 @@
                                             </ul>
                                         @else
                                             <div class="empty-state-compact"><i class="fas fa-folder-open"></i>
-                                                <p>لا توجد سجلات تشخيص سابقة لهذا المريض.</p>
+                                                <p>{{ trans('doctors.no_previous_diagnostic_records') }}</p>
                                             </div>
                                         @endif
                                     </div>
@@ -848,24 +861,26 @@
                                 aria-labelledby="prescriptions-tab-link">
                                 <div class="info-section-card mb-0">
                                     <div class="card-header d-flex justify-content-between align-items-center">
-                                        <span><i class="fas fa-file-prescription me-2"></i>الوصفات الطبية السابقة</span>
+                                        <span><i
+                                                class="fas fa-file-prescription me-2"></i>{{ trans('doctors.previous_prescriptions') }}</span>
                                         <button class="btn btn-sm btn-outline-secondary no-print"
                                             onclick="printPatientSection(['#patientProfileHeaderSection', '#prescriptionsContent'])"><i
-                                                class="fas fa-print fa-sm"></i> طباعة هذا القسم</button>
+                                                class="fas fa-print fa-sm"></i>
+                                            {{ trans('doctors.print_this_section') }}</button>
                                     </div>
-                                    <div class="card-body p-0"> {{-- p-0 for DataTables full width --}}
+                                    <div class="card-body p-0">
                                         @if ($patient->prescriptions && $patient->prescriptions->isNotEmpty())
-                                            <div class="table-responsive px-3 pt-3"> {{-- Add padding for DataTables controls --}}
+                                            <div class="table-responsive px-3 pt-3">
                                                 <table id="prescriptionsTable"
                                                     class="table table-records table-sm table-hover table-striped w-100">
-                                                    {{-- table-striped and w-100 for DataTables --}}
                                                     <thead>
                                                         <tr>
-                                                            <th>رقم الوصفة</th>
-                                                            <th>التاريخ</th>
-                                                            <th>الطبيب</th>
-                                                            <th class="text-center">الحالة</th>
-                                                            <th class="text-center no-print">الإجراء</th>
+                                                            <th>{{ trans('doctors.prescription_number') }}</th>
+                                                            <th>{{ trans('doctors.date') }}</th>
+                                                            <th>{{ trans('doctors.Doctor') }}</th>
+                                                            <th class="text-center">{{ trans('doctors.Status') }}</th>
+                                                            <th class="text-center no-print">{{ trans('doctors.action') }}
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -873,7 +888,7 @@
                                                             <tr>
                                                                 <td><a href="{{ route('prescriptions.show', $pr->id) }}"
                                                                         data-toggle="tooltip"
-                                                                        title="عرض تفاصيل الوصفة رقم {{ $pr->prescription_number }}">{{ $pr->prescription_number }}</a>
+                                                                        title="{{ trans('doctors.view_prescription_details_for_number', ['number' => $pr->prescription_number]) }}">{{ $pr->prescription_number }}</a>
                                                                 </td>
                                                                 <td>{{ $pr->prescription_date ? $pr->prescription_date->translatedFormat('d M Y') : '-' }}
                                                                 </td>
@@ -910,7 +925,8 @@
                                                                 <td class="text-center no-print">
                                                                     <a href="{{ route('prescriptions.show', $pr->id) }}"
                                                                         class="btn btn-xs btn-outline-info px-2 py-1"
-                                                                        data-toggle="tooltip" title="عرض الوصفة"><i
+                                                                        data-toggle="tooltip"
+                                                                        title="{{ trans('doctors.view_prescription') }}"><i
                                                                             class="fas fa-eye fa-fw"></i></a>
                                                                 </td>
                                                             </tr>
@@ -920,7 +936,7 @@
                                             </div>
                                         @else
                                             <div class="empty-state-compact p-3 m-3"><i class="fas fa-pills"></i>
-                                                <p>لا توجد وصفات طبية سابقة لهذا المريض.</p>
+                                                <p>{{ trans('doctors.no_previous_prescriptions_for_patient') }}</p>
                                             </div>
                                         @endif
                                     </div>
@@ -931,10 +947,11 @@
                             <div class="tab-pane fade" id="raysContent" role="tabpanel" aria-labelledby="rays-tab-link">
                                 <div class="info-section-card mb-0">
                                     <div class="card-header d-flex justify-content-between align-items-center">
-                                        <span><i class="fas fa-x-ray me-2"></i>سجل الأشعة</span>
+                                        <span><i class="fas fa-x-ray me-2"></i>{{ trans('doctors.rays_log') }}</span>
                                         <button class="btn btn-sm btn-outline-secondary no-print"
                                             onclick="printPatientSection(['#patientProfileHeaderSection', '#raysContent'])"><i
-                                                class="fas fa-print fa-sm"></i> طباعة هذا القسم</button>
+                                                class="fas fa-print fa-sm"></i>
+                                            {{ trans('doctors.print_this_section') }}</button>
                                     </div>
                                     <div class="card-body p-0">
                                         @if (isset($patient_rays) && $patient_rays->count() > 0)
@@ -944,11 +961,12 @@
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>الوصف/الطلب</th>
-                                                            <th>الطبيب الطالب</th>
-                                                            <th>تاريخ الطلب</th>
-                                                            <th class="text-center">الحالة</th>
-                                                            <th class="text-center no-print">النتيجة</th>
+                                                            <th>{{ trans('doctors.description_request') }}</th>
+                                                            <th>{{ trans('doctors.requesting_doctor') }}</th>
+                                                            <th>{{ trans('doctors.request_date') }}</th>
+                                                            <th class="text-center">{{ trans('doctors.Status') }}</th>
+                                                            <th class="text-center no-print">{{ trans('doctors.result') }}
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -962,21 +980,20 @@
                                                                 <td class="text-center">
                                                                     @if ($ray->case == 1)
                                                                         <span
-                                                                            class="status-badge-sm status-completed">مكتملة</span>
+                                                                            class="status-badge-sm status-completed">{{ trans('doctors.status_completed') }}</span>
                                                                     @else
-                                                                        <span class="status-badge-sm status-pending">قيد
-                                                                            التنفيذ</span>
+                                                                        <span
+                                                                            class="status-badge-sm status-pending">{{ trans('doctors.status_pending') }}</span>
                                                                     @endif
                                                                 </td>
                                                                 <td class="text-center no-print">
                                                                     @if ($ray->case == 1 && isset($ray->employee_id) && $ray->image && $ray->image->filename)
-                                                                        {{-- افترض أن لديك مسار لتخزين صور الأشعة --}}
                                                                         <a href="{{ asset('ads/rays/' . $ray->image->filename) }}"
                                                                             data-lightbox="ray-images-{{ $patient->id }}"
-                                                                            data-title="أشعة: {{ $ray->description }} - تاريخ: {{ $ray->created_at ? $ray->created_at->translatedFormat('d M Y') : '' }}"
+                                                                            data-title="{{ trans('doctors.radiology') }}: {{ $ray->description }} - {{ trans('doctors.date') }}: {{ $ray->created_at ? $ray->created_at->translatedFormat('d M Y') : '' }}"
                                                                             class="btn btn-xs btn-outline-info px-2 py-1"
                                                                             data-toggle="tooltip"
-                                                                            title="عرض نتيجة الأشعة">
+                                                                            title="{{ trans('doctors.view_ray_result') }}">
                                                                             <i class="fas fa-file-image fa-fw"></i>
                                                                         </a>
                                                                     @else
@@ -990,7 +1007,7 @@
                                             </div>
                                         @else
                                             <div class="empty-state-compact p-3 m-3"><i class="fas fa-radiation"></i>
-                                                <p>لا توجد طلبات أشعة سابقة.</p>
+                                                <p>{{ trans('doctors.no_previous_ray_requests') }}</p>
                                             </div>
                                         @endif
                                     </div>
@@ -1001,10 +1018,11 @@
                             <div class="tab-pane fade" id="labsContent" role="tabpanel" aria-labelledby="labs-tab-link">
                                 <div class="info-section-card mb-0">
                                     <div class="card-header d-flex justify-content-between align-items-center">
-                                        <span><i class="fas fa-flask-vial me-2"></i>سجل المختبر</span>
+                                        <span><i class="fas fa-flask-vial me-2"></i>{{ trans('doctors.lab_log') }}</span>
                                         <button class="btn btn-sm btn-outline-secondary no-print"
                                             onclick="printPatientSection(['#patientProfileHeaderSection', '#labsContent'])"><i
-                                                class="fas fa-print fa-sm"></i> طباعة هذا القسم</button>
+                                                class="fas fa-print fa-sm"></i>
+                                            {{ trans('doctors.print_this_section') }}</button>
                                     </div>
                                     <div class="card-body p-0">
                                         @if (isset($patient_Laboratories) && $patient_Laboratories->count() > 0)
@@ -1014,11 +1032,12 @@
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>الوصف/الطلب</th>
-                                                            <th>الطبيب الطالب</th>
-                                                            <th>تاريخ الطلب</th>
-                                                            <th class="text-center">الحالة</th>
-                                                            <th class="text-center no-print">النتيجة</th>
+                                                            <th>{{ trans('doctors.description_request') }}</th>
+                                                            <th>{{ trans('doctors.requesting_doctor') }}</th>
+                                                            <th>{{ trans('doctors.request_date') }}</th>
+                                                            <th class="text-center">{{ trans('doctors.Status') }}</th>
+                                                            <th class="text-center no-print">
+                                                                {{ trans('doctors.result') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -1032,21 +1051,20 @@
                                                                 <td class="text-center">
                                                                     @if ($lab->case == 1)
                                                                         <span
-                                                                            class="status-badge-sm status-completed">مكتملة</span>
+                                                                            class="status-badge-sm status-completed">{{ trans('doctors.status_completed') }}</span>
                                                                     @else
-                                                                        <span class="status-badge-sm status-pending">قيد
-                                                                            التنفيذ</span>
+                                                                        <span
+                                                                            class="status-badge-sm status-pending">{{ trans('doctors.status_pending') }}</span>
                                                                     @endif
                                                                 </td>
                                                                 <td class="text-center no-print">
                                                                     @if ($lab->case == 1 && isset($lab->employee_id) && $lab->image && $lab->image->filename)
-                                                                        {{-- افترض أن لديك مسار لتخزين صور المختبر --}}
                                                                         <a href="{{ asset('Dashboard/img/laboratories/' . $lab->image->filename) }}"
                                                                             data-lightbox="lab-images-{{ $patient->id }}"
-                                                                            data-title="تحليل: {{ $lab->description }} - تاريخ: {{ $lab->created_at ? $lab->created_at->translatedFormat('d M Y') : '' }}"
+                                                                            data-title="{{ trans('doctors.lab_test_title') }}: {{ $lab->description }} - {{ trans('doctors.date') }}: {{ $lab->created_at ? $lab->created_at->translatedFormat('d M Y') : '' }}"
                                                                             class="btn btn-xs btn-outline-info px-2 py-1"
                                                                             data-toggle="tooltip"
-                                                                            title="عرض نتيجة التحليل">
+                                                                            title="{{ trans('doctors.view_lab_result') }}">
                                                                             <i class="fas fa-file-alt fa-fw"></i>
                                                                         </a>
                                                                     @else
@@ -1060,7 +1078,7 @@
                                             </div>
                                         @else
                                             <div class="empty-state-compact p-3 m-3"><i class="fas fa-vial-virus"></i>
-                                                <p>لا توجد طلبات مختبر سابقة.</p>
+                                                <p>{{ trans('doctors.no_previous_lab_requests') }}</p>
                                             </div>
                                         @endif
                                     </div>
@@ -1073,10 +1091,12 @@
                                     aria-labelledby="admissionsLogTab-link">
                                     <div class="info-section-card mb-0">
                                         <div class="card-header d-flex justify-content-between align-items-center">
-                                            <span><i class="fas fa-procedures me-2"></i>سجل الإقامة والدخول</span>
+                                            <span><i
+                                                    class="fas fa-procedures me-2"></i>{{ trans('doctors.admissions_log') }}</span>
                                             <button class="btn btn-sm btn-outline-secondary no-print"
                                                 onclick="printPatientSection(['#patientProfileHeaderSection', '#admissionsLogContent'])"><i
-                                                    class="fas fa-print fa-sm"></i> طباعة هذا القسم</button>
+                                                    class="fas fa-print fa-sm"></i>
+                                                {{ trans('doctors.print_this_section') }}</button>
                                         </div>
                                         <div class="card-body p-0">
                                             <div class="table-responsive px-3 pt-3">
@@ -1084,12 +1104,12 @@
                                                     class="table table-records table-sm table-hover w-100">
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>تاريخ الدخول</th>
-                                                        <th>تاريخ الخروج</th>
-                                                        <th>القسم</th>
-                                                        <th>الغرفة/السرير</th>
-                                                        <th>سبب الدخول</th>
-                                                        <th>الحالة</th>
+                                                        <th>{{ trans('doctors.admission_date') }}</th>
+                                                        <th>{{ trans('doctors.discharge_date') }}</th>
+                                                        <th>{{ trans('doctors.section') }}</th>
+                                                        <th>{{ trans('doctors.room_bed') }}</th>
+                                                        <th>{{ trans('doctors.admission_reason') }}</th>
+                                                        <th>{{ trans('doctors.Status') }}</th>
                                                     </tr>
 
                                                     <tbody>
@@ -1102,22 +1122,20 @@
                                                                     @if ($admission->discharge_date)
                                                                         {{ \Carbon\Carbon::parse($admission->discharge_date)->translatedFormat('d M Y, H:i A') }}
                                                                     @else
-                                                                        <span class="status-badge-sm status-admitted">مقيم
-                                                                            حاليًا</span>
+                                                                        <span
+                                                                            class="status-badge-sm status-admitted">{{ trans('doctors.currently_admitted') }}</span>
                                                                     @endif
                                                                 </td>
                                                                 <td>
-
                                                                     {{ $admission->section->name }}
-
                                                                 </td>
-
                                                                 <td>
-
-                                                                    (غ: {{ $admission->bed->room->room_number }} - س:
+                                                                    ({{ trans('doctors.room_short') }}:
+                                                                    {{ $admission->bed->room->room_number }} -
+                                                                    {{ trans('doctors.bed_short') }}:
                                                                     {{ $admission->bed->bed_number }})
                                                                 </td>
-                                                                <td>{{ Str::limit($admission->reason_for_admission, 40) ?? 'غير محدد' }}
+                                                                <td>{{ Str::limit($admission->reason_for_admission, 40) ?? trans('doctors.unspecified') }}
                                                                 </td>
                                                                 <td>
                                                                     <span
@@ -1141,11 +1159,12 @@
         </div> {{-- End #printable-patient-profile --}}
     @else
         <div class="alert alert-danger text-center" data-aos="fade-in">
-            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i> خطأ في عرض البيانات!</h4>
-            <p>لم يتم العثور على بيانات المريض المطلوب. قد يكون قد تم حذفه أو أن المعرف غير صحيح.</p>
+            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>
+                {{ trans('doctors.error_displaying_data') }}</h4>
+            <p>{{ trans('doctors.patient_data_not_found_error') }}</p>
             <hr>
             <a href="{{ route('doctor.patients.search_for_prescription') }}" class="btn btn-outline-danger"><i
-                    class="fas fa-search me-1"></i> العودة للبحث عن مريض</a>
+                    class="fas fa-search me-1"></i> {{ trans('doctors.return_to_patient_search') }}</a>
         </div>
     @endif
 @endsection

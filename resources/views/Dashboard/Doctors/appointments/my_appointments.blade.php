@@ -396,80 +396,76 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">المواعيد</h4> <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ مواعيدي
-                    المحجوزة</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('doctors.appointments') }}</h4> <span
+                    class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('doctors.my_booked_appointments') }}</span>
             </div>
         </div>
     </div>
     <!-- breadcrumb -->
 @endsection
 
-{{-- ====================== HTML Content Section ===================== --}}
 @section('content')
     @include('Dashboard.messages_alert')
 
     <div class="appointments-container">
         <div class="appointments-header">
-            <h1 class="appointments-title"><i class="fas fa-calendar-check"></i> مواعيدي المؤكدة القادمة</h1>
+            <h1 class="appointments-title"><i class="fas fa-calendar-check"></i>
+                {{ trans('doctors.my_upcoming_confirmed_appointments') }}</h1>
         </div>
 
-        {{-- قسم الفلترة والبحث (يمكن الإبقاء عليه أو حذفه) --}}
         <div class="filter-controls animate__animated animate__fadeIn mb-4">
-            <div class="filter-group"> <label for="patientSearch">البحث عن مريض</label> <input type="text"
-                    id="patientSearch" class="form-control-filter" placeholder="ادخل اسم المريض..."> </div>
-
+            <div class="filter-group">
+                <label for="patientSearch">{{ trans('doctors.search_for_patient') }}</label>
+                <input type="text" id="patientSearch" class="form-control-filter"
+                    placeholder="{{ trans('doctors.enter_patient_name_placeholder') }}">
+            </div>
         </div>
 
-        {{-- عرض المواعيد --}}
         <div class="appointments-grid">
             @forelse ($appointments as $appointment)
-                {{-- data-status لا يزال مفيداً لتلوين الخط --}}
                 <div class="appointment-card animate__animated animate__fadeInUp"
                     data-appointment-id="{{ $appointment->id }}" data-status="{{ $appointment->type }}"
                     style="animation-delay: {{ $loop->index * 0.05 }}s;">
                     <div class="appointment-card-header">
                         <div class="patient-info">
-                            <div class="patient-avatar"> {{ mb_substr($appointment->name, 0, 1) }} </div>
+                            <div class="patient-avatar">{{ mb_substr($appointment->name, 0, 1) }}</div>
                             <div>
                                 <h5 class="patient-name">{{ $appointment->name }}</h5>
                                 <span class="patient-contact"><i class="fas fa-phone-alt fa-xs"></i>
-                                    {{ $appointment->phone ?: 'غير متوفر' }}</span>
+                                    {{ $appointment->phone ?: trans('doctors.not_available') }}</span>
                             </div>
                         </div>
-                        {{-- عرض شارة "مؤكد" --}}
                         <span class="appointment-status status-confirmed">
-                            <i class="fas fa-check-circle"></i> مؤكد
+                            <i class="fas fa-check-circle"></i> {{ trans('doctors.confirmed') }}
                         </span>
                     </div>
                     <div class="appointment-card-body">
                         <div class="appointment-time">
                             <i class="fas fa-clock"></i>
-                            <span>{{ $appointment->appointment ? $appointment->appointment->translatedFormat('l، d M Y - h:i A') : 'غير محدد' }}</span>
+                            <span>{{ $appointment->appointment ? $appointment->appointment->translatedFormat('l, d M Y - h:i A') : trans('doctors.unspecified') }}</span>
                         </div>
                         @if ($appointment->notes)
                             <div class="appointment-notes">
-                                <strong><i class="fas fa-sticky-note"></i> ملاحظات:</strong>
+                                <strong><i class="fas fa-sticky-note"></i> {{ trans('doctors.notes_colon') }}</strong>
                                 <p class="mb-0">{{ $appointment->notes }}</p>
                             </div>
                         @endif
                     </div>
                     <div class="appointment-card-footer">
-                        {{-- *** الأزرار المتاحة للطبيب للموعد المؤكد *** --}}
                         <button type="button" class="appointment-action-btn btn-cancel-app"> <i class="fas fa-times"></i>
-                            إلغاء </button>
+                            {{ trans('doctors.cancel') }}</button>
                         <button type="button" class="appointment-action-btn btn-complete"> <i
-                                class="fas fa-user-check"></i> اكتمل </button>
-                        {{-- *** تم حذف زر التأكيد *** --}}
+                                class="fas fa-user-check"></i> {{ trans('doctors.completed') }}</button>
                     </div>
                 </div>
             @empty
-                <div class="no-appointments col-span-full"> <i class="fas fa-calendar-check"></i>
-                    <p>لا توجد مواعيد مؤكدة قادمة حالياً.</p>
+                <div class="no-appointments col-span-full">
+                    <i class="fas fa-calendar-check"></i>
+                    <p>{{ trans('doctors.no_upcoming_confirmed_appointments') }}</p>
                 </div>
             @endforelse
         </div>
 
-        {{-- Pagination --}}
         @if ($appointments->hasPages())
             <div class="pagination-wrapper mt-4">
                 {{ $appointments->links() }}
@@ -754,6 +750,5 @@
 
 
         }); // نهاية DOMContentLoaded
-
     </script>
 @endsection

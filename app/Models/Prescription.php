@@ -103,26 +103,26 @@ class Prescription extends Model
      * (Accessor) للحصول على نص وصفي لحالة الوصفة.
      */
     public function getStatusDisplayAttribute(): string
-    {
-        return match ($this->status) {
-            self::STATUS_NEW => 'جديدة',
-            self::STATUS_PENDING_REVIEW => 'قيد مراجعة الصيدلية',
-            self::STATUS_APPROVED => 'معتمدة من الطبيب',
-            self::STATUS_PROCESSING => 'قيد التجهيز بالصيدلية',
-            self::STATUS_READY_FOR_PICKUP => 'جاهزة للاستلام',
-            self::STATUS_DISPENSED => 'تم الصرف بالكامل',
-            self::STATUS_PARTIALLY_DISPENSED => 'تم الصرف جزئيًا',
-            self::STATUS_ON_HOLD => 'معلقة',
-            self::STATUS_CANCELLED_BY_DOCTOR => 'ملغاة (الطبيب)',
-            self::STATUS_CANCELLED_BY_PHARMACIST => 'ملغاة (الصيدلية)',
-            self::STATUS_CANCELLED_BY_PATIENT => 'ملغاة (المريض)',
-            self::STATUS_EXPIRED => 'منتهية الصلاحية',
-            self::STATUS_REFILL_REQUESTED => 'طلب إعادة صرف',
-            self::STATUS_RENEWAL_APPROVED => 'تجديد معتمد (جاهز للصرف)',
-            self::STATUS_REFILL_DENIED_BY_DOCTOR => 'مرفوض (بواسطة الطبيب)',
-            default => ucfirst(str_replace('_', ' ', $this->status ?? 'غير معروفة')),
-        };
-    }
+{
+    return match ($this->status) {
+        self::STATUS_NEW => trans('patients.status_new'),
+        self::STATUS_PENDING_REVIEW => trans('patients.status_pending_review'),
+        self::STATUS_APPROVED => trans('patients.status_approved'),
+        self::STATUS_PROCESSING => trans('patients.status_processing'),
+        self::STATUS_READY_FOR_PICKUP => trans('patients.status_ready_for_pickup'),
+        self::STATUS_DISPENSED => trans('patients.status_dispensed'),
+        self::STATUS_PARTIALLY_DISPENSED => trans('patients.status_partially_dispensed'),
+        self::STATUS_ON_HOLD => trans('patients.status_on_hold'),
+        self::STATUS_CANCELLED_BY_DOCTOR => trans('patients.status_cancelled_by_doctor'),
+        self::STATUS_CANCELLED_BY_PHARMACIST => trans('patients.status_cancelled_by_pharmacist'),
+        self::STATUS_CANCELLED_BY_PATIENT => trans('patients.status_cancelled_by_patient'),
+        self::STATUS_EXPIRED => trans('patients.status_expired'),
+        self::STATUS_REFILL_REQUESTED => trans('patients.status_refill_requested'),
+        self::STATUS_RENEWAL_APPROVED => trans('patients.status_renewal_approved'),
+        self::STATUS_REFILL_DENIED_BY_DOCTOR => trans('patients.status_refill_denied_by_doctor'),
+        default => trans('patients.status_unknown'),
+    };
+}
 
 
     protected static function booted()
@@ -159,25 +159,25 @@ class Prescription extends Model
      * @return array
      */
     public static function getStatusesForFilter(): array
-    {
-        return [
-            self::STATUS_NEW => 'جديدة',
-            self::STATUS_PENDING_REVIEW => 'قيد مراجعة الصيدلية',
-            self::STATUS_APPROVED => 'معتمدة من الطبيب',
-            self::STATUS_PROCESSING => 'قيد التجهيز بالصيدلية',
-            self::STATUS_READY_FOR_PICKUP => 'جاهزة للاستلام',
-            self::STATUS_DISPENSED => 'تم صرفها بالكامل',
-            self::STATUS_PARTIALLY_DISPENSED => 'مصروفة جزئيًا',
-            self::STATUS_ON_HOLD => 'معلقة',
-            self::STATUS_CANCELLED_BY_DOCTOR => 'ملغاة (بواسطة الطبيب)',
-            self::STATUS_CANCELLED_BY_PHARMACIST => 'ملغاة (بواسطة الصيدلية)',
-            self::STATUS_CANCELLED_BY_PATIENT => 'ملغاة (بواسطة المريض)',
-            self::STATUS_EXPIRED => 'منتهية الصلاحية',
-            self::STATUS_REFILL_REQUESTED => 'طلب إعادة صرف',
-            self::STATUS_RENEWAL_APPROVED => 'تجديد معتمد',
-            self::STATUS_REFILL_DENIED_BY_DOCTOR => 'مرفوض (بواسطة الطبيب)',
-        ];
-    }
+{
+    return [
+        self::STATUS_NEW => trans('patients.status_new'),
+        self::STATUS_PENDING_REVIEW => trans('patients.status_pending_review'),
+        self::STATUS_APPROVED => trans('patients.status_approved'),
+        self::STATUS_PROCESSING => trans('patients.status_processing'),
+        self::STATUS_READY_FOR_PICKUP => trans('patients.status_ready_for_pickup'),
+        self::STATUS_DISPENSED => trans('patients.status_dispensed'),
+        self::STATUS_PARTIALLY_DISPENSED => trans('patients.status_partially_dispensed'),
+        self::STATUS_ON_HOLD => trans('patients.status_on_hold'),
+        self::STATUS_CANCELLED_BY_DOCTOR => trans('patients.status_cancelled_by_doctor'),
+        self::STATUS_CANCELLED_BY_PHARMACIST => trans('patients.status_cancelled_by_pharmacist'),
+        self::STATUS_CANCELLED_BY_PATIENT => trans('patients.status_cancelled_by_patient'),
+        self::STATUS_EXPIRED => trans('patients.status_expired'),
+        self::STATUS_REFILL_REQUESTED => trans('patients.status_refill_requested'),
+        self::STATUS_RENEWAL_APPROVED => trans('patients.status_renewal_approved'),
+        self::STATUS_REFILL_DENIED_BY_DOCTOR => trans('patients.status_refill_denied_by_doctor'),
+    ];
+}
 
     /**
      * Accessor لتحديد كلاس CSS للـ badge بناءً على الحالة.

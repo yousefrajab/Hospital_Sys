@@ -302,14 +302,14 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-pills fa-lg me-2" style="color: var(--admin-primary);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">الصيدلية</h4>
-                    <span class="text-muted mt-0 tx-13">/ إدارة قائمة الأدوية</span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('phrM.pharmacy') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('phrM.manage_medications_list') }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('pharmacy_manager.medications.create') }}" class="btn btn-primary ripple">
-                <i class="fas fa-plus-circle me-1"></i> إضافة دواء جديد
+                <i class="fas fa-plus-circle me-1"></i> {{ trans('phrM.add_new_medication') }}
             </a>
         </div>
     </div>
@@ -318,24 +318,23 @@
 @section('content')
     @include('Dashboard.messages_alert')
 
-    {{-- بطاقة الفلترة للأدوية --}}
     <div class="card mb-4 animate__animated animate__fadeIn">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة البحث عن الأدوية</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>{{ trans('phrM.filter_medications_search') }}</h5>
         </div>
         <div class="card-body">
             <form action="{{ route('pharmacy_manager.medications.index') }}" method="GET">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label for="search_medication" class="form-label">بحث (اسم/اسم علمي/باركود):</label>
+                        <label for="search_medication" class="form-label">{{ trans('phrM.search_by_name_generic_barcode') }}</label>
                         <input type="text" name="search_medication" id="search_medication" class="form-control"
-                            placeholder="ابحث..." value="{{ $request->search_medication }}">
+                            placeholder="{{ trans('phrM.search_placeholder') }}" value="{{ $request->search_medication }}">
                     </div>
                     <div class="col-md-3">
-                        <label for="category_filter" class="form-label">التصنيف:</label>
+                        <label for="category_filter" class="form-label">{{ trans('phrM.category') }}</label>
                         <select name="category_filter" id="category_filter" class="form-select select2"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="{{ trans('phrM.all_placeholder') }}">
+                            <option value="">{{ trans('phrM.all_placeholder') }}</option>
                             @if (isset($categories))
                                 @foreach ($categories as $key => $value)
                                     <option value="{{ $key }}"
@@ -347,9 +346,9 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label for="status_filter" class="form-label">الحالة:</label>
-                        <select name="status_filter" id="status_filter" class="form-select select2" data-placeholder="الكل">
-                            <option value="">الكل</option>
+                        <label for="status_filter" class="form-label">{{ trans('phrM.status') }}</label>
+                        <select name="status_filter" id="status_filter" class="form-select select2" data-placeholder="{{ trans('phrM.all_placeholder') }}">
+                            <option value="">{{ trans('phrM.all_placeholder') }}</option>
                             @if (isset($statuses))
                                 @foreach ($statuses as $key => $value)
                                     <option value="{{ $key }}"
@@ -362,10 +361,10 @@
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary me-2"><i class="fas fa-search me-1"></i>
-                            تطبيق</button>
+                            {{ trans('phrM.apply') }}</button>
                         @if (request()->hasAny(['search_medication', 'category_filter', 'status_filter']))
                             <a href="{{ route('pharmacy_manager.medications.index') }}"
-                                class="btn btn-outline-secondary"><i class="fas fa-eraser me-1"></i> مسح</a>
+                                class="btn btn-outline-secondary"><i class="fas fa-eraser me-1"></i> {{ trans('phrM.clear') }}</a>
                         @endif
                     </div>
                 </div>
@@ -373,11 +372,9 @@
         </div>
     </div>
 
-    {{-- بطاقة جدول الأدوية --}}
     <div class="card animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
         <div class="card-header">
-            <h5 class="card-title mb-0"><i class="fas fa-tablets me-2"></i>قائمة الأدوية المسجلة
-                ({{ $medications->total() }})</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-tablets me-2"></i>{{ trans('phrM.registered_medications_list', ['count' => $medications->total()]) }}</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -385,15 +382,15 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>اسم الدواء</th>
-                            <th>الاسم العلمي</th>
-                            <th>التصنيف</th>
-                            <th>الشكل الصيدلاني</th>
-                            <th>التركيز</th>
-                            <th>وحدة القياس</th>
-                            <th>حد الطلب</th>
-                            <th>الحالة</th>
-                            <th class="text-center">إجراءات</th>
+                            <th>{{ trans('phrM.medication_name') }}</th>
+                            <th>{{ trans('phrM.generic_name') }}</th>
+                            <th>{{ trans('phrM.category') }}</th>
+                            <th>{{ trans('phrM.dosage_form') }}</th>
+                            <th>{{ trans('phrM.strength') }}</th>
+                            <th>{{ trans('phrM.unit_of_measure') }}</th>
+                            <th>{{ trans('phrM.reorder_level') }}</th>
+                            <th>{{ trans('phrM.status') }}</th>
+                            <th class="text-center">{{ trans('phrM.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -419,26 +416,26 @@
                                         class="badge {{ $medication->status ? 'badge-light-success' : 'badge-light-danger' }}">
                                         <i
                                             class="fas {{ $medication->status ? 'fa-check-circle' : 'fa-times-circle' }} me-1"></i>
-                                        {{ $medication->status ? 'نشط' : 'غير نشط' }}
+                                        {{ $medication->status ? trans('phrM.active') : trans('phrM.inactive') }}
                                     </span>
                                 </td>
                                 <td class="text-center action-buttons">
                                     <a href="{{ route('pharmacy_manager.medications.stocks.index', $medication->id) }}"
-                                        class="btn btn-sm btn-outline-info" title="إدارة المخزون/الدفعات">
+                                        class="btn btn-sm btn-outline-info" title="{{ trans('phrM.manage_stock_batches') }}">
                                         <i class="fas fa-boxes-stacked"></i>
                                     </a>
                                     <a href="{{ route('pharmacy_manager.medications.show', $medication->id) }}"
-                                        class="btn btn-sm btn-outline-success" title="عرض التفاصيل"><i
+                                        class="btn btn-sm btn-outline-success" title="{{ trans('phrM.view_details') }}"><i
                                             class="fas fa-eye"></i></a>
                                     <a href="{{ route('pharmacy_manager.medications.edit', $medication->id) }}"
-                                        class="btn btn-sm btn-outline-primary" title="تعديل الدواء"><i
+                                        class="btn btn-sm btn-outline-primary" title="{{ trans('phrM.edit_medication') }}"><i
                                             class="fas fa-edit"></i></a>
                                     <form action="{{ route('pharmacy_manager.medications.destroy', $medication->id) }}"
                                         method="POST" class="d-inline"
-                                        onsubmit="return confirm('هل أنت متأكد من رغبتك في حذف هذا الدواء؟');">
+                                        onsubmit="return confirm('{{ trans('phrM.confirm_delete_message') }}');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="حذف الدواء"><i
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ trans('phrM.delete_medication') }}"><i
                                                 class="fas fa-trash-alt"></i></button>
                                     </form>
                                 </td>
@@ -447,13 +444,12 @@
                             <tr>
                                 <td colspan="10" class="text-center py-4">
                                     <i class="fas fa-capsules fa-2x text-muted mb-2"></i><br>
-                                    لا توجد أدوية مسجلة حاليًا.
+                                    {{ trans('phrM.no_medications_registered') }}
                                     @if (!request()->hasAny(['search_medication', 'category_filter', 'status_filter']))
                                         <br> <a href="{{ route('pharmacy_manager.medications.create') }}"
-                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-plus"></i> أضف دواءً
-                                            جديدًا</a>
+                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-plus"></i> {{ trans('phrM.add_new_medication') }}</a>
                                     @else
-                                        <br> <span class="text-muted">حاول تعديل معايير الفلترة.</span>
+                                        <br> <span class="text-muted">{{ trans('phrM.try_adjusting_filters') }}</span>
                                     @endif
                                 </td>
                             </tr>
@@ -482,7 +478,7 @@
         $(document).ready(function() {
             // تهيئة Select2
             $('#category_filter, #status_filter, #dosage_form_filter').select2({ // أضف ID الفلاتر الجديدة هنا
-                placeholder: $(this).data('placeholder') || "الكل",
+                placeholder: $(this).data('placeholder') || "{{ trans('AdminSb.View All') }}",
                 width: '100%',
                 dir: "rtl",
                 theme: "bootstrap-5",

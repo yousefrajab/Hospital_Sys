@@ -50,14 +50,14 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-pills fa-lg me-2" style="color: var(--admin-primary);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">إدارة الأدوية</h4>
-                    <span class="text-muted mt-0 tx-13">/ إضافة دواء جديد</span>
+                    <h4 class="content-title mb-0 my-auto">{{ trans('phrM.manage_medications') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('phrM.add_new_medication') }}</span>
                 </div>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('pharmacy_manager.medications.index') }}" class="btn btn-outline-secondary btn-sm" style="border-radius: var(--admin-radius-md);">
-                <i class="fas fa-arrow-left me-1"></i> العودة لقائمة الأدوية
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('phrM.back_to_medications_list') }}
             </a>
         </div>
     </div>
@@ -70,35 +70,32 @@
         <div class="col-lg-10 col-md-12">
             <div class="card animate__animated animate__fadeInUp">
                 <div class="card-header">
-                    <h5 class="card-title mb-0"><i class="fas fa-plus-circle me-2"></i> بيانات الدواء الجديد</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-plus-circle me-2"></i> {{ trans('phrM.new_medication_data') }}</h5>
                 </div>
                 <div class="card-body p-4">
                     <form action="{{ route('pharmacy_manager.medications.store') }}" method="POST" class="needs-validation" novalidate autocomplete="off">
                         @csrf
                         <div class="row g-3">
-                            {{-- اسم الدواء --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name" class="form-label">اسم الدواء (التجاري/الأساسي) <span class="text-danger">*</span></label>
-                                    <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required placeholder="مثال: Panadol Extra">
+                                    <label for="name" class="form-label">{{ trans('phrM.trade_name') }} <span class="text-danger">*</span></label>
+                                    <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required placeholder="{{ trans('phrM.name_placeholder_example') }}">
                                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
-                            {{-- الاسم العلمي --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="generic_name" class="form-label">الاسم العلمي (Generic)</label>
-                                    <input type="text" name="generic_name" id="generic_name" class="form-control @error('generic_name') is-invalid @enderror" value="{{ old('generic_name') }}" placeholder="مثال: Paracetamol, Caffeine">
+                                    <label for="generic_name" class="form-label">{{ trans('phrM.generic_name_label') }}</label>
+                                    <input type="text" name="generic_name" id="generic_name" class="form-control @error('generic_name') is-invalid @enderror" value="{{ old('generic_name') }}" placeholder="{{ trans('phrM.generic_name_placeholder') }}">
                                     @error('generic_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
-                            {{-- التصنيف --}}
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="category" class="form-label">تصنيف الدواء</label>
-                                    <select name="category" id="category" class="form-select select2 @error('category') is-invalid @enderror" data-placeholder="-- اختر التصنيف --">
+                                    <label for="category" class="form-label">{{ trans('phrM.medication_category') }}</label>
+                                    <select name="category" id="category" class="form-select select2 @error('category') is-invalid @enderror" data-placeholder="{{ trans('phrM.select_category_placeholder') }}">
                                         <option value=""></option>
                                         @foreach($categories as $key => $value)
                                             <option value="{{ $key }}" {{ old('category') == $key ? 'selected' : '' }}>{{ $value }}</option>
@@ -108,20 +105,18 @@
                                 </div>
                             </div>
 
-                            {{-- الشركة المصنعة --}}
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="manufacturer" class="form-label">الشركة المصنعة</label>
-                                    <input type="text" name="manufacturer" id="manufacturer" class="form-control @error('manufacturer') is-invalid @enderror" value="{{ old('manufacturer') }}" placeholder="اسم الشركة">
+                                    <label for="manufacturer" class="form-label">{{ trans('phrM.manufacturer') }}</label>
+                                    <input type="text" name="manufacturer" id="manufacturer" class="form-control @error('manufacturer') is-invalid @enderror" value="{{ old('manufacturer') }}" placeholder="{{ trans('phrM.manufacturer_placeholder') }}">
                                     @error('manufacturer') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
-                            {{-- الشكل الصيدلاني --}}
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="dosage_form" class="form-label">الشكل الصيدلاني</label>
-                                    <select name="dosage_form" id="dosage_form" class="form-select select2 @error('dosage_form') is-invalid @enderror" data-placeholder="-- اختر الشكل --">
+                                    <label for="dosage_form" class="form-label">{{ trans('phrM.dosage_form_label') }}</label>
+                                    <select name="dosage_form" id="dosage_form" class="form-select select2 @error('dosage_form') is-invalid @enderror" data-placeholder="{{ trans('phrM.select_dosage_form_placeholder') }}">
                                         <option value=""></option>
                                         @foreach($dosage_forms as $key => $value)
                                             <option value="{{ $key }}" {{ old('dosage_form') == $key ? 'selected' : '' }}>{{ $value }}</option>
@@ -131,20 +126,18 @@
                                 </div>
                             </div>
 
-                            {{-- التركيز --}}
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="strength" class="form-label">التركيز/القوة</label>
-                                    <input type="text" name="strength" id="strength" class="form-control @error('strength') is-invalid @enderror" value="{{ old('strength') }}" placeholder="مثال: 500mg, 10%">
+                                    <label for="strength" class="form-label">{{ trans('phrM.strength_potency') }}</label>
+                                    <input type="text" name="strength" id="strength" class="form-control @error('strength') is-invalid @enderror" value="{{ old('strength') }}" placeholder="{{ trans('phrM.strength_placeholder_example') }}">
                                     @error('strength') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
-                            {{-- وحدة القياس --}}
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="unit_of_measure" class="form-label">وحدة القياس الأساسية</label>
-                                    <select name="unit_of_measure" id="unit_of_measure" class="form-select select2 @error('unit_of_measure') is-invalid @enderror" data-placeholder="-- اختر الوحدة --">
+                                    <label for="unit_of_measure" class="form-label">{{ trans('phrM.base_unit_of_measure') }}</label>
+                                    <select name="unit_of_measure" id="unit_of_measure" class="form-select select2 @error('unit_of_measure') is-invalid @enderror" data-placeholder="{{ trans('phrM.select_unit_placeholder') }}">
                                         <option value=""></option>
                                         @foreach($units_of_measure as $key => $value)
                                             <option value="{{ $key }}" {{ old('unit_of_measure') == $key ? 'selected' : '' }}>{{ $value }}</option>
@@ -154,10 +147,9 @@
                                 </div>
                             </div>
 
-                            {{-- الباركود --}}
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="barcode" class="form-label">الباركود (UPC/EAN)</label>
+                                    <label for="barcode" class="form-label">{{ trans('phrM.barcode_upc_ean') }}</label>
                                     <input type="text" name="barcode" id="barcode" class="form-control @error('barcode') is-invalid @enderror" value="{{ old('barcode') }}">
                                     @error('barcode') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
@@ -165,37 +157,33 @@
 
                             <div class="col-12"><hr class="my-3"></div>
 
-                            {{-- حد الطلب الأدنى --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="minimum_stock_level" class="form-label">حد الطلب الأدنى للمخزون <span class="text-danger">*</span></label>
+                                    <label for="minimum_stock_level" class="form-label">{{ trans('phrM.minimum_stock_level') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="minimum_stock_level" id="minimum_stock_level" class="form-control @error('minimum_stock_level') is-invalid @enderror" value="{{ old('minimum_stock_level', 10) }}" required min="0">
                                     @error('minimum_stock_level') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
-                            {{-- الحد الأقصى للمخزون --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="maximum_stock_level" class="form-label">الحد الأقصى للمخزون (اختياري)</label>
+                                    <label for="maximum_stock_level" class="form-label">{{ trans('phrM.maximum_stock_level') }}</label>
                                     <input type="number" name="maximum_stock_level" id="maximum_stock_level" class="form-control @error('maximum_stock_level') is-invalid @enderror" value="{{ old('maximum_stock_level') }}" min="0">
                                     @error('maximum_stock_level') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
-                            {{-- سعر الشراء --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="purchase_price" class="form-label">سعر الشراء للوحدة (اختياري)</label>
+                                    <label for="purchase_price" class="form-label">{{ trans('phrM.purchase_price_per_unit') }}</label>
                                     <input type="text" name="purchase_price" id="purchase_price" class="form-control @error('purchase_price') is-invalid @enderror" value="{{ old('purchase_price') }}" placeholder="0.00">
                                     @error('purchase_price') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
-                            {{-- سعر البيع --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="selling_price" class="form-label">سعر البيع للوحدة (اختياري)</label>
+                                    <label for="selling_price" class="form-label">{{ trans('phrM.selling_price_per_unit') }}</label>
                                     <input type="text" name="selling_price" id="selling_price" class="form-control @error('selling_price') is-invalid @enderror" value="{{ old('selling_price') }}" placeholder="0.00">
                                     @error('selling_price') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
@@ -203,58 +191,53 @@
 
                             <div class="col-12"><hr class="my-3"></div>
 
-                            {{-- يتطلب وصفة --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label d-block">هل يتطلب وصفة طبية؟ <span class="text-danger">*</span></label>
+                                    <label class="form-label d-block">{{ trans('phrM.requires_prescription') }} <span class="text-danger">*</span></label>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="requires_prescription" id="requires_prescription_yes" value="1" {{ old('requires_prescription', '1') == '1' ? 'checked' : '' }} required>
-                                        <label class="form-check-label" for="requires_prescription_yes">نعم</label>
+                                        <label class="form-check-label" for="requires_prescription_yes">{{ trans('phrM.yes') }}</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="requires_prescription" id="requires_prescription_no" value="0" {{ old('requires_prescription') == '0' ? 'checked' : '' }} required>
-                                        <label class="form-check-label" for="requires_prescription_no">لا</label>
+                                        <label class="form-check-label" for="requires_prescription_no">{{ trans('phrM.no') }}</label>
                                     </div>
                                     @error('requires_prescription') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
-                            {{-- الحالة --}}
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label d-block">حالة الدواء <span class="text-danger">*</span></label>
+                                    <label class="form-label d-block">{{ trans('phrM.medication_status') }} <span class="text-danger">*</span></label>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="status" id="status_active" value="1" {{ old('status', '1') == '1' ? 'checked' : '' }} required>
-                                        <label class="form-check-label" for="status_active">نشط</label>
+                                        <label class="form-check-label" for="status_active">{{ trans('phrM.active') }}</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="status" id="status_inactive" value="0" {{ old('status') == '0' ? 'checked' : '' }} required>
-                                        <label class="form-check-label" for="status_inactive">غير نشط</label>
+                                        <label class="form-check-label" for="status_inactive">{{ trans('phrM.inactive') }}</label>
                                     </div>
                                     @error('status') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                                 </div>
                             </div>
 
-                            {{-- الوصف --}}
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="description" class="form-label">وصف الدواء</label>
+                                    <label for="description" class="form-label">{{ trans('phrM.medication_description') }}</label>
                                     <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" rows="3">{{ old('description') }}</textarea>
                                     @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
-                            {{-- موانع الاستعمال --}}
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="contraindications" class="form-label">موانع الاستعمال</label>
+                                    <label for="contraindications" class="form-label">{{ trans('phrM.contraindications') }}</label>
                                     <textarea name="contraindications" id="contraindications" class="form-control @error('contraindications') is-invalid @enderror" rows="3">{{ old('contraindications') }}</textarea>
                                     @error('contraindications') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                             </div>
-                            {{-- الآثار الجانبية --}}
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="side_effects" class="form-label">الآثار الجانبية الشائعة</label>
+                                    <label for="side_effects" class="form-label">{{ trans('phrM.common_side_effects') }}</label>
                                     <textarea name="side_effects" id="side_effects" class="form-control @error('side_effects') is-invalid @enderror" rows="3">{{ old('side_effects') }}</textarea>
                                     @error('side_effects') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
@@ -263,10 +246,10 @@
 
                         <div class="text-center mt-4 pt-3 border-top">
                             <button type="submit" class="btn btn-submit-form">
-                                <i class="fas fa-save me-2"></i> حفظ الدواء
+                                <i class="fas fa-save me-2"></i> {{ trans('phrM.save_medication') }}
                             </button>
                             <a href="{{ route('pharmacy_manager.medications.index') }}" class="btn btn-cancel-form ms-2">
-                                <i class="fas fa-times me-2"></i> إلغاء
+                                <i class="fas fa-times me-2"></i> {{ trans('phrM.cancel') }}
                             </a>
                         </div>
                     </form>
@@ -287,7 +270,7 @@
         $(document).ready(function() {
             // تهيئة Select2
             $('#category, #dosage_form, #unit_of_measure').select2({
-                placeholder: $(this).data('placeholder') || "اختر...",
+                placeholder: $(this).data('placeholder') || "{{ trans('phrM.select_placeholder') }}",
                 width: '100%',
                 dir: "rtl",
                 theme: "bootstrap-5",

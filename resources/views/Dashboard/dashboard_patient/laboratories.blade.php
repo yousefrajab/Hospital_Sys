@@ -13,7 +13,7 @@
  				<div class="breadcrumb-header justify-content-between">
  					<div class="my-auto">
  						<div class="d-flex">
- 							<h4 class="content-title mb-0 my-auto">عمليات المريض</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ المختبر</span>
+ 							<h4 class="content-title mb-0 my-auto">{{ trans('patients.patient_operations') }}</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('patients.laboratory') }}</span>
  						</div>
  					</div>
  				</div>
@@ -34,11 +34,11 @@
                                              <thead>
                                              <tr>
                                                  <th>#</th>
-                                                 <th>المطلوب</th>
-                                                 <th >اسم الدكتور</th>
-                                                 <th>اسم دكتور المختبر</th>
-                                                 <th>ملاحظة المختبر</th>
-                                                 <th>العمليات</th>
+                                                 <th>{{ trans('patients.required_test') }}</th>
+                                                 <th >{{ trans('patients.doctor_name') }}</th>
+                                                 <th>{{ trans('patients.lab_doctor_name') }}</th>
+                                                 <th>{{ trans('patients.lab_notes') }}</th>
+                                                 <th>{{ trans('patients.actions_col') }}</th>
                                              </tr>
                                              </thead>
                                              <tbody>
@@ -51,8 +51,9 @@
                                                     <td>{{$laboratorie->description_employee}}</td>
                                                     <td>
                                                         @if($laboratorie->employee_id !== null)
-                                                            <a class="btn btn-primary btn-sm" href="{{route('laboratories.view',$laboratorie->id)}}" role="button">عرض التحليل</a>
-                                                        @endif                                                   </td>
+                                                            <a class="btn btn-primary btn-sm" href="{{route('laboratories.view',$laboratorie->id)}}" role="button">{{ trans('patients.view_analysis') }}</a>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                              </tbody>

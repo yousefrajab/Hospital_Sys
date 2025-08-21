@@ -1,0 +1,78 @@
+<?php
+
+return [
+   'dashboard_title' => 'لوحة تحكم موظف المختبر',
+    'welcome_back_message' => 'مرحباً بعودتك، :name!',
+    'total_lab_requests' => 'إجمالي طلبات المختبر',
+    'pending_requests' => 'طلبات تحت الإجراء',
+    'completed_requests' => 'طلبات مكتملة',
+    'monthly_lab_requests_chart_title' => 'طلبات المختبر الشهرية (:year)',
+    'latest_5_requests_title' => 'أحدث 5 طلبات',
+    'patient_col' => 'المريض',
+    'doctor_col' => 'الطبيب',
+    'status_col' => 'الحالة',
+    'view_col' => 'عرض',
+    'not_available' => 'غير متوفر',
+    'status_pending' => 'تحت الإجراء',
+    'status_completed' => 'مكتملة',
+    'no_recent_requests' => 'لا توجد طلبات حديثة.',
+
+    'lab_employee' => 'موظف المختبر',
+    'profile' => 'الملف الشخصي',
+    'lab_department_employee' => 'موظف قسم المختبر',
+    'status_active' => 'نشط',
+    'status_inactive' => 'غير نشط',
+    'personal_information' => 'المعلومات الشخصية',
+    'email' => 'البريد الإلكتروني',
+    'phone_number' => 'رقم الهاتف',
+    'national_id' => 'رقم الهوية',
+    'join_date' => 'تاريخ الانضمام',
+    'work_statistics' => 'إحصائيات العمل',
+    'today_requests' => 'طلبات اليوم',
+    'week_requests' => 'طلبات الأسبوع',
+    'completion_rate' => 'إنجاز الطلبات',
+    'edit_profile' => 'تعديل الملف الشخصي',
+
+    'edit_profile_header' => 'تعديل الملف الشخصي',
+    'personal_photo' => 'الصورة الشخصية',
+    'choose_photo' => 'اختيار صورة',
+    'no_file_chosen' => 'لم يتم اختيار ملف',
+    'photo_help_text' => 'اختياري. يفضل صورة مربعة (الحد الأقصى 2MB).',
+    'full_name' => 'الاسم الكامل',
+    'phone_placeholder' => '05xxxxxxxx',
+    'national_id_placeholder' => '9 أرقام',
+    'password_change_instructions' => 'لتغيير كلمة المرور، أدخل كلمة المرور الحالية ثم الجديدة وتأكيدها.',
+    'current_password' => 'كلمة المرور الحالية',
+    'new_password' => 'كلمة المرور الجديدة',
+    'password_help_text' => '8 أحرف على الأقل.',
+    'confirm_new_password' => 'تأكيد كلمة المرور الجديدة',
+    'cancel' => 'إلغاء',
+    'save_changes' => 'حفظ التغييرات',
+
+     'statements' => 'الكشوفات',
+    'invoices' => 'الفواتير',
+    'invoice_date' => 'تاريخ الفاتورة',
+    'patient_name' => 'اسم المريض',
+    'doctor_name' => 'اسم الدكتور',
+    'required_test' => 'المطلوب',
+    'invoice_status' => 'حالة الفاتورة',
+    'actions' => 'العمليات',
+    'status_in_progress' => 'تحت الاجراء',
+    // 'status_completed' is already defined as 'مكتملة'
+    'processes' => 'العمليات',
+    'add_diagnosis' => 'اضافة تشخيص',
+
+    'analysis_images' => 'صور التحاليل',
+    'lab_doctor_notes' => 'ملاحظات دكتور المحتبر',
+
+
+    'completed_invoices' => 'الفواتير المكتملة',
+
+    'view_profile' => 'عرض الملف الشخصي',
+    'edit_profile_menu' => 'تعديل الملف الشخصي',
+    'lab_tests' => 'كشوفات المختبر',
+    'tests_list' => 'قائمة الكشوفات',
+    'completed_tests_list' => 'قائمة الكشوفات المكتملة',
+
+
+];

@@ -25,8 +25,8 @@ class DoctorRepository implements DoctorRepositoryInterface
 
     public function index()
     {
-        $doctors = Doctor::with(['section', 'image', 'workingDays'])
-            ->orderBy('created_at', 'desc') 
+        $doctors = Doctor::with(['translations','section', 'image', 'workingDays'])
+            ->orderBy('created_at', 'desc')
             ->get();
         return view('Dashboard.Doctors.index', compact('doctors'));
     }

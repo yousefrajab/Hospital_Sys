@@ -38,8 +38,8 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">المواعيد</h4>
-                <span class="text-muted mt-1 tx-13 ms-2 mb-0">/ تأكيد الحجز</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('patients.appointments') }}</h4>
+                <span class="text-muted mt-1 tx-13 ms-2 mb-0">/ {{ trans('patients.booking_confirmation') }}</span>
             </div>
         </div>
     </div>
@@ -53,18 +53,18 @@
                     <div class="success-container">
                         <i class="fas fa-check-circle success-icon"></i>
                         <div class="success-message">
-                            <h2>تم حجز موعدك بنجاح!</h2>
+                            <h2>{{ trans('patients.appointment_booked_successfully') }}</h2>
                             @if (isset($message) && $message)
                                 <p>{{ $message }}</p>
                             @else
-                                <p>سيتم التواصل معك قريباً لتأكيد تفاصيل الموعد النهائية.</p>
+                                <p>{{ trans('patients.we_will_contact_you_soon') }}</p>
                             @endif
                             <a href="{{ route('dashboard.patient') }}" class="btn btn-primary btn-home">
-                                <i class="fas fa-home me-2"></i> العودة إلى لوحة التحكم
+                                <i class="fas fa-home me-2"></i> {{ trans('patients.back_to_dashboard') }}
                             </a>
                             {{-- يمكنك إضافة زر لعرض "مواعيدي" إذا كان لديك هذا الـ route --}}
                             {{-- <a href="{{ route('patient.appointments.index') }}" class="btn btn-outline-secondary btn-home ms-2">
-                                <i class="fas fa-calendar-alt me-2"></i> عرض مواعيدي
+                                <i class="fas fa-calendar-alt me-2"></i> {{ trans('patients.view_my_appointments') }}
                             </a> --}}
                         </div>
                     </div>

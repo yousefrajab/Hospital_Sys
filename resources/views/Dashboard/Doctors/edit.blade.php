@@ -273,7 +273,7 @@
                         <i class="fas fa-user-md me-2"></i> {{ trans('doctors.edit_doctor') }}
                     </h3>
                     <div class="badge bg-indigo-100 text-indigo-800 px-3 py-2 rounded-full">
-                        <i class="fas fa-edit me-2"></i> {{ trans('doctors.modify data') }}
+                        <i class="fas fa-edit me-2"></i> {{ trans('doctors.modify_data') }}
                     </div>
                 </div>
 
@@ -291,7 +291,7 @@
                                         alt="{{ trans('doctors.img') }}">
                                 @else
                                     <img id="output" src="{{ URL::asset('Dashboard/img/doctor_default.png') }}"
-                                        alt="صورة الطبيب">
+                                        alt="{{ trans('doctors.doctor_picture_alt') }}">
                                 @endif
                                 <label for="avatar-upload">
                                     <i class="fas fa-camera"></i>
@@ -306,15 +306,12 @@
                                 <div class="col-md-6">
                                     <div class="floating-label">
                                         <label>{{ trans('doctors.name') }}</label>
-                                        {{-- <input class="form-control-modern w-100" name="name" type="text"
-                                            value="{{ $doctor->name }}" required> --}}
-
                                         <input type="text" id="name" name="name" value="{{ $doctor->name }}"
                                             class="form-control @error('name') is-invalid @enderror"
-                                            placeholder="الاسم الأول، الأب، الجد، العائلة" required
+                                            placeholder="{{ trans('doctors.full_name_placeholder') }}" required
                                             pattern="^([\u0600-\u06FF\s]{10,}|[A-Za-z\s\-']{10,})$">
-                                        <div class="invalid-feedback">يجب إدخال الاسم الكامل (على الأقل 10 أحرف)</div>
-                                        <div class="valid-feedback"><i class="fas fa-check"></i> صحيح</div>
+                                        <div class="invalid-feedback">{{ trans('doctors.name_validation_10_chars') }}</div>
+                                        <div class="valid-feedback"><i class="fas fa-check"></i> {{ trans('doctors.valid') }}</div>
                                         <input type="hidden" name="id" value="{{ $doctor->id }}">
                                     </div>
                                 </div>
@@ -323,11 +320,11 @@
                                     <div class="floating-label">
                                         <label>{{ trans('doctors.national_id') }}</label>
                                         <input class="form-control" id="national_id" name="national_id"
-                                            placeholder="ادخل رقم الهوية (9 أرقام)" type="text"
-                                            value="{{ $doctor->national_id }}" title="يجب أن يتكون رقم الهوية من 9 أرقام"
+                                            placeholder="{{ trans('doctors.national_id_placeholder_9_digits') }}" type="text"
+                                            value="{{ $doctor->national_id }}" title="{{ trans('doctors.national_id_feedback_9_digits') }}"
                                             maxlength="9" required>
-                                        <div class="invalid-feedback">يجب أن يتكون رقم الهوية من 9 أرقام</div>
-                                        <div class="valid-feedback"><i class="fas fa-check"></i> صحيح</div>
+                                        <div class="invalid-feedback">{{ trans('doctors.national_id_feedback_9_digits') }}</div>
+                                        <div class="valid-feedback"><i class="fas fa-check"></i> {{ trans('doctors.valid') }}</div>
                                     </div>
                                 </div>
 
@@ -336,56 +333,42 @@
                                         <label>{{ trans('doctors.email') }}</label>
                                         <input type="email" id="email" name="email" value="{{ $doctor->email }}"
                                             class="form-control @error('email') is-invalid @enderror"
-                                            placeholder="example@domain.com" required>
-                                        <div class="invalid-feedback">يرجى إدخال بريد إلكتروني صحيح</div>
-                                        <div class="valid-feedback"><i class="fas fa-check"></i> صحيح</div>
+                                            placeholder="{{ trans('doctors.email_placeholder') }}" required>
+                                        <div class="invalid-feedback">{{ trans('doctors.email_feedback_valid') }}</div>
+                                        <div class="valid-feedback"><i class="fas fa-check"></i> {{ trans('doctors.valid') }}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="floating-label position-relative">
                                         <label>{{ trans('doctors.password') }}</label>
                                         <input class="form-control-modern w-100 pr-5" name="password" type="password"
-                                            placeholder="{{ trans('doctors.Leave it') }}" autocomplete="new-password"
+                                            placeholder="{{ trans('doctors.password_placeholder_edit') }}" autocomplete="new-password"
                                             id="password-input">
-
-                                        <!-- زر العين -->
                                         <button type="button" class="toggle-password-eye" onclick="togglePassword()">
                                             <i class="fas fa-eye" id="password-icon"></i>
                                         </button>
-
-                                        {{-- <small class="form-text text-muted">يجب أن تحتوي أحرف على الأقل</small> --}}
                                     </div>
-
-
                                 </div>
-
 
                                 <div class="col-md-6">
                                     <div class="floating-label">
                                         <label>{{ trans('doctors.phone') }}</label>
-                                        {{-- <input class="form-control-modern w-100" name="phone" type="tel"
-                                            value="{{ $doctor->phone }}" required> --}}
-
                                         <input type="tel" id="phone" name="phone" value="{{ $doctor->phone }}"
                                             class="form-control @error('phone') is-invalid @enderror"
-                                            placeholder="05XXXXXXXX" maxlength="12" required pattern="^05\d{8}$"
-                                            title="يجب أن يبدأ رقم الجوال بـ 05 ويتكون من 10 أرقام">
-                                        <div class="invalid-feedback">يجب أن يبدأ رقم الجوال بـ 05 ويتكون من 10 أرقام</div>
-                                        <div class="valid-feedback"><i class="fas fa-check"></i> صحيح</div>
+                                            placeholder="{{ trans('doctors.phone_placeholder_sa') }}" maxlength="12" required pattern="^05\d{8}$"
+                                            title="{{ trans('doctors.phone_feedback_10_digits_start_05') }}">
+                                        <div class="invalid-feedback">{{ trans('doctors.phone_feedback_10_digits_start_05') }}</div>
+                                        <div class="valid-feedback"><i class="fas fa-check"></i> {{ trans('doctors.valid') }}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="floating-label">
                                         <label>{{ trans('doctors.number_of_statements') }}</label>
-                                        {{-- <input class="form-control-modern w-100" name="number_of_statements"
-                                            type="number" min="0" value="{{ $doctor->number_of_statements }}"
-                                            required> --}}
-
                                         <input class="form-control-modern w-100" name="number_of_statements"
                                             type="number" value="{{ $doctor->number_of_statements }}" min="1"
                                             max="20" required>
-                                        <div class="invalid-feedback">يجب أن يكون العدد بين 1 و 20</div>
-                                        <div class="valid-feedback"><i class="fas fa-check"></i> صحيح</div>
+                                        <div class="invalid-feedback">{{ trans('doctors.statements_feedback_between_1_20') }}</div>
+                                        <div class="valid-feedback"><i class="fas fa-check"></i> {{ trans('doctors.valid') }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -397,16 +380,14 @@
                             <div class="floating-label">
                                 <label>{{ trans('doctors.section') }}</label>
                                 <select name="section_id" class="form-control-modern w-100" required>
-                                    {{-- <option value="" disabled selected>---{{ trans('doctors.Select Section') }}---
-                                    </option> --}}
                                     @foreach ($sections as $section)
                                         <option
                                             value="{{ $section->id }}"{{ $section->id == $doctor->section_id ? 'selected' : '' }}>
                                             {{ $section->name }}</option>
                                     @endforeach
                                 </select>
-                                <div class="invalid-feedback">يرجى اختيار القسم</div>
-                                <div class="valid-feedback"><i class="fas fa-check"></i> تم الاختيار</div>
+                                <div class="invalid-feedback">{{ trans('doctors.section_feedback_required') }}</div>
+                                <div class="valid-feedback"><i class="fas fa-check"></i> {{ trans('doctors.feedback_selection_made') }}</div>
                             </div>
                         </div>
                     </div>
@@ -425,12 +406,11 @@
                         <button type="submit" class="btn-custom btn-save">
                             <span class="btn-content">
                                 <i class="fas fa-save me-2"></i>
-                                <span>{{ trans('doctors.modify data') }}</span>
+                                <span>{{ trans('doctors.modify_data') }}</span>
                             </span>
                             <span class="btn-wave"></span>
                         </button>
                     </div>
-
 
                 </form>
             </div>

@@ -4,8 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>تفاصيل قسم {{ $section->name }} - {{ config('app.name', 'اسم المستشفى/المنصة') }}</title>
-    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+<title>{{ trans('patients.department_details_title', ['name' => $section->name]) }} - {{ config('app.name', trans('patients.medical_platform')) }}</title>    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('Dashboard/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('Dashboard/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('Dashboard/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
@@ -422,13 +421,13 @@
     <header class="standalone-detail-header">
         <div class="container-fluid">
             <div class="site-branding">
-                <a href="{{ route('home') }}" class="site-title" title="العودة إلى الرئيسية {{ config('app.name') }}">
-                    {{ config('app.name', 'المنصة الطبية') }}
+                <a href="{{ route('home') }}" class="site-title" title="{{ trans('patients.back_to_home_title', ['appName' => config('app.name')]) }}">
+                    {{ config('app.name', trans('patients.medical_platform')) }}
                 </a>
             </div>
             <div class="back-to-links">
-                <a href="{{ route('website.departments.all') }}"><i class="fas fa-th-large"></i> كل الأقسام</a>
-                <a href="{{ route('home') }}"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="{{ route('website.departments.all') }}"><i class="fas fa-th-large"></i> {{ trans('patients.all_departments') }}</a>
+                <a href="{{ route('home') }}"><i class="fas fa-home"></i> {{ trans('patients.nav_home') }}</a>
             </div>
         </div>
     </header>
@@ -439,36 +438,29 @@
             @if ($section->icon_class)
                 <div class="department-icon-hero"><i class="{{ $section->icon_class }}"></i></div>
             @else
-                <div class="department-icon-hero"><i class="fas fa-clinic-medical"></i></div> {{-- Default icon --}}
+                <div class="department-icon-hero"><i class="fas fa-clinic-medical"></i></div>
             @endif
             <h1>{{ $section->name }}</h1>
             <ul class="breadcrumb-custom-detail">
-                <li><a href="{{ route('home') }}">الرئيسية</a></li>
-                <li><a href="{{ route('website.departments.all') }}">الأقسام الطبية</a></li>
+                <li><a href="{{ route('home') }}">{{ trans('patients.nav_home') }}</a></li>
+                <li><a href="{{ route('website.departments.all') }}">{{ trans('patients.medical_departments') }}</a></li>
                 <li>{{ $section->name }}</li>
             </ul>
         </section>
 
-        <div class="row g-4 g-lg-5"> {{-- Bootstrap 5 row with gutters --}}
+        <div class="row g-4 g-lg-5">
             <!-- Content Side -->
             <div class="col-lg-8">
                 <div class="department-main-content card-styled-detail animate__animated animate__fadeInUp"
                     data-wow-delay="0.2s">
-                    {{-- Optional: Main Image for the department
-                    @if ($section->main_image_url)
-                        <div class="department-main-image mb-4 rounded overflow-hidden shadow-sm">
-                            <img src="{{ $section->main_image_url }}" alt="صورة قسم {{ $section->name }}" class="img-fluid">
-                        </div>
-                    @endif
-                    --}}
-                    <h2 class="section-heading-detail">عن قسم {{ $section->name }}</h2>
+                    <h2 class="section-heading-detail">{{ trans('patients.about_department', ['name' => $section->name]) }}</h2>
                     <div class="department-description-full">
-                        {!! nl2br(e($section->description ?? 'لا يوجد وصف تفصيلي متاح لهذا القسم حاليًا.')) !!}
+                        {!! nl2br(e($section->description ?? trans('patients.no_detailed_description_available'))) !!}
                     </div>
 
                     @if ($section->Service && $section->Service->isNotEmpty())
                         <div class="mt-4 pt-4 border-top">
-                            <h3 class="section-heading-detail">الخدمات الأساسية المقدمة</h3>
+                            <h3 class="section-heading-detail">{{ trans('patients.core_services_provided') }}</h3>
                             <ul class="services-list-detail row">
                                 @foreach ($section->Service as $service)
                                     <li class="col-md-6">{{ $service->name }}</li>
@@ -481,7 +473,7 @@
                 @if ($section->doctors && $section->doctors->isNotEmpty())
                     <div class="department-doctors-section card-styled-detail mt-4 animate__animated animate__fadeInUp"
                         data-wow-delay="0.3s">
-                        <h2 class="section-heading-detail">أطباؤنا في قسم {{ $section->name }}</h2>
+                        <h2 class="section-heading-detail">{{ trans('patients.our_doctors_in_department', ['name' => $section->name]) }}</h2>
                         <div class="row g-3 department-doctors-grid">
                             @foreach ($section->doctors as $doctor)
                                 <div class="col-lg-4 col-md-6 col-sm-6">
@@ -494,7 +486,7 @@
                                                         class="doctor-avatar" alt="{{ trans('doctors.img') }}">
                                                 @else
                                                     <img src="{{ Url::asset('Dashboard/img/doctor_default.png') }}"
-                                                        class="doctor-avatar" alt="صورة افتراضية">
+                                                        class="doctor-avatar" alt="{{ trans('patients.default_image_alt') }}">
                                                 @endif
                                             </a>
                                         </div>
@@ -503,12 +495,11 @@
                                                     href="{{ route('website.doctor.details', $doctor->id) }}">{{ $doctor->name }}</a>
                                             </h5>
                                             <span class="doctor-specialization-small">
-                                                {{-- Assuming specializations is a collection; adjust if it's a string --}}
-                                                {{ $doctor->specializations_display ?? ($doctor->specializations && $doctor->specializations->isNotEmpty() ? $doctor->specializations->pluck('name')->take(2)->implode(', ') : 'أخصائي بالقسم') }}
+                                                {{ $doctor->specializations_display ?? ($doctor->specializations && $doctor->specializations->isNotEmpty() ? $doctor->specializations->pluck('name')->take(2)->implode(', ') : trans('patients.specialist_in_department')) }}
                                             </span>
                                             <a href="{{ route('website.doctor.details', $doctor->id) }}"
                                                 class="btn-view-profile-small">
-                                                <i class="fas fa-user-circle"></i> الملف الشخصي
+                                                <i class="fas fa-user-circle"></i> {{ trans('patients.profile') }}
                                             </a>
                                         </div>
                                     </div>
@@ -519,7 +510,7 @@
                 @else
                     <div class="alert empty-state-alert mt-4 animate__animated animate__fadeInUp" data-wow-delay="0.3s">
                         <i class="fas fa-user-md fa-2x mb-2"></i><br>
-                        لا يوجد أطباء مسجلون في هذا القسم حاليًا.
+                        {{ trans('patients.no_doctors_currently_in_department') }}
                     </div>
                 @endif
             </div>
@@ -529,7 +520,7 @@
                 <aside class="department-sidebar">
                     <div class="sidebar-widget-detail card-styled-detail animate__animated animate__fadeInUp"
                         data-wow-delay="0.4s">
-                        <h4 class="widget-title-detail">الأقسام الأخرى</h4>
+                        <h4 class="widget-title-detail">{{ trans('patients.other_departments') }}</h4>
                         @if ($otherSections->isNotEmpty())
                             <ul class="other-departments-list">
                                 @foreach ($otherSections as $otherSection)
@@ -543,11 +534,11 @@
                                 @endforeach
                             </ul>
                         @else
-                            <p class="text-muted small">لا توجد أقسام أخرى لعرضها حاليًا.</p>
+                            <p class="text-muted small">{{ trans('patients.no_other_departments_to_display') }}</p>
                         @endif
                         <a href="{{ route('website.departments.all') }}"
                             class="btn btn-sm btn-outline-primary mt-3 d-block text-center">
-                            <i class="fas fa-th-list"></i> عرض جميع الأقسام
+                            <i class="fas fa-th-list"></i> {{ trans('patients.view_all_departments') }}
                         </a>
                     </div>
 
@@ -555,10 +546,9 @@
                         data-wow-delay="0.5s">
                         <div class="widget-content-styled">
                             <div class="contact-icon-top"><i class="fas fa-headset"></i></div>
-                            <h4 class="widget-title-detail text-white border-white mb-3">تحتاج مساعدة أو لديك استفسار؟
+                            <h4 class="widget-title-detail text-white border-white mb-3">{{ trans('patients.need_help_or_have_a_query') }}
                             </h4>
-                            <p class="text-contact opacity-90">فريقنا جاهز لخدمتك. يمكنك التواصل معنا عبر المعلومات
-                                التالية أو زيارتنا مباشرة.</p>
+                            <p class="text-contact opacity-90">{{ trans('patients.our_team_is_ready_to_serve') }}</p>
                             <div class="contact-info-item">
                                 <a href="tel:{{ $settings['hospital_phone'] ?? '+970567077179' }}"><i
                                         class="fas fa-phone-alt"></i>
@@ -569,8 +559,7 @@
                                         class="fas fa-envelope"></i>
                                     {{ $settings['hospital_email'] ?? 'momensarsour5@gmail.com' }}</a>
                             </div>
-                            {{-- Add address or link to contact page if available --}}
-                            {{-- <a href="{{route('contact')}}" class="btn btn-light btn-sm mt-3">صفحة التواصل الكاملة</a> --}}
+                            {{-- <a href="{{route('contact')}}" class="btn btn-light btn-sm mt-3">{{ trans('patients.full_contact_page') }}</a> --}}
                         </div>
                     </div>
                 </aside>
@@ -578,16 +567,7 @@
         </div>
     </main>
 
-    <footer class="standalone-detail-footer">
-        {{-- <p>© {{ date('Y') }} جميع الحقوق محفوظة - {{ config('app.name', 'منصتنا الطبية') }}.</p> --}}
-        <p style="margin: 0; font-size: 14px;">© حقوق النشر {{ date('Y') }} ، جميع الحقوق محفوظة لـ <a
-                href="{{ route('home') }}" style="color: #00bcd4; text-decoration: none;">نظام إدارة
-                المستشفيات</a>.
-            <br class="d-sm-none"> <!-- فاصل سطر على الشاشات الصغيرة فقط -->
-            تصميم وتطوير <a href="https://www.facebook.com/Momensarsour" target="_blank"
-                style="color: #00bcd4; text-decoration: none;">Mo'men Sarsour & Yousef Rajab</a>
-        </p>
-    </footer>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     {{--

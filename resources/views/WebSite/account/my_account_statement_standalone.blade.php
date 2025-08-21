@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>كشف حسابي - {{ $patient->name }} - {{ config('app.name', 'المنصة الطبية') }}</title>
-
+<title>{{ trans('patients.my_account_page_title', ['name' => $patient->name]) }} - {{ config('app.name', trans('patients.medical_platform')) }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -109,35 +108,35 @@
 </head>
 <body>
 
-    <header class="standalone-account-header">
+  <header class="standalone-account-header">
         <div class="container-fluid">
             <div class="site-branding">
-                <a href="{{ route('home') }}" class="site-title" title="العودة إلى الرئيسية {{ config('app.name') }}">
-                    {{ config('app.name', 'المنصة الطبية') }}
+                <a href="{{ route('home') }}" class="site-title" title="{{ trans('patients.back_to_home_title', ['appName' => config('app.name')]) }}">
+                    {{ config('app.name', trans('patients.medical_platform')) }}
                 </a>
             </div>
             <div class="user-actions">
                 @auth('patient')
-                    <span class="welcome-text">مرحباً بك، <strong>{{ $patient->name }}</strong></span>
+                    <span class="welcome-text">{{ trans('patients.welcome_message') }} <strong>{{ $patient->name }}</strong></span>
                     <a href="{{ route('logout.patient') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form-header-standalone').submit();"
-                        title="تسجيل الخروج">
-                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                        title="{{ trans('patients.logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> {{ trans('patients.logout') }}
                     </a>
                     <form id="logout-form-header-standalone" action="{{ route('logout.patient') }}" method="POST" style="display: none;">@csrf</form>
                 @else
-                    <a href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+                    <a href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> {{ trans('patients.login') }}</a>
                 @endauth
-                <a href="{{ route('home') }}" title="العودة للصفحة الرئيسية"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="{{ route('home') }}" title="{{ trans('patients.back_to_home') }}"><i class="fas fa-home"></i> {{ trans('patients.nav_home') }}</a>
             </div>
         </div>
     </header>
 
     <main class="my-account-container">
         <section class="my-account-title-section">
-            <h1 class="animate__animated animate__fadeInDown">كشف حسابي و مدفوعاتي</h1>
+            <h1 class="animate__animated animate__fadeInDown">{{ trans('patients.my_account_and_payments_header') }}</h1>
             <p class="title-subtext animate__animated animate__fadeInUp" data-wow-delay="0.1s">
-                تابع جميع معاملاتك المالية وسندات القبض الخاصة بك بكل سهولة.
+                {{ trans('patients.my_account_subheader') }}
             </p>
         </section>
 
@@ -150,7 +149,6 @@
                             <i class="fas fa-check-circle fa-lg me-2"></i><div>{!! session('success_notify') !!}</div>
                         </div>
                     @endif
-                    {{-- ... (باقي رسائل السيشون الأخرى إذا كنت ستستخدمها) ... --}}
                 </div>
             </div>
         @endif
@@ -162,11 +160,11 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>رقم السند</th>
-                                <th>تاريخ السند</th>
-                                <th>المبلغ المدفوع</th>
-                                <th>الوصف / البيان</th>
-                                <th>الإجراءات</th>
+                                <th>{{ trans('patients.receipt_number_col') }}</th>
+                                <th>{{ trans('patients.receipt_date_col') }}</th>
+                                <th>{{ trans('patients.amount_paid_col') }}</th>
+                                <th>{{ trans('patients.description_statement_col') }}</th>
+                                <th>{{ trans('patients.actions_col') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -177,13 +175,12 @@
                                     <td>{{ \Carbon\Carbon::parse($receipt->date)->translatedFormat('d F Y') }}</td>
                                     <td class="receipt-amount">
                                         {{ number_format($receipt->amount, 2) }}
-                                        <small>{{ config('app.currency_symbol', 'ر.س') }}</small>
+                                        <small>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</small>
                                     </td>
                                     <td class="receipt-description">{{ Str::limit($receipt->description, 70) }}</td>
                                     <td>
-                                        {{-- مسار طباعة سند القبض سيحتاج إلى دالة و view خاص به --}}
                                         @if(Route::has('website.receipt.print'))
-                                        <a href="{{ route('website.receipt.print', $receipt->id) }}" class="btn btn-sm btn-outline-primary btn-print-receipt" target="_blank" title="طباعة السند">
+                                        <a href="{{ route('website.receipt.print', $receipt->id) }}" class="btn btn-sm btn-outline-primary btn-print-receipt" target="_blank" title="{{ trans('patients.print_receipt_tooltip') }}">
                                             <i class="fas fa-print"></i>
                                         </a>
                                         @endif
@@ -203,16 +200,16 @@
             @else
                 <div class="empty-account-state p-5">
                     <div class="empty-icon"><i class="fas fa-file-invoice"></i></div>
-                    <h4>لا توجد لديك أي مدفوعات أو سندات قبض مسجلة حاليًا.</h4>
-                    <p>عند قيامك بأي دفعة، ستظهر هنا في كشف حسابك.</p>
+                    <h4>{{ trans('patients.no_payments_or_receipts_title') }}</h4>
+                    <p>{{ trans('patients.payments_will_appear_here_message') }}</p>
                 </div>
             @endif
         </div>
     </main>
 
-    <footer class="standalone-account-footer">
+    {{-- <footer class="standalone-account-footer">
         <p>© {{ date('Y') }} جميع الحقوق محفوظة - {{ config('app.name', 'المنصة الطبية') }}.</p>
-    </footer>
+    </footer> --}}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>

@@ -67,9 +67,9 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-user-shield text-warning me-2"></i>طلبات تحتاج قرارك</h4>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-user-shield text-warning me-2"></i>{{ trans('doctors.requests_needing_decision') }}</h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="mt-1 tx-13">مراجعة طلبات تجديد الوصفات</span>
+                <span class="mt-1 tx-13">{{ trans('doctors.review_renewal_requests') }}</span>
             </div>
         </div>
     </div>
@@ -81,16 +81,16 @@
     <div class="card" data-aos="fade-up">
         <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
              <h4 class="card-title-css mb-2 mb-md-0">
-                 <i class="fas fa-list-check me-2 text-warning-dark"></i> قائمة طلبات التجديد للموافقة
+                 <i class="fas fa-list-check me-2 text-warning-dark"></i> {{ trans('doctors.renewal_requests_list_title') }}
                  @if($approvalRequests->total() > 0)
-                     <span class="badge bg-warning-transparent text-warning-dark rounded-pill ms-2">{{ $approvalRequests->total() }} طلب</span>
+                     <span class="badge bg-warning-transparent text-warning-dark rounded-pill ms-2">{{ $approvalRequests->total() }} {{ trans('doctors.request_unit') }}</span>
                  @endif
              </h4>
              <form method="GET" action="{{ route('doctor.prescriptions.approvalRequests') }}" class="d-flex align-items-center" style="min-width: 300px;">
-                 <input type="text" name="search_patient_approval" class="form-control form-control-sm me-2" placeholder="بحث باسم المريض، هويته، رقم الوصفة..." value="{{ $request->search_patient_approval ?? '' }}">
-                 <button type="submit" class="btn btn-sm btn-outline-primary ripple"><i class="fas fa-search"></i> بحث</button>
+                 <input type="text" name="search_patient_approval" class="form-control form-control-sm me-2" placeholder="{{ trans('doctors.search_patient_placeholder') }}" value="{{ $request->search_patient_approval ?? '' }}">
+                 <button type="submit" class="btn btn-sm btn-outline-primary ripple"><i class="fas fa-search"></i> {{ trans('doctors.search_button') }}</button>
                  @if(request('search_patient_approval'))
-                    <a href="{{ route('doctor.prescriptions.approvalRequests') }}" class="btn btn-sm btn-link text-danger ms-2" data-bs-toggle="tooltip" title="إلغاء البحث"><i class="fas fa-times"></i></a>
+                    <a href="{{ route('doctor.prescriptions.approvalRequests') }}" class="btn btn-sm btn-link text-danger ms-2" data-bs-toggle="tooltip" title="{{ trans('doctors.cancel_search_tooltip') }}"><i class="fas fa-times"></i></a>
                  @endif
             </form>
         </div>
@@ -101,12 +101,12 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th style="min-width: 200px;">المريض</th>
-                                <th style="min-width: 150px;">الوصفة الأصلية</th>
-                                <th style="min-width: 160px;">ملخص الأدوية الرئيسية</th>
-                                <th style="min-width: 130px;">تاريخ الطلب</th>
-                                <th style="min-width: 180px;">السبب الداعي لموافقتك</th>
-                                <th class="text-center" style="min-width: 180px;">الإجراء</th>
+                                <th style="min-width: 200px;">{{ trans('doctors.table_header_patient') }}</th>
+                                <th style="min-width: 150px;">{{ trans('doctors.table_header_original_prescription') }}</th>
+                                <th style="min-width: 160px;">{{ trans('doctors.table_header_medication_summary') }}</th>
+                                <th style="min-width: 130px;">{{ trans('doctors.table_header_request_date') }}</th>
+                                <th style="min-width: 180px;">{{ trans('doctors.table_header_reason_for_approval') }}</th>
+                                <th class="text-center" style="min-width: 180px;">{{ trans('doctors.table_header_action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -118,37 +118,37 @@
                                             <div class="d-flex align-items-center">
                                                  <img src="{{ $prescription->patient->image ? asset('Dashboard/img/patients/' . $prescription->patient->image->filename) : URL::asset('Dashboard/img/default_patient_avatar.png') }}" alt="patient" class="patient-avatar-sm">
                                                  <div>
-                                                     <a href="{{ route('doctor.patient.details', $prescription->patient->id) }}" class="fw-500 text-primary d-block" data-bs-toggle="tooltip" title="عرض ملف المريض الكامل">
+                                                     <a href="{{ route('doctor.patient.details', $prescription->patient->id) }}" class="fw-500 text-primary d-block" data-bs-toggle="tooltip" title="{{ trans('doctors.view_full_patient_profile') }}">
                                                          {{ $prescription->patient->name }}
                                                      </a>
                                                      <small class="text-muted d-block">
-                                                         {{ $prescription->patient->gender_display ?? ($prescription->patient->gender == 1 ? 'ذكر' : ($prescription->patient->gender == 2 ? 'أنثى' : '')) }}
-                                                         {{ $prescription->patient->Date_Birth ? '، ' . $prescription->patient->Date_Birth->age . ' سنة' : '' }}
+                                                         {{ $prescription->patient->gender == 1 ? trans('doctors.gender_male') : ($prescription->patient->gender == 2 ? trans('doctors.gender_female') : '') }}
+                                                         {{ $prescription->patient->Date_Birth ? '، ' . $prescription->patient->Date_Birth->age . ' ' . trans('doctors.years_old') : '' }}
                                                      </small>
                                                  </div>
                                              </div>
                                         @else
-                                             <span class="text-muted">مريض غير محدد</span>
+                                             <span class="text-muted">{{ trans('doctors.patient_not_specified') }}</span>
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('prescriptions.show', $prescription->id) }}" class="fw-500" data-bs-toggle="tooltip" title="عرض تفاصيل الوصفة الأصلية">
+                                        <a href="{{ route('prescriptions.show', $prescription->id) }}" class="fw-500" data-bs-toggle="tooltip" title="{{ trans('doctors.view_original_prescription_details') }}">
                                             {{ $prescription->prescription_number }}
                                         </a>
-                                        <small class="text-muted d-block">أنشئت: {{ $prescription->prescription_date->translatedFormat('d M Y') }}</small>
+                                        <small class="text-muted d-block">{{ trans('doctors.created_at_prefix') }} {{ $prescription->prescription_date->translatedFormat('d M Y') }}</small>
                                     </td>
                                     <td>
                                         @if($prescription->items->isNotEmpty())
                                             <ul class="list-unstyled mb-0 small">
                                                 @foreach($prescription->items->take(2) as $item) {{-- عرض أول دواءين كملخص --}}
-                                                    <li data-bs-toggle="tooltip" title="{{ $item->medication->name ?? '' }} {{ $item->medication->strength ?? '' }}"><i class="fas fa-capsule fa-xs text-muted me-1"></i>{{ Str::limit($item->medication->name ?? 'غير محدد', 25) }}</li>
+                                                    <li data-bs-toggle="tooltip" title="{{ $item->medication->name ?? '' }} {{ $item->medication->strength ?? '' }}"><i class="fas fa-capsule fa-xs text-muted me-1"></i>{{ Str::limit($item->medication->name ?? trans('doctors.unspecified_medication'), 25) }}</li>
                                                 @endforeach
                                                 @if($prescription->items_count > 2)
-                                                    <li class="text-muted">& و {{ $prescription->items_count - 2 }} أدوية أخرى...</li>
+                                                    <li class="text-muted">{{ trans('doctors.and_x_more_medications', ['count' => $prescription->items_count - 2]) }}</li>
                                                 @endif
                                             </ul>
                                         @else
-                                             <span class="text-muted small">(لا أدوية)</span>
+                                             <span class="text-muted small">{{ trans('doctors.no_medications_in_prescription') }}</span>
                                         @endif
                                     </td>
                                     <td class="text-nowrap">
@@ -158,10 +158,7 @@
                                     </td>
                                     <td>
                                          @php
-                                             // منطق متقدم لتحديد السبب، ستحتاج لتعديله بناءً على استعلامك في الكنترولر
-                                             $reasonText = "طلب تجديد من المريض";
-                                             // يمكنك إضافة عمود `renewal_request_reason` في جدول prescriptions
-                                             // أو تحليله من حالة البنود
+                                             $reasonText = trans('doctors.reason_patient_request');
                                              $allOriginalRefillsDone = true;
                                              $hadRefillableItems = false;
                                              foreach($prescription->items as $pItem){
@@ -169,21 +166,21 @@
                                                  if($pItem->refills_allowed > $pItem->refills_done) $allOriginalRefillsDone = false;
                                              }
                                              if($hadRefillableItems && $allOriginalRefillsDone){
-                                                $reasonText = "استنفاد مرات الإعادة";
+                                                $reasonText = trans('doctors.reason_refills_exhausted');
                                              } elseif ($prescription->is_chronic_prescription && !$hadRefillableItems) {
-                                                $reasonText = "طلب تجديد وصفة مزمنة";
+                                                $reasonText = trans('doctors.reason_chronic_prescription_renewal');
                                              }
                                          @endphp
-                                         <span class="badge bg-light border text-primary-dark request-reason-badge" data-bs-toggle="tooltip" title="هذا هو السبب الرئيسي الذي يستدعي موافقتك المباشرة">
+                                         <span class="badge bg-light border text-primary-dark request-reason-badge" data-bs-toggle="tooltip" title="{{ trans('doctors.reason_tooltip') }}">
                                              <i class="fas fa-info-circle me-1"></i>{{ $reasonText }}
                                          </span>
                                     </td>
                                     <td class="text-center action-buttons">
-                                        <button type="button" class="btn btn-sm btn-success-gradient" data-toggle="modal" data-target="#approveRefillModal-{{ $prescription->id }}" title="الموافقة على التجديد">
-                                            <i class="fas fa-check-circle"></i> <span class="btn-label">موافقة</span>
+                                        <button type="button" class="btn btn-sm btn-success-gradient" data-toggle="modal" data-target="#approveRefillModal-{{ $prescription->id }}" title="{{ trans('doctors.action_approve_renewal') }}">
+                                            <i class="fas fa-check-circle"></i> <span class="btn-label">{{ trans('doctors.approve_button') }}</span>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-danger-gradient" data-toggle="modal" data-target="#denyRefillModal-{{ $prescription->id }}" title="رفض طلب التجديد">
-                                            <i class="fas fa-times-circle"></i> <span class="btn-label">رفض</span>
+                                        <button type="button" class="btn btn-sm btn-danger-gradient" data-toggle="modal" data-target="#denyRefillModal-{{ $prescription->id }}" title="{{ trans('doctors.action_deny_renewal') }}">
+                                            <i class="fas fa-times-circle"></i> <span class="btn-label">{{ trans('doctors.deny_button') }}</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -199,9 +196,9 @@
             @else
                 <div class="empty-state-container p-5" data-aos="zoom-in-up">
                     <i class="fas fa-clipboard-check empty-icon text-success opacity-75"></i>
-                    <h5 class="mt-3 fw-bold">لا توجد طلبات إعادة صرف تنتظر موافقتك حاليًا.</h5>
+                    <h5 class="mt-3 fw-bold">{{ trans('doctors.empty_state_title') }}</h5>
                     <p class="text-muted col-md-8 mx-auto mt-2">
-                        عمل رائع! لقد قمت بمراجعة جميع الطلبات التي تحتاج إلى قرارك.
+                        {{ trans('doctors.empty_state_message') }}
                     </p>
                 </div>
             @endif
@@ -218,16 +215,16 @@
                     <div class="modal-content">
                         <div class="modal-header bg-success text-white">
                             <h5 class="modal-title" id="approveRefillModalLabel-{{ $prescription->id }}">
-                                <i class="fas fa-check-double me-2"></i>موافقة على تجديد للوصفة: <strong class="font-monospace">{{ $prescription->prescription_number }}</strong>
+                                <i class="fas fa-check-double me-2"></i>{{ trans('doctors.approve_modal_title') }} <strong class="font-monospace">{{ $prescription->prescription_number }}</strong>
                             </h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-                            <p><strong>المريض:</strong> {{ $prescription->patient->name ?? 'غير محدد' }}
-                                <a href="{{ route('doctor.patient.details', $prescription->patient_id) }}" target="_blank" class="ms-2 small">(عرض الملف)</a>
+                            <p><strong>{{ trans('doctors.table_header_patient') }}:</strong> {{ $prescription->patient->name ?? trans('doctors.patient_not_specified') }}
+                                <a href="{{ route('doctor.patient.details', $prescription->patient_id) }}" target="_blank" class="ms-2 small">{{ trans('doctors.view_profile_link') }}</a>
                             </p>
                             <hr>
-                            <h6><i class="fas fa-pills me-2 text-primary"></i>الأدوية المطلوب تجديدها (حدد ما سيتم تجديده واضبط الشروط):</h6>
+                            <h6><i class="fas fa-pills me-2 text-primary"></i>{{ trans('doctors.medications_to_renew_label') }}</h6>
                             @if($prescription->items->isNotEmpty())
                                 @foreach($prescription->items as $item)
                                     <div class="item-for-approval" data-aos="fade-in">
@@ -235,61 +232,59 @@
                                             <input class="form-check-input me-2" type="checkbox"
                                                    name="items[{{ $item->id }}][renew]"
                                                    id="renew_item_{{ $item->id }}_for_pres_{{ $prescription->id }}"
-                                                   {{-- يمكنك تحديد Checkbox افتراضياً إذا كان الدواء لا يزال ضمن خطة العلاج --}}
-                                                   {{-- 예를 들어, ($item->refills_allowed > 0 && $item->refills_done >= $item->refills_allowed) || ($item->refills_allowed == 0 && $prescription->is_chronic_prescription) ? 'checked' :  لا يمكن وضع شرط معقد هكذا ببساطة، يحتاج لـ PHP قبله --}}
-                                                   checked {{-- تحديد الكل افتراضياً، الطبيب يزيل ما لا يريده --}}
+                                                   checked
                                                    onchange="toggleRefillFields(this, {{$item->id}}, {{$prescription->id}})">
                                             <label class="form-check-label fw-500" for="renew_item_{{ $item->id }}_for_pres_{{ $prescription->id }}">
-                                                {{ $item->medication->name ?? 'دواء غير معروف' }}
+                                                {{ $item->medication->name ?? trans('doctors.unknown_medication') }}
                                                 <small class="text-muted">({{ $item->medication->strength ?? '' }} {{ $item->medication->dosage_form_display ?? '' }})</small>
                                             </label>
                                         </div>
                                         <div class="ms-4 ps-2 row gx-2 item-renewal-fields" id="fields_item_{{ $item->id }}_pres_{{ $prescription->id }}">
                                             <div class="col-md-5 mb-2">
-                                                <label for="refills_allowed_new_{{ $item->id }}" class="form-label sub-label">مرات الصرف الجديدة:</label>
+                                                <label for="refills_allowed_new_{{ $item->id }}" class="form-label sub-label">{{ trans('doctors.new_refills_count_label') }}</label>
                                                 <input type="number" class="form-control form-control-sm-custom"
                                                        id="refills_allowed_new_{{ $item->id }}"
                                                        name="items[{{ $item->id }}][refills_allowed_new]"
                                                        min="0" max="12"
-                                                       value="{{ $item->refills_allowed > 0 ? $item->refills_allowed : ($prescription->is_chronic_prescription ? 1 : 0) }}" {{-- قيمة افتراضية معقولة_ --}}
+                                                       value="{{ $item->refills_allowed > 0 ? $item->refills_allowed : ($prescription->is_chronic_prescription ? 1 : 0) }}"
                                                        required>
                                             </div>
                                             <div class="col-md-7 mb-2">
-                                                <label for="item_notes_new_{{ $item->id }}" class="form-label sub-label">ملاحظة على هذا الدواء (اختياري):</label>
+                                                <label for="item_notes_new_{{ $item->id }}" class="form-label sub-label">{{ trans('doctors.item_note_label') }}</label>
                                                 <input type="text" class="form-control form-control-sm"
                                                        id="item_notes_new_{{ $item->id }}"
                                                        name="items[{{ $item->id }}][item_notes_new]"
-                                                       placeholder="مثال: زد الجرعة، قلل المدة...">
+                                                       placeholder="{{ trans('doctors.item_note_placeholder') }}">
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
                             @else
-                                <p class="text-danger">لا توجد بنود أدوية في هذه الوصفة لمراجعتها!</p>
+                                <p class="text-danger">{{ trans('doctors.no_medication_items_in_prescription_error') }}</p>
                             @endif
                             <hr class="my-3">
                             <div class="row">
                                 <div class="col-md-12 mb-3">
-                                     <label for="new_next_refill_due_date-{{ $prescription->id }}" class="form-label">تاريخ استحقاق التجديد التالي للوصفة ككل (اختياري):</label>
+                                     <label for="new_next_refill_due_date-{{ $prescription->id }}" class="form-label">{{ trans('doctors.next_renewal_due_date_label') }}</label>
                                      <input type="text" class="form-control flatpickr-modal" id="new_next_refill_due_date-{{ $prescription->id }}" name="new_next_refill_due_date" placeholder="YYYY-MM-DD"
-                                            value="{{ $prescription->next_refill_due_date ? $prescription->next_refill_due_date->addMonth()->toDateString() : now()->addMonth()->toDateString() }}"> {{-- يقترح الشهر التالي --}}
-                                     <small class="form-text text-muted">إذا كانت الوصفة دورية (شهرية، إلخ).</small>
+                                            value="{{ $prescription->next_refill_due_date ? $prescription->next_refill_due_date->addMonth()->toDateString() : now()->addMonth()->toDateString() }}">
+                                     <small class="form-text text-muted">{{ trans('doctors.next_renewal_due_date_help') }}</small>
                                  </div>
                             </div>
                             <div class="mb-2">
-                                <label for="general_approval_notes-{{ $prescription->id }}" class="form-label">ملاحظات عامة على الموافقة (اختياري):</label>
-                                <textarea class="form-control" id="general_approval_notes-{{ $prescription->id }}" name="general_approval_notes" rows="2" placeholder="مثال: يرجى متابعة المريض بعد أسبوعين..."></textarea>
+                                <label for="general_approval_notes-{{ $prescription->id }}" class="form-label">{{ trans('doctors.general_approval_notes_label') }}</label>
+                                <textarea class="form-control" id="general_approval_notes-{{ $prescription->id }}" name="general_approval_notes" rows="2" placeholder="{{ trans('doctors.general_approval_notes_placeholder') }}"></textarea>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="1" id="notify_patient_approval-{{ $prescription->id }}" name="notify_patient_on_approval" checked>
                                 <label class="form-check-label" for="notify_patient_approval-{{ $prescription->id }}">
-                                    إرسال إشعار للمريض بالموافقة
+                                    {{ trans('doctors.notify_patient_on_approval_checkbox') }}
                                 </label>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إغلاق</button>
-                            <button type="submit" class="btn btn-success"><i class="fas fa-check-circle me-1"></i> تأكيد الموافقة وحفظ التغييرات</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ trans('doctors.close_button') }}</button>
+                            <button type="submit" class="btn btn-success"><i class="fas fa-check-circle me-1"></i> {{ trans('doctors.confirm_approval_button') }}</button>
                         </div>
                     </div>
                 </form>
@@ -304,26 +299,26 @@
                     <div class="modal-content">
                         <div class="modal-header bg-danger text-white">
                             <h5 class="modal-title" id="denyRefillModalLabel-{{ $prescription->id }}">
-                                <i class="fas fa-times-circle me-2"></i>رفض طلب تجديد للوصفة: <strong class="font-monospace">{{ $prescription->prescription_number }}</strong>
+                                <i class="fas fa-times-circle me-2"></i>{{ trans('doctors.deny_modal_title') }} <strong class="font-monospace">{{ $prescription->prescription_number }}</strong>
                             </h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p><strong>المريض:</strong> {{ $prescription->patient->name ?? 'غير محدد' }}</p>
+                            <p><strong>{{ trans('doctors.table_header_patient') }}:</strong> {{ $prescription->patient->name ?? trans('doctors.patient_not_specified') }}</p>
                             <div class="mb-3">
-                                <label for="denial_reason-{{ $prescription->id }}" class="form-label">سبب الرفض (مطلوب وسيُسجل):</label>
-                                <textarea class="form-control" id="denial_reason-{{ $prescription->id }}" name="denial_reason" rows="4" placeholder="مثال: يتطلب المريض مراجعة طبية قبل الموافقة، تم تغيير الخطة العلاجية..." required minlength="10"></textarea>
+                                <label for="denial_reason-{{ $prescription->id }}" class="form-label">{{ trans('doctors.denial_reason_label') }}</label>
+                                <textarea class="form-control" id="denial_reason-{{ $prescription->id }}" name="denial_reason" rows="4" placeholder="{{ trans('doctors.denial_reason_placeholder') }}" required minlength="10"></textarea>
                             </div>
                              <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="1" id="notify_patient_denial-{{ $prescription->id }}" name="notify_patient_on_denial" checked>
                                 <label class="form-check-label" for="notify_patient_denial-{{ $prescription->id }}">
-                                    إرسال إشعار للمريض بالرفض والسبب
+                                    {{ trans('doctors.notify_patient_on_denial_checkbox') }}
                                 </label>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">إغلاق</button>
-                            <button type="submit" class="btn btn-danger"><i class="fas fa-ban me-1"></i> تأكيد الرفض</button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ trans('doctors.close_button') }}</button>
+                            <button type="submit" class="btn btn-danger"><i class="fas fa-ban me-1"></i> {{ trans('doctors.confirm_denial_button') }}</button>
                         </div>
                     </div>
                 </form>

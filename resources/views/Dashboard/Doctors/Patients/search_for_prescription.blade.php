@@ -342,15 +342,14 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-file-medical-alt fa-lg me-2" style="color: var(--admin-primary);"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto" style="font-weight: 600;">إنشاء وصفة طبية</h4>
-                    <span class="text-muted mt-1 tx-13">/ البحث عن مريض</span>
+                    <h4 class="content-title mb-0 my-auto" style="font-weight: 600;">{{ trans('doctors.create_prescription') }}</h4>
+                    <span class="text-muted mt-1 tx-13">/ {{ trans('doctors.search_for_patient') }}</span>
                 </div>
             </div>
         </div>
-        {{-- يمكنك إضافة زر رجوع هنا إلى قائمة الوصفات إذا أردت --}}
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('prescriptions.index') }}" class="btn btn-outline-secondary btn-sm ripple-effect">
-                <i class="fas fa-list-ul me-1"></i> عرض وصفاتي
+                <i class="fas fa-list-ul me-1"></i> {{ trans('doctors.view_my_prescriptions') }}
             </a>
         </div>
     </div>
@@ -359,25 +358,20 @@
 @section('content')
     @include('Dashboard.messages_alert')
 
-    {{-- بطاقة الفلترة (البحث) --}}
     <div class="card filter-card animate__animated animate__fadeIn mb-4">
         <div class="card-header">
-            <h5 class="card-title mb-0"><i class="fas fa-search me-2" style="color: var(--admin-secondary);"></i>البحث عن
-                مريض</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-search me-2" style="color: var(--admin-secondary);"></i>{{ trans('doctors.search_for_patient') }}</h5>
         </div>
         <div class="card-body">
             <form method="GET" action="{{ route('doctor.patients.search_for_prescription') }}">
                 <div class="row g-3 align-items-end">
                     <div class="col-lg-9 col-md-8">
-                        <label for="search_term_prescription" class="form-label">أدخل اسم المريض، رقم الهوية، البريد أو
-                            الهاتف:</label>
-                        <input type="text" name="search_term" id="search_term_prescription"
-                            class="form-control form-control-lg" placeholder="ابدأ الكتابة للبحث..."
-                            value="{{ $request->input('search_term') }}">
+                        <label for="search_term_prescription" class="form-label">{{ trans('doctors.enter_patient_search_term') }}</label>
+                        <input type="text" name="search_term" id="search_term_prescription" class="form-control form-control-lg" placeholder="{{ trans('doctors.start_typing_to_search') }}" value="{{ $request->input('search_term') }}">
                     </div>
                     <div class="col-lg-3 col-md-4">
                         <button class="btn btn-primary btn-lg w-100" type="submit">
-                            <i class="fas fa-search me-1"></i> بحث
+                            <i class="fas fa-search me-1"></i> {{ trans('doctors.search_button') }}
                         </button>
                     </div>
                 </div>
@@ -385,14 +379,13 @@
         </div>
     </div>
 
-    {{-- بطاقة جدول نتائج البحث --}}
-    @if (isset($patients)) {{-- فقط إذا تم إجراء بحث أو تم تمرير المتغير --}}
+    @if (isset($patients))
         <div class="card patient-table-card animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
             <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-users me-2" style="color: var(--admin-info);"></i>
-                    نتائج البحث عن المرضى
+                    {{ trans('doctors.patient_search_results') }}
                     @if ($patients->total() > 0)
-                        <span class="badge bg-light text-primary ms-2">{{ $patients->total() }} نتيجة</span>
+                        <span class="badge bg-light text-primary ms-2">{{ trans('doctors.results_count', ['count' => $patients->total()]) }}</span>
                     @endif
                 </h3>
             </div>
@@ -403,32 +396,26 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>
-                                    <th>الصورة</th>
-                                    <th>اسم المريض</th>
-                                    <th>الهوية / الهاتف</th>
-                                    <th>العمر</th>
-                                    <th>الجنس</th>
-                                    <th>فصيلة الدم</th>
-                                    <th>حالة الإقامة</th>
-                                    <th>الأمراض المزمنة</th>
-                                    <th class="text-center">الإجراء</th>
+                                    <th>{{ trans('AdminSb.patient_image') }}</th>
+                                    <th>{{ trans('AdminSb.patient_name') }}</th>
+                                    <th>{{ trans('doctors.id_phone') }}</th>
+                                    <th>{{ trans('doctors.age') }}</th>
+                                    <th>{{ trans('AdminSb.gender') }}</th>
+                                    <th>{{ trans('AdminSb.blood_type') }}</th>
+                                    <th>{{ trans('AdminSb.admission_status') }}</th>
+                                    <th>{{ trans('AdminSb.chronic_diseases') }}</th>
+                                    <th class="text-center">{{ trans('doctors.action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($patients as $index => $patient_result)
-                                    <tr class="animate__animated animate__fadeIn"
-                                        style="animation-delay: {{ $index * 0.03 }}s;">
+                                    <tr class="animate__animated animate__fadeIn" style="animation-delay: {{ $index * 0.03 }}s;">
                                         <td>{{ $patients->firstItem() + $index }}</td>
                                         <td>
-                                            <img src="{{ $patient_result->image ? asset('Dashboard/img/patients/' . $patient_result->image->filename) : URL::asset('Dashboard/img/doctor_default.png') }}"
-                                                alt="{{ $patient_result->name }}" class="patient-avatar-table"
-                                                onerror="this.onerror=null; this.src='{{ URL::asset('Dashboard/img/default_patient_avatar.png') }}';">
+                                            <img src="{{ $patient_result->image ? asset('Dashboard/img/patients/' . $patient_result->image->filename) : URL::asset('Dashboard/img/doctor_default.png') }}" alt="{{ $patient_result->name }}" class="patient-avatar-table" onerror="this.onerror=null; this.src='{{ URL::asset('Dashboard/img/default_patient_avatar.png') }}';">
                                         </td>
                                         <td>
-                                            {{-- يمكنك جعل الاسم رابطًا لصفحة عرض تفاصيل المريض إذا كان الطبيب لديه صلاحية لذلك --}}
-                                            <a href="{{ route('doctor.patient.details', $patient_result->id) }}"
-                                                class="patient-name-link" data-bs-toggle="tooltip"
-                                                title="عرض تفاصيل المريض (للطبيب)">
+                                            <a href="{{ route('doctor.patient.details', $patient_result->id) }}" class="patient-name-link" data-bs-toggle="tooltip" title="{{ trans('doctors.view_patient_details_tooltip') }}">
                                                 {{ $patient_result->name }}
                                             </a>
                                             <small class="text-muted d-block">{{ $patient_result->email }}</small>
@@ -439,20 +426,17 @@
                                         </td>
                                         <td>
                                             @if ($patient_result->Date_Birth)
-                                                {{ $patient_result->Date_Birth->age }} سنة
-                                                <small
-                                                    class="text-muted d-block">({{ $patient_result->Date_Birth->translatedFormat('Y-m-d') }})</small>
+                                                {{ $patient_result->Date_Birth->age }} {{ trans('AdminSb.years_old') }}
+                                                <small class="text-muted d-block">({{ $patient_result->Date_Birth->translatedFormat('Y-m-d') }})</small>
                                             @else
                                                 <span class="text-muted">-</span>
                                             @endif
                                         </td>
                                         <td>
                                             @if ($patient_result->Gender)
-                                                <span
-                                                    class="badge {{ $patient_result->Gender == 1 ? 'badge-gender-male' : 'badge-gender-female' }}">
-                                                    <i
-                                                        class="fas {{ $patient_result->Gender == 1 ? 'fa-mars' : 'fa-venus' }} me-1"></i>
-                                                    {{ $patient_result->Gender == 1 ? 'ذكر' : 'أنثى' }}
+                                                <span class="badge {{ $patient_result->Gender == 1 ? 'badge-gender-male' : 'badge-gender-female' }}">
+                                                    <i class="fas {{ $patient_result->Gender == 1 ? 'fa-mars' : 'fa-venus' }} me-1"></i>
+                                                    {{ $patient_result->Gender == 1 ? trans('AdminSb.male') : trans('AdminSb.female') }}
                                                 </span>
                                             @else
                                                 <span class="text-muted">-</span>
@@ -460,60 +444,28 @@
                                         </td>
                                         <td>
                                             @if ($patient_result->Blood_Group)
-                                                <span class="badge badge-blood">
-                                                    <i class="fas fa-tint me-1"></i> {{ $patient_result->Blood_Group }}
-                                                </span>
+                                                <span class="badge badge-blood"><i class="fas fa-tint me-1"></i> {{ $patient_result->Blood_Group }}</span>
                                             @else
                                                 <span class="text-muted">-</span>
                                             @endif
                                         </td>
-                                        <td
-                                            class="status-badge-table {{ $patient_result->currentAdmission ? 'admitted' : 'not-admitted' }}">
+                                        <td class="status-badge-table {{ $patient_result->currentAdmission ? 'admitted' : 'not-admitted' }}">
                                             @if ($patient_result->currentAdmission)
-                                                <i class="fas fa-hospital-user text-success me-1"></i> مقيم حاليًا
-                                                @if ($patient_result->currentAdmission->bed && $patient_result->currentAdmission->bed->room)
-                                                    <small class="d-block text-muted" style="font-size: 0.75rem;">
-                                                        (قسم:
-                                                        {{ $patient_result->currentAdmission->bed->room->section->name ?? '-' }}
-                                                        |
-                                                        غ: {{ $patient_result->currentAdmission->bed->room->room_number }}
-                                                        |
-                                                        س: {{ $patient_result->currentAdmission->bed->bed_number }})
-                                                    </small>
-                                                @endif
+                                                <i class="fas fa-hospital-user text-success me-1"></i> {{ trans('AdminSb.currently_admitted') }}
                                             @else
-                                                <i class="fas fa-user-check text-secondary me-1"></i> غير مقيم
+                                                <i class="fas fa-user-check text-secondary me-1"></i> {{ trans('AdminSb.not_admitted') }}
                                             @endif
                                         </td>
                                         <td>
                                             @if ($patient_result->diagnosedChronicDiseases && $patient_result->diagnosedChronicDiseases->isNotEmpty())
-                                                <ul class="diseases-list-inline">
-                                                    @foreach ($patient_result->diagnosedChronicDiseases->take(2) as $diagnosedDisease)
-                                                        <li data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            title="{{ $diagnosedDisease->name }} - الحالة: {{ $diagnosedDisease->pivot->current_status ? \App\Models\PatientChronicDisease::getStatuses()[$diagnosedDisease->pivot->current_status] ?? $diagnosedDisease->pivot->current_status : 'غير محددة' }}">
-                                                            <i class="fas fa-notes-medical fa-xs me-1 text-danger"></i>
-                                                            {{ Str::limit($diagnosedDisease->name, 18) }}
-                                                        </li>
-                                                    @endforeach
-                                                    @if ($patient_result->diagnosedChronicDiseases->count() > 2)
-                                                        <li class="more-diseases">
-                                                            <a href="{{ route('admin.Patients.show', $patient_result->id) }}#chronic-diseases-section"
-                                                                target="_blank" class="text-primary"
-                                                                data-bs-toggle="tooltip"
-                                                                title="عرض كل الأمراض (+{{ $patient_result->diagnosedChronicDiseases->count() - 2 }})">
-                                                                <i class="fas fa-ellipsis-h"></i>
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                </ul>
+                                                <ul class="diseases-list-inline">...</ul>
                                             @else
-                                                <span class="no-chronic-diseases">لا يوجد</span>
+                                                <span class="no-chronic-diseases">{{ trans('AdminSb.no_chronic_diseases_found') }}</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('prescriptions.create', ['patient_id' => $patient_result->id]) }}"
-                                                class="btn btn-success btn-sm action-btn-create-prescription px-3">
-                                                <i class="fas fa-file-signature me-1"></i> إنشاء وصفة
+                                            <a href="{{ route('prescriptions.create', ['patient_id' => $patient_result->id]) }}" class="btn btn-success btn-sm action-btn-create-prescription px-3">
+                                                <i class="fas fa-file-signature me-1"></i> {{ trans('doctors.create_prescription') }}
                                             </a>
                                         </td>
                                     </tr>
@@ -529,23 +481,20 @@
                 @elseif($request->filled('search_term'))
                     <div class="empty-state-container p-4 mt-4">
                         <i class="fas fa-user-times"></i>
-                        <h5>لم يتم العثور على نتائج</h5>
-                        <p class="text-muted">لا يوجد مرضى يطابقون مصطلح البحث
-                            "<strong>{{ $request->input('search_term') }}</strong>". يرجى التأكد من البيانات والمحاولة مرة
-                            أخرى.</p>
+                        <h5>{{ trans('doctors.no_results_found') }}</h5>
+                        <p class="text-muted">{!! trans('doctors.no_patients_match_search_term', ['term' => $request->input('search_term')]) !!}</p>
                     </div>
                 @else
                     <div class="empty-state-container p-4 mt-4">
                         <i class="fas fa-search-plus"></i>
-                        <h5>ابدأ البحث عن مريض</h5>
-                        <p class="text-muted">استخدم حقل البحث أعلاه للعثور على المريض المطلوب لإنشاء وصفة طبية له.</p>
+                        <h5>{{ trans('doctors.start_searching_for_patient') }}</h5>
+                        <p class="text-muted">{{ trans('doctors.use_search_field_to_find_patient') }}</p>
                     </div>
                 @endif
             </div>
         </div>
     @endif
 @endsection
-
 @section('js')
     @parent
     <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>

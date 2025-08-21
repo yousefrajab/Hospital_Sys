@@ -245,31 +245,29 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-calendar-alt me-2 text-primary"></i>مواعيدي</h4>
-                <span class="text-muted mt-1 tx-13 ms-2 mb-0">/ القادمة</span> {{-- ms-2 for RTL --}}
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-calendar-alt me-2 text-primary"></i>{{ trans('patients.my_appointments') }}</h4>
+                <span class="text-muted mt-1 tx-13 ms-2 mb-0">/ {{ trans('patients.upcoming') }}</span> {{-- ms-2 for RTL --}}
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content align-items-center">
             @if (Route::has('patient.appointments.past'))
                 <a href="{{ route('patient.appointments.past') }}" class="btn btn-outline-secondary-patient btn-sm me-2">
-                    <i class="fas fa-history me-1"></i> المواعيد السابقة
+                    <i class="fas fa-history me-1"></i> {{ trans('patients.past_appointments') }}
                 </a>
             @endif
-            {{-- Update this route name if it's different --}}
             <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-primary-patient btn-sm">
-                <i class="fas fa-plus-circle me-1"></i> طلب موعد جديد
+                <i class="fas fa-plus-circle me-1"></i> {{ trans('patients.request_new_appointment') }}
             </a>
         </div>
     </div>
 @endsection
 
 @section('content')
-    @include('Dashboard.messages_alert') {{-- For session messages from non-AJAX redirects --}}
+    @include('Dashboard.messages_alert')
 
     <div class="appointments-page-container">
         <div class="page-header-custom animate__animated animate__fadeInDown">
-            <h1 class="page-title-custom"><i class="fas fa-business-time"></i> مواعيدك القادمة</h1>
-            {{-- Optional: Add a filter/sort dropdown here if needed later --}}
+            <h1 class="page-title-custom"><i class="fas fa-business-time"></i> {{ trans('patients.your_upcoming_appointments_title') }}</h1>
         </div>
 
         @if (isset($appointments) && $appointments->isNotEmpty())
@@ -277,9 +275,9 @@
                 @foreach ($appointments as $appointment)
                     @php
                         $appointmentDateTime = \Carbon\Carbon::parse($appointment->appointment);
-                        $statusKey = 'pending'; // Default
-                        $statusText = $appointment->type; // Original status text
-                        $statusBadgeClass = 'badge-status-pending'; // Default
+                        $statusKey = 'pending';
+                        $statusText = $appointment->type;
+                        $statusBadgeClass = 'badge-status-pending';
 
                         if ($appointment->type == (\App\Models\Appointment::STATUS_CONFIRMED ?? 'مؤكد')) {
                             $statusKey = 'confirmed';
@@ -288,10 +286,7 @@
                              $statusKey = 'cancelled';
                              $statusBadgeClass = 'badge-status-cancelled';
                         }
-                        // If you have a status_display accessor for translations:
-                        // $statusText = $appointment->status_display ?? $appointment->type;
 
-                        // Determine if cancellable
                         $cancellationWindowHours = config('app.appointment_cancellation_window_hours', 24);
                         $isCancellable = in_array($appointment->type, [\App\Models\Appointment::STATUS_PENDING ?? 'غير مؤكد', \App\Models\Appointment::STATUS_CONFIRMED ?? 'مؤكد']) &&
                                          $appointmentDateTime->isFuture() &&
@@ -302,7 +297,7 @@
                             <div class="appointment-card-header-patient">
                                 <div>
                                     <h5 class="appointment-title-patient">
-                                        {{ $appointment->section->name ?? 'موعد عام' }}
+                                        {{ $appointment->section->name ?? trans('patients.general_appointment') }}
                                     </h5>
                                     <div class="appointment-datetime-patient">
                                         <span><i class="fas fa-calendar-alt"></i> {{ $appointmentDateTime->translatedFormat('l، j F Y') }}</span>
@@ -320,15 +315,15 @@
                                 <ul class="appointment-details-list-patient">
                                     @if ($appointment->doctor)
                                         <li><i class="fas fa-user-md"></i>
-                                            <span class="detail-value">{{ $appointment->doctor->name ?? 'غير محدد' }}</span>
+                                            <span class="detail-value">{{ $appointment->doctor->name ?? trans('doctors.unspecified') }}</span>
                                         </li>
                                     @endif
                                      <li><i class="fas fa-user"></i>
-                                        <span class="detail-value">{{ $appointment->name }}</span> {{-- Patient Name on appointment --}}
+                                        <span class="detail-value">{{ $appointment->name }}</span>
                                     </li>
                                     @if ($appointment->notes)
                                         <li><i class="fas fa-sticky-note"></i>
-                                            <span class="detail-label">ملاحظاتك:</span>
+                                            <span class="detail-label">{{ trans('patients.your_notes_label') }}</span>
                                             <span class="detail-value">{{ Str::limit($appointment->notes, 100) }}</span>
                                         </li>
                                     @endif
@@ -339,15 +334,15 @@
                                     <button type="button"
                                         class="btn btn-appointment-action btn-outline-danger-patient cancel-appointment-btn"
                                         data-appointment-id="{{ $appointment->id }}"
-                                        data-appointment-doctor="{{ $appointment->doctor->name ?? 'الطبيب' }}"
+                                        data-appointment-doctor="{{ $appointment->doctor->name ?? trans('patients.the_doctor') }}"
                                         data-appointment-datetime="{{ $appointmentDateTime->translatedFormat('l، j F Y - h:i A') }}"
-                                        title="إلغاء هذا الموعد">
-                                        <i class="fas fa-times-circle me-1"></i> إلغاء الموعد
+                                        title="{{ trans('patients.cancel_this_appointment_tooltip') }}">
+                                        <i class="fas fa-times-circle me-1"></i> {{ trans('patients.cancel_appointment_button') }}
                                     </button>
                                 @elseif (in_array($statusKey, ['pending', 'confirmed']))
-                                     <span class="text-muted small"><i class="fas fa-info-circle me-1"></i> لا يمكن الإلغاء (الموعد قريب جداً أو فات وقته).</span>
+                                     <span class="text-muted small"><i class="fas fa-info-circle me-1"></i> {{ trans('patients.cancellation_not_allowed_msg') }}</span>
                                 @else
-                                    <span class="text-muted small"><i class="fas fa-ban me-1"></i> لا توجد إجراءات متاحة لهذا الموعد.</span>
+                                    <span class="text-muted small"><i class="fas fa-ban me-1"></i> {{ trans('patients.no_actions_available_msg') }}</span>
                                 @endif
                             </div>
                         </div>
@@ -357,22 +352,21 @@
 
             @if ($appointments->hasPages())
                 <div class="pagination-wrapper d-flex justify-content-center">
-                    {{ $appointments->links() }} {{-- Default pagination view, or specify bootstrap-5 if needed --}}
+                    {{ $appointments->links() }}
                 </div>
             @endif
         @else
             <div class="no-appointments-patient animate__animated animate__fadeIn">
                 <i class="fas fa-calendar-check"></i>
-                <h4>لا توجد لديك مواعيد قادمة حاليًا.</h4>
-                <p>عندما تقوم بحجز موعد جديد، سيظهر هنا.</p>
+                <h4>{{ trans('patients.no_upcoming_appointments_currently') }}</h4>
+                <p>{{ trans('patients.new_appointments_will_appear_here') }}</p>
                 <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-lg btn-primary-patient mt-2">
-                    <i class="fas fa-plus-circle me-2"></i> اطلب موعدًا جديدًا الآن
+                    <i class="fas fa-plus-circle me-2"></i> {{ trans('patients.request_new_appointment_now') }}
                 </a>
             </div>
         @endif
     </div>
 @endsection
-
 @section('js')
     @parent
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>

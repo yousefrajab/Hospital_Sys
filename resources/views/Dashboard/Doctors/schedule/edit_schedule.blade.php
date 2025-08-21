@@ -531,77 +531,61 @@
 @endsection
 
 @section('page-header')
+    <!-- breadcrumb -->
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">لوحة التحكم</h4>
+                <h4 class="content-title mb-0 my-auto">{{ trans('doctors.doctor_dashboard') }}</h4>
                 @if (Route::has('doctor.profile.show'))
-                    <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ <a href="{{ route('doctor.profile.show') }}">ملفي
-                            الشخصي</a></span>
+                    <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ <a
+                            href="{{ route('doctor.profile.show') }}">{{ trans('doctors.my_profile') }}</a></span>
                 @endif
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل أوقات العمل</span>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('doctors.edit_working_hours') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('doctor.schedule.show') }}" class="btn btn-primary-gradient btn-sm">
-                <i class="fas fa-edit me-1"></i> عرض جدول العمل
+                <i class="fas fa-edit me-1"></i> {{ trans('doctors.view_work_schedule') }}
             </a>
             <a href="{{ route('doctor.profile.show') }}" class="btn btn-outline-secondary btn-sm mr-2">
-                <i class="fas fa-user me-1"></i> العودة للملف الشخصي
+                <i class="fas fa-user me-1"></i> {{ trans('doctors.return_to_profile') }}
             </a>
         </div>
-        {{-- يمكنك إعادة تفعيل هذا إذا كان لديك صفحة عرض منفصلة --}}
-        {{-- @if (Route::has('doctor.schedule.show'))
-         <div class="d-flex my-xl-auto right-content">
-             <a href="{{ route('doctor.schedule.show') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
-                 <i class="fas fa-eye me-1"></i> عرض جدولي الحالي
-             </a>
-         </div>
-         @endif --}}
     </div>
     <!-- breadcrumb -->
 @endsection
 
-{{-- ====================== HTML Content Section ===================== --}}
 @section('content')
-    @include('Dashboard.messages_alert') {{-- لعرض رسائل النجاح/الخطأ العامة --}}
+    @include('Dashboard.messages_alert')
 
     <div class="row justify-content-center">
-        <div class="col-12"> {{-- استخدام عرض كامل للاستفادة من max-width للحاوية --}}
-            {{-- حاوية تعديل الجدول --}}
+        <div class="col-12">
             <form action="{{ route('doctor.schedule.updatee', $doctor->id) }}" method="POST" id="scheduleForm"
                 class="needs-validation schedule-edit-container" novalidate>
                 @csrf
                 @method('PUT')
 
-                {{-- الهيدر --}}
                 <div class="form-header">
                     <i class="fas fa-user-clock header-icon"></i>
-                    <h3>تعديل تفاصيل أوقات العمل</h3>
-                    <p>حدد ساعات البدء والانتهاء ومدة الموعد لأيام عملك المعتمدة.</p>
+                    <h3>{{ trans('doctors.edit_working_hours_details') }}</h3>
+                    <p>{{ trans('doctors.set_start_end_times_and_duration') }}</p>
                 </div>
 
-                {{-- قسم الفورم --}}
                 <div class="form-section">
-
-                    {{-- رسالة التعليمات --}}
                     <div class="alert alert-info alert-custom mb-4 small">
                         <div class="d-flex align-items-start">
                             <i class="fas fa-info-circle fa-lg me-2 mt-1 flex-shrink-0"></i>
-                            <span>أيام العمل النشطة تم تحديدها مسبقاً من قبل الإدارة. يمكنك هنا فقط تعديل <strong>توقيتات
-                                    البدء والانتهاء</strong> و<strong>مدة الموعد</strong> و<strong>فترات الاستراحة</strong>
-                                لهذه الأيام.</span>
+                            <span>{!! trans('doctors.working_days_instructions') !!}</span>
                         </div>
                     </div>
 
-                    {{-- عرض أخطاء التحقق المجمعة --}}
                     @if ($errors->any())
                         <div class="alert alert-danger alert-custom mb-4 animate__animated animate__headShake"
                             role="alert">
                             <div class="d-flex align-items-start">
                                 <i class="fas fa-exclamation-triangle fa-lg me-2 mt-1 flex-shrink-0"></i>
                                 <div>
-                                    <strong>خطأ في الإدخال! يرجى مراجعة الحقول التالية:</strong>
+                                    <strong>{{ trans('doctors.input_error_check_fields') }}</strong>
                                     <ul class="mb-0 mt-1 small">
                                         @foreach ($errors->all() as $error)
                                             <li>{{ $error }}</li>
@@ -612,7 +596,6 @@
                         </div>
                     @endif
 
-                    {{-- حاوية أيام الأسبوع --}}
                     <div class="days-container">
                         @php
                             $dayIcons = [
@@ -626,7 +609,6 @@
                             ];
                         @endphp
 
-                        {{-- الحلقة على الأيام النشطة فقط --}}
                         @forelse ($activeDaysList as $day)
                             @php
                                 $currentDayData = $workingHoursData[$day];
@@ -636,18 +618,16 @@
                                     'days.' . $day . '.appointment_duration',
                                     $currentDayData['appointment_duration'],
                                 );
-                                $breaks = old('days.' . $day . '.breaks', $currentDayData['breaks']); // $breaks هي مصفوفة بالفعل من Controller
+                                $breaks = old('days.' . $day . '.breaks', $currentDayData['breaks']);
                                 if (!is_array($breaks)) {
                                     $breaks = [];
                                 }
-
                                 $dayNameLower = strtolower($day);
                                 $dayIcon = $dayIcons[$dayNameLower] ?? 'fa-calendar-alt';
                                 $dayDisplayName = trans('doctors.days.' . $dayNameLower) ?? $day;
                             @endphp
 
                             <div class="day-card">
-                                {{-- رأس اليوم --}}
                                 <div class="day-header">
                                     <div class="day-header-left">
                                         <span class="day-icon"><i class="fas {{ $dayIcon }}"></i></span>
@@ -661,14 +641,11 @@
                                         </small>
                                     </div>
                                 </div>
-
-                                {{-- جسم اليوم --}}
                                 <div class="day-body" id="day-body-{{ $day }}">
                                     <div class="row g-3">
-                                        {{-- حقول الوقت والمدة --}}
                                         <div class="col-md-4">
-                                            <label for="start_time_{{ $day }}" class="form-label-sm">وقت
-                                                البدء</label>
+                                            <label for="start_time_{{ $day }}"
+                                                class="form-label-sm">{{ trans('doctors.start_time') }}</label>
                                             <input type="text" id="start_time_{{ $day }}"
                                                 class="form-control form-control-sm form-control-time flatpickr-time start-time @error('days.' . $day . '.start_time') is-invalid @enderror"
                                                 name="days[{{ $day }}][start_time]" value="{{ $startTime }}"
@@ -677,13 +654,13 @@
                                                 @error('days.' . $day . '.start_time')
                                                     {{ $message }}
                                                 @else
-                                                    مطلوب
+                                                    {{ trans('doctors.required_field') }}
                                                 @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="end_time_{{ $day }}" class="form-label-sm">وقت
-                                                الانتهاء</label>
+                                            <label for="end_time_{{ $day }}"
+                                                class="form-label-sm">{{ trans('doctors.end_time') }}</label>
                                             <input type="text" id="end_time_{{ $day }}"
                                                 class="form-control form-control-sm form-control-time flatpickr-time end-time @error('days.' . $day . '.end_time') is-invalid @enderror"
                                                 name="days[{{ $day }}][end_time]" value="{{ $endTime }}"
@@ -692,99 +669,71 @@
                                                 @error('days.' . $day . '.end_time')
                                                     {{ $message }}
                                                 @else
-                                                    مطلوب ويجب أن يكون بعد وقت البدء
+                                                    {{ trans('doctors.required_after_start_time') }}
                                                 @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <label for="duration_{{ $day }}" class="form-label-sm">مدة الموعد
-                                                (بالدقائق)</label>
+                                            <label for="duration_{{ $day }}"
+                                                class="form-label-sm">{{ trans('doctors.appointment_duration_minutes') }}</label>
                                             <div class="input-group input-group-sm duration-input">
                                                 <input type="number" id="duration_{{ $day }}"
                                                     class="form-control form-control-sm @error('days.' . $day . '.appointment_duration') is-invalid @enderror"
                                                     name="days[{{ $day }}][appointment_duration]"
                                                     value="{{ $duration }}" min="5" max="120"
                                                     step="5" required>
-                                                <span class="input-group-text">دقيقة</span>
+                                                <span class="input-group-text">{{ trans('doctors.minute_short') }}</span>
                                             </div>
                                             <div class="invalid-feedback">
                                                 @error('days.' . $day . '.appointment_duration')
                                                     {{ $message }}
                                                 @else
-                                                    مطلوبة (بين 5 و 120)
+                                                    {{ trans('doctors.duration_required_between') }}
                                                 @enderror
                                             </div>
                                         </div>
 
-                                        {{-- قسم الاستراحات --}}
                                         <div class="col-12 breaks-section mt-3">
-                                            <h6>
-                                                <span><i class="fas fa-mug-hot me-2"></i> فترات الاستراحة</span>
-                                                <button type="button" class="btn btn-sm add-break-btn"
+                                            <h6><span><i class="fas fa-mug-hot me-2"></i>
+                                                    {{ trans('doctors.break_periods') }}</span><button type="button"
+                                                    class="btn btn-sm add-break-btn"
                                                     onclick="addBreak('{{ $day }}')"> <i
-                                                        class="fas fa-plus me-1"></i> إضافة فترة </button>
-                                            </h6>
+                                                        class="fas fa-plus me-1"></i>
+                                                    {{ trans('doctors.add_period') }}</button></h6>
                                             <div class="breaks-container" id="breaks-container-{{ $day }}">
-                                                {{-- عرض الاستراحات الموجودة --}}
                                                 @if (!empty($breaks))
                                                     @foreach ($breaks as $index => $break)
-                                                        @php
-                                                            $breakStartTime = $break['start_time'] ?? '';
-                                                            $breakEndTime = $break['end_time'] ?? '';
-                                                            $breakReason = $break['reason'] ?? '';
-                                                        @endphp
                                                         <div class="break-card animate__animated animate__fadeIn">
                                                             <div class="row g-2 align-items-center">
-                                                                <div class="col">
-                                                                    <input type="text"
+                                                                <div class="col"><input type="text"
                                                                         class="form-control form-control-sm flatpickr-time break-start-time @error("days.$day.breaks.$index.start_time") is-invalid @enderror"
                                                                         placeholder="HH:MM"
                                                                         name="days[{{ $day }}][breaks][{{ $index }}][start_time]"
-                                                                        value="{{ $breakStartTime }}" required>
-                                                                    <div class="invalid-feedback">
-                                                                        @error("days.$day.breaks.$index.start_time")
-                                                                            {{ $message }}
-                                                                        @enderror
-                                                                    </div>
+                                                                        value="{{ $break['start_time'] ?? '' }}" required>
                                                                 </div>
                                                                 <div class="col-auto"><span
                                                                         class="time-separator">-</span></div>
-                                                                <div class="col">
-                                                                    <input type="text"
+                                                                <div class="col"><input type="text"
                                                                         class="form-control form-control-sm flatpickr-time break-end-time @error("days.$day.breaks.$index.end_time") is-invalid @enderror"
                                                                         placeholder="HH:MM"
                                                                         name="days[{{ $day }}][breaks][{{ $index }}][end_time]"
-                                                                        value="{{ $breakEndTime }}" required>
-                                                                    <div class="invalid-feedback">
-                                                                        @error("days.$day.breaks.$index.end_time")
-                                                                            {{ $message }}
-                                                                        @enderror
-                                                                    </div>
+                                                                        value="{{ $break['end_time'] ?? '' }}" required>
                                                                 </div>
-                                                                <div class="col-md-4">
-                                                                    <input type="text"
+                                                                <div class="col-md-4"><input type="text"
                                                                         class="form-control form-control-sm @error("days.$day.breaks.$index.reason") is-invalid @enderror"
                                                                         name="days[{{ $day }}][breaks][{{ $index }}][reason]"
-                                                                        value="{{ $breakReason }}"
-                                                                        placeholder="السبب (اختياري)">
-                                                                    <div class="invalid-feedback">
-                                                                        @error("days.$day.breaks.$index.reason")
-                                                                            {{ $message }}
-                                                                        @enderror
-                                                                    </div>
+                                                                        value="{{ $break['reason'] ?? '' }}"
+                                                                        placeholder="{{ trans('doctors.reason_optional') }}">
                                                                 </div>
-                                                                <div class="col-auto">
-                                                                    <button type="button"
+                                                                <div class="col-auto"><button type="button"
                                                                         class="btn btn-sm remove-break-btn"
                                                                         onclick="removeBreak(this)"
-                                                                        title="إزالة الاستراحة"><i
-                                                                            class="fas fa-times"></i></button>
-                                                                </div>
+                                                                        title="{{ trans('doctors.remove_break') }}"><i
+                                                                            class="fas fa-times"></i></button></div>
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                 @endif
-                                                {{-- قالب لإضافة استراحة جديدة --}}
                                                 <template id="break-template-{{ $day }}">
                                                     <div class="break-card">
                                                         <div class="row g-2 align-items-center">
@@ -803,10 +752,12 @@
                                                             <div class="col-md-4"><input type="text"
                                                                     class="form-control form-control-sm"
                                                                     name="days[{{ $day }}][breaks][__INDEX__][reason]"
-                                                                    placeholder="السبب (اختياري)"></div>
+                                                                    placeholder="{{ trans('doctors.reason_optional') }}">
+                                                            </div>
                                                             <div class="col-auto"><button type="button"
                                                                     class="btn btn-sm remove-break-btn"
-                                                                    onclick="removeBreak(this)" title="إزالة الاستراحة"><i
+                                                                    onclick="removeBreak(this)"
+                                                                    title="{{ trans('doctors.remove_break') }}"><i
                                                                         class="fas fa-times"></i></button></div>
                                                         </div>
                                                     </div>
@@ -815,29 +766,27 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> {{-- نهاية day-card --}}
+                            </div>
                         @empty
-                            {{-- رسالة في حالة عدم وجود أيام نشطة --}}
                             <div class="alert alert-warning text-center py-4">
                                 <i class="fas fa-exclamation-circle fa-2x mb-3 d-block"></i>
-                                لم تحدد الإدارة أي أيام عمل نشطة لك حتى الآن. لا يمكنك تعديل الجدول الزمني حاليًا.
+                                {{ trans('doctors.no_active_days_message') }}
                             </div>
                         @endforelse
-                    </div> {{-- نهاية days-container --}}
+                    </div>
 
-                    {{-- أزرار الحفظ وإعادة التعيين --}}
                     @if (!empty($activeDaysList))
                         <div class="form-actions">
-                            <button type="reset" class="btn-custom btn-reset-schedule"> <i class="fas fa-sync-alt"></i>
-                                <span>إعادة التعيين</span> </button>
-                            <button type="submit" class="btn-custom btn-save-schedule"> <i class="fas fa-save"></i>
-                                <span>حفظ التعديلات</span> </button>
+                            <button type="reset" class="btn-custom btn-reset-schedule"> <i
+                                    class="fas fa-sync-alt"></i><span>{{ trans('doctors.reset') }}</span></button>
+                            <button type="submit" class="btn-custom btn-save-schedule"> <i
+                                    class="fas fa-save"></i><span>{{ trans('doctors.save_changes') }}</span></button>
                         </div>
                     @endif
-                </div> {{-- نهاية form-section --}}
-            </form> {{-- نهاية الفورم الرئيسي --}}
-        </div> {{-- نهاية col --}}
-    </div> {{-- نهاية row --}}
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 {{-- ====================== JavaScript Section ===================== --}}
@@ -853,7 +802,7 @@
         // --- تهيئة Flatpickr ---
         function initializeFlatpickr(selector = '.flatpickr-time') {
             const elements = typeof selector === 'string' ? document.querySelectorAll(selector) : Array.from(
-            selector); // Ensure it's an array
+                selector); // Ensure it's an array
             elements.forEach(el => {
                 if (el && !el._flatpickr) { // Check if element exists and not initialized
                     flatpickr(el, {
@@ -1004,29 +953,29 @@
                                 const dayStartTime = dayCard.querySelector('.start-time')
                                     ?.value;
                                 const dayEndTime = dayCard.querySelector('.end-time')
-                                ?.value;
+                                    ?.value;
                                 dayCard.querySelectorAll('.break-card').forEach(
-                                breakCard => {
-                                    const breakStartInput = breakCard.querySelector(
-                                        '.break-start-time');
-                                    const breakEndInput = breakCard.querySelector(
-                                        '.break-end-time');
-                                    if (breakStartInput && breakEndInput) {
+                                    breakCard => {
+                                        const breakStartInput = breakCard.querySelector(
+                                            '.break-start-time');
+                                        const breakEndInput = breakCard.querySelector(
+                                            '.break-end-time');
+                                        if (breakStartInput && breakEndInput) {
 
-                                        if (breakEndInput.value && breakStartInput
-                                            .value && breakEndInput.value <=
-                                            breakStartInput.value) {
-                                            customValid = false;
-                                            breakEndInput.classList.add(
-                                                'is-invalid');
+                                            if (breakEndInput.value && breakStartInput
+                                                .value && breakEndInput.value <=
+                                                breakStartInput.value) {
+                                                customValid = false;
+                                                breakEndInput.classList.add(
+                                                    'is-invalid');
 
-                                        } else {
-                                            breakEndInput.classList.remove(
-                                                'is-invalid');
+                                            } else {
+                                                breakEndInput.classList.remove(
+                                                    'is-invalid');
+                                            }
+
                                         }
-
-                                    }
-                                });
+                                    });
                             });
 
                             if (!form.checkValidity() || !customValid) {
@@ -1047,7 +996,7 @@
                     e.preventDefault();
                     if (confirm(
                             'هل أنت متأكد أنك تريد إعادة تعيين جميع الحقول إلى قيمها الأصلية؟ ستفقد أي تغييرات غير محفوظة.'
-                            )) {
+                        )) {
                         scheduleForm.reset();
                         document.querySelectorAll('.day-card').forEach(updateHeaderTimeSummary);
                         scheduleForm.classList.remove('was-validated');

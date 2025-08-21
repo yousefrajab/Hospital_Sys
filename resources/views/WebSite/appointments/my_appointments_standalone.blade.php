@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>مواعيــدي - {{ $patient->name }} - {{ config('app.name', 'المنصة الطبية') }}</title>
-
+<title>{{ trans('patients.my_appointments_title', ['name' => $patient->name]) }} - {{ config('app.name', trans('patients.medical_platform')) }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -139,51 +138,48 @@
 
 <body>
     <header class="standalone-page-header">
-        {{-- ... نفس الهيدر من الرد السابق ... --}}
         <div class="container-fluid">
             <div class="site-branding">
-                <a href="{{ route('home') }}" class="site-title" title="العودة إلى الرئيسية ">
+                <a href="{{ route('home') }}" class="site-title" title="{{ trans('patients.back_to_home') }}">
                     {{  'Hospital Management System' }}
                 </a>
             </div>
             <div class="user-actions">
                 @auth('patient')
-                    <span class="welcome-text">مرحباً بك، <strong>{{ $patient->name }}</strong></span>
+                    <span class="welcome-text">{{ trans('patients.welcome_message') }} <strong>{{ $patient->name }}</strong></span>
                     <a href="{{ route('logout.patient') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form-header-standalone').submit();"
-                        title="تسجيل الخروج">
-                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                        title="{{ trans('patients.logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> {{ trans('patients.logout') }}
                     </a>
                     <form id="logout-form-header-standalone" action="{{ route('logout.patient') }}" method="POST" style="display: none;">@csrf</form>
                 @else
-                    <a href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+                    <a href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> {{ trans('patients.login') }}</a>
                 @endauth
-                <a href="{{ route('home') }}" title="العودة للصفحة الرئيسية"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="{{ route('home') }}" title="{{ trans('patients.back_to_home') }}"><i class="fas fa-home"></i> {{ trans('patients.nav_home') }}</a>
             </div>
         </div>
     </header>
 
     <main class="appointments-page-container">
         <div class="page-header-custom animate__animated animate__fadeInDown">
-            <h1 class="page-title-custom"><i class="fas fa-calendar-check text-primary"></i> مواعيــدي</h1>
+            <h1 class="page-title-custom"><i class="fas fa-calendar-check text-primary"></i> {{ trans('patients.my_appointments') }}</h1>
             <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-primary-patient btn-sm">
-                <i class="fas fa-plus-circle me-1"></i> طلب موعد جديد
+                <i class="fas fa-plus-circle me-1"></i> {{ trans('patients.request_new_appointment') }}
             </a>
         </div>
 
-        {{-- Session Messages (for redirects from non-AJAX forms - not used by current AJAX cancel) --}}
         @if (session('success_notify') || session('error_notify') || session('warning_notify') || session('info_notify'))
-            {{-- ... نفس كود عرض رسائل السيشون من الرد السابق ... --}}
+            {{-- ... --}}
         @endif
 
         <div class="appointment-tabs animate__animated animate__fadeInUp" data-wow-delay="0.2s">
             <ul class="nav nav-tabs nav-fill mb-4" id="myAppointmentsTab" role="tablist">
-                {{-- ... نفس كود التبويبات من الرد السابق ... --}}
                  <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab"
                         data-bs-target="#upcoming-appointments-content" type="button" role="tab"
                         aria-controls="upcoming-appointments-content" aria-selected="true">
-                        <i class="fas fa-calendar-day"></i> المواعيد القادمة
+                        <i class="fas fa-calendar-day"></i> {{ trans('patients.upcoming_appointments') }}
                         @if ($upcomingAppointments->total() > 0)
                             <span class="badge ms-2">{{ $upcomingAppointments->total() }}</span>
                         @endif
@@ -193,7 +189,7 @@
                     <button class="nav-link" id="past-tab" data-bs-toggle="tab"
                         data-bs-target="#past-appointments-content" type="button" role="tab"
                         aria-controls="past-appointments-content" aria-selected="false">
-                        <i class="fas fa-history"></i> المواعيد السابقة
+                        <i class="fas fa-history"></i> {{ trans('patients.past_appointments') }}
                         @if ($pastAppointments->total() > 0)
                             <span class="badge ms-2">{{ $pastAppointments->total() }}</span>
                         @endif
@@ -225,26 +221,25 @@
                                             </span>
                                         </div>
                                         <div class="appointment-card-body-patient">
-                                            {{-- ... نفس تفاصيل الموعد ... --}}
                                             @if ($appointment->doctor)
                                                 <li><i class="fas fa-user-md"></i>
-                                                    <span class="detail-label">الطبيب:</span>
-                                                    <span class="detail-value">{{ $appointment->doctor->name ?? 'غير محدد' }}</span>
+                                                    <span class="detail-label">{{ trans('patients.doctor_label') }}</span>
+                                                    <span class="detail-value">{{ $appointment->doctor->name }}</span>
                                                 </li>
                                             @endif
                                             @if ($appointment->section)
                                                 <li><i class="fas fa-clinic-medical"></i>
-                                                    <span class="detail-label">القسم:</span>
-                                                    <span class="detail-value">{{ $appointment->section->name ?? 'غير محدد' }}</span>
+                                                    <span class="detail-label">{{ trans('patients.section_prefix') }}</span>
+                                                    <span class="detail-value">{{ $appointment->section->name }}</span>
                                                 </li>
                                             @endif
                                              <li><i class="fas fa-user"></i>
-                                                <span class="detail-label">باسم:</span>
+                                                <span class="detail-label">{{ trans('patients.by_the_name_of') }}</span>
                                                 <span class="detail-value">{{ $appointment->name }}</span>
                                             </li>
                                             @if ($appointment->notes)
                                                 <li><i class="fas fa-sticky-note"></i>
-                                                    <span class="detail-label">ملاحظاتك:</span>
+                                                    <span class="detail-label">{{ trans('patients.your_notes_label') }}</span>
                                                     <span class="detail-value text-muted">{{ Str::limit($appointment->notes, 70) }}</span>
                                                 </li>
                                             @endif
@@ -254,20 +249,18 @@
                                 </div>
                             @endforeach
                         </div>
-                        {{-- ... نفس كود الترقيم ... --}}
                          @if ($upcomingAppointments->hasPages())
                             <div class="pagination-wrapper d-flex justify-content-center mt-4">
                                 {{ $upcomingAppointments->appends(['past_page' => $pastAppointments->currentPage()])->links('vendor.pagination.bootstrap-5') }}
                             </div>
                         @endif
                     @else
-                        {{-- ... نفس كود "لا توجد مواعيد قادمة" ... --}}
                          <div class="no-appointments-patient">
                             <div class="empty-icon-display"><i class="fas fa-calendar-check"></i></div>
-                            <h4>لا توجد لديك مواعيد قادمة حاليًا.</h4>
-                            <p>عندما تقوم بحجز موعد جديد، سيظهر هنا بكل تأكيد.</p>
+                            <h4>{{ trans('patients.no_upcoming_appointments_currently') }}</h4>
+                            <p>{{ trans('patients.new_appointments_will_appear_here_with_certainty') }}</p>
                             <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-lg btn-book-new-appointment mt-2">
-                                <i class="fas fa-plus-circle"></i> اطلب موعدًا جديدًا الآن
+                                <i class="fas fa-plus-circle"></i> {{ trans('patients.request_new_appointment_now') }}
                             </a>
                         </div>
                     @endif
@@ -275,7 +268,6 @@
 
                 <!-- Past Appointments Tab -->
                 <div class="tab-pane fade" id="past-appointments-content" role="tabpanel" aria-labelledby="past-tab">
-                   {{-- ... نفس كود عرض المواعيد السابقة من الرد السابق ... --}}
                    @if ($pastAppointments->isNotEmpty())
                         <div class="appointments-grid-patient">
                             @foreach ($pastAppointments as $appointment)
@@ -297,28 +289,28 @@
                                             <ul class="appointment-details-list-patient">
                                                 @if ($appointment->doctor)
                                                     <li><i class="fas fa-user-md"></i>
-                                                        <span class="detail-label">الطبيب:</span>
-                                                        <span class="detail-value">{{ $appointment->doctor->name ?? 'غير محدد' }}</span>
+                                                        <span class="detail-label">{{ trans('patients.doctor_label') }}</span>
+                                                        <span class="detail-value">{{ $appointment->doctor->name }}</span>
                                                     </li>
                                                 @endif
                                                 @if ($appointment->section)
                                                     <li><i class="fas fa-clinic-medical"></i>
-                                                         <span class="detail-label">القسم:</span>
-                                                        <span class="detail-value">{{ $appointment->section->name ?? 'غير محدد' }}</span>
+                                                         <span class="detail-label">{{ trans('patients.section_prefix') }}</span>
+                                                        <span class="detail-value">{{ $appointment->section->name }}</span>
                                                     </li>
                                                 @endif
                                                  <li><i class="fas fa-user"></i>
-                                                    <span class="detail-label">باسم:</span>
+                                                    <span class="detail-label">{{ trans('patients.by_the_name_of') }}</span>
                                                     <span class="detail-value">{{ $appointment->name }}</span>
                                                 </li>
                                                 @if ( ($appointment->type == App\Models\Appointment::STATUS_CANCELLED_BY_PATIENT || $appointment->type == App\Models\Appointment::STATUS_CANCELLED) && $appointment->cancellation_reason && (empty($appointment->cancelled_by_user_type) || $appointment->cancelled_by_user_type == App\Models\Patient::class) )
                                                     <li class="cancellation-reason-item text-danger"><i class="fas fa-comment-slash"></i>
-                                                        <span class="detail-label">سبب الإلغاء (من طرفك):</span>
+                                                        <span class="detail-label">{{ trans('patients.cancellation_reason_by_you') }}</span>
                                                         <span class="detail-value">{{ Str::limit($appointment->cancellation_reason, 60) }}</span>
                                                     </li>
                                                 @elseif ( ($appointment->type == App\Models\Appointment::STATUS_CANCELLED_BY_DOCTOR || $appointment->type == App\Models\Appointment::STATUS_CANCELLED) && $appointment->cancellation_reason && $appointment->cancelled_by_user_type == App\Models\Doctor::class )
                                                     <li class="cancellation-reason-item text-warning"><i class="fas fa-comment-slash"></i>
-                                                        <span class="detail-label">سبب الإلغاء (من العيادة):</span>
+                                                        <span class="detail-label">{{ trans('patients.cancellation_reason_by_clinic') }}</span>
                                                         <span class="detail-value">{{ Str::limit($appointment->cancellation_reason, 60) }}</span>
                                                     </li>
                                                 @endif
@@ -336,8 +328,8 @@
                     @else
                         <div class="no-appointments-patient">
                              <div class="empty-icon-display"><i class="fas fa-folder-open"></i></div>
-                            <h4>لا يوجد لديك سجل مواعيد سابقة.</h4>
-                            <p>ستظهر مواعيدك المكتملة أو الملغاة هنا بعد مرور تاريخها.</p>
+                            <h4>{{ trans('patients.no_past_appointments_record') }}</h4>
+                            <p>{{ trans('patients.past_appointments_will_appear_here') }}</p>
                         </div>
                     @endif
                 </div>
@@ -345,9 +337,9 @@
         </div>
     </main>
 
-    <footer class="standalone-page-footer">
-        <p>© {{ date('Y') }} جميع الحقوق محفوظة - {{ config('app.name', 'المنصة الطبية') }}.</p>
-    </footer>
+    {{-- <footer class="standalone-page-footer">
+        <p>© {{ date('Y') }} جميع الحقوق محفوظة - {{ ء }}.</p>
+    </footer> --}}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>

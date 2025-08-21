@@ -70,18 +70,18 @@
      <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">لوحة تحكم الطبيب</h4>
-                 <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ <a href="{{ route('doctor.profile.show') }}">الملف الشخصي</a></span>
-                 <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ عرض جدول العمل</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('doctors.doctor_dashboard') }}</h4>
+                 <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ <a href="{{ route('doctor.profile.show') }}">{{ trans('doctors.profile') }}</a></span>
+                 <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('doctors.view_work_schedule') }}</span>
             </div>
         </div>
          <div class="d-flex my-xl-auto right-content">
              {{-- زر للانتقال لصفحة تعديل الجدول (التي أنشأناها) --}}
              <a href="{{ route('doctors.schedule.edit', $doctor->id) }}" class="btn btn-primary-gradient btn-sm">
-                 <i class="fas fa-edit me-1"></i> تعديل جدول العمل
+                 <i class="fas fa-edit me-1"></i> {{ trans('doctors.edit_work_schedule') }}
              </a>
              <a href="{{ route('doctor.profile.show') }}" class="btn btn-outline-secondary btn-sm mr-2">
-                 <i class="fas fa-user me-1"></i> العودة للملف الشخصي
+                 <i class="fas fa-user me-1"></i> {{ trans('doctors.back_to_profile') }}
             </a>
         </div>
     </div>
@@ -98,7 +98,7 @@
                  <div class="schedule-header">
                     <h2 class="schedule-title">
                         <i class="fas fa-calendar-week"></i>
-                        جدول ساعات العمل الأسبوعي
+                        {{ trans('doctors.weekly_work_schedule') }}
                     </h2>
                      <span class="doctor-badge">
                         <i class="fas fa-user-md"></i>
@@ -111,24 +111,21 @@
                          <table class="table weekly-schedule-table">
                              <thead>
                                  <tr>
-                                     <th>اليوم</th>
-                                     <th class="text-center">وقت البدء</th>
-                                     <th class="text-center">وقت الانتهاء</th>
-                                     <th class="text-center">مدة الموعد</th>
-                                     <th class="text-center">الحالة</th>
-                                     <th>الاستراحات</th>
+                                     <th>{{ trans('doctors.day') }}</th>
+                                     <th class="text-center">{{ trans('doctors.start_time') }}</th>
+                                     <th class="text-center">{{ trans('doctors.end_time') }}</th>
+                                     <th class="text-center">{{ trans('doctors.appointment_duration') }}</th>
+                                     <th class="text-center">{{ trans('doctors.status') }}</th>
+                                     <th>{{ trans('doctors.breaks') }}</th>
                                  </tr>
                              </thead>
                              <tbody>
                                  @php
                                      $daysOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-                                     // تحويل المجموعة المفهرسة إلى مصفوفة عادية للفرز (إذا لزم الأمر)
-                                     // $workingDaysMapped = $workingDaysCollection->keyBy('day'); // لا نحتاج keyBy هنا
                                  @endphp
 
                                  @foreach($daysOrder as $dayName)
                                      @php
-                                         // البحث عن اليوم في المجموعة الممررة
                                          $workingDay = $workingDaysCollection->first(function ($item) use ($dayName) {
                                              return strcasecmp($item->day, $dayName) === 0;
                                          });
@@ -142,8 +139,8 @@
                                          @if($workingDay && $workingDay->active)
                                              <td class="time-cell"><span>{{ \Carbon\Carbon::parse($workingDay->start_time)->format('h:i A') }}</span></td>
                                              <td class="time-cell"><span>{{ \Carbon\Carbon::parse($workingDay->end_time)->format('h:i A') }}</span></td>
-                                             <td class="duration-cell"><span>{{ $workingDay->appointment_duration }} دقيقة</span></td>
-                                             <td class="status-cell text-center"><span class="badge badge-success-light"><i class="fas fa-check-circle me-1"></i>نشط</span></td>
+                                             <td class="duration-cell"><span>{{ $workingDay->appointment_duration }} {{ trans('doctors.minute') }}</span></td>
+                                             <td class="status-cell text-center"><span class="badge badge-success-light"><i class="fas fa-check-circle me-1"></i>{{ trans('doctors.active') }}</span></td>
                                              <td>
                                                  @if($workingDay->breaks->isNotEmpty())
                                                      <ul class="breaks-list">
@@ -152,11 +149,11 @@
                                                          @endforeach
                                                      </ul>
                                                  @else
-                                                     <span class="text-muted small">لا يوجد</span>
+                                                     <span class="text-muted small">{{ trans('doctors.none') }}</span>
                                                  @endif
                                              </td>
                                          @else
-                                             <td colspan="5" class="text-center text-muted font-italic">غير متاح / إجازة</td>
+                                             <td colspan="5" class="text-center text-muted font-italic">{{ trans('doctors.unavailable_off') }}</td>
                                          @endif
                                      </tr>
                                  @endforeach
@@ -166,15 +163,15 @@
                  @else
                      <div class="alert alert-warning no-schedule-alert text-center">
                           <i class="fas fa-exclamation-triangle fa-2x mb-3 d-block"></i>
-                          لم يتم تحديد جدول ساعات العمل لهذا الطبيب بعد.
-                          <a href="{{ route('doctors.schedule.edit', $doctor->id) }}" class="btn btn-primary btn-sm mt-3">إضافة / تعديل الجدول</a>
+                          {{ trans('doctors.no_schedule_defined_yet') }}
+                          <a href="{{ route('doctors.schedule.edit', $doctor->id) }}" class="btn btn-primary btn-sm mt-3">{{ trans('doctors.add_edit_schedule') }}</a>
                      </div>
                  @endif
 
                  {{-- زر العودة لصفحة تعديل الجدول --}}
                  <div class="text-center mt-5">
                        <a href="{{ route('doctors.schedule.edit', $doctor->id) }}" class="btn btn-edit-schedule">
-                            <i class="fas fa-edit"></i> تعديل جدول العمل
+                            <i class="fas fa-edit"></i> {{ trans('doctors.edit_work_schedule') }}
                        </a>
                  </div>
 

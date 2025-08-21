@@ -77,14 +77,13 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-pills text-primary me-2"></i>الصيدلية</h4>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-pills text-primary me-2"></i>{{ trans('phrE.pharmacist') }}</h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="text-muted mt-1 tx-13">الوصفات الطبية الواردة</span>
+                <span class="text-muted mt-1 tx-13">{{ trans('phrE.incoming_prescriptions') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
-            {{-- يمكنك إضافة زر "بحث متقدم" أو أي إجراءات أخرى هنا --}}
-            <span class="text-muted small me-3">الوصفات الجديدة اليوم: <strong class="text-primary">{{ $newPrescriptionsCount ?? 0 }}</strong></span>
+            <span class="text-muted small me-3">{{ trans('phrE.new_prescriptions_today') }} <strong class="text-primary">{{ $newPrescriptionsCount ?? 0 }}</strong></span>
         </div>
     </div>
 @endsection
@@ -94,40 +93,28 @@
 
     <div class="card card-custom filter-card" data-aos="fade-down">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة الوصفات الطبية</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>{{ trans('phrE.filter_prescriptions') }}</h5>
         </div>
         <div class="card-body">
             <form method="GET" action="{{ route('pharmacy_employee.prescriptions.index') }}">
                 <div class="row g-3 align-items-end">
                     <div class="col-lg-5 col-md-6">
-                        <label for="search_term_pharma" class="form-label">بحث برقم الوصفة، اسم المريض أو الطبيب:</label>
+                        <label for="search_term_pharma" class="form-label">{{ trans('phrE.search_by_prescription_patient_doctor') }}</label>
                         <input type="text" name="search_term" id="search_term_pharma" class="form-control"
-                               placeholder="أدخل مصطلح البحث..." value="{{ $request->input('search_term') }}">
+                               placeholder="{{ trans('phrE.search_term_placeholder') }}" value="{{ $request->input('search_term') }}">
                     </div>
                     <div class="col-lg-3 col-md-6">
-                        <label for="date_filter_pharma" class="form-label">تاريخ الوصفة:</label>
+                        <label for="date_filter_pharma" class="form-label">{{ trans('phrE.prescription_date') }}</label>
                         <input type="text" name="date_filter" id="date_filter_pharma" class="form-control flatpickr-date"
                                placeholder="YYYY-MM-DD" value="{{ $request->input('date_filter') }}">
                     </div>
-                    {{-- يمكنك إضافة فلتر بالحالة إذا كان لديك $prescriptionStatuses ممررة --}}
-                    {{-- <div class="col-lg-2 col-md-6">
-                        <label for="status_filter_pharma" class="form-label">الحالة:</label>
-                        <select name="status_filter" id="status_filter_pharma" class="form-select select2" data-placeholder="الكل">
-                            <option value="">الكل</option>
-                             @if(isset($prescriptionStatuses))
-                                @foreach($prescriptionStatuses as $key => $value)
-                                    <option value="{{ $key }}" {{ $request->status_filter == $key ? 'selected' : '' }}>{{ $value }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div> --}}
                     <div class="col-lg-2 col-md-6">
-                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> بحث</button>
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> {{ trans('phrE.search') }}</button>
                     </div>
                     <div class="col-lg-2 col-md-6">
                         @if(request()->hasAny(['search_term', 'date_filter', 'status_filter']))
                             <a href="{{ route('pharmacy_employee.prescriptions.index') }}" class="btn btn-outline-secondary w-100">
-                                <i class="fas fa-eraser me-1"></i> مسح
+                                <i class="fas fa-eraser me-1"></i> {{ trans('phrE.clear') }}
                             </a>
                         @endif
                     </div>
@@ -138,8 +125,8 @@
 
     <div class="card card-custom mt-4" data-aos="fade-up" data-aos-delay="100">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h4 class="card-title mb-0"><i class="fas fa-list-alt me-2"></i>الوصفات الطبية الواردة ({{ $pendingPrescriptions->total() }})</h4>
-            {{-- <a href="#" class="btn btn-outline-primary btn-sm"><i class="fas fa-redo me-1"></i> تحديث القائمة</a> --}}
+            <h4 class="card-title mb-0"><i class="fas fa-list-alt me-2"></i>{{ trans('phrE.incoming_prescriptions_list_title', ['count' => $pendingPrescriptions->total()]) }}</h4>
+            {{-- <a href="#" class="btn btn-outline-primary btn-sm"><i class="fas fa-redo me-1"></i> {{ trans('phrE.update_list') }}</a> --}}
         </div>
         <div class="card-body p-0">
             @if($pendingPrescriptions->isNotEmpty())
@@ -148,12 +135,12 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>رقم الوصفة</th>
-                                <th>اسم المريض</th>
-                                <th>الطبيب المعالج</th>
-                                <th>تاريخ الوصفة</th>
-                                <th class="text-center">الحالة</th>
-                                <th class="text-center">الإجراء</th>
+                                <th>{{ trans('phrE.prescription_number_col') }}</th>
+                                <th>{{ trans('phrE.patient_name_col') }}</th>
+                                <th>{{ trans('phrE.attending_doctor_col') }}</th>
+                                <th>{{ trans('phrE.prescription_date_col') }}</th>
+                                <th class="text-center">{{ trans('phrE.status_col') }}</th>
+                                <th class="text-center">{{ trans('phrE.action_col') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -162,18 +149,16 @@
                                     <td>{{ $loop->iteration + $pendingPrescriptions->firstItem() - 1 }}</td>
                                     <td><strong>{{ $prescription->prescription_number }}</strong></td>
                                     <td class="patient-name-link">
-                                        {{-- يمكنك جعل هذا رابطًا لملف المريض إذا كان للصيدلي صلاحية لعرض تفاصيل معينة --}}
-                                        {{ $prescription->patient->name ?? 'مريض غير معروف' }}
+                                        {{ $prescription->patient->name ?? trans('phrE.unknown_patient') }}
                                     </td>
-                                    <td>{{ $prescription->doctor->name ?? 'طبيب غير محدد' }}</td>
+                                    <td>{{ $prescription->doctor->name ?? trans('phrE.unspecified_doctor') }}</td>
                                     <td>{{ $prescription->prescription_date->translatedFormat('d M Y') }}</td>
                                     <td class="text-center">
                                         @php
                                             $statusKey = $prescription->status;
-                                            // افترض أن لديك مصفوفة $prescriptionStatuses ممررة أو دالة عامة
                                             $allStatuses = class_exists(\App\Models\Prescription::class) && method_exists(\App\Models\Prescription::class, 'getStatusesForFilter')
                                                            ? \App\Models\Prescription::getStatusesForFilter()
-                                                           : ['new' => 'جديدة', 'approved' => 'معتمدة', 'partially_dispensed' => 'مصروفة جزئياً']; // مثال fallback
+                                                           : [];
                                             $statusText = $allStatuses[$statusKey] ?? ucfirst(str_replace('_', ' ', $statusKey));
                                             $statusBadgeClass = 'status-' . str_replace('_', '-', $statusKey);
                                         @endphp
@@ -184,10 +169,8 @@
                                     <td class="text-center">
                                         <a href="{{ route('pharmacy_employee.prescriptions.dispense.form', $prescription->id) }}"
                                            class="btn btn-success action-btn btn-sm">
-                                            <i class="fas fa-prescription-bottle"></i> بدء الصرف
+                                            <i class="fas fa-prescription-bottle"></i> {{ trans('phrE.start_dispensing') }}
                                         </a>
-                                        {{-- يمكنك إضافة زر لعرض التفاصيل إذا أردت --}}
-                                        {{-- <a href="#" class="btn btn-outline-info btn-sm action-btn"><i class="fas fa-eye"></i></a> --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -202,8 +185,8 @@
             @else
                 <div class="empty-state p-5">
                     <i class="fas fa-folder-open"></i>
-                    <h5 class="mt-3">لا توجد وصفات طبية تنتظر المعالجة حاليًا.</h5>
-                    <p class="text-muted">سيتم عرض الوصفات الجديدة هنا عند وصولها من الأطباء.</p>
+                    <h5 class="mt-3">{{ trans('phrE.no_prescriptions_awaiting_processing') }}</h5>
+                    <p class="text-muted">{{ trans('phrE.new_prescriptions_will_appear_here') }}</p>
                 </div>
             @endif
         </div>

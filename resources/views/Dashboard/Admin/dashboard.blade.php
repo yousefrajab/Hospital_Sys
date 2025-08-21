@@ -250,7 +250,7 @@
                     <div class="icon ray_employees"><i class="fas fa-x-ray"></i></div>
                     <div class="info">
                         <span class="count">{{ $rayEmployeesCount ?? (\App\Models\RayEmployee::count() ?? 0) }}</span>
-                        <span class="label">{{ trans('AdminSb.radiology_staff') }}</span>
+                        <span class="label">{{ trans('AdminSb.Radiology staff') }}</span>
                     </div>
                     <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.radiology_department') }}</span></div>
                 </a>

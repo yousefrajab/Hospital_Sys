@@ -5,15 +5,15 @@
             <input
                 class="form-control message-input"
                 wire:model="body"
-                placeholder="اكتب رسالتك هنا..."
+                placeholder="{{ trans('doctors.chat_send_message_placeholder') }}"
                 type="text"
-                aria-label="رسالة جديدة"
+                aria-label="{{ trans('doctors.chat_new_message_aria_label') }}"
             >
             <div class="input-group-append">
                 <button
                     class="btn btn-send"
                     type="submit"
-                    title="إرسال"
+                    title="{{ trans('doctors.chat_send_button_title') }}"
                     :disabled="!$body"
                 >
                     <i class="fas fa-paper-plane send-icon"></i>
@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="typing-indicator" wire:loading>
-            <i class="fas fa-circle-notch fa-spin"></i> جاري الإرسال...
+            <i class="fas fa-circle-notch fa-spin"></i> {{ trans('doctors.chat_sending_indicator') }}
         </div>
     </form>
     @endif

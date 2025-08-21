@@ -254,10 +254,10 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <i class="fas fa-info-circle fa-lg me-2 text-primary"></i> {{-- أيقونة معلومات --}}
+                <i class="fas fa-info-circle fa-lg me-2 text-primary"></i>
                 <div>
-                    <h4 class="content-title mb-0 my-auto">إدارة المخزون الدوائي</h4>
-                    <span class="text-muted mt-0 tx-13">/ تفاصيل الدواء:
+                    <h4 class="content-title mb-0 my-auto">{{ trans('phrM.manage_medications') }}</h4>
+                    <span class="text-muted mt-0 tx-13">/ {{ trans('phrM.medication_details_title', ['name' => '']) }}
                         <strong>{{ $medicationNameForTitle }}</strong></span>
                 </div>
             </div>
@@ -265,11 +265,11 @@
         <div class="d-flex my-xl-auto right-content btn-action-group">
             <a href="{{ route('pharmacy_manager.medications.edit', $medication->id) }}"
                 class="btn btn-outline-warning btn-sm btn-icon-text">
-                <i class="fas fa-edit"></i> تعديل
+                <i class="fas fa-edit"></i> {{ trans('phrM.edit') }}
             </a>
             <a href="{{ route('pharmacy_manager.medications.index') }}"
                 class="btn btn-outline-secondary btn-sm btn-icon-text">
-                <i class="fas fa-arrow-left"></i> القائمة
+                <i class="fas fa-arrow-left"></i> {{ trans('phrM.list') }}
             </a>
         </div>
     </div>
@@ -284,50 +284,49 @@
                 <div class="details-card-header">
                     <h3><i class="fas fa-capsules"></i> {{ $medicationNameForTitle }}</h3>
                     <span class="status-badge bg-{{ $medication->status ? 'success' : 'danger' }}">
-                        {{ $medication->status ? 'نشط' : 'غير نشط' }}
+                        {{ $medication->status ? trans('phrM.active') : trans('phrM.inactive') }}
                     </span>
                 </div>
 
                 <div class="details-card-body">
-                    <h4 class="section-title"><i class="fas fa-file-medical-alt"></i> معلومات الدواء الأساسية</h4>
+                    <h4 class="section-title"><i class="fas fa-file-medical-alt"></i> {{ trans('phrM.basic_medication_info') }}</h4>
                     <div class="info-grid">
                         <div class="info-item">
-                            <span class="info-item-label"><i class="fas fa-tag"></i>الاسم التجاري</span>
+                            <span class="info-item-label"><i class="fas fa-tag"></i>{{ trans('phrM.commercial_name') }}</span>
                             <strong class="info-item-value">{{ $medication->name }}</strong>
                         </div>
                         <div class="info-item">
-                            <span class="info-item-label"><i class="fas fa-flask-vial"></i>الاسم العلمي</span>
+                            <span class="info-item-label"><i class="fas fa-flask-vial"></i>{{ trans('phrM.scientific_name') }}</span>
                             <strong class="info-item-value">{{ $medication->generic_name ?? '-' }}</strong>
                         </div>
                         <div class="info-item">
-                            <span class="info-item-label"><i class="fas fa-tablets"></i>الشكل الصيدلاني</span>
+                            <span class="info-item-label"><i class="fas fa-tablets"></i>{{ trans('phrM.pharmaceutical_form') }}</span>
                             <strong class="info-item-value">{{ $medication->dosage_form ?? '-' }}</strong>
                         </div>
                         <div class="info-item">
-                            <span class="info-item-label"><i class="fas fa-weight-scale"></i>التركيز/القوة</span>
+                            <span class="info-item-label"><i class="fas fa-weight-scale"></i>{{ trans('phrM.concentration_strength') }}</span>
                             <strong class="info-item-value">{{ $medication->strength ?? '-' }}</strong>
                         </div>
                         <div class="info-item">
-                            <span class="info-item-label"><i class="fas fa-bell"></i>حد إعادة الطلب</span>
+                            <span class="info-item-label"><i class="fas fa-bell"></i>{{ trans('phrM.reorder_limit') }}</span>
                             <strong class="info-item-value">{{ $medication->minimum_stock_level }}</strong>
                         </div>
                         <div class="info-item">
-                            <span class="info-item-label"><i class="far fa-calendar-plus"></i>تاريخ الإضافة</span>
+                            <span class="info-item-label"><i class="far fa-calendar-plus"></i>{{ trans('phrM.date_added') }}</span>
                             <strong
                                 class="info-item-value">{{ $medication->created_at->translatedFormat('d F Y, H:i') }}</strong>
                         </div>
-                        {{-- مثال لعرض حقل ملاحظات إذا كان موجودًا --}}
                         @if ($medication->notes)
-                            <div class="info-item" style="grid-column: 1 / -1;"> {{-- يمتد على كامل العرض --}}
-                                <span class="info-item-label"><i class="far fa-sticky-note"></i>ملاحظات إضافية</span>
+                            <div class="info-item" style="grid-column: 1 / -1;">
+                                <span class="info-item-label"><i class="far fa-sticky-note"></i>{{ trans('phrM.additional_notes') }}</span>
                                 <p class="info-item-value" style="white-space: pre-wrap;">{{ $medication->notes }}</p>
                             </div>
                         @endif
                     </div>
 
-                    <hr class="my-4"> {{-- فاصل بصري أوضح --}}
+                    <hr class="my-4">
 
-                    <h4 class="section-title"><i class="fas fa-boxes-stacked"></i> المخزون المتوفر (الدفعات النشطة)</h4>
+                    <h4 class="section-title"><i class="fas fa-boxes-stacked"></i> {{ trans('phrM.available_stock_active_batches') }}</h4>
                     @if ($medication->relationLoaded('stocks') && $medication->stocks->where('quantity_on_hand', '>', 0)->count() > 0)
                         <div class="table-responsive shadow-sm"
                             style="border-radius: var(--admin-radius-md); overflow: hidden;">
@@ -335,11 +334,11 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
-                                        <th>رقم الدفعة</th>
-                                        <th>تاريخ الانتهاء</th>
-                                        <th>الكمية الحالية</th>
-                                        <th>أُضيفت بتاريخ</th>
-                                        <th>ملاحظات الدفعة</th>
+                                        <th>{{ trans('phrM.batch_number_col') }}</th>
+                                        <th>{{ trans('phrM.expiry_date_col') }}</th>
+                                        <th>{{ trans('phrM.current_quantity_col') }}</th>
+                                        <th>{{ trans('phrM.added_on_col') }}</th>
+                                        <th>{{ trans('phrM.batch_notes_col') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -352,10 +351,10 @@
                                                 {{ $stock->expiry_date->translatedFormat('M Y') }}
                                                 @if ($stock->expiry_date->isPast())
                                                     <i class="fas fa-exclamation-triangle text-danger ms-1"
-                                                        title="منتهي الصلاحية"></i>
+                                                        title="{{ trans('phrM.expired_tooltip') }}"></i>
                                                 @elseif($stock->expiry_date->isBefore(now()->addMonths(config('pharmacy.expiry_warning_months', 3))))
                                                     <i class="fas fa-exclamation-circle text-warning ms-1"
-                                                        title="قارب على الانتهاء"></i>
+                                                        title="{{ trans('phrM.expiring_soon_tooltip') }}"></i>
                                                 @endif
                                             </td>
                                             <td><strong>{{ $stock->quantity_on_hand }}</strong></td>
@@ -367,28 +366,16 @@
                             </table>
                         </div>
                         <small class="form-text text-muted mt-2 d-block">
-                            <span class="badge bg-danger-soft me-1"> </span> منتهي الصلاحية
-                            <span class="badge bg-warning-soft ms-2 me-1"> </span> قارب على الانتهاء (خلال
-                            {{ config('pharmacy.expiry_warning_months', 3) }} أشهر)
+                            <span class="badge bg-danger-soft me-1"> </span> {{ trans('phrM.legend_expired') }}
+                            <span class="badge bg-warning-soft ms-2 me-1"> </span> {{ trans('phrM.legend_expiring_soon', ['months' => config('pharmacy.expiry_warning_months', 3)]) }}
                         </small>
                     @else
                         <div class="alert alert-custom-info text-center no-stock-message">
                             <i class="fas fa-box-open d-block"></i>
-                            <h5 class="mb-1">لا يوجد مخزون مسجل أو متوفر حاليًا لهذا الدواء.</h5>
-                            <p class="mb-0">يمكنك إضافة دفعات جديدة من صفحة إدارة المخزون.</p>
+                            <h5 class="mb-1">{{ trans('phrM.no_stock_message_title') }}</h5>
+                            <p class="mb-0">{{ trans('phrM.no_stock_message_body') }}</p>
                         </div>
                     @endif
-
-                    <div class="text-center mt-4">
-                        {{-- <a href="{{ route('pharmacy_manager.stocks.index', ['medication_id' => $medication->id]) }}"
-                            class="btn btn-primary btn-sm btn-icon-text">
-                            <i class="fas fa-tasks"></i> إدارة دفعات المخزون
-                        </a> --}}
-                        {{-- <a href="{{ route('pharmacy_manager.medications.stocks.create', ['medication_id' => $medication->id]) }}"
-                            class="btn btn-success btn-sm btn-icon-text ms-2">
-                            <i class="fas fa-plus-circle"></i> إضافة دفعة جديدة
-                        </a> --}}
-                    </div>
                 </div>
             </div>
         </div>

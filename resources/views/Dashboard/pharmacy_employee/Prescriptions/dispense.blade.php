@@ -206,15 +206,15 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-pills text-primary me-2"></i>صرف الوصفات</h4>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-pills text-primary me-2"></i>{{ trans('phrE.dispense_prescriptions') }}</h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="text-muted mt-1 tx-13">الوصفة رقم: {{ $prescription->prescription_number }}</span>
+                <span class="text-muted mt-1 tx-13">{{ trans('phrE.prescription_number_header') }} {{ $prescription->prescription_number }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
             <a href="{{ route('pharmacy_employee.prescriptions.index') }}"
                 class="btn btn-outline-secondary btn-sm ripple-effect">
-                <i class="fas fa-list-ul me-1"></i> كل الوصفات الواردة
+                <i class="fas fa-list-ul me-1"></i> {{ trans('phrE.all_incoming_prescriptions') }}
             </a>
         </div>
     </div>
@@ -225,35 +225,34 @@
 
     <div class="dispense-form-container" data-aos="fade-up">
         <div class="text-center mb-4">
-            <h3 class="text-primary">صرف الوصفة الطبية رقم: {{ $prescription->prescription_number }}</h3>
-            <p class="text-muted">يرجى مراجعة الأدوية واختيار الدفعات المناسبة للصرف.</p>
+            <h3 class="text-primary">{{ trans('phrE.dispense_prescription_number_title', ['number' => $prescription->prescription_number]) }}</h3>
+            <p class="text-muted">{{ trans('phrE.dispense_instructions') }}</p>
         </div>
 
-        {{-- معلومات المريض والطبيب --}}
         <div class="patient-doctor-info-grid">
             <div class="info-box" data-aos="fade-right" data-aos-delay="100">
-                <h6><i class="fas fa-user-injured"></i>معلومات المريض</h6>
+                <h6><i class="fas fa-user-injured"></i>{{ trans('phrE.patient_information') }}</h6>
                 @if ($prescription->patient)
-                    <p><strong>الاسم:</strong> {{ $prescription->patient->name }}</p>
-                    <p><strong>رقم الهوية:</strong> {{ $prescription->patient->national_id }}</p>
-                    <p><strong>العمر:</strong> {{ $prescription->patient->Date_Birth ? $prescription->patient->Date_Birth->age . ' سنة' : '-' }}</p>
+                    <p><strong>{{ trans('phrE.name') }}</strong> {{ $prescription->patient->name }}</p>
+                    <p><strong>{{ trans('phrE.national_id') }}</strong> {{ $prescription->patient->national_id }}</p>
+                    <p><strong>{{ trans('phrE.age') }}</strong> {{ $prescription->patient->Date_Birth ? $prescription->patient->Date_Birth->age . ' ' . trans('phrE.years_old') : '-' }}</p>
                     @if (isset($prescription->patient->initial_allergies_text) && !empty($prescription->patient->initial_allergies_text) )
-                        <p class="text-danger mt-2 mb-0"><small><i class="fas fa-allergies me-1"></i><strong>حساسيات مسجلة:</strong> {{ Str::limit($prescription->patient->initial_allergies_text, 50) }}</small></p>
+                        <p class="text-danger mt-2 mb-0"><small><i class="fas fa-allergies me-1"></i><strong>{{ trans('phrE.registered_allergies') }}</strong> {{ Str::limit($prescription->patient->initial_allergies_text, 50) }}</small></p>
                     @endif
                 @else
-                    <p class="text-muted">لا توجد معلومات للمريض.</p>
+                    <p class="text-muted">{{ trans('phrE.no_patient_info') }}</p>
                 @endif
             </div>
             <div class="info-box" data-aos="fade-left" data-aos-delay="100">
-                <h6><i class="fas fa-user-md"></i>معلومات الطبيب</h6>
+                <h6><i class="fas fa-user-md"></i>{{ trans('phrE.doctor_information') }}</h6>
                 @if ($prescription->doctor)
-                    <p><strong>الاسم:</strong> {{ $prescription->doctor->name }}</p>
-                    <p><strong>تاريخ الوصفة:</strong> {{ $prescription->prescription_date->translatedFormat('d M Y') }}</p>
+                    <p><strong>{{ trans('phrE.name') }}</strong> {{ $prescription->doctor->name }}</p>
+                    <p><strong>{{ trans('phrE.prescription_date') }}</strong> {{ $prescription->prescription_date->translatedFormat('d M Y') }}</p>
                     @if ($prescription->doctor_notes)
-                        <p class="mt-2 mb-0"><small><strong>ملاحظات الطبيب:</strong> {{ Str::limit($prescription->doctor_notes, 60) }}</small></p>
+                        <p class="mt-2 mb-0"><small><strong>{{ trans('phrE.doctor_notes') }}</strong> {{ Str::limit($prescription->doctor_notes, 60) }}</small></p>
                     @endif
                 @else
-                    <p class="text-muted">لا توجد معلومات للطبيب.</p>
+                    <p class="text-muted">{{ trans('phrE.no_doctor_info') }}</p>
                 @endif
             </div>
         </div>
@@ -262,14 +261,14 @@
             id="dispenseForm" novalidate class="needs-validation">
             @csrf
 
-            <h5 class="form-section-title mt-4"><i class="fas fa-tablets"></i>بنود الأدوية المطلوبة للصرف</h5>
+            <h5 class="form-section-title mt-4"><i class="fas fa-tablets"></i>{{ trans('phrE.items_to_be_dispensed') }}</h5>
 
             @if ($prescription->items->isNotEmpty())
                 @foreach ($prescription->items as $index => $item)
                     <input type="hidden" name="items[{{ $index }}][prescription_item_id]" value="{{ $item->id }}">
                     <div class="prescription-item-card" data-aos="fade-up" data-aos-delay="{{ 200 + $index * 50 }}">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <span>{{ $loop->iteration }}. {{ $item->medication->name ?? 'دواء غير معروف' }}
+                            <span>{{ $loop->iteration }}. {{ $item->medication->name ?? trans('phrE.unknown_medication') }}
                                 <small class="text-muted">
                                     @if($item->medication)
                                         ({{ $item->medication->strength ?? '' }}
@@ -278,7 +277,7 @@
                                     @endif
                                 </small>
                             </span>
-                            <span class="badge bg-primary-light text-primary">الكمية الموصوفة:
+                            <span class="badge bg-primary-light text-primary">{{ trans('phrE.prescribed_quantity') }}
                                 {{ $item->quantity_prescribed ?? 'N/A' }}
                                 @if($item->medication && $item->medication->unit_of_measure)
                                     {{ \App\Models\Medication::getCommonUnitsOfMeasure()[$item->medication->unit_of_measure] ?? $item->medication->unit_of_measure }}
@@ -288,23 +287,23 @@
                         <div class="card-body">
                             <div class="row g-3 align-items-center">
                                 <div class="col-md-4">
-                                    <p class="item-detail mb-1"><strong>الجرعة:</strong> {{ $item->dosage }}</p>
-                                    <p class="item-detail mb-1"><strong>التكرار:</strong> {{ $item->frequency }}</p>
-                                    <p class="item-detail mb-0"><strong>المدة:</strong> {{ $item->duration ?: '-' }}</p>
+                                    <p class="item-detail mb-1"><strong>{{ trans('patients.dosage_label') }}</strong> {{ $item->dosage }}</p>
+                                    <p class="item-detail mb-1"><strong>{{ trans('patients.frequency_label') }}</strong> {{ $item->frequency }}</p>
+                                    <p class="item-detail mb-0"><strong>{{ trans('patients.duration_label') }}</strong> {{ $item->duration ?: '-' }}</p>
                                 </div>
                                 <div class="col-md-8 stock-selection">
                                     <div class="row g-2">
                                         <div class="col-sm-7">
                                             <div class="form-group mb-sm-0">
-                                                <label for="stock_id_{{ $item->id }}" class="form-label">اختر الدفعة للصرف
+                                                <label for="stock_id_{{ $item->id }}" class="form-label">{{ trans('phrE.select_batch_for_dispensing') }}
                                                     @if($item->quantity_prescribed > 0)<small class="text-danger">*</small>@endif
                                                 </label>
                                                 <select name="items[{{ $index }}][pharmacy_stock_id]"
                                                     id="stock_id_{{ $item->id }}"
                                                     class="form-select select2-stock-batch @error('items.' . $index . '.pharmacy_stock_id') is-invalid @enderror"
-                                                    data-placeholder="اختر دفعة المخزون..."
+                                                    data-placeholder="{{ trans('phrE.select_stock_batch_placeholder') }}"
                                                     onchange="updateStockInfo(this, 'stock_info_{{ $item->id }}', 'disp_qty_{{ $item->id }}', {{ $item->quantity_prescribed ?? 0 }})">
-                                                    <option value="">-- اختر دفعة --</option>
+                                                    <option value="">{{ trans('phrE.select_batch') }}</option>
                                                     @php
                                                         $medicationIdForStockLoop = $item->medication->id ?? $item->medication_id;
                                                     @endphp
@@ -315,12 +314,11 @@
                                                                 data-expiry="{{ $stock->expiry_date ? $stock->expiry_date->format('Y-m-d') : 'N/A' }}"
                                                                 data-displaytext="{{ $stock->display_text_for_select }}"
                                                                 {{ old('items.' . $index . '.pharmacy_stock_id') == $stock->id ? 'selected' : '' }}>
-                                                                {{-- JavaScript will format this --}}
                                                                 {{ $stock->display_text_for_select }}
                                                             </option>
                                                         @endforeach
                                                     @else
-                                                        <option value="" disabled>لا توجد دفعات متاحة</option>
+                                                        <option value="" disabled>{{ trans('phrE.no_batches_available') }}</option>
                                                     @endif
                                                 </select>
                                                 <div id="stock_info_{{ $item->id }}" class="stock-info mt-1"></div>
@@ -329,13 +327,13 @@
                                         </div>
                                         <div class="col-sm-5">
                                             <div class="form-group mb-0">
-                                                <label for="disp_qty_{{ $item->id }}" class="form-label" >الكمية المصروفة
+                                                <label for="disp_qty_{{ $item->id }}" class="form-label">{{ trans('phrE.dispensed_quantity') }}
                                                     <small class="text-danger">*</small></label>
-                                                <input type="number" name="items[{{ $index }}][dispensed_quantity]" 
+                                                <input type="number" name="items[{{ $index }}][dispensed_quantity]"
                                                     id="disp_qty_{{ $item->id }}"
                                                     value="{{ old('items.' . $index . '.dispensed_quantity', ($item->quantity_prescribed > 0 ? $item->quantity_prescribed : 0)) }}"
                                                     class="form-control @error('items.' . $index . '.dispensed_quantity') is-invalid @enderror"
-                                                    min="0" placeholder="الكمية" >
+                                                    min="0" placeholder="{{ trans('phrE.quantity') }}" >
                                                 @error('items.' . $index . '.dispensed_quantity') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                             </div>
                                         </div>
@@ -344,7 +342,7 @@
                             </div>
                             @if ($item->instructions_for_patient)
                                 <div class="mt-2 mb-0 alert alert-light border p-2" style="font-size:0.85rem; background-color: #fbfdff !important;">
-                                    <i class="fas fa-info-circle me-1 text-info"></i> <strong>تعليمات للمريض:</strong>
+                                    <i class="fas fa-info-circle me-1 text-info"></i> <strong>{{ trans('phrE.patient_instructions') }}</strong>
                                     {{ $item->instructions_for_patient }}
                                 </div>
                             @endif
@@ -352,26 +350,26 @@
                     </div>
                 @endforeach
             @else
-                <div class="empty-state-compact my-3"><i class="fas fa-pills"></i><p>لا توجد أدوية في هذه الوصفة.</p></div>
+                <div class="empty-state-compact my-3"><i class="fas fa-pills"></i><p>{{ trans('phrE.no_medications_in_prescription') }}</p></div>
             @endif
 
             @if ($prescription->items->isNotEmpty())
                 <hr class="my-4">
                 <div class="form-group">
-                    <label for="pharmacy_notes_dispense" class="form-label">ملاحظات الصيدلية (اختياري)</label>
+                    <label for="pharmacy_notes_dispense" class="form-label">{{ trans('phrE.pharmacy_notes_optional') }}</label>
                     <textarea name="pharmacy_notes_dispense" id="pharmacy_notes_dispense"
                         class="form-control @error('pharmacy_notes_dispense') is-invalid @enderror" rows="3"
-                        placeholder="أي ملاحظات من الصيدلي بخصوص عملية الصرف...">{{ old('pharmacy_notes_dispense', $prescription->pharmacy_notes) }}</textarea>
+                        placeholder="{{ trans('phrE.pharmacy_notes_placeholder') }}">{{ old('pharmacy_notes_dispense', $prescription->pharmacy_notes) }}</textarea>
                     @error('pharmacy_notes_dispense') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="form-actions">
                     <a href="{{ route('pharmacy_employee.prescriptions.index') }}"
                         class="btn btn-outline-secondary me-2">
-                        <i class="fas fa-times me-1"></i> إلغاء
+                        <i class="fas fa-times me-1"></i> {{ trans('phrE.cancel') }}
                     </a>
                     <button type="submit" class="btn btn-success btn-submit-dispense" id="submitDispenseBtn">
-                       <span class="btn-text"> <i class="fas fa-check-circle me-2"></i> تأكيد الصرف </span>
+                       <span class="btn-text"> <i class="fas fa-check-circle me-2"></i> {{ trans('phrE.confirm_dispensing') }} </span>
                        <i class="fas fa-spinner fa-spin spinner-icon"></i>
                     </button>
                 </div>

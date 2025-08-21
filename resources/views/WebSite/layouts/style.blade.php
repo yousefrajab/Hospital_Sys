@@ -1,4 +1,4 @@
-<title>برنامج المستشفيات</title>
+<title>{{ config('app.name') }}</title>
 <!-- Stylesheets -->
 <link href="{{asset('WebSite/css/bootstrap.css')}}" rel="stylesheet">
 <link href="{{asset('WebSite/css/style.css')}}" rel="stylesheet">

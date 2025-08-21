@@ -1,0 +1,729 @@
+<?php $__env->startSection('title'); ?>
+    لوحة تحكم المريض - <?php echo e($patient->name ?? auth()->user()->name); ?>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('css'); ?>
+    <?php echo \Illuminate\View\Factory::parentPlaceholder('css'); ?> 
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="<?php echo e(URL::asset('dashboard/plugins/notify/css/notifIt.css')); ?>" rel="stylesheet" />
+
+    <style>
+        :root {
+            --patient-primary: #4A90E2;
+            /* أزرق سماوي منعش */
+            --patient-primary-rgb: 74, 144, 226;
+            --patient-primary-dark: #357ABD;
+            --patient-primary-light: #EAF2FB;
+            /* خلفية فاتحة للبطاقات مع لمسة زرقاء */
+            --patient-secondary: #50E3C2;
+            /* أخضر مائي مشرق */
+            --patient-secondary-rgb: 80, 227, 194;
+            --patient-success: #7ED321;
+            /* أخضر تفاحي */
+            --patient-success-rgb: 126, 211, 33;
+            --patient-info: #F8E71C;
+            /* أصفر ليموني (للتنبيهات الخفيفة) */
+            --patient-info-dark: #cda70c;
+            --patient-warning: #F5A623;
+            /* برتقالي */
+            --patient-warning-rgb: 245, 166, 35;
+            --patient-danger: #D0021B;
+            /* أحمر واضح */
+            --patient-text-dark: #4A4A4A;
+            /* رمادي داكن للنصوص */
+            --patient-text-light: #7F8C8D;
+            /* رمادي أفتح للنصوص الثانوية */
+            --patient-bg: #f4f7f9;
+            /* خلفية رمادية فاتحة جداً */
+            --patient-card-bg: #ffffff;
+            --patient-border-color: #e8eef3;
+            --patient-card-radius: 0.8rem;
+            /* انحناء أكبر للبطاقات */
+            --patient-card-shadow: 0 6px 22px rgba(var(--patient-primary-rgb), 0.09);
+            /* ظل أنعم وأوسع */
+            --patient-gradient-primary: linear-gradient(135deg, var(--patient-primary) 0%, #68B3F9 100%);
+            --patient-gradient-success: linear-gradient(135deg, var(--patient-success) 0%, #A6E66D 100%);
+            --patient-gradient-info: linear-gradient(135deg, #50C9C3 0%, var(--patient-secondary) 100%);
+            --patient-gradient-warning: linear-gradient(135deg, var(--patient-warning) 0%, #FAC06B 100%);
+            --patient-gradient-chat: linear-gradient(135deg, #805ad5 0%, #a46ef4 100%);
+            /* بنفسجي للرسائل */
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            /* تأكد من تحميل الخط إذا لم يكن في Master */
+            background-color: var(--patient-bg);
+            color: var(--patient-text-dark);
+        }
+
+        .main-content .container-fluid {
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+
+        .breadcrumb-header {
+            margin-bottom: 2rem;
+        }
+
+        .main-content-title {
+            color: var(--patient-primary-dark);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .sub-text-breadcrumb {
+            color: var(--patient-text-light);
+            font-size: 1rem;
+        }
+
+        .stat-card-patient {
+            background-color: var(--patient-card-bg);
+            border-radius: var(--patient-card-radius);
+            padding: 1.75rem;
+            box-shadow: var(--patient-card-shadow);
+            display: flex;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid var(--patient-border-color);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none !important;
+        }
+
+        .stat-card-patient:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 10px 30px rgba(var(--patient-primary-rgb), 0.15);
+        }
+
+        .stat-card-patient .stat-icon-bg {
+            width: 65px;
+            height: 65px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #fff;
+            margin-left: 1.25rem;
+            /* RTL */
+            flex-shrink: 0;
+        }
+
+        .stat-card-patient .stat-info h6 {
+            font-size: 0.9rem;
+            color: var(--patient-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-card-patient .stat-info .stat-number {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--patient-text-dark);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .stat-card-patient .stat-info .stat-number small {
+            font-size: 0.6em;
+            font-weight: 500;
+            color: var(--patient-text-light);
+        }
+
+        .stat-card-patient .stat-info .stat-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--patient-primary);
+            transition: color 0.2s ease;
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+
+        .stat-card-patient .stat-info .stat-link:hover {
+            color: var(--patient-primary-dark);
+        }
+
+        .stat-card-patient .stat-icon-bg.bg-primary-gradient {
+            background: var(--patient-gradient-primary);
+        }
+
+        .stat-card-patient .stat-icon-bg.bg-success-gradient {
+            background: var(--patient-gradient-success);
+        }
+
+        .stat-card-patient .stat-icon-bg.bg-info-gradient {
+            background: var(--patient-gradient-info);
+        }
+
+        .stat-card-patient .stat-icon-bg.bg-chat-gradient {
+            background: var(--patient-gradient-chat);
+        }
+
+
+        .section-heading {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--patient-primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 4px solid var(--patient-primary);
+            display: inline-block;
+        }
+
+        .section-heading i {
+            margin-left: 0.6rem;
+            opacity: 0.8;
+        }
+
+        .alert-card-patient {
+            background-color: var(--patient-card-bg);
+            border-radius: var(--patient-card-radius);
+            border-left: 6px solid var(--patient-warning);
+            padding: 1.5rem;
+            box-shadow: var(--patient-card-shadow);
+            display: flex;
+            align-items: center;
+            /* Center vertically */
+            margin-bottom: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .alert-card-patient:hover {
+            box-shadow: 0 8px 25px rgba(var(--patient-primary-rgb), 0.12);
+            transform: translateY(-3px);
+        }
+
+        .alert-card-patient.alert-success {
+            border-left-color: var(--patient-success);
+        }
+
+        .alert-card-patient.alert-info {
+            border-left-color: var(--patient-primary);
+        }
+
+        .alert-card-patient.alert-chat {
+            border-left-color: #805ad5;
+        }
+
+        /* لون بنفسجي للرسائل */
+        .alert-card-patient .alert-icon-box {
+            font-size: 2rem;
+            margin-left: 1.25rem;
+            /* RTL */
+            padding-top: 0.1rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .alert-card-patient .alert-icon-box .fa-comments {
+            color: #805ad5;
+        }
+
+        .alert-card-patient .alert-content .alert-title {
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 0.35rem;
+            color: var(--patient-text-dark);
+        }
+
+        .alert-card-patient .alert-content .alert-text {
+            font-size: 0.95rem;
+            color: var(--patient-text-light);
+            margin-bottom: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .alert-card-patient .alert-content .btn {
+            font-size: 0.9rem;
+            padding: 0.4rem 1rem;
+        }
+
+        .dashboard-section .card {
+            border: 1px solid var(--patient-border-color);
+            box-shadow: var(--patient-card-shadow);
+        }
+
+        .dashboard-section .card-header {
+            background-color: var(--patient-primary-light);
+            border-bottom: 1px solid var(--patient-border-color);
+            padding: 0.85rem 1.25rem;
+        }
+
+        .dashboard-section .card-title-main {
+            color: var(--patient-primary-dark);
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .dashboard-section .list-group-item {
+            border: 0;
+            padding: 1rem 0.5rem;
+            border-bottom: 1px dashed #eaedf1;
+            transition: background-color 0.2s ease;
+        }
+
+        .dashboard-section .list-group-item:last-child {
+            border-bottom: 0;
+        }
+
+        .dashboard-section .list-group-item:hover {
+            background-color: #f0f5fb;
+        }
+
+        .appointment-item .time-badge {
+            background-color: rgba(var(--patient-primary-rgb), 0.12);
+            color: var(--patient-primary-dark);
+            padding: 0.5em 0.9em;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .appointment-item .doctor-name {
+            font-weight: 600;
+            color: var(--patient-text-dark);
+            font-size: 1.05rem;
+        }
+
+        .appointment-item .section-name {
+            font-size: 0.85rem;
+            color: var(--patient-text-light);
+        }
+
+        .appointment-item .status-badge {
+            font-size: 0.8rem;
+            padding: 0.4em 0.8em;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .status-badge.status-confirmed {
+            background-color: rgba(var(--patient-success-rgb), 0.15) !important;
+            color: #38761d !important;
+            border: 1px solid rgba(var(--patient-success-rgb), 0.3) !important;
+        }
+
+        .status-badge.status-pending {
+            background-color: rgba(var(--patient-warning-rgb), 0.15) !important;
+            color: #b17d00 !important;
+            border: 1px solid rgba(var(--patient-warning-rgb), 0.3) !important;
+        }
+
+        .quick-access-links .list-group-item a {
+            color: var(--patient-text-dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 0.2rem;
+            font-weight: 500;
+            font-size: 1.05rem;
+            transition: color 0.2s ease, padding-right 0.2s ease, transform 0.2s ease;
+        }
+
+        .quick-access-links .list-group-item a:hover {
+            color: var(--patient-primary);
+            padding-right: 8px;
+            transform: scale(1.02);
+        }
+
+        .quick-access-links .list-group-item i {
+            width: 25px;
+            text-align: center;
+            margin-left: 1rem;
+            color: var(--patient-primary);
+            opacity: 0.9;
+            font-size: 1.2rem;
+        }
+
+        .welcome-area .btn {
+            padding: 0.7rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .welcome-area .btn i {
+            margin-right: -3px;
+            margin-left: 6px;
+        }
+
+        .no-alerts-card {
+            background-color: #f0fdf4;
+            /* أخضر فاتح جداً */
+            border-left: 5px solid var(--patient-success);
+        }
+
+        .no-alerts-card i {
+            color: var(--patient-success);
+            font-size: 2rem;
+        }
+
+        .no-alerts-card p {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #306844;
+        }
+
+        .text-gradient-primary {
+            background: var(--patient-gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            font-weight: 700;
+        }
+    </style>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('page-header'); ?>
+    <div class="breadcrumb-header justify-content-between">
+        <div class="left-content welcome-area">
+            <div>
+                <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1"><?php echo e(trans('patients.welcome_back')); ?> <span
+                        class="text-gradient-primary"><?php echo e($patient->name ?? trans('patients.our_dear_visitor')); ?></span>!</h2>
+                <p class="mg-b-0 sub-text-breadcrumb"><?php echo e(trans('patients.welcome_subheader')); ?></p>
+            </div>
+        </div>
+        <div class="right-content d-flex my-auto ms-auto welcome-area">
+            <a href="<?php echo e(route('patient.appointments.create.form')); ?>" class="btn btn-primary-gradient ripple shadow-sm me-2"
+                data-aos="fade-left" data-aos-delay="100">
+                <i class="fas fa-calendar-plus me-1"></i> <?php echo e(trans('patients.book_new_appointment')); ?>
+
+            </a>
+            <a href="<?php echo e(url('/home')); ?>" class="btn btn-outline-secondary ripple" target="_blank" data-aos="fade-left">
+                <i class="fas fa-home me-1"></i> <?php echo e(trans('patients.back_to_home')); ?>
+
+            </a>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php echo $__env->make('Dashboard.messages_alert', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+    <div class="row row-sm">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="50">
+            <a href="<?php echo e(route('website.my.invoices')); ?>" class="stat-card-patient">
+                <div class="stat-icon-bg bg-primary-gradient"><i class="fas fa-file-invoice-dollar"></i></div>
+                <div class="stat-info">
+                    <h6><?php echo e(trans('patients.my_due_invoices')); ?></h6>
+                    <span class="stat-number"><?php echo e(number_format($totalDueInvoices ?? 0, 2)); ?> <small><?php echo e(trans('patients.currency_sar')); ?></small></span>
+                    <span class="stat-link"><?php echo e(trans('patients.view_invoices')); ?> <i class="fas fa-arrow-left tx-10"></i></span>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="100">
+            <a href="<?php echo e(route('website.my.account')); ?>" class="stat-card-patient">
+                <div class="stat-icon-bg" style="background: linear-gradient(135deg, #fd7e14 0%, #ff9a44 100%);"><i
+                        class="fas fa-receipt"></i></div>
+                <div class="stat-info">
+                    <h6><?php echo e(trans('patients.my_total_payments')); ?></h6>
+                    <span class="stat-number"><?php echo e(number_format($totalPaidByPatient ?? 0, 2)); ?> <small><?php echo e(trans('patients.currency_sar')); ?></small></span>
+                    <span class="stat-link"><?php echo e(trans('patients.view_account_statement')); ?> <i class="fas fa-arrow-left tx-10"></i></span>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="150">
+            <a href="<?php echo e(route('appointments.upcoming')); ?>" class="stat-card-patient">
+                <div class="stat-icon-bg bg-success-gradient"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-info">
+                    <h6><?php echo e(trans('patients.my_upcoming_appointments')); ?></h6>
+                    <span class="stat-number"><?php echo e($upcomingAppointmentsCount ?? 0); ?> <small><?php echo e(trans('patients.appointment_unit')); ?></small></span>
+                    <span class="stat-link"><?php echo e(trans('patients.manage_appointments')); ?> <i class="fas fa-arrow-left tx-10"></i></span>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="250">
+            <a href="<?php echo e(route('patient.pharmacy.index', ['quick_filter' => \App\Models\Prescription::STATUS_READY_FOR_PICKUP])); ?>" class="stat-card-patient">
+                <div class="stat-icon-bg bg-info-gradient"><i class="fas fa-pills"></i></div>
+                <div class="stat-info">
+                    <h6><?php echo e(trans('patients.prescriptions_ready_for_pickup')); ?></h6>
+                    <span class="stat-number"><?php echo e($readyPrescriptionsCount ?? 0); ?> <small><?php echo e(trans('patients.prescription_unit')); ?></small></span>
+                    <span class="stat-link"><?php echo e(trans('patients.follow_up_pharmacy')); ?> <i class="fas fa-arrow-left tx-10"></i></span>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="200">
+            <a href="<?php echo e(route('chat.doctors')); ?>" class="stat-card-patient">
+                <div class="stat-icon-bg bg-chat-gradient"><i class="fas fa-comments"></i></div>
+                <div class="stat-info">
+                    <h6><?php echo e(trans('patients.new_messages')); ?></h6>
+                    <span class="stat-number"><?php echo e($unreadChatMessagesCount ?? 0); ?> <small><?php echo e(trans('patients.message_unit')); ?></small></span>
+                    <span class="stat-link"><?php echo e(trans('patients.view_conversations')); ?> <i class="fas fa-arrow-left tx-10"></i></span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Row: Important Alerts -->
+    <div class="row row-sm mt-2">
+        <div class="col-12 mb-3" data-aos="fade-up" data-aos-delay="50">
+            <h5 class="section-heading"><i class="fas fa-bell text-warning"></i><?php echo e(trans('patients.important_alerts_and_actions')); ?></h5>
+        </div>
+
+        <?php if(isset($unreadChatMessagesCount) && $unreadChatMessagesCount > 0): ?>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="alert-card-patient alert-chat">
+                    <div class="alert-icon-box"><i class="fas fa-envelope-open-text fa-fw"></i></div>
+                    <div class="alert-content">
+                        <h6 class="alert-title"><?php echo e(trans('patients.you_have_new_messages')); ?></h6>
+                        <p class="alert-text mb-1">
+                            <?php echo e(trans('patients.you_have')); ?> <strong style="color: #805ad5;"><?php echo e($unreadChatMessagesCount); ?></strong>
+                            <?php echo e($unreadChatMessagesCount == 1 ? trans('patients.new_message_singular') : ($unreadChatMessagesCount == 2 ? trans('patients.new_messages_dual') : trans('patients.new_messages_plural'))); ?>
+
+                            <?php echo e(trans('patients.from_our_medical_team')); ?>
+
+                        </p>
+                        <a href="<?php echo e(route('chat.doctors')); ?>" class="btn btn-sm btn-outline-primary shadow-sm mt-2"
+                            style="border-color: #805ad5; color: #805ad5;">
+                            <i class="fas fa-comments me-1"></i> <?php echo e(trans('patients.view_conversations_now')); ?>
+
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if($upcomingChronicRefill): ?>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="150">
+                <div class="alert-card-patient alert-warning">
+                    <div class="alert-icon-box text-warning"><i class="fas fa-history fa-fw"></i></div>
+                    <div class="alert-content">
+                        <h6 class="alert-title"><?php echo e(trans('patients.renew_chronic_prescription')); ?></h6>
+                        <p class="alert-text">
+                            <?php echo e(trans('patients.the_prescription')); ?> <a href="<?php echo e(route('patient.pharmacy.show', $upcomingChronicRefill->id)); ?>"
+                                class="fw-bold text-dark hover-underline"><?php echo e($upcomingChronicRefill->prescription_number); ?></a>
+                            <?php echo e(trans('patients.needs_refill')); ?>
+
+                            <?php echo e($upcomingChronicRefill->next_refill_due_date->locale(app()->getLocale())->diffForHumans()); ?>.
+                        </p>
+                        <?php if(method_exists($upcomingChronicRefill, 'can_request_refill') && $upcomingChronicRefill->can_request_refill): ?>
+                            <form action="<?php echo e(route('patient.pharmacy.request-refill', $upcomingChronicRefill->id)); ?>"
+                                method="POST" class="mt-2">
+                                <?php echo csrf_field(); ?>
+                                <button type="submit" class="btn btn-sm btn-warning text-dark shadow-sm"><i
+                                        class="fas fa-redo-alt me-1"></i> <?php echo e(trans('patients.request_refill')); ?></button>
+                            </form>
+                        <?php else: ?>
+                            <small class="text-muted d-block mt-2"><?php echo e(trans('patients.refill_requested_or_check_pharmacy')); ?></small>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if(isset($readyPrescriptionsCount) && $readyPrescriptionsCount > 0): ?>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="alert-card-patient alert-success">
+                    <div class="alert-icon-box text-success"><i class="fas fa-check-circle fa-fw"></i></div>
+                    <div class="alert-content">
+                        <h6 class="alert-title"><?php echo e(trans('patients.prescriptions_ready_for_pickup')); ?></h6>
+                        <p class="alert-text">
+                            <?php echo e(trans('patients.you_have')); ?> <strong class="text-gradient-success"><?php echo e($readyPrescriptionsCount); ?></strong> <?php echo e(trans('patients.prescriptions_are_ready_for_pickup')); ?>
+
+                        </p>
+                        <a href="<?php echo e(route('patient.pharmacy.index', ['quick_filter' => \App\Models\Prescription::STATUS_READY_FOR_PICKUP])); ?>"
+                            class="btn btn-sm btn-success shadow-sm mt-2"><i class="fas fa-clinic-medical me-1"></i> <?php echo e(trans('patients.view_prescriptions')); ?></a>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if($imminentAppointment): ?>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="250">
+                <div class="alert-card-patient alert-info">
+                    <div class="alert-icon-box text-primary"><i class="fas fa-calendar-day fa-fw"></i></div>
+                    <div class="alert-content">
+                        <h6 class="alert-title"><?php echo e(trans('patients.upcoming_appointment_reminder')); ?></h6>
+                        <p class="alert-text">
+                            <?php echo e(trans('patients.your_appointment_with_dr')); ?> <strong><?php echo e($imminentAppointment->doctor->name ?? trans('patients.the_doctor')); ?></strong>
+                            <?php echo e(trans('patients.is_on')); ?> <span
+                                class="text-danger fw-bold"><?php echo e($imminentAppointment->appointment->isToday() ? trans('patients.today') : ($imminentAppointment->appointment->isTomorrow() ? trans('patients.tomorrow') : $imminentAppointment->appointment->translatedFormat('l'))); ?></span>
+                            <?php echo e(trans('patients.at_time')); ?>
+
+                            <?php echo e(\Carbon\Carbon::parse($imminentAppointment->appointment)->translatedFormat('h:i A')); ?>.
+                        </p>
+                        <a href="<?php echo e(route('appointments.upcoming')); ?>"
+                            class="btn btn-sm btn-primary shadow-sm mt-2">
+                            <i class="fas fa-eye me-1"></i> <?php echo e(trans('patients.view_my_appointments')); ?>
+
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if(!$hasImportantAlerts): ?>
+            <div class="col-12" data-aos="fade-up" data-aos-delay="100">
+                <div class="card no-alerts-card shadow-sm">
+                    <div class="card-body text-center p-4 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-shield-alt fa-3x opacity-75 me-3"></i>
+                        <div>
+                            <h5 class="mb-1"><?php echo e(trans('patients.no_urgent_alerts')); ?></h5>
+                            <p class="mb-0 text-muted"><?php echo e(trans('patients.health_under_control_message')); ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Row: Appointments and Quick Access -->
+    <div class="row row-sm row-deck mt-3 dashboard-section">
+        <div class="col-lg-7 col-md-12 mb-4" data-aos="fade-right" data-aos-delay="100">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title-main mb-0"><i class="far fa-calendar-alt me-2"></i> <?php echo e(trans('patients.upcoming_appointments_latest_5')); ?>
+
+                    </h4>
+                    <a href="<?php echo e(route('appointments.upcoming')); ?>" class="btn btn-sm btn-outline-primary ripple"><?php echo e(trans('patients.view_all')); ?> <i class="fas fa-angle-double-left"></i></a>
+                </div>
+                <div class="card-body pt-2 pb-2">
+                    <?php if($upcoming_appointments_list->isNotEmpty()): ?>
+                        <ul class="list-group list-group-flush appointment-list">
+                            <?php $__currentLoopData = $upcoming_appointments_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $appointment_item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li class="list-group-item appointment-item">
+                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                        <div class="appointment-details flex-grow-1">
+                                            <span
+                                                class="time-badge mb-1 d-inline-block"><?php echo e(\Carbon\Carbon::parse($appointment_item->appointment)->translatedFormat('D، j M Y - g:i A')); ?></span>
+                                            <div class="mt-1"><i class="fas fa-user-md text-muted me-1 op-7"></i><?php echo e(trans('patients.dr_prefix')); ?>
+
+                                                <strong
+                                                    class="doctor-name"><?php echo e($appointment_item->doctor->name ?? trans('doctors.unspecified')); ?></strong>
+                                            </div>
+                                            <div class="section-name"><i
+                                                    class="fas fa-clinic-medical text-muted me-1 op-7"></i><?php echo e(trans('patients.section_prefix')); ?>
+
+                                                <?php echo e($appointment_item->section->name ?? trans('doctors.unspecified')); ?></div>
+                                        </div>
+                                        <div class="text-center ms-2 appointment-actions">
+                                            <span
+                                                class="badge status-badge <?php echo e($appointment_item->type == 'مؤكد' ? 'status-confirmed' : 'status-pending'); ?> mb-2">
+                                                <?php echo e($appointment_item->type); ?>
+
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <?php if($appointment_item->notes): ?>
+                                        <p class="mb-0 mt-2 text-muted small border-top pt-2" style="font-size: 0.9rem"><i
+                                                class="fas fa-info-circle me-1 text-info"></i> <?php echo e(trans('patients.your_notes_prefix')); ?>
+
+                                            <?php echo e(Str::limit($appointment_item->notes, 100)); ?></p>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </ul>
+                    <?php else: ?>
+                        <div class="text-center text-muted p-5">
+                            <i class="fas fa-calendar-times fa-3x opacity-50 mb-3"></i>
+                            <h5 class="mb-2"><?php echo e(trans('patients.no_upcoming_appointments')); ?></h5>
+                            <p class="mb-3"><?php echo e(trans('patients.you_can_book_easily')); ?></p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5 col-md-12 mb-4" data-aos="fade-left" data-aos-delay="200">
+            <div class="card quick-access-links h-100 shadow-sm">
+                <div class="card-header">
+                    <h4 class="card-title-main mb-0"><i class="fas fa-paperclip me-2"></i> <?php echo e(trans('patients.quick_access_to_services')); ?></h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><a href="<?php echo e(route('website.my.invoices')); ?>"><i
+                                    class="fas fa-file-invoice-dollar fa-fw"></i> <?php echo e(trans('patients.my_invoices')); ?></a></li>
+                        <li class="list-group-item"><a href="<?php echo e(route('website.my.account')); ?>"><i
+                                    class="fas fa-cash-register fa-fw"></i> <?php echo e(trans('patients.my_account_statement')); ?></a></li>
+                        <li class="list-group-item"><a href="<?php echo e(route('patient.pharmacy.index')); ?>"><i
+                                    class="fas fa-pills fa-fw"></i> <?php echo e(trans('patients.my_prescriptions_and_pharmacy')); ?></a></li>
+                        <li class="list-group-item"><a href="<?php echo e(route('laboratories.patient')); ?>"><i
+                                    class="fas fa-microscope fa-fw"></i> <?php echo e(trans('patients.my_lab_results')); ?></a></li>
+                        <li class="list-group-item"><a href="<?php echo e(route('rays.patient')); ?>"><i
+                                    class="fas fa-x-ray fa-fw"></i> <?php echo e(trans('patients.my_radiology_reports')); ?></a></li>
+                        <li class="list-group-item"><a href="<?php echo e(route('chat.doctors') ?? '#'); ?>"><i
+                                    class="fas fa-comments fa-fw"></i> <?php echo e(trans('patients.my_conversations_with_doctors')); ?></a></li>
+                        <li class="list-group-item"><a href="<?php echo e(route('profile.edit')); ?>"><i
+                                    class="fas fa-user-edit fa-fw"></i> <?php echo e(trans('patients.edit_my_profile_data')); ?></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('js'); ?>
+    <?php echo \Illuminate\View\Factory::parentPlaceholder('js'); ?>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="<?php echo e(URL::asset('dashboard/plugins/notify/js/notifIt.js')); ?>"></script>
+    <script src="<?php echo e(URL::asset('dashboard/plugins/notify/js/notifit-custom.js')); ?>"></script>
+    
+
+    <script>
+        $(document).ready(function() {
+            AOS.init({
+                duration: 750, // مدة أطول قليلاً
+                easing: 'ease-out-cubic', // حركة ألطف
+                once: true,
+                offset: 40 // تعديل طفيف
+            });
+
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body,
+                    container: 'body',
+                    trigger: 'hover' // إظهار الـ tooltip عند المرور فقط
+                });
+            });
+
+            // رسائل NotifIt تبقى كما هي، فهي جيدة
+            <?php if(session('success')): ?>
+                notif({
+                    msg: "<div class='d-flex align-items-center p-2'><i class='fas fa-check-circle fa-lg me-2 text-success'></i><div style='font-size: 0.95rem;'><?php echo addslashes(session('success')); ?></div></div>",
+                    type: "success",
+                    position: "top-center",
+                    autohide: true,
+                    timeout: 6000
+                });
+            <?php endif; ?>
+            <?php if(session('error')): ?>
+                notif({
+                    msg: "<div class='d-flex align-items-center p-2'><i class='fas fa-exclamation-triangle fa-lg me-2 text-danger'></i><div style='font-size: 0.95rem;'><?php echo addslashes(session('error')); ?></div></div>",
+                    type: "error",
+                    position: "top-center",
+                    autohide: true,
+                    timeout: 8000
+                });
+            <?php endif; ?>
+            <?php if(session('info')): ?>
+                notif({
+                    msg: "<div class='d-flex align-items-center p-2'><i class='fas fa-info-circle fa-lg me-2 text-info'></i><div style='font-size: 0.95rem;'><?php echo addslashes(session('info')); ?></div></div>",
+                    type: "info",
+                    position: "top-center",
+                    autohide: true,
+                    timeout: 6000
+                });
+            <?php endif; ?>
+            <?php if(session('warning')): ?>
+                notif({
+                    msg: "<div class='d-flex align-items-center p-2'><i class='fas fa-exclamation-circle fa-lg me-2 text-warning'></i><div style='font-size: 0.95rem;'><?php echo addslashes(session('warning')); ?></div></div>",
+                    type: "warning",
+                    position: "top-center",
+                    autohide: true,
+                    timeout: 7000
+                });
+            <?php endif; ?>
+        });
+    </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('Dashboard.layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH H:\Hospital_Sys\resources\views/Dashboard/dashboard_patient/dashboard.blade.php ENDPATH**/ ?>

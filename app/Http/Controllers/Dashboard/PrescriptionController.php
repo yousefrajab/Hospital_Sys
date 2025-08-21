@@ -139,7 +139,7 @@ class PrescriptionController extends Controller
 
         Log::info("PrescriptionController@create: Successfully loaded data for prescription form. Patient ID: {$patient->id}");
 
-        return view('Dashboard.Prescriptions.create', compact( // تأكد أن المسار صحيح
+        return view('Dashboard.Doctors.Prescriptions.create', compact( // تأكد أن المسار صحيح
             'patient',
             'medications',
             'doctor'
@@ -261,7 +261,7 @@ class PrescriptionController extends Controller
             });
 
         Log::info("PrescriptionController@edit: Loading edit form for Prescription ID: {$prescription->id}");
-        return view('Dashboard.Prescriptions.edit', compact('prescription', 'patient', 'medications', 'doctor'));
+        return view('Dashboard.Doctors.Prescriptions.edit', compact('prescription', 'patient', 'medications', 'doctor'));
     }
 
     public function update(StorePrescriptionRequest $request, Prescription $prescription)
@@ -649,7 +649,7 @@ class PrescriptionController extends Controller
             return redirect()->back()->with('error', 'حدث خطأ فني أثناء الموافقة على تجديد الوصفة. يرجى المحاولة مرة أخرى.');
         }
     }
-  
+
     public function denyRefill(Request $request, Prescription $prescription)
     {
         $doctor = Auth::guard('doctor')->user();

@@ -44,14 +44,13 @@
         .empty-state p { color: var(--bs-body-color); font-size: 0.95rem; }
     </style>
 @endsection
-
 @section('page-header')
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-pills text-primary me-2"></i>الصيدلية</h4>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-pills text-primary me-2"></i>{{ trans('phrE.pharmacist') }}</h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="text-muted mt-1 tx-13">الوصفات المصروفة</span>
+                <span class="text-muted mt-1 tx-13">{{ trans('phrE.dispensed_prescriptions') }}</span>
             </div>
         </div>
     </div>
@@ -62,26 +61,26 @@
 
     <div class="card card-custom filter-card" data-aos="fade-down">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة الوصفات المصروفة</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>{{ trans('phrE.filter_dispensed_prescriptions') }}</h5>
         </div>
         <div class="card-body">
             <form method="GET" action="{{ route('pharmacy_employee.prescriptions.dispensed') }}">
                 <div class="row g-3 align-items-end">
                     <div class="col-lg-5 col-md-6">
-                        <label for="search_dispensed" class="form-label">بحث برقم الوصفة / اسم المريض / الطبيب:</label>
+                        <label for="search_dispensed" class="form-label">{{ trans('phrE.search_by_prescription_patient_doctor') }}</label>
                         <input type="text" name="search_term" id="search_dispensed" class="form-control"
-                               placeholder="أدخل مصطلح البحث..." value="{{ $request->input('search_term') }}">
+                               placeholder="{{ trans('phrE.search_term_placeholder') }}" value="{{ $request->input('search_term') }}">
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <label for="date_filter_dispensed_page" class="form-label">تاريخ الصرف:</label>
+                        <label for="date_filter_dispensed_page" class="form-label">{{ trans('phrE.dispensing_date') }}:</label>
                         <input type="text" name="date_filter_dispensed" id="date_filter_dispensed_page" class="form-control flatpickr-date"
                                placeholder="YYYY-MM-DD" value="{{ $request->input('date_filter_dispensed') }}">
                     </div>
                     <div class="col-lg-3 col-md-12">
-                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> بحث</button>
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> {{ trans('phrE.search') }}</button>
                         @if(request()->hasAny(['search_term', 'date_filter_dispensed']))
                             <a href="{{ route('pharmacy_employee.prescriptions.dispensed') }}" class="btn btn-outline-secondary w-100 mt-2 btn-sm">
-                                <i class="fas fa-eraser me-1"></i> مسح
+                                <i class="fas fa-eraser me-1"></i> {{ trans('phrE.clear') }}
                             </a>
                         @endif
                     </div>
@@ -92,7 +91,7 @@
 
     <div class="card card-custom mt-4" data-aos="fade-up" data-aos-delay="100">
         <div class="card-header">
-            <h4 class="card-title">قائمة الوصفات المصروفة ({{ $dispensedPrescriptions->total() }})</h4>
+            <h4 class="card-title">{{ trans('phrE.dispensed_prescriptions_list_title', ['count' => $dispensedPrescriptions->total()]) }}</h4>
         </div>
         <div class="card-body p-0">
             @if($dispensedPrescriptions->isNotEmpty())
@@ -101,11 +100,11 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>رقم الوصفة</th>
-                                <th>اسم المريض</th>
-                                <th>الطبيب المعالج</th>
-                                <th>تاريخ الصرف</th>
-                                <th class="text-center">الإجراء</th>
+                                <th>{{ trans('phrE.prescription_number_col') }}</th>
+                                <th>{{ trans('phrE.patient_name_col') }}</th>
+                                <th>{{ trans('phrE.attending_doctor_col') }}</th>
+                                <th>{{ trans('phrE.dispensing_date') }}</th>
+                                <th class="text-center">{{ trans('phrE.action_col') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -113,13 +112,13 @@
                                 <tr>
                                     <td>{{ $loop->iteration + $dispensedPrescriptions->firstItem() - 1 }}</td>
                                     <td><strong>{{ $prescription->prescription_number }}</strong></td>
-                                    <td>{{ $prescription->patient->name ?? 'مريض غير معروف' }}</td>
-                                    <td>{{ $prescription->doctor->name ?? 'طبيب غير محدد' }}</td>
+                                    <td>{{ $prescription->patient->name ?? trans('phrE.unknown_patient') }}</td>
+                                    <td>{{ $prescription->doctor->name ?? trans('phrE.unspecified_doctor') }}</td>
                                     <td>{{ $prescription->dispensed_at ? $prescription->dispensed_at->translatedFormat('d M Y, H:i') : '-' }}</td>
                                     <td class="text-center">
-                                        <a href="{{ route('pharmacy_employee.prescriptions.dispense.form', $prescription->id) }}" {{-- أو مسار لعرض تفاصيل الصرف --}}
+                                        <a href="{{ route('pharmacy_employee.prescriptions.dispense.form', $prescription->id) }}"
                                            class="btn btn-outline-info btn-sm action-btn">
-                                            <i class="fas fa-eye"></i> عرض التفاصيل
+                                            <i class="fas fa-eye"></i> {{ trans('phrE.view_details') }}
                                         </a>
                                     </td>
                                 </tr>
@@ -135,7 +134,7 @@
             @else
                 <div class="empty-state p-5">
                     <i class="fas fa-check-circle fa-3x text-success"></i>
-                    <h5 class="mt-3">لا توجد وصفات مصروفة تطابق البحث.</h5>
+                    <h5 class="mt-3">{{ trans('phrE.no_dispensed_prescriptions_found') }}</h5>
                 </div>
             @endif
         </div>

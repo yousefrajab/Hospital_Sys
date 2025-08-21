@@ -13,8 +13,8 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">عمليات المريض</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/
-                    الفواتير</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('patients.patient_operations') }}</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/
+                    {{ trans('patients.invoices') }}</span>
             </div>
         </div>
     </div>
@@ -35,10 +35,10 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>تاريخ الفاتورة</th>
-                                    <th>اسم الدكتور</th>
-                                    <th>اسم الخدمة</th>
-                                    <th>الاجمالي</th>
+                                    <th>{{ trans('patients.invoice_date_col') }}</th>
+                                    <th>{{ trans('patients.doctor_name_col') }}</th>
+                                    <th>{{ trans('patients.service_name_col') }}</th>
+                                    <th>{{ trans('patients.total_col') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,17 +46,14 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $invoice->invoice_date }}</td>
-                                        <td>{{ $invoice->doctor->name ?? 'غير محدد' }}</td>
+                                        <td>{{ $invoice->doctor->name ?? trans('patients.unspecified') }}</td>
                                         <td>
-                                            {{-- ** التحقق هنا قبل عرض اسم الخدمة ** --}}
                                             @if ($invoice->Service_id && $invoice->service)
-                                                {{-- تحقق من وجود ID الخدمة ومن وجود العلاقة --}}
                                                 {{ $invoice->service->name }}
                                             @elseif ($invoice->Group_id && $invoice->group)
-                                                {{-- إذا كانت فاتورة مجموعة، اعرض اسم المجموعة --}}
-                                                {{ $invoice->group->name }} (مجموعة) {{-- تأكد من وجود علاقة group() واسمها في الموديل --}}
+                                                {{ $invoice->group->name }} {{ trans('patients.group_suffix') }}
                                             @else
-                                                <span class="text-muted">غير محدد</span> {{-- أو نص مناسب آخر --}}
+                                                <span class="text-muted">{{ trans('patients.unspecified') }}</span>
                                             @endif
                                         </td>
                                         <td>{{ $invoice->total_with_tax }}</td>

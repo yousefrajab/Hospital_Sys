@@ -475,18 +475,17 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto">لوحة تحكم الطبيب</h4>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ <a href="{{ route('doctor.profile.show') }}">الملف
-                        الشخصي</a></span>
-                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ عرض جدول العمل</span>
+                <h4 class="content-title mb-0 my-auto">{{ trans('doctors.doctor_dashboard') }}</h4>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ <a href="{{ route('doctor.profile.show') }}">{{ trans('doctors.my_profile') }}</a></span>
+                <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ {{ trans('doctors.view_work_schedule') }}</span>
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
-            <a href="{{ route('doctors.schedule.editt', $doctor->id) }}" class="btn btn-primary-gradient btn-sm">
-                <i class="fas fa-edit me-1"></i> تعديل جدول العمل
+            <a href="{{ route('doctor.schedule.edit', $doctor->id) }}" class="btn btn-primary-gradient btn-sm">
+                <i class="fas fa-edit me-1"></i> {{ trans('doctors.edit_work_schedule') }}
             </a>
             <a href="{{ route('doctor.profile.show') }}" class="btn btn-outline-secondary btn-sm mr-2">
-                <i class="fas fa-user me-1"></i> العودة للملف الشخصي
+                <i class="fas fa-user me-1"></i> {{ trans('doctors.return_to_profile') }}
             </a>
         </div>
     </div>
@@ -501,17 +500,12 @@
             <!-- Doctor Info Card -->
             <div class="doctor-info-card mb-4 animate__animated animate__fadeIn">
                 <div class="user-avatar-wrapper">
-                    <img alt="user-img" class="avatar avatar-lg rounded-circle user-avatar"
-                        src="{{ Auth::guard('doctor')->user()->image ? asset('Dashboard/img/doctors/' . Auth::guard('doctor')->user()->image->filename) : asset('Dashboard/img/doctor_default.png') }}">
-                    <span
-                        class="avatar-status-indicator {{ Auth::guard('doctor')->user()->status ? 'online' : 'offline' }}"></span>
+                    <img alt="user-img" class="avatar avatar-lg rounded-circle user-avatar" src="{{ Auth::guard('doctor')->user()->image ? asset('Dashboard/img/doctors/' . Auth::guard('doctor')->user()->image->filename) : asset('Dashboard/img/doctor_default.png') }}">
+                    <span class="avatar-status-indicator {{ Auth::guard('doctor')->user()->status ? 'online' : 'offline' }}"></span>
                 </div>
                 <div class="doctor-details">
-                    <h5>د. {{ $doctor->name }}</h5>
-                    <p class="doctor-specialty mb-0">
-                        <i class="fas fa-stethoscope me-1"></i>
-                        {{ $doctor->section->name ?? 'تخصص غير محدد' }}
-                    </p>
+                    <h5>{{ trans('doctors.dr_prefix') }} {{ $doctor->name }}</h5>
+                    <p class="doctor-specialty mb-0"><i class="fas fa-stethoscope me-1"></i>{{ $doctor->section->name ?? trans('doctors.unspecified_specialty') }}</p>
                 </div>
             </div>
 
@@ -519,47 +513,24 @@
             @if ($workingDaysCollection && $workingDaysCollection->isNotEmpty())
                 @php
                     $workingDaysCount = $workingDaysCollection->where('active', true)->count();
-                    $totalBreaks = $workingDaysCollection->sum(function ($day) {
-                        return $day->breaks->count();
-                    });
+                    $totalBreaks = $workingDaysCollection->sum(fn($day) => $day->breaks->count());
                     $averageDuration = $workingDaysCollection->where('active', true)->avg('appointment_duration');
                 @endphp
-
                 <div class="schedule-summary-card animate__animated animate__fadeIn">
-                    <h4 class="summary-title">
-                        <i class="fas fa-chart-pie"></i>
-                        ملخص جدول العمل
-                    </h4>
+                    <h4 class="summary-title"><i class="fas fa-chart-pie"></i>{{ trans('doctors.work_schedule_summary') }}</h4>
                     <div class="summary-stats">
                         <div class="stat-item">
                             <div class="stat-value">{{ $workingDaysCount }}</div>
-                            <div class="stat-label">أيام العمل أسبوعياً</div>
+                            <div class="stat-label">{{ trans('doctors.working_days_per_week') }}</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-value">{{ $totalBreaks }}</div>
-                            <div class="stat-label">فترات الاستراحة</div>
+                            <div class="stat-label">{{ trans('doctors.break_periods') }}</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">{{ round($averageDuration) }} دقيقة</div>
-                            <div class="stat-label">متوسط مدة الموعد</div>
+                            <div class="stat-value">{{ round($averageDuration) }} {{ trans('doctors.minute_short') }}</div>
+                            <div class="stat-label">{{ trans('doctors.average_appointment_duration') }}</div>
                         </div>
-                        {{-- <div class="stat-item">
-                            <div class="stat-value">
-                                @php
-                                    $nextWorkingDay = $workingDaysCollection->where('active', true)
-                                        ->sortBy(function($day) use ($daysOrder) {
-                                            return array_search($day->day, $daysOrder);
-                                        })
-                                        ->first();
-                                @endphp
-                                @if ($nextWorkingDay)
-                                    {{ trans('doctors.days.' . strtolower($nextWorkingDay->day)) }}
-                                @else
-                                    غير متاح
-                                @endif
-                            </div>
-                            <div class="stat-label">يوم العمل التالي</div>
-                        </div> --}}
                     </div>
                 </div>
             @endif
@@ -567,201 +538,112 @@
             <!-- Main Schedule Table -->
             <div class="schedule-view-container animate__animated animate__fadeIn">
                 <div class="schedule-header">
-                    <h2 class="schedule-title">
-                        <i class="fas fa-calendar-week"></i>
-                        جدول ساعات العمل الأسبوعي
-                    </h2>
+                    <h2 class="schedule-title"><i class="fas fa-calendar-week"></i>{{ trans('doctors.weekly_working_hours_schedule') }}</h2>
                     <div class="d-flex align-items-center">
-                        <span class="badge bg-primary me-2" style="color: white">الحالي</span>
-                        <small class="text-muted">آخر تحديث: {{ now()->format('Y-m-d') }}</small>
+                        <span class="badge bg-primary me-2" style="color: white">{{ trans('doctors.current') }}</span>
+                        <small class="text-muted">{{ trans('doctors.last_updated_colon') }} {{ now()->format('Y-m-d') }}</small>
                     </div>
                 </div>
 
                 @if ($workingDaysCollection && $workingDaysCollection->isNotEmpty())
-                    <div class="table-responsive" >
+                    <div class="table-responsive">
                         <table class="table weekly-schedule-table">
                             <thead>
                                 <tr>
-                                    <th class="text-center"style="color: white">اليوم</th>
-                                    <th class="text-center"style="color: white">وقت البدء</th>
-                                    <th class="text-center"style="color: white">وقت الانتهاء</th>
-                                    <th class="text-center"style="color: white">مدة الموعد</th>
-                                    <th class="text-center"style="color: white">الحالة</th>
-                                    <th class="text-center"style="color: white">فترات الاستراحة</th>
+                                    <th class="text-center" style="color: white">{{ trans('doctors.day') }}</th>
+                                    <th class="text-center" style="color: white">{{ trans('doctors.start_time') }}</th>
+                                    <th class="text-center" style="color: white">{{ trans('doctors.end_time') }}</th>
+                                    <th class="text-center" style="color: white">{{ trans('doctors.appointment_duration') }}</th>
+                                    <th class="text-center" style="color: white">{{ trans('doctors.status') }}</th>
+                                    <th class="text-center" style="color: white">{{ trans('doctors.break_periods') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
-                                    $daysOrder = [
-                                        'Saturday',
-                                        'Sunday',
-                                        'Monday',
-                                        'Tuesday',
-                                        'Wednesday',
-                                        'Thursday',
-                                        'Friday',
-                                    ];
-                                    $dayIcons = [
-                                        'saturday' => 'fa-star-of-david',
-                                        'sunday' => 'fa-sun',
-                                        'monday' => 'fa-moon',
-                                        'tuesday' => 'fa-calendar-day',
-                                        'wednesday' => 'fa-calendar-day',
-                                        'thursday' => 'fa-calendar-week',
-                                        'friday' => 'fa-mosque',
-                                    ];
+                                    $daysOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                                    $dayIcons = ['saturday' => 'fa-star-of-david', 'sunday' => 'fa-sun', 'monday' => 'fa-moon', 'tuesday' => 'fa-calendar-day', 'wednesday' => 'fa-calendar-day', 'thursday' => 'fa-calendar-week', 'friday' => 'fa-mosque'];
                                 @endphp
-
                                 @foreach ($daysOrder as $dayName)
                                     @php
-                                        $workingDay = $workingDaysCollection->first(function ($item) use ($dayName) {
-                                            return strcasecmp($item->day, $dayName) === 0;
-                                        });
+                                        $workingDay = $workingDaysCollection->first(fn($item) => strcasecmp($item->day, $dayName) === 0);
                                         $isToday = strtolower($dayName) === strtolower(now()->englishDayOfWeek);
                                     @endphp
-
-                                    <tr class="animate__animated animate__fadeInUp @if (!$workingDay || !$workingDay->active) day-off @endif @if ($isToday) border-start border-3 border-primary @endif"
-                                        style="animation-delay: {{ $loop->index * 0.05 }}s;">
-                                        <td class="day-cell" data-label="اليوم">
-                                            <div class="day-icon">
-                                                <i class="fas {{ $dayIcons[strtolower($dayName)] ?? 'fa-calendar' }}"></i>
-                                            </div>
+                                    <tr class="animate__animated animate__fadeInUp @if (!$workingDay || !$workingDay->active) day-off @endif @if ($isToday) border-start border-3 border-primary @endif" style="animation-delay: {{ $loop->index * 0.05 }}s;">
+                                        <td class="day-cell" data-label="{{ trans('doctors.day') }}">
+                                            <div class="day-icon"><i class="fas {{ $dayIcons[strtolower($dayName)] ?? 'fa-calendar' }}"></i></div>
                                             <div>
                                                 <div>{{ trans('doctors.days.' . strtolower($dayName)) ?? $dayName }}</div>
-                                                @if ($isToday)
-                                                    <small class="text-primary">(اليوم)</small>
-                                                @endif
+                                                @if ($isToday) <small class="text-primary">({{ trans('doctors.today') }})</small> @endif
                                             </div>
                                         </td>
-
                                         @if ($workingDay && $workingDay->active)
-                                            <td class="time-cell" data-label="وقت البدء">
-                                                <span class="badge bg-light text-dark">
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    {{ \Carbon\Carbon::parse($workingDay->start_time)->format('h:i A') }}
-                                                </span>
-                                            </td>
-                                            <td class="time-cell" data-label="وقت الانتهاء">
-                                                <span class="badge bg-light text-dark">
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    {{ \Carbon\Carbon::parse($workingDay->end_time)->format('h:i A') }}
-                                                </span>
-                                            </td>
-                                            <td class="duration-cell" data-label="مدة الموعد">
-                                                <span class="badge bg-primary-light text-primary">
-                                                    {{ $workingDay->appointment_duration }} دقيقة
-                                                </span>
-                                            </td>
-                                            <td class="status-cell" data-label="الحالة">
-                                                <span class="status-badge status-active">
-                                                    <i class="fas fa-check-circle"></i>
-                                                    نشط
-                                                </span>
-                                            </td>
-                                            <td data-label="فترات الاستراحة">
+                                            <td class="time-cell" data-label="{{ trans('doctors.start_time') }}"><span class="badge bg-light text-dark"><i class="fas fa-clock me-1"></i>{{ \Carbon\Carbon::parse($workingDay->start_time)->format('h:i A') }}</span></td>
+                                            <td class="time-cell" data-label="{{ trans('doctors.end_time') }}"><span class="badge bg-light text-dark"><i class="fas fa-clock me-1"></i>{{ \Carbon\Carbon::parse($workingDay->end_time)->format('h:i A') }}</span></td>
+                                            <td class="duration-cell" data-label="{{ trans('doctors.appointment_duration') }}"><span class="badge bg-primary-light text-primary">{{ $workingDay->appointment_duration }} {{ trans('doctors.minute_short') }}</span></td>
+                                            <td class="status-cell" data-label="{{ trans('doctors.status') }}"><span class="status-badge status-active"><i class="fas fa-check-circle"></i>{{ trans('doctors.active') }}</span></td>
+                                            <td data-label="{{ trans('doctors.break_periods') }}">
                                                 @if ($workingDay->breaks->isNotEmpty())
                                                     <div class="breaks-container">
                                                         @foreach ($workingDay->breaks as $break)
                                                             <div class="break-item">
                                                                 <div>
-                                                                    <div class="break-time">
-                                                                        <i class="fas fa-coffee me-1"></i>
-                                                                        {{ \Carbon\Carbon::parse($break->start_time)->format('h:i A') }}
-                                                                        -
-                                                                        {{ \Carbon\Carbon::parse($break->end_time)->format('h:i A') }}
-                                                                    </div>
-                                                                    @if ($break->reason)
-                                                                        <div class="break-reason">
-                                                                            <i class="fas fa-info-circle me-1"></i>
-                                                                            {{ $break->reason }}
-                                                                        </div>
-                                                                    @endif
+                                                                    <div class="break-time"><i class="fas fa-coffee me-1"></i>{{ \Carbon\Carbon::parse($break->start_time)->format('h:i A') }} - {{ \Carbon\Carbon::parse($break->end_time)->format('h:i A') }}</div>
+                                                                    @if ($break->reason) <div class="break-reason"><i class="fas fa-info-circle me-1"></i>{{ $break->reason }}</div> @endif
                                                                 </div>
                                                             </div>
                                                         @endforeach
                                                     </div>
                                                 @else
-                                                    <div class="no-breaks">
-                                                        <i class="fas fa-check text-success me-1"></i>
-                                                        لا يوجد استراحات
-                                                    </div>
+                                                    <div class="no-breaks"><i class="fas fa-check text-success me-1"></i>{{ trans('doctors.no_breaks') }}</div>
                                                 @endif
                                             </td>
                                         @else
-                                            <td colspan="5" class="text-center text-muted" data-label="الحالة">
-                                                <span class="status-badge status-inactive">
-                                                    <i class="fas fa-times-circle"></i>
-                                                    غير متاح / إجازة
-                                                </span>
-                                            </td>
+                                            <td colspan="5" class="text-center text-muted" data-label="{{ trans('doctors.status') }}"><span class="status-badge status-inactive"><i class="fas fa-times-circle"></i>{{ trans('doctors.unavailable_day_off') }}</span></td>
                                         @endif
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-
-                    <!-- Action Buttons -->
                     <div class="action-buttons">
-                        <a href="{{ route('doctors.schedule.editt', $doctor->id) }}"
-                            class="btn btn-schedule-action btn-edit">
-                            <i class="fas fa-edit"></i> تعديل الجدول
-                        </a>
-                        <button class="btn btn-schedule-action btn-print" onclick="window.print()">
-                            <i class="fas fa-print"></i> طباعة الجدول
-                        </button>
+                        <a href="{{ route('doctor.schedule.edit', $doctor->id) }}" class="btn btn-schedule-action btn-edit"><i class="fas fa-edit"></i> {{ trans('doctors.edit_schedule') }}</a>
+                        <button class="btn btn-schedule-action btn-print" onclick="window.print()"><i class="fas fa-print"></i> {{ trans('doctors.print_schedule') }}</button>
                     </div>
                 @else
                     <div class="empty-state text-center py-5 animate__animated animate__pulse">
-                        <div class="mb-4">
-                            <i class="fas fa-calendar-times fa-4x text-muted"></i>
-                        </div>
-                        <h4 class="text-muted mb-3">لم يتم تحديد جدول العمل بعد</h4>
-                        <p class="text-muted mb-4">يبدو أنك لم تقم بإعداد جدول العمل الأسبوعي الخاص بك بعد.</p>
-                        <a href="{{ route('doctors.schedule.edit', $doctor->id) }}" class="btn btn-primary btn-lg">
-                            <i class="fas fa-plus-circle me-2"></i> إنشاء جدول العمل
-                        </a>
+                        <div class="mb-4"><i class="fas fa-calendar-times fa-4x text-muted"></i></div>
+                        <h4 class="text-muted mb-3">{{ trans('doctors.schedule_not_set_yet') }}</h4>
+                        <p class="text-muted mb-4">{{ trans('doctors.schedule_not_set_yet_message') }}</p>
+                        <a href="{{ route('doctor.schedule.edit', $doctor->id) }}" class="btn btn-primary btn-lg"><i class="fas fa-plus-circle me-2"></i> {{ trans('doctors.create_work_schedule') }}</a>
                     </div>
                 @endif
             </div>
         </div>
     </div>
 
-    <!-- Share Schedule Modal -->
     <div class="modal fade" id="shareScheduleModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-share-alt me-2"></i>
-                        مشاركة جدول العمل
-                    </h5>
+                    <h5 class="modal-title"><i class="fas fa-share-alt me-2"></i>{{ trans('doctors.share_work_schedule') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">رابط المشاركة</label>
+                        <label class="form-label">{{ trans('doctors.shareable_link') }}</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="scheduleLink" value="#" readonly>
-                            <button class="btn btn-primary" onclick="copyScheduleLink()">
-                                <i class="fas fa-copy"></i> نسخ
-                            </button>
+                            <button class="btn btn-primary" onclick="copyScheduleLink()"><i class="fas fa-copy"></i> {{ trans('doctors.copy') }}</button>
                         </div>
                     </div>
                     <div class="social-share-buttons d-flex justify-content-center gap-2 mt-4">
-                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle" title="WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                        <a href="#" class="btn btn-outline-info btn-sm rounded-circle" title="Telegram">
-                            <i class="fab fa-telegram"></i>
-                        </a>
-                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle" title="نسخ الرابط">
-                            <i class="fas fa-link"></i>
-                        </a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-circle" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" class="btn btn-outline-info btn-sm rounded-circle" title="Telegram"><i class="fab fa-telegram"></i></a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle" title="{{ trans('doctors.copy_link') }}"><i class="fas fa-link"></i></a>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ trans('doctors.close') }}</button>
                 </div>
             </div>
         </div>

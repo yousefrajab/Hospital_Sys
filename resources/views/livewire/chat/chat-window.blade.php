@@ -1,23 +1,23 @@
 <div>
     <div class="container-fluid users-list-container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="mb-0"><i class="fas fa-user-friends me-2"></i>اختر مريضًا لبدء محادثة</h4>
-            <input type="text" wire:model.debounce.300ms="searchPatients" class="form-control form-control-sm w-25" placeholder="بحث عن مريض بالاسم أو الإيميل...">
+            <h4 class="mb-0"><i class="fas fa-user-friends me-2"></i>{{ trans('doctors.chat_select_patient_title') }}</h4>
+            <input type="text" wire:model.debounce.300ms="searchPatients" class="form-control form-control-sm w-25" placeholder="{{ trans('doctors.chat_search_patient_placeholder') }}">
         </div>
 
         @if($users && $users->count() > 0)
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
                 @foreach ($users as $patient) {{-- المتغير هنا هو $users الذي يمثل المرضى --}}
                     <div class="col">
-                        <div class="card user-card-item h-100 shadow-hover" wire:click="createConversation('{{ $patient->email }}')" title="بدء محادثة مع {{ $patient->name }}">
+                        <div class="card user-card-item h-100 shadow-hover" wire:click="createConversation('{{ $patient->email }}')" title="{{ trans('doctors.chat_start_conversation_with', ['name' => $patient->name]) }}">
                             <div class="card-body text-center">
                                 <img src="{{ $patient->image ? asset('Dashboard/img/patients/' . $patient->image->filename) : asset('Dashboard/img/default_patient_avatar.png') }}"
-                                     alt="صورة {{ $patient->name }}" class="rounded-circle mb-3" width="80" height="80" style="object-fit: cover; border: 3px solid #e9ecef;">
+                                     alt="{{ trans('doctors.chat_patient_image_alt', ['name' => $patient->name]) }}" class="rounded-circle mb-3" width="80" height="80" style="object-fit: cover; border: 3px solid #e9ecef;">
                                 <h6 class="card-title mb-1 fw-bold">{{ $patient->name }}</h6>
                                 <p class="card-text text-muted small mb-2">{{ $patient->email }}</p>
                                 {{-- يمكنك إضافة معلومات أخرى مثل آخر زيارة أو رقم الملف --}}
                                 <button class="btn btn-sm btn-outline-primary rounded-pill">
-                                    <i class="fas fa-comments me-1"></i> بدء محادثة
+                                    <i class="fas fa-comments me-1"></i> {{ trans('doctors.chat_start_conversation_button') }}
                                 </button>
                             </div>
                         </div>
@@ -29,11 +29,11 @@
         @else
             <div class="text-center text-muted p-5">
                 <i class="fas fa-users-slash fa-3x mb-3"></i>
-                <p>لا يوجد مرضى مسجلون حاليًا لبدء محادثة معهم.</p>
+                <p>{{ trans('doctors.chat_no_patients_found') }}</p>
             </div>
         @endif
         <div wire:loading wire:target="searchPatients" class="text-center p-3 text-muted">
-            <i class="fas fa-spinner fa-spin me-2"></i>جاري البحث...
+            <i class="fas fa-spinner fa-spin me-2"></i>{{ trans('doctors.chat_searching') }}
         </div>
     </div>
 </div>

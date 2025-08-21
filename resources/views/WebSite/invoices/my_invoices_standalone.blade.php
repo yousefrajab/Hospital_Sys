@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>فواتيري - {{ $patient->name }} - {{ config('app.name', 'المنصة الطبية') }}</title>
-
+<title>{{ trans('patients.my_invoices_page_title', ['name' => $patient->name]) }} - {{ config('app.name', trans('patients.medical_platform')) }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -134,36 +133,35 @@
     <header class="standalone-invoice-header">
         <div class="container-fluid">
             <div class="site-branding">
-                <a href="{{ route('home') }}" class="site-title" title="العودة إلى الرئيسية {{ config('app.name') }}">
-                    {{ config('app.name', 'المنصة الطبية') }}
+                <a href="{{ route('home') }}" class="site-title" title="{{ trans('patients.back_to_home') }}">
+                    {{ config('app.name', trans('patients.medical_platform')) }}
                 </a>
             </div>
             <div class="user-actions">
                 @auth('patient')
-                    <span class="welcome-text">مرحباً بك، <strong>{{ $patient->name }}</strong></span>
+                    <span class="welcome-text">{{ trans('patients.welcome_message') }} <strong>{{ $patient->name }}</strong></span>
                     <a href="{{ route('logout.patient') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form-header-standalone').submit();"
-                        title="تسجيل الخروج">
-                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                        title="{{ trans('patients.logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> {{ trans('patients.logout') }}
                     </a>
                     <form id="logout-form-header-standalone" action="{{ route('logout.patient') }}" method="POST" style="display: none;">@csrf</form>
                 @else
-                    <a href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+                    <a href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> {{ trans('patients.login') }}</a>
                 @endauth
-                <a href="{{ route('home') }}" title="العودة للصفحة الرئيسية"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="{{ route('home') }}" title="{{ trans('patients.back_to_home') }}"><i class="fas fa-home"></i> {{ trans('patients.nav_home') }}</a>
             </div>
         </div>
     </header>
 
     <main class="my-invoices-container">
         <section class="my-invoices-title-section">
-            <h1 class="animate__animated animate__fadeInDown">كشف فواتيري</h1>
+            <h1 class="animate__animated animate__fadeInDown">{{ trans('patients.my_invoices_header') }}</h1>
             <p class="title-subtext animate__animated animate__fadeInUp" data-wow-delay="0.1s">
-                هنا يمكنك عرض جميع فواتيرك المتعلقة بالخدمات الطبية التي تلقيتها.
+                {{ trans('patients.my_invoices_subheader') }}
             </p>
         </section>
 
-        {{-- Session Messages --}}
         @if (session('success_notify') || session('error_notify') || session('warning_notify') || session('info_notify'))
             <div class="row justify-content-center mb-4">
                 <div class="col-md-10 col-lg-8">
@@ -172,7 +170,6 @@
                             <i class="fas fa-check-circle fa-lg me-2"></i><div>{!! session('success_notify') !!}</div>
                         </div>
                     @endif
-                    {{-- ... (باقي رسائل السيشون للخطأ والتحذير والمعلومات) ... --}}
                 </div>
             </div>
         @endif
@@ -185,85 +182,74 @@
                             <div class="invoice-card">
                                 <div class="invoice-card-header">
                                     <div>
-                                        <span class="invoice-id">فاتورة رقم: #{{ $invoice->id }}</span>
+                                        <span class="invoice-id">{{ trans('patients.invoice_id_prefix') }} #{{ $invoice->id }}</span>
                                         <span class="invoice-date d-block"><i class="far fa-calendar-alt me-1"></i> {{ \Carbon\Carbon::parse($invoice->invoice_date)->translatedFormat('l، j F Y') }}</span>
                                     </div>
-                                    {{-- @php
-                                        $statusClass = 'default';
-                                        $statusText = $invoice->invoice_status_display ?? ($invoice->invoice_status == 1 ? 'غير مدفوعة' : ($invoice->invoice_status == 2 ? 'مدفوعة' : 'غير معروفة')); // مثال، عدل حسب حالاتك
-                                        if ($invoice->invoice_status == 1) $statusClass = 'unpaid'; //  1 لـ 'غير مدفوعة'
-                                        elseif ($invoice->invoice_status == 2) $statusClass = 'paid'; // 2 لـ 'مدفوعة'
-                                        elseif ($invoice->invoice_status == 3) $statusClass = 'cancelled'; // 3 لـ 'ملغاة' (مثال)
-                                    @endphp --}}
-                                    {{-- <span class="invoice-status-badge status-badge {{ $statusClass }}">
-                                        {{ $statusText }}
-                                    </span> --}}
+                                    {{-- Status Badge can be re-enabled if you create the accessor --}}
                                 </div>
                                 <div class="invoice-card-body">
                                     <div class="detail-grid">
                                         <div class="detail-item">
-                                            <span class="label"><i class="fas fa-notes-medical me-1"></i> الخدمة/الباقة:</span>
+                                            <span class="label"><i class="fas fa-notes-medical me-1"></i> {{ trans('patients.service_package') }}</span>
                                             <span class="value">
-                                                @if($invoice->invoice_type == 1 && $invoice->Service) {{-- فاتورة خدمة مفردة --}}
+                                                @if($invoice->invoice_type == 1 && $invoice->Service)
                                                     {{ $invoice->Service->name }}
-                                                @elseif($invoice->invoice_type == 2 && $invoice->Group) {{-- فاتورة مجموعة خدمات --}}
+                                                @elseif($invoice->invoice_type == 2 && $invoice->Group)
                                                     {{ $invoice->Group->name }}
                                                 @else
-                                                    خدمة غير محددة
+                                                    {{ trans('patients.unspecified_service') }}
                                                 @endif
                                             </span>
                                         </div>
                                         @if($invoice->Doctor)
                                         <div class="detail-item">
-                                            <span class="label"><i class="fas fa-user-md me-1"></i> الطبيب:</span>
+                                            <span class="label"><i class="fas fa-user-md me-1"></i> {{ trans('patients.doctor') }}</span>
                                             <span class="value">{{ $invoice->Doctor->name }}</span>
                                         </div>
                                         @endif
                                         @if($invoice->Section)
                                         <div class="detail-item">
-                                            <span class="label"><i class="fas fa-clinic-medical me-1"></i> القسم:</span>
+                                            <span class="label"><i class="fas fa-clinic-medical me-1"></i> {{ trans('patients.department') }}</span>
                                             <span class="value">{{ $invoice->Section->name }}</span>
                                         </div>
                                         @endif
                                         <div class="detail-item">
-                                            <span class="label"><i class="fas fa-money-bill-wave me-1"></i> السعر الأساسي:</span>
-                                            <span class="value">{{ number_format($invoice->price, 2) }} <small>{{ config('app.currency_symbol', 'ر.س') }}</small></span>
+                                            <span class="label"><i class="fas fa-money-bill-wave me-1"></i> {{ trans('patients.base_price') }}</span>
+                                            <span class="value">{{ number_format($invoice->price, 2) }} <small>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</small></span>
                                         </div>
                                         <div class="detail-item">
-                                            <span class="label"><i class="fas fa-percent me-1"></i> الخصم:</span>
-                                            <span class="value">{{ number_format($invoice->discount_value, 2) }} <small>{{ config('app.currency_symbol', 'ر.س') }}</small></span>
+                                            <span class="label"><i class="fas fa-percent me-1"></i> {{ trans('patients.discount') }}</span>
+                                            <span class="value">{{ number_format($invoice->discount_value, 2) }} <small>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</small></span>
                                         </div>
                                         <div class="detail-item">
-                                            <span class="label"><i class="fas fa-calculator me-1"></i> نسبة الضريبة:</span>
+                                            <span class="label"><i class="fas fa-calculator me-1"></i> {{ trans('patients.tax_rate') }}</span>
                                             <span class="value">{{ $invoice->tax_rate }}%</span>
                                         </div>
                                         <div class="detail-item">
-                                            <span class="label"><i class="fas fa-coins me-1"></i> قيمة الضريبة:</span>
-                                            <span class="value">{{ number_format($invoice->tax_value, 2) }} <small>{{ config('app.currency_symbol', 'ر.س') }}</small></span>
+                                            <span class="label"><i class="fas fa-coins me-1"></i> {{ trans('patients.tax_value') }}</span>
+                                            <span class="value">{{ number_format($invoice->tax_value, 2) }} <small>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</small></span>
                                         </div>
                                          <div class="detail-item">
-                                            <span class="label"><i class="fas fa-cash-register me-1"></i> نوع الدفع:</span>
-                                            <span class="value fw-bold">{{ $invoice->type == 1 ? 'نقدي' : ($invoice->type == 2 ? 'آجل' : 'غير محدد') }}</span>
+                                            <span class="label"><i class="fas fa-cash-register me-1"></i> {{ trans('patients.payment_type') }}</span>
+                                            <span class="value fw-bold">{{ $invoice->type == 1 ? trans('patients.cash') : ($invoice->type == 2 ? trans('patients.credit') : trans('patients.unspecified')) }}</span>
                                         </div>
                                     </div>
                                     <div class="invoice-total">
-                                        <span class="total-label">الإجمالي المطلوب:</span>
+                                        <span class="total-label">{{ trans('patients.total_due') }}</span>
                                         <span class="total-amount">
                                             {{ number_format($invoice->total_with_tax, 2) }}
-                                            <small>{{ config('app.currency_symbol', 'ر.س') }}</small>
+                                            <small>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</small>
                                         </span>
                                     </div>
                                 </div>
                                 <div class="invoice-card-footer">
-                                    {{-- يمكنك إضافة زر لطباعة الفاتورة إذا كان لديك مسار لذلك --}}
-                                    @if(Route::has('admin.Print_single_invoices')) {{-- تأكد من اسم المسار --}}
+                                    @if(Route::has('admin.Print_single_invoices'))
                                         <a href="{{ route('website.invoice.print', $invoice->id) }}" class="btn btn-sm btn-outline-primary" target="_blank">
-                                            <i class="fas fa-print me-1"></i> طباعة الفاتورة
+                                            <i class="fas fa-print me-1"></i> {{ trans('patients.print_invoice') }}
                                         </a>
                                     @endif
-                                    {{-- زر الدفع إذا كانت الفاتورة غير مدفوعة ونوعها نقدي (يتطلب نظام دفع) --}}
                                     @if($invoice->invoice_status == 1 && $invoice->type == 1)
-                                        {{-- <a href="#" class="btn btn-sm btn-success"><i class="fas fa-credit-card me-1"></i> دفع الآن</a> --}}
+                                        {{-- <a href="#" class="btn btn-sm btn-success"><i class="fas fa-credit-card me-1"></i> {{ trans('patients.pay_now') }}</a> --}}
                                     @endif
                                 </div>
                             </div>
@@ -272,15 +258,15 @@
                 </div>
 
                 @if ($invoices->hasPages())
-                    <nav class="pagination-standalone mt-4 d-flex justify-content-center" aria-label="سجل الفواتير">
+                    <nav class="pagination-standalone mt-4 d-flex justify-content-center" aria-label="{{ trans('patients.invoices_record_pagination_aria') }}">
                         {{ $invoices->links('vendor.pagination.bootstrap-5') }}
                     </nav>
                 @endif
             @else
                 <div class="empty-invoices-state">
                     <div class="empty-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-                    <h4>لا توجد لديك فواتير مسجلة حاليًا.</h4>
-                    <p>عند إصدار أي فاتورة لخدمات تلقيتها، ستظهر هنا.</p>
+                    <h4>{{ trans('patients.no_invoices_title') }}</h4>
+                    <p>{{ trans('patients.no_invoices_message') }}</p>
                 </div>
             @endif
         </div>

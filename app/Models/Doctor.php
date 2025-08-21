@@ -13,13 +13,13 @@ use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 
 class Doctor extends Authenticatable implements TranslatableContract, CanResetPassword
 {
-    use HasFactory, Notifiable, Translatable, CanResetPasswordTrait;
+    use HasFactory, Notifiable,Translatable, CanResetPasswordTrait;
 
     public $translatedAttributes = ['name'];
 
     protected $fillable = [
         'national_id',
-        'name',
+        // 'name',
         'email',
         'password',
         'phone',

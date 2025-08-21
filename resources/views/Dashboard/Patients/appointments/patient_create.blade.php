@@ -266,13 +266,13 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-calendar-plus text-primary me-2"></i> المواعيد</h4>
-                <span class="text-muted mt-1 tx-13 ms-2 mb-0">/ حجز موعد جديد</span>
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-calendar-plus text-primary me-2"></i> {{ trans('patients.appointments') }}</h4>
+                <span class="text-muted mt-1 tx-13 ms-2 mb-0">/ {{ trans('patients.book_new_appointment') }}</span>
             </div>
         </div>
          <div class="d-flex my-xl-auto right-content">
             <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm">
-                <i class="fas fa-arrow-left me-1"></i> رجوع
+                <i class="fas fa-arrow-left me-1"></i> {{ trans('patients.back') }}
             </a>
         </div>
     </div>
@@ -285,36 +285,36 @@
         <div class="col-lg-10 col-md-12">
             <div class="card appointment-form-card">
                 <div class="appointment-form-header">
-                    <h5 class="text-white"><i class="fas fa-calendar-plus"></i> املأ بيانات حجز الموعد</h5>
+                    <h5 class="text-white"><i class="fas fa-calendar-plus"></i> {{ trans('patients.fill_appointment_details_title') }}</h5>
                 </div>
                 <div class="card-body p-0">
                     <form action="{{ route('patient.appointments.store') }}" method="POST" class="needs-validation" novalidate autocomplete="off">
                         @csrf
                         <fieldset class="form-section-fieldset patient-info-section">
                             <legend class="form-section-legend">
-                                <i class="fas fa-user-injured"></i> معلومات المريض
+                                <i class="fas fa-user-injured"></i> {{ trans('patients.patient_information') }}
                             </legend>
                             <div class="row g-3">
                                 <div class="col-md-4 form-group">
-                                    <label for="patient_name" class="form-label">الاسم الكامل <span class="text-danger">*</span></label>
+                                    <label for="patient_name" class="form-label">{{ trans('patients.full_name') }} <span class="text-danger">*</span></label>
                                     <div class="input-with-icon">
-                                        <input type="text" name="patient_name" id="patient_name" class="form-control @error('patient_name') is-invalid @enderror" value="{{ old('patient_name', $patientName ?? '') }}" required placeholder="أدخل اسمك الثلاثي">
+                                        <input type="text" name="patient_name" id="patient_name" class="form-control @error('patient_name') is-invalid @enderror" value="{{ old('patient_name', $patientName ?? '') }}" required placeholder="{{ trans('patients.enter_your_full_name_placeholder') }}">
                                         <i class="fas fa-user"></i>
                                     </div>
                                     @error('patient_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="patient_email" class="form-label">البريد الإلكتروني <span class="text-danger">*</span></label>
+                                    <label for="patient_email" class="form-label">{{ trans('patients.email') }} <span class="text-danger">*</span></label>
                                     <div class="input-with-icon">
-                                        <input type="email" name="patient_email" id="patient_email" class="form-control @error('patient_email') is-invalid @enderror" value="{{ old('patient_email', $patientEmail ?? '') }}" required placeholder="example@domain.com">
+                                        <input type="email" name="patient_email" id="patient_email" class="form-control @error('patient_email') is-invalid @enderror" value="{{ old('patient_email', $patientEmail ?? '') }}" required placeholder="{{ trans('patients.email_placeholder') }}">
                                         <i class="fas fa-envelope"></i>
                                     </div>
                                     @error('patient_email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <label for="patient_phone" class="form-label">رقم الهاتف <span class="text-danger">*</span></label>
+                                    <label for="patient_phone" class="form-label">{{ trans('patients.phone_number') }} <span class="text-danger">*</span></label>
                                     <div class="input-with-icon">
-                                        <input type="tel" name="patient_phone" id="patient_phone" class="form-control @error('patient_phone') is-invalid @enderror" value="{{ old('patient_phone', $patientPhone ?? '') }}" required placeholder="05XXXXXXXX">
+                                        <input type="tel" name="patient_phone" id="patient_phone" class="form-control @error('patient_phone') is-invalid @enderror" value="{{ old('patient_phone', $patientPhone ?? '') }}" required placeholder="{{ trans('patients.phone_placeholder_sa') }}">
                                         <i class="fas fa-phone-alt"></i>
                                     </div>
                                     @error('patient_phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -324,13 +324,13 @@
 
                         <fieldset class="form-section-fieldset">
                             <legend class="form-section-legend">
-                                <i class="fas fa-calendar-alt"></i> تفاصيل الموعد المطلوب
+                                <i class="fas fa-calendar-alt"></i> {{ trans('patients.appointment_details') }}
                             </legend>
                             <div class="row g-3">
                                 <div class="col-md-6 form-group">
-                                    <label for="section_id" class="form-label">القسم الطبي <span class="text-danger">*</span></label>
+                                    <label for="section_id" class="form-label">{{ trans('patients.medical_section') }} <span class="text-danger">*</span></label>
                                     <div class="input-with-icon">
-                                        <select name="section_id" id="section_id" class="form-select select2 @error('section_id') is-invalid @enderror" required data-placeholder="-- اختر القسم --">
+                                        <select name="section_id" id="section_id" class="form-select select2 @error('section_id') is-invalid @enderror" required data-placeholder="{{ trans('patients.select_section_placeholder') }}">
                                             <option value=""></option>
                                             @foreach($sections as $section)
                                                 <option value="{{ $section->id }}" {{ old('section_id', $selectedSectionId ?? '') == $section->id ? 'selected' : '' }}>
@@ -344,9 +344,9 @@
                                 </div>
 
                                 <div class="col-md-6 form-group">
-                                    <label for="doctor_id" class="form-label">الطبيب المعالج <span class="text-danger">*</span></label>
+                                    <label for="doctor_id" class="form-label">{{ trans('patients.attending_doctor') }} <span class="text-danger">*</span></label>
                                     <div class="input-with-icon">
-                                        <select name="doctor_id" id="doctor_id" class="form-select select2 @error('doctor_id') is-invalid @enderror" required data-placeholder="-- اختر الطبيب --" disabled>
+                                        <select name="doctor_id" id="doctor_id" class="form-select select2 @error('doctor_id') is-invalid @enderror" required data-placeholder="{{ trans('patients.select_doctor_placeholder') }}" disabled>
                                             <option value=""></option>
                                             @if(old('doctor_id') && isset($doctors) && $doctors->isNotEmpty() && $doctors->contains('id', old('doctor_id')))
                                                 <option value="{{ old('doctor_id') }}" selected>{{ $doctors->firstWhere('id', old('doctor_id'))->name }}</option>
@@ -357,24 +357,24 @@
                                         <i class="fas fa-user-md"></i>
                                     </div>
                                     @error('doctor_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                                    <div id="doctors_loading" style="display: none;" class="mt-1"><small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i> جاري تحميل الأطباء...</small></div>
+                                    <div id="doctors_loading" style="display: none;" class="mt-1"><small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i> {{ trans('patients.loading_doctors') }}</small></div>
                                 </div>
 
                                 <div class="col-md-6 form-group">
-                                    <label for="selected_date_display" class="form-label">تاريخ الموعد <span class="text-danger">*</span></label>
+                                    <label for="selected_date_display" class="form-label">{{ trans('patients.appointment_date') }} <span class="text-danger">*</span></label>
                                     <div class="input-with-icon">
                                         <input type="text" id="selected_date_display" class="form-control flatpickr-date @error('selected_date') is-invalid @enderror"
-                                               value="{{ old('selected_date') }}" required placeholder="اختر طبيباً أولاً" disabled readonly="readonly">
+                                               value="{{ old('selected_date') }}" required placeholder="{{ trans('patients.select_doctor_first_placeholder') }}" disabled readonly="readonly">
                                         <i class="fas fa-calendar-day"></i>
                                     </div>
                                     <input type="hidden" name="selected_date" id="selected_date" value="{{ old('selected_date') }}">
-                                    <div id="dates_loading_indicator" style="display: none;" class="mt-1"><small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i> جاري تحميل أيام عمل الطبيب...</small></div>
-                                    @error('selected_date') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror {{-- d-block for error on hidden input --}}
+                                    <div id="dates_loading_indicator" style="display: none;" class="mt-1"><small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i> {{ trans('patients.loading_doctor_work_days') }}</small></div>
+                                    @error('selected_date') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                                 </div>
 
                                 <div class="col-md-12 form-group">
-                                    <label class="form-label mt-2">وقت الموعد <span class="text-danger">*</span></label>
-                                    <div id="times_loading" style="display: none;" class="mb-2"><small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i> جاري تحميل الأوقات...</small></div>
+                                    <label class="form-label mt-2">{{ trans('patients.appointment_time') }} <span class="text-danger">*</span></label>
+                                    <div id="times_loading" style="display: none;" class="mb-2"><small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i> {{ trans('patients.loading_times') }}</small></div>
                                     <div id="no_times_message" style="display: none;"></div>
 
                                     <div id="available_time_slots_container" class="mt-1 time-slots-container" style="display: none;">
@@ -390,15 +390,15 @@
 
                         <div class="p-4">
                             <div class="form-group">
-                                <label for="notes" class="form-label">ملاحظات إضافية (اختياري)</label>
-                                <textarea name="notes" id="notes" class="form-control @error('notes') is-invalid @enderror" rows="3" placeholder="اكتب أي ملاحظات إضافية هنا...">{{ old('notes') }}</textarea>
+                                <label for="notes" class="form-label">{{ trans('patients.additional_notes_optional') }}</label>
+                                <textarea name="notes" id="notes" class="form-control @error('notes') is-invalid @enderror" rows="3" placeholder="{{ trans('patients.additional_notes_placeholder') }}">{{ old('notes') }}</textarea>
                                 @error('notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 
                         <div class="form-actions-container">
                             <button type="submit" class="submit-btn-appointment" id="submitAppointmentBtn">
-                                <i class="fas fa-calendar-check me-2"></i> تأكيد الحجز
+                                <i class="fas fa-calendar-check me-2"></i> {{ trans('patients.confirm_booking') }}
                             </button>
                         </div>
                     </form>
@@ -427,7 +427,7 @@
 
         $(document).ready(function() {
             $('#section_id, #doctor_id').select2({
-                placeholder: $(this).data('placeholder') || "اختر...",
+                placeholder: $(this).data('placeholder') || "{{ trans('patients.js_select_placeholder') }}",
                 width: '100%', dir: "rtl", theme: "bootstrap-5",
                 allowClear: true, language: "ar"
             }).on('change', function() {
@@ -477,7 +477,7 @@
                     flatpickrInstance.clear();
                     flatpickrInstance.set('enable', []); // Clear enabled dates
                 }
-                dateDisplayInput.prop('disabled', true).attr('placeholder', 'اختر طبيباً أولاً').removeClass('is-valid is-invalid');
+                dateDisplayInput.prop('disabled', true).attr('placeholder', "{{ trans('patients.js_select_doctor_first') }}").removeClass('is-valid is-invalid');
                 dateHiddenInput.val('');
                 resetTimeSelection();
             }
@@ -514,27 +514,26 @@
                         type: "GET", data: { section_id: sectionId }, dataType: 'json',
                         success: function(response) {
                             doctorsLoading.hide();
-                            doctorSelect.html('<option value="">-- اختر الطبيب --</option>');
+                            doctorSelect.html('<option value="">{{ trans("patients.select_doctor_placeholder") }}</option>');
                             if (response && response.doctors && response.doctors.length > 0) {
                                 response.doctors.forEach(doctor => doctorSelect.append(new Option(doctor.name, doctor.id)));
                                 doctorSelect.prop('disabled', false);
 
-                                // Restore old doctor selection if present for this section
                                 if (initialData.selectedDoctorId && doctorSelect.find('option[value="' + initialData.selectedDoctorId + '"]').length > 0) {
-                                     doctorSelect.val(initialData.selectedDoctorId).trigger('change'); // This will trigger date loading
+                                     doctorSelect.val(initialData.selectedDoctorId).trigger('change');
                                 } else if (doctorSelect.prop('required')) {
                                      doctorSelect.next('.select2-container').find('.select2-selection').addClass('is-invalid');
                                 }
                             } else {
-                                doctorSelect.append(new Option(response.error || 'لا يوجد أطباء في هذا القسم', '', true, true));
+                                doctorSelect.append(new Option(response.error || "{{ trans('patients.js_no_doctors_in_section') }}", '', true, true));
                             }
-                            doctorSelect.trigger('change.select2'); // Update Select2 display
+                            doctorSelect.trigger('change.select2');
                         },
                         error: function(jqXHR) {
                             doctorsLoading.hide();
                             console.error("AJAX Error fetching doctors:", jqXHR.responseText);
-                            notif({ msg: (jqXHR.responseJSON?.error || "خطأ في تحميل الأطباء."), type: "error", position: "bottom" });
-                            doctorSelect.html('<option value="">-- خطأ --</option>').trigger('change.select2');
+                            notif({ msg: (jqXHR.responseJSON?.error || "{{ trans('patients.js_error_loading_doctors') }}"), type: "error", position: "bottom" });
+                            doctorSelect.html('<option value="">{{ trans("patients.js_error_placeholder") }}</option>').trigger('change.select2');
                         }
                     });
                 }
@@ -542,7 +541,7 @@
 
             $('#doctor_id').on('change', function() {
                 const doctorId = $(this).val();
-                disableDateField(); // Always reset date field on doctor change
+                disableDateField();
 
                 if (doctorId) {
                     datesLoadingIndicator.show();
@@ -555,30 +554,29 @@
                                 flatpickrInstance.set('enable', response.enabledDates);
                                 if (response.enabledDates.length > 0) {
                                     enableDateField();
-                                    dateDisplayInput.attr('placeholder', 'اختر التاريخ من الأيام المتاحة');
+                                    dateDisplayInput.attr('placeholder', "{{ trans('patients.js_select_date_from_available') }}");
                                     if (initialData.oldSelectedDate && response.enabledDates.includes(initialData.oldSelectedDate)) {
                                         flatpickrInstance.setDate(initialData.oldSelectedDate, true);
                                     }
                                 } else {
-                                    disableDateField(); // Keep disabled
-                                    dateDisplayInput.attr('placeholder', 'لا توجد أيام متاحة لهذا الطبيب حالياً');
-                                    $('#no_times_message').text(response.message || 'لا توجد أيام متاحة لهذا الطبيب حالياً.').show();
+                                    disableDateField();
+                                    dateDisplayInput.attr('placeholder', "{{ trans('patients.js_no_available_days') }}");
+                                    $('#no_times_message').text(response.message || "{{ trans('patients.js_no_available_days') }}.").show();
                                 }
                             } else {
                                 disableDateField();
-                                dateDisplayInput.attr('placeholder', response.message || 'خطأ في تحميل أيام الطبيب');
+                                dateDisplayInput.attr('placeholder', response.message || "{{ trans('patients.js_error_loading_days') }}");
                             }
                         },
                         error: function(jqXHR) {
                             datesLoadingIndicator.hide();
                             console.error("AJAX Error fetching doctor available dates:", jqXHR.responseText);
                             disableDateField();
-                            dateDisplayInput.attr('placeholder', 'خطأ في تحميل أيام الطبيب');
-                            notif({ msg: "خطأ في تحميل أيام عمل الطبيب.", type: "error", position: "bottom" });
+                            dateDisplayInput.attr('placeholder', "{{ trans('patients.js_error_loading_days') }}");
+                            notif({ msg: "{{ trans('patients.js_error_loading_work_days') }}", type: "error", position: "bottom" });
                         }
                     });
                 }
-                // Update Select2 validation state
                 const $select2Container = $(this).next('.select2-container').find('.select2-selection');
                  if ($(this).val()) {
                     $select2Container.removeClass('is-invalid').addClass('is-valid');
@@ -594,7 +592,7 @@
                 const noTimesMessage = $('#no_times_message');
                 const hiddenTimeInput = $('#selected_time');
 
-                resetTimeSelection(); // This resets times and submit button
+                resetTimeSelection();
 
                 if (doctorId && selectedDate) {
                     timesLoading.show();
@@ -610,7 +608,7 @@
                                         .on('click', function() {
                                             timeSlotsWrapper.find('.time-slot-btn').removeClass('selected active');
                                             $(this).addClass('selected active');
-                                            hiddenTimeInput.val(timeObj.value).trigger('change'); // Trigger change for any listeners
+                                            hiddenTimeInput.val(timeObj.value).trigger('change');
                                             $('#selected_time').next('.invalid-feedback').hide();
                                             noTimesMessage.hide().removeClass('text-danger');
                                             updateSubmitButtonState();
@@ -621,16 +619,16 @@
                                 if (initialData.oldSelectedTime) {
                                     const matchingButton = timeSlotsWrapper.find('button[value="' + initialData.oldSelectedTime + '"]');
                                     if (matchingButton.length > 0) matchingButton.click();
-                                    initialData.oldSelectedTime = null; // Consume it
+                                    initialData.oldSelectedTime = null;
                                 }
                             } else {
-                                noTimesMessage.text(response.message || 'لا توجد أوقات متاحة في هذا اليوم.').show();
+                                noTimesMessage.text(response.message || "{{ trans('patients.js_no_available_times') }}").show();
                             }
                         },
                         error: function(jqXHR) {
                             timesLoading.hide();
                             console.error("AJAX Error fetching times:", jqXHR.responseText);
-                            noTimesMessage.text(jqXHR.responseJSON?.message || jqXHR.responseJSON?.error || 'خطأ في تحميل الأوقات.').show();
+                            noTimesMessage.text(jqXHR.responseJSON?.message || jqXHR.responseJSON?.error || "{{ trans('patients.js_error_loading_times') }}").show();
                         }
                     });
                 }
@@ -642,25 +640,18 @@
                 const timeSelected = $('#selected_time').val();
                 submitButton.prop('disabled', !(doctorSelected && dateSelected && timeSelected));
             }
-            updateSubmitButtonState(); // Initial call
+            updateSubmitButtonState();
 
-            // --- Handle initial data (old values) ---
             if (initialData.selectedSectionId) {
                 $('#section_id').val(initialData.selectedSectionId).trigger('change');
-                // The 'change' on section_id will handle loading doctors.
-                // If `initialData.selectedDoctorId` is also set, the success callback of
-                // `getDoctorsBySection` will attempt to select it and trigger its 'change' event,
-                // which in turn will load the available dates.
             } else if (initialData.doctorsForOldSection && initialData.doctorsForOldSection.length > 0 && initialData.selectedDoctorId) {
-                // This case handles if section_id was not set by query param but doctor was via old data
                 const doctorSelect = $('#doctor_id');
-                doctorSelect.html('<option value="">-- اختر الطبيب --</option>');
+                doctorSelect.html('<option value="">--{{ trans("patients.select_doctor_placeholder") }}--</option>');
                 initialData.doctorsForOldSection.forEach(doc => doctorSelect.append(new Option(doc.name, doc.id, false, doc.id == initialData.selectedDoctorId)));
                 if (initialData.selectedDoctorId) doctorSelect.val(initialData.selectedDoctorId);
                 doctorSelect.prop('disabled', false).trigger('change.select2');
-                if (doctorSelect.val()) doctorSelect.trigger('change'); // Load dates for this pre-selected doctor
+                if (doctorSelect.val()) doctorSelect.trigger('change');
             }
-
 
             (function () {
                 'use strict';
@@ -670,22 +661,19 @@
                         const hiddenTimeInput = form.querySelector('#selected_time');
                         const timeErrorFeedback = $(hiddenTimeInput).next('.invalid-feedback');
 
-                        // Validate Select2 fields
                         $(form).find('select.select2[required]').each(function() {
                             if (!$(this).val()) {
                                 $(this).next('.select2-container').find('.select2-selection').addClass('is-invalid');
                             }
                         });
-                        // Validate Flatpickr display field
                         if ($(dateDisplayInput).prop('required') && !$('#selected_date').val()) {
                              $(dateDisplayInput).addClass('is-invalid');
                              $(dateDisplayInput).closest('.form-group').find('.invalid-feedback').show();
                         }
 
-                        // Validate time selection if date is selected
                         if ($('#doctor_id').val() && $('#selected_date').val() && !hiddenTimeInput.value) {
-                             $('#no_times_message').text('الرجاء اختيار وقت الموعد.').addClass('text-danger').show();
-                             if(timeErrorFeedback.length) timeErrorFeedback.text('الرجاء اختيار وقت للموعد.').show();
+                             $('#no_times_message').text("{{ trans('patients.js_please_select_time') }}").addClass('text-danger').show();
+                             if(timeErrorFeedback.length) timeErrorFeedback.text("{{ trans('patients.js_please_select_a_time') }}").show();
                              event.preventDefault();
                              event.stopPropagation();
                         } else if (hiddenTimeInput.value) {
@@ -697,15 +685,13 @@
                             event.preventDefault();
                             event.stopPropagation();
                         } else {
-                            // If form is valid, disable submit button and show loading
-                            submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> جاري الحجز...');
+                            submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> {{ trans("patients.js_booking_in_progress") }}');
                         }
                         form.classList.add('was-validated');
                     }, false);
                 });
             })();
 
-            // Display session messages with NotifIt
             @if (session('success_message'))
                 notif({ msg: "<i class='fas fa-check-circle me-2'></i> {{ session('success_message') }}", type: "success", position: "bottom", autohide: true, timeout: 7000 });
             @endif
@@ -713,7 +699,7 @@
                 notif({ msg: "<i class='fas fa-exclamation-triangle me-2'></i> {{ session('error') }}", type: "error", position: "bottom", autohide: true, timeout: 7000 });
             @endif
             @if ($errors->any())
-                let errorMsg = "<strong class='d-block mb-1'><i class='fas fa-times-circle me-2'></i> يرجى تصحيح الأخطاء التالية:</strong><ul class='list-unstyled mb-0 ps-3' style='text-align: right;'>";
+                let errorMsg = "<strong class='d-block mb-1'><i class='fas fa-times-circle me-2'></i> {{ trans('patients.js_please_correct_errors') }}</strong><ul class='list-unstyled mb-0 ps-3' style='text-align: right;'>";
                 @foreach ($errors->all() as $error)
                     errorMsg += "<li>- {{ $error }}</li>";
                 @endforeach

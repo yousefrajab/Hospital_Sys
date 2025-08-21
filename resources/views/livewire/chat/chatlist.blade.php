@@ -1,18 +1,13 @@
 {{-- resources/views/livewire/chat/chatlist.blade.php --}}
 <div>
-    {{-- (اختياري) شريط بحث داخل قائمة المحادثات --}}
-    {{-- <div class="p-3 border-bottom">
-        <input type="text" wire:model.debounce.300ms="searchTerm" class="form-control form-control-sm rounded-pill" placeholder="بحث في المحادثات...">
-    </div> --}}
-
-    <div class="main-chat-list ps" id="ChatListContainer" style="position: relative; overflow-y: auto; height: calc(100% - 130px);"> {{-- تعديل الارتفاع ليناسب البحث والهيدر --}}
+    <div class="main-chat-list ps" id="ChatListContainer" style="position: relative; overflow-y: auto; height: calc(100% - 130px);">
         @if($conversations && $conversations->count() > 0)
             @foreach ($conversations as $conversation)
                 @php
                     $otherUser = null;
                     $otherUserType = null;
                     $imagePath = null;
-                    $defaultImage = URL::asset('Dashboard/img/faces/user_default.png'); // صورة افتراضية عامة
+                    $defaultImage = URL::asset('Dashboard/img/faces/user_default.png');
 
                     if ($this->auth_user_guard === 'patient') {
                         $otherUser = $conversation->doctor;
@@ -34,7 +29,6 @@
                         }
                     }
 
-                    // Fallback إذا لم يتم تحميل otherUser من العلاقة (يجب تجنبه)
                      if (!$otherUser) {
                          Log::warning("[Chatlist Blade] otherUser not loaded via relation for ConvID {$conversation->id}. Using email fallback.");
                          if ($conversation->sender_email == $this->auth_email) {
@@ -42,7 +36,6 @@
                          } else {
                              $otherUser = \App\Models\Doctor::where('email', $conversation->sender_email)->first() ?? \App\Models\Patient::where('email', $conversation->sender_email)->first();
                          }
-                         // ... (تحديد imagePath و defaultImage للـ fallback)
                      }
                 @endphp
 
@@ -52,14 +45,12 @@
                          id="conversation-{{ $conversation->id }}"
                          role="button" tabindex="0"
                          aria-current="{{ $selected_conversation && $selected_conversation->id == $conversation->id ? 'true' : 'false' }}"
-                         title="محادثة مع {{ $otherUser->name ?? $otherUser->email }}">
+                         title="{{ trans('doctors.chat_list_conversation_with', ['name' => $otherUser->name ?? $otherUser->email]) }}">
 
                         <div class="d-flex align-items-center">
                             <div class="flex-shrink-0 me-3 position-relative">
                                 <img src="{{ $imagePath ?? $defaultImage }}"
-                                     class="user-avatar rounded-circle" alt="صورة {{ $otherUser->name ?? '' }}">
-                                {{-- (اختياري) نقطة حالة الاتصال --}}
-                                {{-- <span class="user-status-dot {{ $otherUser->is_online ? 'online' : 'offline' }}"></span> --}}
+                                     class="user-avatar rounded-circle" alt="{{ trans('doctors.chat_list_user_image_alt', ['name' => $otherUser->name ?? '']) }}">
                             </div>
 
                             <div class="flex-grow-1 overflow-hidden">
@@ -67,7 +58,7 @@
                                     <span class="user-name fw-bold text-dark text-truncate" style="max-width: 150px;">{{ $otherUser->name ?? $otherUser->email }}</span>
                                     @if($conversation->lastMessage)
                                     <small class="message-time text-muted">
-                                        {{ $conversation->lastMessage->created_at->locale('ar')->shortAbsoluteDiffForHumans() }}
+                                        {{ $conversation->lastMessage->created_at->locale(app()->getLocale())->shortAbsoluteDiffForHumans() }}
                                     </small>
                                     @endif
                                 </div>
@@ -75,16 +66,16 @@
                                     @if($conversation->lastMessage)
                                         <p class="message-preview text-muted mb-0 text-truncate" style="max-width: 180px;">
                                             @if($conversation->lastMessage->sender_email == $this->auth_email)
-                                                <i class="fas fa-reply me-1" title="أنت:"></i>
+                                                <i class="fas fa-reply me-1" title="{{ trans('doctors.chat_list_you_prefix_tooltip') }}"></i>
                                             @endif
                                             {{ $conversation->lastMessage->body }}
                                         </p>
                                     @else
-                                         <p class="message-preview text-muted mb-0 fst-italic">ابدأ المحادثة...</p>
+                                         <p class="message-preview text-muted mb-0 fst-italic">{{ trans('doctors.chat_list_start_conversation_placeholder') }}</p>
                                     @endif
 
                                     @if($conversation->unread_messages_for_user_count > 0)
-                                        <span class="badge bg-danger rounded-pill unread-count ms-2" title="{{ $conversation->unread_messages_for_user_count }} رسائل غير مقروءة">
+                                        <span class="badge bg-danger rounded-pill unread-count ms-2" title="{{ trans('doctors.chat_list_unread_messages_tooltip', ['count' => $conversation->unread_messages_for_user_count]) }}">
                                             {{ $conversation->unread_messages_for_user_count }}
                                         </span>
                                     @endif
@@ -94,19 +85,19 @@
                     </div>
                 @else
                      <div class="list-group-item text-danger small p-2">
-                         خطأ في تحميل محادثة (ID: {{ $conversation->id }}).
+                         {{ trans('doctors.chat_list_load_error', ['id' => $conversation->id]) }}
                      </div>
                 @endif
             @endforeach
         @else
              <div class="text-center text-muted p-5">
                  <i class="far fa-comments fa-3x mb-3"></i>
-                 <p>لا توجد محادثات بعد.</p>
-                 <p class="small">ابدأ محادثة جديدة من القائمة.</p>
+                 <p>{{ trans('doctors.chat_list_no_conversations_yet') }}</p>
+                 <p class="small">{{ trans('doctors.chat_list_start_new_conversation_prompt') }}</p>
              </div>
         @endif
         <div wire:loading wire:target="loadConversations, searchTerm" class="text-center p-3 text-muted">
-            <i class="fas fa-spinner fa-spin me-2"></i>جاري تحميل المحادثات...
+            <i class="fas fa-spinner fa-spin me-2"></i>{{ trans('doctors.chat_list_loading_conversations') }}
         </div>
     </div>
 </div>

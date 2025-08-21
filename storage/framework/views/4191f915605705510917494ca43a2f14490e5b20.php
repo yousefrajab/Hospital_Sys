@@ -1,0 +1,563 @@
+<?php $__env->startSection('title'); ?>
+    مخزون الدواء: <?php echo e($medication->name); ?>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('css'); ?>
+    <?php echo \Illuminate\View\Factory::parentPlaceholder('css'); ?>
+    <link href="<?php echo e(URL::asset('Dashboard/plugins/select2/css/select2.min.css')); ?>" rel="stylesheet" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link href="<?php echo e(URL::asset('dashboard/plugins/notify/css/notifIt.css')); ?>" rel="stylesheet" />
+    <style>
+        /* --- نفس متغيرات CSS وأنماط البطاقات والجداول والفورمات التي اتفقنا عليها --- */
+        :root {
+            /* ... (متغيراتك) ... */
+        }
+
+        body {
+            /* ... */
+        }
+
+        .card {
+            /* ... */
+        }
+
+        .card-header {
+            /* ... */
+        }
+
+        .table thead th {
+            /* ... */
+        }
+
+        .table td,
+        .table th {
+            /* ... */
+        }
+
+        .badge {
+            /* ... */
+        }
+
+        .badge-light-success {
+            background-color: rgba(var(--admin-success-rgb, 34, 197, 94), 0.1);
+            color: #166534 !important;
+            border: 1px solid rgba(var(--admin-success-rgb), 0.2);
+        }
+
+        .badge-light-warning {
+            background-color: rgba(var(--admin-warning-rgb, 245, 158, 11), 0.15);
+            color: #78350f !important;
+            border: 1px solid rgba(var(--admin-warning-rgb), 0.3);
+        }
+
+        .badge-light-danger {
+            background-color: rgba(var(--admin-danger-rgb, 239, 68, 68), 0.1);
+            color: #991b1b !important;
+            border: 1px solid rgba(var(--admin-danger-rgb), 0.2);
+        }
+
+        .action-buttons .btn {
+            /* ... */
+        }
+
+        .form-control,
+        .form-select {
+            /* ... */
+        }
+
+        .select2-container--bootstrap-5 .select2-selection {
+            /* ... */
+        }
+
+        .pagination-container {
+            /* ... */
+        }
+
+        .page-item .page-link {
+            /* ... */
+        }
+
+        .page-item.active .page-link {
+            /* ... */
+        }
+
+        .page-item.disabled .page-link {
+            /* ... */
+        }
+
+        /* أنماط خاصة ببطاقة ملخص المخزون */
+        .stock-summary-card-revised {
+            background-color: var(--admin-card-bg, #ffffff);
+            border-radius: var(--admin-radius-lg, 0.5rem);
+            /* استخدام radius من متغيراتك */
+            padding: 1.25rem;
+            /* تقليل الحشو قليلاً */
+            margin-bottom: 1.5rem;
+            box-shadow: var(--admin-shadow-md, 0 4px 8px rgba(0, 0, 0, 0.07));
+            border: 1px solid var(--admin-border-color, #e5e7eb);
+        }
+
+        .dark .stock-summary-card-revised {
+            background-color: var(--admin-card-bg) !important;
+            border-color: var(--admin-border-color) !important;
+        }
+
+        .summary-header-revised {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            /* تقليل الحشو السفلي */
+            border-bottom: 1px solid var(--admin-border-color, #e5e7eb);
+        }
+
+        .summary-header-revised .icon-wrapper-revised {
+            background-color: rgba(var(--bs-primary-rgb, 79, 70, 229), 0.1);
+            color: var(--admin-primary, #4f46e5);
+            width: 45px;
+            /* تصغير الأيقونة قليلاً */
+            height: 45px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            /* تصغير حجم الأيقونة داخل الدائرة */
+            margin-left: 0.75rem;
+            /* RTL: margin-right */
+        }
+
+        .summary-header-revised h4 {
+            font-size: 1.1rem;
+            /* تصغير حجم الخط قليلاً */
+            font-weight: 600;
+            color: var(--admin-text, #1f2937);
+            margin-bottom: 0.1rem;
+        }
+
+        .summary-header-revised .medication-name-revised {
+            font-size: 0.95rem;
+            /* تصغير اسم الدواء */
+            font-weight: 700;
+            color: var(--admin-primary, #4f46e5);
+        }
+
+        .summary-grid-revised.row {
+            /* لتطبيق المسافات بشكل صحيح مع Bootstrap row */
+            margin-right: -0.75rem;
+            /* تعويض g-3 */
+            margin-left: -0.75rem;
+            /* تعويض g-3 */
+        }
+
+        .summary-grid-revised>[class*="col-"] {
+            /* استهداف الأعمدة داخل الصف */
+            padding-right: 0.75rem;
+            /* جزء من g-3 */
+            padding-left: 0.75rem;
+            /* جزء من g-3 */
+        }
+
+        .summary-item-revised {
+            background-color: var(--admin-bg, #f8f9fc);
+            /* لون خلفية أفتح للعناصر */
+            padding: 1rem;
+            /* زيادة الحشو الداخلي للعناصر */
+            border-radius: var(--admin-radius-md, 0.375rem);
+            display: flex;
+            /* استخدام Flexbox لمحاذاة الأيقونة والمحتوى */
+            align-items: center;
+            /* محاذاة رأسية */
+            gap: 0.75rem;
+            /* مسافة بين الأيقونة والمحتوى */
+            border: 1px solid var(--admin-border-color, #e5e7eb);
+            height: 100%;
+            /* لجعل جميع البطاقات بنفس الارتفاع في الصف */
+            transition: var(--admin-transition);
+        }
+
+        .summary-item-revised:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .dark .summary-item-revised {
+            background-color: #2d3748;
+        }
+
+        .item-icon-revised {
+            width: 40px;
+            /* حجم أيقونة العنصر */
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            /* حجم الأيقونة داخل الدائرة */
+            flex-shrink: 0;
+            /* منع الأيقونة من التقلص */
+        }
+
+        /* كلاسات الألوان للأيقونات (يمكنك تعريف المزيد) */
+        .bg-success-soft {
+            background-color: rgba(var(--admin-success-rgb), 0.1);
+        }
+
+        .text-success {
+            color: var(--admin-success) !important;
+        }
+
+        .bg-warning-soft {
+            background-color: rgba(var(--admin-warning-rgb), 0.15);
+        }
+
+        .text-warning {
+            color: var(--admin-warning) !important;
+        }
+
+        .bg-info-soft {
+            background-color: rgba(var(--admin-info-rgb), 0.1);
+        }
+
+        .text-info {
+            color: var(--admin-info) !important;
+        }
+
+        .bg-secondary-soft {
+            background-color: rgba(108, 117, 125, 0.1);
+        }
+
+        /* لون ثانوي ناعم */
+        .text-secondary {
+            color: #6c757d !important;
+        }
+
+        /* يمكنك إضافة ألوان أخرى مثل: */
+        /* .bg-light-grey { background-color: #e9ecef; } */
+        /* .text-dark-grey { color: #495057; } */
+
+
+        .item-content-revised {
+            text-align: right;
+            /* محاذاة النص لليمين */
+            flex-grow: 1;
+            /* لجعل المحتوى يأخذ المساحة المتبقية */
+        }
+
+        .item-content-revised .label {
+            display: block;
+            font-size: 0.75rem;
+            /* تصغير الليبل */
+            color: var(--admin-text-secondary, #6b7280);
+            margin-bottom: 0.15rem;
+            font-weight: 500;
+        }
+
+        .item-content-revised .value {
+            font-size: 1.15rem;
+            /* تصغير القيمة قليلاً */
+            font-weight: 700;
+            color: var(--admin-text, #1f2937);
+            display: block;
+            line-height: 1.2;
+            /* تحسين تباعد الأسطر */
+        }
+
+        .item-content-revised .value.low-stock-value {
+            /* تم تغيير اسم الكلاس */
+            color: var(--admin-warning, #f59e0b);
+        }
+
+        .item-content-revised .value.low-stock-value i {
+            font-size: 0.8em;
+            /* تصغير أيقونة التحذير */
+        }
+
+        .item-content-revised .unit-label {
+            font-size: 0.7rem;
+            /* تصغير وحدة القياس */
+            color: var(--admin-text-muted, #9ca3af);
+            display: block;
+            margin-top: 0.1rem;
+        }
+    </style>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('page-header'); ?>
+    <div class="breadcrumb-header justify-content-between">
+        <div class="my-auto">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-boxes-stacked fa-lg me-2" style="color: var(--admin-primary);"></i>
+                <div>
+                    <h4 class="content-title mb-0 my-auto"><?php echo e(trans('phrM.pharmacy_stock_management')); ?></h4>
+                    <span class="text-muted mt-0 tx-13">/ <?php echo e(trans('phrM.medication_batches_for')); ?> <strong><?php echo e($medication->name); ?></strong></span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex my-xl-auto right-content">
+            <a href="<?php echo e(route('pharmacy_manager.medications.stocks.create', $medication->id)); ?>"
+                class="btn btn-primary ripple">
+                <i class="fas fa-plus-circle me-1"></i> <?php echo e(trans('phrM.add_new_batch_button')); ?>
+
+            </a>
+            <a href="<?php echo e(route('pharmacy_manager.medications.index')); ?>" class="btn btn-outline-secondary btn-sm ms-2"
+                style="border-radius: var(--admin-radius-md);">
+                <i class="fas fa-arrow-left me-1"></i> <?php echo e(trans('phrM.back_to_medications_list')); ?>
+
+            </a>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php echo $__env->make('Dashboard.messages_alert', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+    <div class="card stock-summary-card-revised animate__animated animate__fadeInDown">
+        <div class="summary-header-revised">
+            <div class="icon-wrapper-revised">
+                <i class="fas fa-tablets"></i>
+            </div>
+            <div>
+                <h4><?php echo e(trans('phrM.medication_stock_summary')); ?></h4>
+                <span class="medication-name-revised"><?php echo e($medication->name); ?></span>
+            </div>
+        </div>
+        <div class="summary-grid-revised row g-3">
+            <div class="col-md-4 col-sm-6">
+                <div class="summary-item-revised">
+                    <div class="item-icon-revised bg-success-soft">
+                        <i class="fas fa-cubes text-success"></i>
+                    </div>
+                    <div class="item-content-revised">
+                        <span class="label"><?php echo e(trans('phrM.total_available_valid')); ?></span>
+                        <span class="value"><?php echo e($totalQuantityOnHand ?? 0); ?></span>
+                        <span class="unit-label"><?php echo e($medication->unit_of_measure ?? trans('phrM.unit')); ?></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="summary-item-revised">
+                    <div class="item-icon-revised <?php echo e($medication->is_low_stock ? 'bg-warning-soft' : 'bg-info-soft'); ?>">
+                        <i
+                            class="fas fa-thermometer-half <?php echo e($medication->is_low_stock ? 'text-warning' : 'text-info'); ?>"></i>
+                    </div>
+                    <div class="item-content-revised">
+                        <span class="label"><?php echo e(trans('phrM.minimum_stock_level')); ?></span>
+                        <span class="value <?php echo e($medication->is_low_stock ? 'low-stock-value' : ''); ?>">
+                            <?php echo e($medication->minimum_stock_level); ?>
+
+                            <?php if($medication->is_low_stock): ?>
+                                <i class="fas fa-exclamation-triangle ms-1" title="<?php echo e(trans('phrM.low_stock_alert')); ?>"></i>
+                            <?php endif; ?>
+                        </span>
+                        <span class="unit-label"><?php echo e($medication->unit_of_measure ?? trans('phrM.unit')); ?></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="summary-item-revised">
+                    <div class="item-icon-revised bg-secondary-soft">
+                        <i class="fas fa-flask text-secondary"></i>
+                    </div>
+                    <div class="item-content-revised">
+                        <span class="label"><?php echo e(trans('phrM.generic_name')); ?></span>
+                        <span class="value"><?php echo e($medication->generic_name ?: '-'); ?></span>
+                        <span class="unit-label"> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="summary-item-revised">
+                    <div class="item-icon-revised bg-light-grey">
+                        <i class="fas fa-barcode text-dark-grey"></i>
+                    </div>
+                    <div class="item-content-revised">
+                        <span class="label"><?php echo e(trans('phrM.barcode')); ?></span>
+                        <span class="value"><?php echo e($medication->barcode ?: '-'); ?></span>
+                        <span class="unit-label"> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4 animate__animated animate__fadeIn">
+        <div class="card-header pb-0">
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i><?php echo e(trans('phrM.filter_batches_search')); ?></h5>
+        </div>
+        <div class="card-body">
+            <form action="<?php echo e(route('pharmacy_manager.medications.stocks.index', $medication->id)); ?>" method="GET">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="batch_search" class="form-label"><?php echo e(trans('phrM.search_by_batch_number')); ?></label>
+                        <input type="text" name="batch_search" id="batch_search" class="form-control"
+                            placeholder="<?php echo e(trans('phrM.batch_number_placeholder')); ?>" value="<?php echo e($request->batch_search); ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="supplier_search" class="form-label"><?php echo e(trans('phrM.search_by_supplier_name')); ?></label>
+                        <input type="text" name="supplier_search" id="supplier_search" class="form-control"
+                            placeholder="<?php echo e(trans('phrM.supplier_name_placeholder')); ?>" value="<?php echo e($request->supplier_search); ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="expired_filter" class="form-label"><?php echo e(trans('phrM.expiry_status')); ?></label>
+                        <select name="expired_filter" id="expired_filter" class="form-select select2"
+                            data-placeholder="<?php echo e(trans('phrM.all_placeholder')); ?>">
+                            <?php $__currentLoopData = $expiryFilterOptions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($key); ?>"
+                                    <?php echo e($request->expired_filter == $key ? 'selected' : ''); ?>>
+                                    <?php echo e($value); ?>
+
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search me-1"></i> <?php echo e(trans('phrM.apply_filter')); ?></button>
+                        <?php if(request()->hasAny(['batch_search', 'supplier_search', 'expired_filter'])): ?>
+                            <a href="<?php echo e(route('pharmacy_manager.medications.stocks.index', $medication->id)); ?>"
+                                class="btn btn-outline-secondary"><i class="fas fa-eraser me-1"></i> <?php echo e(trans('phrM.clear_filter')); ?></a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+        <div class="card-header">
+            <h5 class="card-title mb-0"><i class="fas fa-archive me-2"></i><?php echo e(trans('phrM.medication_stock_batches_title', ['name' => $medication->name, 'count' => $stocks->total()])); ?></h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th><?php echo e(trans('phrM.batch_number_col')); ?></th>
+                            <th><?php echo e(trans('phrM.initial_quantity')); ?></th>
+                            <th><?php echo e(trans('phrM.current_quantity')); ?></th>
+                            <th><?php echo e(trans('phrM.expiry_date_col')); ?></th>
+                            <th><?php echo e(trans('phrM.cost_price_per_unit')); ?></th>
+                            <th><?php echo e(trans('phrM.supplier')); ?></th>
+                            <th><?php echo e(trans('phrM.received_date')); ?></th>
+                            <th class="text-center"><?php echo e(trans('phrM.actions')); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $__empty_1 = true; $__currentLoopData = $stocks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $stock): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <tr>
+                                <td><?php echo e($stocks->firstItem() + $index); ?></td>
+                                <td class="fw-bold"><?php echo e($stock->batch_number ?: '-'); ?></td>
+                                <td><?php echo e($stock->initial_quantity); ?></td>
+                                <td><?php echo e($stock->quantity_on_hand); ?></td>
+                                <td>
+                                    <?php echo e($stock->expiry_date->format('Y-m-d')); ?>
+
+                                    <?php if($stock->is_expired): ?>
+                                        <span class="badge badge-light-danger ms-1"><?php echo e(trans('phrM.expired')); ?></span>
+                                    <?php elseif($stock->is_expiring_soon): ?>
+                                        <span class="badge badge-light-warning ms-1"><?php echo e(trans('phrM.expiring_soon')); ?></span>
+                                    <?php else: ?>
+                                        <span class="badge badge-light-success ms-1"><?php echo e(trans('phrM.valid')); ?></span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo e($stock->cost_price_per_unit !== null ? number_format($stock->cost_price_per_unit, 2) : '-'); ?>
+
+                                </td>
+                                <td><?php echo e($stock->supplier_name ?: '-'); ?></td>
+                                <td><?php echo e($stock->received_date ? $stock->received_date->format('Y-m-d') : '-'); ?></td>
+                                <td class="text-center action-buttons">
+                                    <a href="<?php echo e(route('pharmacy_manager.stocks.edit', $stock->id)); ?>"
+                                        class="btn btn-sm btn-outline-primary" title="<?php echo e(trans('phrM.edit_batch')); ?>"><i
+                                            class="fas fa-edit"></i></a>
+                                    <form action="<?php echo e(route('pharmacy_manager.stocks.destroy', $stock->id)); ?>"
+                                        method="POST" class="d-inline"
+                                        onsubmit="return confirm('<?php echo e(trans('phrM.confirm_delete_batch_message')); ?>');">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('DELETE'); ?>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            title="<?php echo e(trans('phrM.delete_batch')); ?>"><i class="fas fa-trash-alt"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                            <tr>
+                                <td colspan="9" class="text-center py-4">
+                                    <i class="fas fa-box-open fa-2x text-muted mb-2"></i><br>
+                                    <?php echo e(trans('phrM.no_stock_batches_registered')); ?>
+
+                                    <?php if(!request()->hasAny(['batch_search', 'supplier_search', 'expired_filter'])): ?>
+                                        <br> <a
+                                            href="<?php echo e(route('pharmacy_manager.medications.stocks.create', $medication->id)); ?>"
+                                            class="btn btn-primary btn-sm mt-2"><i class="fas fa-plus"></i> <?php echo e(trans('phrM.add_new_batch_button')); ?></a>
+                                    <?php else: ?>
+                                        <br> <span class="text-muted"><?php echo e(trans('phrM.try_adjusting_filters')); ?></span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <?php if($stocks->hasPages()): ?>
+                <div class="mt-3 d-flex justify-content-center pagination-container">
+                    <?php echo e($stocks->links('pagination::bootstrap-5')); ?>
+
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('js'); ?>
+    <?php echo \Illuminate\View\Factory::parentPlaceholder('js'); ?>
+    <script src="<?php echo e(URL::asset('Dashboard/plugins/select2/js/select2.full.min.js')); ?>"></script>
+    <script src="<?php echo e(URL::asset('Dashboard/plugins/select2/js/i18n/ar.js')); ?>"></script>
+    <script src="<?php echo e(URL::asset('Dashboard/plugins/notify/js/notifIt.js')); ?>"></script>
+    <script src="<?php echo e(URL::asset('Dashboard/plugins/notify/js/notifit-custom.js')); ?>"></script>
+
+    <script>
+        $(document).ready(function() {
+            // تهيئة Select2
+            $('#expired_filter').select2({
+                placeholder: $(this).data('placeholder') || "<?php echo e(trans('AdminSb.View All')); ?>",
+                width: '100%',
+                dir: "rtl",
+                theme: "bootstrap-5",
+                allowClear: true,
+                language: "ar",
+                minimumResultsForSearch: Infinity // إذا كانت الخيارات قليلة
+            });
+
+            // إظهار رسائل NotifIt
+            <?php if(session('success')): ?>
+                notif({
+                    msg: "<i class='fas fa-check-circle me-2'></i> <?php echo e(session('success')); ?>",
+                    type: "success",
+                    position: "bottom",
+                    autohide: true,
+                    timeout: 5000
+                });
+            <?php endif; ?>
+            <?php if(session('error')): ?>
+                notif({
+                    msg: "<i class='fas fa-exclamation-triangle me-2'></i> <?php echo e(session('error')); ?>",
+                    type: "error",
+                    position: "bottom",
+                    autohide: true,
+                    timeout: 7000
+                });
+            <?php endif; ?>
+        });
+    </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('Dashboard.layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH H:\Hospital_Sys\resources\views/Dashboard/PharmacyManager/Stocks/index.blade.php ENDPATH**/ ?>

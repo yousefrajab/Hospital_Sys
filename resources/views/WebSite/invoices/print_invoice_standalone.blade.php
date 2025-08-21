@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فاتورة رقم #{{ $invoice->id }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<title>{{ trans('patients.invoice_print_title', ['id' => $invoice->id]) }}</title>    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -188,8 +187,7 @@
 </head>
 <body>
 
-
-    <div class="print-container">
+<div class="print-container">
         <header class="invoice-header">
             <div class="logo">
                 @if(!empty($hospitalSettings['logo']))
@@ -200,34 +198,34 @@
             </div>
             <div class="hospital-info">
                 <h3>{{ $hospitalSettings['name'] }}</h3>
-                @if(!empty($hospitalSettings['address']))<p>{{ $hospitalSettings['address'] }}</p>@endif
-                @if(!empty($hospitalSettings['phone']))<p>الهاتف: {{ $hospitalSettings['phone'] }}</p>@endif
-                @if(!empty($hospitalSettings['email']))<p>البريد: {{ $hospitalSettings['email'] }}</p>@endif
-                @if(!empty($hospitalSettings['tax_number']))<p>الرقم الضريبي: {{ $hospitalSettings['tax_number'] }}</p>@endif
+                {{-- @if(!empty($hospitalSettings['address']))<p>{{ $hospitalSettings['address'] }}</p>@endif --}}
+                @if(!empty($hospitalSettings['phone']))<p>{{ trans('patients.phone') }}: {{ $hospitalSettings['phone'] }}</p>@endif
+                @if(!empty($hospitalSettings['email']))<p>{{ trans('patients.email') }}: {{ $hospitalSettings['email'] }}</p>@endif
+                {{-- @if(!empty($hospitalSettings['tax_number']))<p>الرقم الضريبي: {{ $hospitalSettings['tax_number'] }}</p>@endif --}}
             </div>
         </header>
 
         <section class="invoice-details">
             <div class="to-details">
-                <h5>فاتورة إلى:</h5>
-                <p><strong>المريض:</strong> {{ $invoice->patient->name ?? 'غير محدد' }}</p>
-                <p><strong>رقم الملف:</strong> {{ $invoice->patient->id ?? 'غير محدد' }}</p>
+                <h5>{{ trans('patients.invoice_to') }}</h5>
+                <p><strong>{{ trans('patients.patient_label') }}</strong> {{ $invoice->patient->name }}</p>
+                <p><strong>{{ trans('patients.file_number') }}</strong> {{ $invoice->patient->id }}</p>
                 @if($invoice->patient->Phone)
-                <p><strong>الهاتف:</strong> {{ $invoice->patient->Phone }}</p>
+                <p><strong>{{ trans('patients.phone') }}:</strong> {{ $invoice->patient->Phone }}</p>
                 @endif
                 @if($invoice->patient->email)
-                <p><strong>البريد الإلكتروني:</strong> {{ $invoice->patient->email }}</p>
+                <p><strong>{{ trans('patients.email') }}:</strong> {{ $invoice->patient->email }}</p>
                 @endif
             </div>
-            <div class="from-details" style="text-align: left;"> <!-- RTL: text-align: right -->
-                <h5>بيانات الفاتورة:</h5>
-                <p><strong>رقم الفاتورة:</strong> #{{ $invoice->id }}</p>
-                <p><strong>تاريخ الفاتورة:</strong> {{ \Carbon\Carbon::parse($invoice->invoice_date)->translatedFormat('d F Y') }}</p>
-                <p><strong>تاريخ الإصدار:</strong> {{ $invoice->created_at->translatedFormat('d F Y - H:i A') }}</p>
-                <p><strong>نوع الدفع:</strong> {{ $invoice->type == 1 ? 'نقدي' : ($invoice->type == 2 ? 'آجل' : 'غير محدد') }}</p>
-                <p><strong>الحالة:</strong>
+            <div class="from-details" style="text-align: left;">
+                <h5>{{ trans('patients.invoice_data') }}</h5>
+                <p><strong>{{ trans('patients.invoice_number') }}</strong> #{{ $invoice->id }}</p>
+                <p><strong>{{ trans('patients.invoice_date') }}</strong> {{ \Carbon\Carbon::parse($invoice->invoice_date)->translatedFormat('d F Y') }}</p>
+                <p><strong>{{ trans('patients.issue_date') }}</strong> {{ $invoice->created_at->translatedFormat('d F Y - H:i A') }}</p>
+                <p><strong>{{ trans('patients.payment_type') }}</strong> {{ $invoice->type == 1 ? trans('patients.cash') : ($invoice->type == 2 ? trans('patients.credit') : trans('patients.unspecified')) }}</p>
+                <p><strong>{{ trans('patients.status') }}</strong>
                     @php
-                        $statusText = $invoice->invoice_status_display ?? ($invoice->invoice_status == 1 ? 'غير مدفوعة' : ($invoice->invoice_status == 2 ? 'مدفوعة' : ($invoice->invoice_status == 3 ? 'ملغاة' : 'غير معروفة')));
+                        $statusText = $invoice->invoice_status_display ?? ($invoice->invoice_status == 1 ? trans('patients.unpaid') : ($invoice->invoice_status == 2 ? trans('patients.paid') : ($invoice->invoice_status == 3 ? trans('patients.cancelled') : trans('patients.unknown'))));
                     @endphp
                     {{ $statusText }}
                 </p>
@@ -239,10 +237,10 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>الخدمة / الباقة</th>
-                        <th class="amount">السعر الوحدوي</th>
-                        <th class="amount">الكمية</th>
-                        <th class="amount">الإجمالي الفرعي</th>
+                        <th>{{ trans('patients.item_col') }}</th>
+                        <th class="amount">{{ trans('patients.unit_price_col') }}</th>
+                        <th class="amount">{{ trans('patients.quantity_col') }}</th>
+                        <th class="amount">{{ trans('patients.subtotal_col') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -260,14 +258,13 @@
                                     <small class="d-block text-muted">{{ Str::limit($invoice->Group->notes, 70) }}</small>
                                 @endif
                             @else
-                                خدمة/باقة غير محددة
+                                {{ trans('patients.unspecified_service_package') }}
                             @endif
                         </td>
                         <td class="amount">{{ number_format($invoice->price, 2) }}</td>
-                        <td class="amount">1</td> {{-- للفواتير المفردة الكمية دائمًا 1 --}}
+                        <td class="amount">1</td>
                         <td class="amount">{{ number_format($invoice->price, 2) }}</td>
                     </tr>
-                    {{-- يمكنك إضافة المزيد من الصفوف هنا إذا كانت الفاتورة يمكن أن تحتوي على عدة بنود --}}
                 </tbody>
             </table>
         </section>
@@ -276,24 +273,24 @@
             <table>
                 <tbody>
                     <tr>
-                        <td class="summary-label">المجموع الفرعي:</td>
-                        <td class="summary-value">{{ number_format($invoice->price, 2) }} <small>{{ config('app.currency_symbol', 'ر.س') }}</small></td>
+                        <td class="summary-label">{{ trans('patients.subtotal') }}</td>
+                        <td class="summary-value">{{ number_format($invoice->price, 2) }} <small>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</small></td>
                     </tr>
                     <tr>
-                        <td class="summary-label">قيمة الخصم:</td>
-                        <td class="summary-value">{{ number_format($invoice->discount_value, 2) }} <small>{{ config('app.currency_symbol', 'ر.س') }}</small></td>
+                        <td class="summary-label">{{ trans('patients.discount_value') }}</td>
+                        <td class="summary-value">{{ number_format($invoice->discount_value, 2) }} <small>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</small></td>
                     </tr>
                     <tr>
-                        <td class="summary-label">المجموع بعد الخصم:</td>
-                        <td class="summary-value">{{ number_format($invoice->price - $invoice->discount_value, 2) }} <small>{{ config('app.currency_symbol', 'ر.س') }}</small></td>
+                        <td class="summary-label">{{ trans('patients.total_after_discount') }}</td>
+                        <td class="summary-value">{{ number_format($invoice->price - $invoice->discount_value, 2) }} <small>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</small></td>
                     </tr>
                     <tr>
-                        <td class="summary-label">نسبة الضريبة ({{ $invoice->tax_rate }}%):</td>
-                        <td class="summary-value">{{ number_format($invoice->tax_value, 2) }} <small>{{ config('app.currency_symbol', 'ر.س') }}</small></td>
+                        <td class="summary-label">{{ trans('patients.tax_rate_with_percentage', ['rate' => $invoice->tax_rate]) }}</td>
+                        <td class="summary-value">{{ number_format($invoice->tax_value, 2) }} <small>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</small></td>
                     </tr>
                     <tr class="total-row">
-                        <td class="summary-label">الإجمالي المستحق:</td>
-                        <td class="summary-value">{{ number_format($invoice->total_with_tax, 2) }} <small>{{ config('app.currency_symbol', 'ر.س') }}</small></td>
+                        <td class="summary-label">{{ trans('patients.total_due_print') }}</td>
+                        <td class="summary-value">{{ number_format($invoice->total_with_tax, 2) }} <small>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</small></td>
                     </tr>
                 </tbody>
             </table>
@@ -301,19 +298,18 @@
 
         @if($invoice->Doctor)
         <section class="notes-section mt-4 pt-3 border-top">
-            <p class="mb-1"><strong>الطبيب المعالج:</strong> {{ $invoice->Doctor->name }}</p>
+            <p class="mb-1"><strong>{{ trans('patients.attending_doctor') }}</strong> {{ $invoice->Doctor->name }}</p>
             @if($invoice->Section)
-            <p><strong>القسم:</strong> {{ $invoice->Section->name }}</p>
+            <p><strong>{{ trans('patients.department') }}</strong> {{ $invoice->Section->name }}</p>
             @endif
         </section>
         @endif
 
-        <footer class="invoice-footer">
-            <p>شكرًا لثقتكم بنا ونتمنى لكم دوام الصحة والعافية.</p>
+        {{-- <footer class="invoice-footer">
+            <p>{{ trans('patients.footer_thank_you_message') }}</p>
             <p>{{ $hospitalSettings['name'] }} - {{ $hospitalSettings['address'] }}</p>
-        </footer>
+        </footer> --}}
     </div>
-
     <script>
         // يمكن إضافة أي JavaScript بسيط هنا إذا لزم الأمر، مثل الفتح التلقائي لنافذة الطباعة
         // window.onload = function() {
@@ -321,7 +317,7 @@
         // }
     </script>
       <div class="print-button-container">
-        <button onclick="window.print()" class="print-button"><i class="fas fa-print"></i> طباعة الفاتورة</button>
+        <button onclick="window.print()" class="print-button"><i class="fas fa-print"></i> {{ trans('patients.Print invoice') }}</button>
     </div>
 </body>
 </html>

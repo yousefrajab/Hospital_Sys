@@ -1,12 +1,9 @@
-{{-- WebSite/layouts/header.blade.php --}}
 <div class="nav-outer clearfix">
 
-    <!--Mobile Navigation Toggler For Mobile-->
     <div class="mobile-nav-toggler"><span class="icon flaticon-menu"></span></div>
 
     <nav class="main-menu navbar-expand-md navbar-light">
         <div class="navbar-header">
-            <!-- Toggle Button -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="icon flaticon-menu"></span>
@@ -15,43 +12,42 @@
 
         <div class="collapse navbar-collapse clearfix" id="navbarSupportedContent">
             <ul class="navigation clearfix">
-                <li class="current"><a href="{{ url('/') }}">الرئيسية</a></li> {{-- افترض أن لديك route اسمه home --}}
+                <li class="current"><a href="{{ url('/') }}">{{ trans('patients.nav_home') }}</a></li>
                 <li>
-                    <a title="لوحة التحكم" href="{{ route('dashboard.patient') }}">
-                        <span class="fas fa-user-cog"></span> لوحة التحكم
+                    <a title="{{ trans('patients.nav_dashboard') }}" href="{{ route('dashboard.patient') }}">
+                        <span class="fas fa-user-cog"></span> {{ trans('patients.nav_dashboard') }}
                     </a>
                 </li>
 
-                <li class="dropdown"><a href="{{ route('website.doctors.all') }}">الاطباء</a>
+                <li class="dropdown"><a href="{{ route('website.doctors.all') }}">{{ trans('patients.nav_doctors') }}</a>
                     <ul>
-                        <li><a href="{{ route('website.doctors.all') }}">عرض الأطباء</a></li>
+                        <li><a href="{{ route('website.doctors.all') }}">{{ trans('patients.nav_view_doctors') }}</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#">الاقسام</a>
+                <li class="dropdown"><a href="#">{{ trans('patients.nav_departments') }}</a>
                     <ul>
-                        <li><a href="{{ route('website.departments.all') }}">عرض الأقسام</a></li>
+                        <li><a href="{{ route('website.departments.all') }}">{{ trans('patients.nav_view_departments') }}</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#">الخدمات</a>
+                <li class="dropdown"><a href="#">{{ trans('patients.nav_services') }}</a>
                     <ul>
-                        <li><a href="{{ route('website.services.all') }}">الخدمات المفردة</a></li>
-
-                        <li><a href="{{ route('website.group_services.all') }}">الخدمات المجمعة</a></li>
+                        <li><a href="{{ route('website.services.all') }}">{{ trans('patients.nav_single_services') }}</a></li>
+                        <li><a href="{{ route('website.group_services.all') }}">{{ trans('patients.nav_group_services') }}</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#">المواعيد</a>
+                <li class="dropdown"><a href="#">{{ trans('patients.nav_appointments') }}</a>
                     <ul>
-                        <li><a href="{{ route('website.my.appointments') }}">مواعيدي</a></li>
+                        <li><a href="{{ route('website.my.appointments') }}">{{ trans('patients.nav_my_appointments') }}</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#">الفواتير</a>
+                <li class="dropdown"><a href="#">{{ trans('patients.nav_invoices') }}</a>
                     <ul>
-                        <li><a href="{{ route('website.my.invoices') }}">فواتيري</a></li>
+                        <li><a href="{{ route('website.my.invoices') }}">{{ trans('patients.nav_my_invoices') }}</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#"> الحسابات </a>
+                <li class="dropdown"><a href="#">{{ trans('patients.nav_accounts') }}</a>
                     <ul>
-                        <li><a href="{{ route('website.my.account') }}">كشف حساباتي</a></li>
+                        <li><a href="{{ route('website.my.account') }}">{{ trans('patients.nav_my_account_statement') }}</a></li>
                     </ul>
                 </li>
                 <li class="dropdown"><a href="#">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>
@@ -76,7 +72,7 @@
             $authenticatedUser = null;
             $userGuard = null;
             $logoutRoute = null;
-            $userImage = asset('Dashboard/img/patient_default.png'); // صورة افتراضية عامة
+            $userImage = asset('Dashboard/img/patient_default.png');
 
             if (Auth::guard('patient')->check()) {
                 $authenticatedUser = Auth::guard('patient')->user();
@@ -86,17 +82,13 @@
                     $userImage = asset('Dashboard/img/patients/' . $authenticatedUser->image->filename);
                 }
             }
-
-            // يمكنك إضافة المزيد من الـ else if لباقي الـ guards (ray_employee, laboratorie_employee) بنفس الطريقة
-            // وتحديد مسارات صورهم ومسارات تسجيل الخروج الخاصة بهم.
-
         @endphp
 
         @if ($authenticatedUser)
             <div class="user-profile-card">
                 <div class="user-avatar-container">
                     <img alt="{{ $authenticatedUser->name }}" class="user-avatar" src="{{ $userImage }}"
-                        onerror="this.src='{{ asset('Dashboard/img/patient_default.png') }}';"> {{-- Fallback image --}}
+                        onerror="this.src='{{ asset('Dashboard/img/patient_default.png') }}';">
                 </div>
                 <div class="user-info-dropdown">
                     <div class="user-name-email">
@@ -108,7 +100,7 @@
                             @csrf
                             <button type="submit" class="btn-logout">
                                 <i class="fas fa-sign-out-alt"></i>
-                                تسجيل الخروج
+                                {{ trans('patients.nav_logout') }}
                             </button>
                         </form>
                     @endif
@@ -127,12 +119,8 @@
             <li><a href="#" aria-label="Twitter"><span class="fab fa-twitter"></span></a></li>
             <li><a href="#" aria-label="LinkedIn"><span class="fab fa-linkedin-in"></span></a></li>
         </ul>
-
-        <!-- Search Btn -->
-        {{-- <div class="search-box-btn"><span class="icon flaticon-search"></span></div> --}}
     </div>
 </div>
-
 <style>
     /* Styles for WebSite/layouts/header.blade.php */
     /* You can move these styles to an external CSS file later */

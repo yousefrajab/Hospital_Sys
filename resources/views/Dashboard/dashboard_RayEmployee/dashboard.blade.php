@@ -128,11 +128,10 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="left-content">
             <div>
-                <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">لوحة تحكم موظف الأشعة</h2>
-                <p class="mg-b-0">مرحباً بعودتك، {{ Auth::guard('ray_employee')->user()->name }}!</p>
+                <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">{{ trans('ray.dashboard_title') }}</h2>
+                <p class="mg-b-0">{{ trans('ray.welcome_back_message', ['name' => Auth::guard('ray_employee')->user()->name]) }}</p>
             </div>
         </div>
-        {{-- يمكنك إضافة عناصر هنا مثل زر "إضافة طلب جديد" إذا كان منطقياً --}}
     </div>
     <!-- /breadcrumb -->
 @endsection
@@ -145,10 +144,10 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 style="color: black">إجمالي طلبات الأشعة</h6>
+                            <h6 style="color: black">{{ trans('ray.total_ray_requests') }}</h6>
                             <h4 style="color: black">{{ $totalRays }}</h4>
                         </div>
-                        <i class="fas fa-receipt stat-icon"></i> {{-- استبدل بأيقونة مناسبة --}}
+                        <i class="fas fa-receipt stat-icon"></i>
                     </div>
                 </div>
             </div>
@@ -158,7 +157,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 style="color: black">طلبات تحت الإجراء</h6>
+                            <h6 style="color: black">{{ trans('ray.pending_requests') }}</h6>
                             <h4 style="color: black">{{ $pendingRays }}</h4>
                         </div>
                         <i class="fas fa-hourglass-half stat-icon"></i>
@@ -171,7 +170,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 style="color: black">طلبات مكتملة</h6>
+                            <h6 style="color: black">{{ trans('ray.completed_requests') }}</h6>
                             <h4 style="color: black">{{ $completedRays }}</h4>
                         </div>
                         <i class="fas fa-check-circle stat-icon"></i>
@@ -188,7 +187,7 @@
         <div class="col-xl-7 col-lg-12 mb-4">
             <div class="card">
                 <div class="card-header pb-0">
-                    <h5 class="card-title mb-0">طلبات الأشعة الشهرية ({{ date('Y') }})</h5>
+                    <h5 class="card-title mb-0">{{ trans('ray.monthly_ray_requests_chart_title', ['year' => date('Y')]) }}</h5>
                 </div>
                 <div class="card-body">
                     <canvas id="monthlyRaysChart"></canvas>
@@ -200,7 +199,7 @@
         <div class="col-xl-5 col-lg-12 mb-4">
             <div class="card card-table-two">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">أحدث 5 طلبات</h5>
+                    <h5 class="card-title mb-0">{{ trans('ray.latest_5_requests_title') }}</h5>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -208,30 +207,26 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>المريض</th>
-                                    <th>الطبيب</th>
-                                    <th>الحالة</th>
-                                    <th>عرض</th>
+                                    <th>{{ trans('ray.patient_col') }}</th>
+                                    <th>{{ trans('ray.doctor_col') }}</th>
+                                    <th>{{ trans('ray.status_col') }}</th>
+                                    <th>{{ trans('ray.view_col') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($latestRays as $ray)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $ray->patient->name ?? 'غير متوفر' }}</td>
-                                        <td>{{ $ray->doctor->name ?? 'غير متوفر' }}</td>
+                                        <td>{{ $ray->patient->name ?? trans('ray.not_available') }}</td>
+                                        <td>{{ $ray->doctor->name ?? trans('ray.not_available') }}</td>
                                         <td>
                                             @if ($ray->case == 0)
-                                                <span class="badge badge-pill badge-warning">تحت الإجراء</span>
+                                                <span class="badge badge-pill badge-warning">{{ trans('ray.status_pending') }}</span>
                                             @else
-                                                <span class="badge badge-pill badge-success">مكتملة</span>
+                                                <span class="badge badge-pill badge-success">{{ trans('ray.status_completed') }}</span>
                                             @endif
                                         </td>
                                         <td>
-                                            {{-- افترض أن لديك مسار لعرض تفاصيل طلب الأشعة لموظف الأشعة --}}
-
-
-
                                             @if ($ray->case == 0)
                                                 <a href="{{ route('ray_employee.invoices_ray_employee.index', $ray->id) }}"
                                                     class="btn btn-sm btn-outline-primary">
@@ -247,7 +242,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center p-3">لا توجد طلبات حديثة.</td>
+                                        <td colspan="5" class="text-center p-3">{{ trans('ray.no_recent_requests') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>

@@ -43,22 +43,20 @@
 
             <li class="slide">
                 <a class="side-menu__item" data-toggle="slide" href="{{ route('ray_employee.profile.show') }}">
-                    <!-- أيقونة Font Awesome مصححة -->
                     <i class="side-menu__icon fa fa-user-cog"></i>
-                    <span class="side-menu__label">الملف الشخصي</span>
-                    <!-- أيقونة السهم بمحاذاة صحيحة -->
+                    <span class="side-menu__label">{{ trans('ray.profile') }}</span>
                     <i class="angle fa fa-chevron-down"></i>
                 </a>
 
                 <ul class="slide-menu">
                     <li>
                         <a class="slide-item" href="{{ route('ray_employee.profile.show') }}">
-                            <i class="fa fa-eye mr-2"></i> عرض الملف الشخصي
+                            <i class="fa fa-eye mr-2"></i> {{ trans('ray.view_profile') }}
                         </a>
                     </li>
                     <li>
                         <a class="slide-item" href="{{ route('ray_employee.profile.edit') }}">
-                            <i class="fa fa-edit mr-2"></i> تعديل الملف الشخصي
+                            <i class="fa fa-edit mr-2"></i> {{ trans('ray.edit_profile_menu') }}
                         </a>
                     </li>
                 </ul>
@@ -71,13 +69,11 @@
                         <path d="M19 5H5v14h14V5zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" opacity=".3" />
                         <path
                             d="M3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm2 0h14v14H5V5zm2 5h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z" />
-                    </svg><span class="side-menu__label">كشوفات الاشعة </span><i
+                    </svg><span class="side-menu__label">{{ trans('ray.ray_scans') }} </span><i
                         class="angle fe fe-chevron-down"></i></a>
                 <ul class="slide-menu">
-                    <li><a class="slide-item" href="{{ route('ray_employee.invoices_ray_employee.index') }}">قائمة
-                            الكشوفات</a></li>
-                    <li><a class="slide-item" href="{{ route('ray_employee.completed_invoices') }}">قائمة الكشوفات
-                            المكتملة</a></li>
+                    <li><a class="slide-item" href="{{ route('ray_employee.invoices_ray_employee.index') }}">{{ trans('ray.scans_list') }}</a></li>
+                    <li><a class="slide-item" href="{{ route('ray_employee.completed_invoices') }}">{{ trans('ray.completed_scans_list') }}</a></li>
                 </ul>
             </li>
         </ul>

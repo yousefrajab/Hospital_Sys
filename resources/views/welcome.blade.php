@@ -13,19 +13,19 @@
                             <!-- Content Column -->
                             <div class="content-column col-lg-6 col-md-12 col-sm-12">
                                 <div class="inner-column">
-                                    <div class="sub-title" style="color: white">رعايتك هي أولويتنا</div>
-                                    <h1 style="color: white">شريكك الصحي الموثوق، <br>لحياة مليئة بالعافية</h1>
+                                    <div class="sub-title" style="color: white">{{ trans('patients.slider1_subtitle') }}
+                                    </div>
+                                    <h1 style="color: white">{!! trans('patients.slider1_title') !!}</h1>
                                     <div class="text">
-                                        نلتزم بتقديم أعلى مستويات الرعاية الطبية بخبرات عالمية وتقنيات متطورة. صحتك معنا في
-                                        أيدٍ أمينة.
+                                        {{ trans('patients.slider1_text') }}
                                     </div>
                                     <div class="btn-box">
                                         <a href="{{ route('website.departments.all') }}"
                                             class="theme-btn appointment-btn"><i class="fas fa-hospital-alt me-2"></i>
-                                            <span> الأقسام </span></a>
+                                            <span> {{ trans('patients.nav_departments') }} </span></a>
                                         <a href="{{ route('website.doctors.all') }}" class="theme-btn services-btn"><i
                                                 class="fas fa-user-md me-2"></i>
-                                            الأطباء</a>
+                                            {{ trans('patients.nav_doctors') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -52,18 +52,19 @@
                             <!-- Content Column -->
                             <div class="content-column col-lg-6 col-md-12 col-sm-12">
                                 <div class="inner-column">
-                                    <div class="sub-title animated-text" style="color: #e0e0e0;">حلول صحية مبتكرة</div>
-                                    <h1 class="animated-text" style="color: white;">خدمات طبية متكاملة،<br> تلبي كافة
-                                        احتياجاتك</h1>
+                                    <div class="sub-title animated-text" style="color: #e0e0e0;">
+                                        {{ trans('patients.slider2_subtitle') }}</div>
+                                    <h1 class="animated-text" style="color: white;">{!! trans('patients.slider2_title') !!}</h1>
                                     <div class="text animated-text">
-                                        نوفر باقة واسعة من الخدمات التشخيصية والعلاجية المتقدمة، مع فريق متخصص يسعى لراحتك
-                                        وشفائك التام.
+                                        {{ trans('patients.slider2_text') }}
                                     </div>
                                     <div class="btn-box">
                                         <a href="{{ route('website.services.all') }}" class="theme-btn appointment-btn"> <i
-                                                class="fas fa-medkit me-2"></i> <span>الخدمات المفردة</span></a>
+                                                class="fas fa-medkit me-2"></i>
+                                            <span>{{ trans('patients.nav_single_services') }}</span></a>
                                         <a href="{{ route('website.group_services.all') }}" class="theme-btn services-btn">
-                                            <i class="fas fa-users-medical me-2"></i> <span>الخدمات المجمعة</span></a>
+                                            <i class="fas fa-users-medical me-2"></i>
+                                            <span>{{ trans('patients.nav_group_services') }}</span></a>
                                     </div>
 
                                 </div>
@@ -91,24 +92,23 @@
                             <!-- Content Column -->
                             <div class="content-column col-lg-6 col-md-12 col-sm-12">
                                 <div class="inner-column">
-                                    <div class="sub-title animated-text" style="color: #e0e0e0;">وصولك السهل للرعاية</div>
-                                    <h1 class="animated-text" style="color: white;">إدارة صحتك أصبحت أسهل،<br> كل ما تحتاجه
-                                        في مكان واحد</h1>
+                                    <div class="sub-title animated-text" style="color: #e0e0e0;">
+                                        {{ trans('patients.slider3_subtitle') }}</div>
+                                    <h1 class="animated-text" style="color: white;">{!! trans('patients.slider3_title') !!}</h1>
                                     <div class="text animated-text">
-                                        نقدم لك أدوات رقمية متطورة لمتابعة فواتيرك، حجوزاتك، والتواصل المباشر مع فريقنا
-                                        الطبي بكل يسر وأمان.
+                                        {{ trans('patients.slider3_text') }}
                                     </div>
                                     <div class="btn-box">
                                         <a href="{{ route('website.my.invoices') }}" class="theme-btn appointment-btn"><i
-                                                class="fas fa-file-invoice-dollar me-2"></i> <span>الفواتير</span></a>
+                                                class="fas fa-file-invoice-dollar me-2"></i>
+                                            <span>{{ trans('patients.nav_invoices') }}</span></a>
                                         <a href="{{ route('website.my.account') }}" class="theme-btn services-btn"><i
-                                                class="fas fa-user-cog me-2"></i> <span>كشف الحساب</span></a>
+                                                class="fas fa-user-cog me-2"></i>
+                                            <span>{{ trans('patients.account_statement') }}</span></a>
                                         <div class="btn-box">
                                             <a href="{{ route('website.my.appointments') }}"
                                                 class="theme-btn appointment-btn"><i class="fas fa-calendar-check me-2"></i>
-                                                <span>المواعيد</span></a>
-                                            {{-- <a href="{{ route('website.doctors.all') }}"
-                                            class="theme-btn services-btn">الأطباء</a> --}}
+                                                <span>{{ trans('patients.nav_appointments') }}</span></a>
                                         </div>
                                     </div>
                                 </div>
@@ -149,14 +149,13 @@
                             <div class="border-line"></div>
                             <!-- Sec Title -->
                             <div class="sec-title">
-                                <h2>من نحن <br> الريادة في الصحة</h2>
+                                <h2>{!! trans('patients.about_us_section_title') !!}</h2>
                                 <div class="separator"></div>
                             </div>
-                            <div class="text">أين أنت في قلب مهمتنا. نأمل أن تعتبرنا منزلك الطبي - المكان الذي تشعر فيه
-                                بالأمان والراحة والرعاية. كمجموعة طبية متعددة التخصصات
+                            <div class="text">{{ trans('patients.about_us_section_text') }}
                             </div>
-                            <a href="{{ route('home') }}" class="theme-btn btn-style-one"><span class="txt">المزيد
-                                    عنا</span></a>
+                            <a href="{{ route('home') }}" class="theme-btn btn-style-one"><span
+                                    class="txt">{{ trans('patients.more_about_us') }}</span></a>
                         </div>
                     </div>
 
@@ -186,12 +185,11 @@
                     <div class="inner-box wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
                         <div class="upper-box">
                             <div class="icon fas fa-briefcase-medical fa-3x">
-                                {{-- <i class="fas fa-briefcase-medical fa-3x text-warning"></i> <!-- أيقونة مناسبة للخدمات المجمعة/الباقات --> --}}
                             </div>
-                            <h3><a href="#group_service">الخدمات المجمعة</a></h3>
+                            <h3><a href="#group_service">{{ trans('patients.nav_group_services') }}</a></h3>
                         </div>
                         <div class="text">
-                            استفد من باقاتنا الصحية الشاملة التي توفر لك رعاية متكاملة بأسعار تنافسية.
+                            {{ trans('patients.feature_group_services_text') }}
                         </div>
                     </div>
                 </div>
@@ -201,9 +199,9 @@
                     <div class="inner-box wow fadeInLeft" data-wow-delay="250ms" data-wow-duration="1500ms">
                         <div class="upper-box">
                             <div class="icon fas fa-syringe fa-3x"></div>
-                            <h3><a href="#single_service">الخدمات المفردة</a></h3>
+                            <h3><a href="#single_service">{{ trans('patients.nav_single_services') }}</a></h3>
                         </div>
-                        <div class="text">احصل على خدمات طبية محددة مثل الفحوصات، التحاليل، أو استشارات متخصصة حسب حاجتك.
+                        <div class="text">{{ trans('patients.feature_single_services_text') }}
                         </div>
                     </div>
                 </div>
@@ -213,10 +211,12 @@
                     <div class="inner-box wow fadeInLeft" data-wow-delay="500ms" data-wow-duration="1500ms">
                         <div class="upper-box">
                             <div class="icon fas fa-user-md"></div>
-                            <h3><a href="{{ route('website.doctors.all') }}">أطباء مؤهلين</a></h3>
+                            <h3><a
+                                    href="{{ route('website.doctors.all') }}">{{ trans('patients.feature_qualified_doctors_title') }}</a>
+                            </h3>
                         </div>
                         <div class="text">
-                            تعرّف على نخبة من الأطباء المؤهلين لتقديم أفضل استشارة ورعاية صحية.</div>
+                            {{ trans('patients.feature_qualified_doctors_text') }}</div>
                     </div>
                 </div>
 
@@ -225,10 +225,12 @@
                     <div class="inner-box wow fadeInLeft" data-wow-delay="750ms" data-wow-duration="1500ms">
                         <div class="upper-box">
                             <div class="icon fas fa-hospital-alt fa-3x"></div>
-                            <h3><a href="{{ route('website.departments.all') }}">الأقسام</a></h3>
+                            <h3><a
+                                    href="{{ route('website.departments.all') }}">{{ trans('patients.nav_departments') }}</a>
+                            </h3>
                         </div>
                         <div class="text">
-                            اكتشف أقسامنا الطبية المتنوعة والمجهزة بأحدث التقنيات لتقديم رعاية متخصصة لك.</div>
+                            {{ trans('patients.feature_departments_text') }}</div>
                     </div>
                 </div>
 
@@ -248,7 +250,7 @@
                     <div class="col-lg-4 col-md-12 col-sm-12">
                         <!-- Sec Title -->
                         <div class="sec-title light">
-                            <h2>الاقسام</h2>
+                            <h2>{{ trans('patients.nav_departments') }}</h2>
                             <div class="separator"></div>
                         </div>
                         <!--Tab Btns-->
@@ -271,12 +273,13 @@
                                         <h2>{{ $section->name }}</h2>
                                         <div class="title">{{ $section->name_en ?? $section->name }}</div>
                                         <div class="text">
-                                            <p>{{ $section->description ?? 'لا يوجد وصف متوفر لهذا القسم' }}</p>
+                                            <p>{{ $section->description ?? trans('patients.no_description_available') }}
+                                            </p>
                                         </div>
 
                                         <div class="two-column row clearfix">
                                             <div class="column col-lg-12 col-md-12 col-sm-12">
-                                                <h3 class="section-title">الأطباء المتخصصين</h3>
+                                                <h3 class="section-title">{{ trans('patients.specialized_doctors') }}</h3>
                                                 <div class="doctors-container">
                                                     @if ($section->doctors && count($section->doctors) > 0)
                                                         <div class="row">
@@ -292,13 +295,13 @@
                                                                                     onerror="this.src='{{ asset('Dashboard/img/doctor_default.png') }}'">
                                                                             @else
                                                                                 <img src="{{ asset('Dashboard/img/doctor_default.png') }}"
-                                                                                    alt="صورة افتراضية"
+                                                                                    alt="{{ trans('patients.default_image_alt') }}"
                                                                                     class="doctor-avatar img-fluid rounded-circle"
                                                                                     style="width: 100px; height: 100px; object-fit: cover;">
                                                                             @endif
                                                                             <div
                                                                                 class="doctor-status-badge {{ $doctor->status ? 'active' : 'inactive' }}">
-                                                                                {{ $doctor->status ? 'متاح' : 'غير متاح' }}
+                                                                                {{ $doctor->status ? trans('patients.available') : trans('patients.not_available') }}
                                                                             </div>
                                                                         </div>
                                                                         <div class="doctor-details flex-grow-1">
@@ -312,7 +315,7 @@
                                                                                 data-doctor-name="{{ $doctor->name }}"
                                                                                 data-section-id="{{ $section->id }}"
                                                                                 data-section-name="{{ $section->name }}">
-                                                                                حجز موعد <i
+                                                                                {{ trans('patients.book_appointment') }} <i
                                                                                     class="fas fa-calendar-check ms-1"></i>
                                                                             </button>
                                                                         </div>
@@ -323,18 +326,16 @@
                                                     @else
                                                         <div class="no-doctors text-center py-5">
                                                             <img src="{{ asset('Dashboard/img/no-doctors.svg') }}"
-                                                                alt="لا يوجد أطباء" class="img-fluid mb-3"
-                                                                style="max-width: 200px;">
-                                                            <p class="text-muted">لا يوجد أطباء مسجلين في هذا القسم</p>
+                                                                alt="{{ trans('patients.no_doctors_in_this_section_alt') }}"
+                                                                class="img-fluid mb-3" style="max-width: 200px;">
+                                                            <p class="text-muted">
+                                                                {{ trans('patients.no_doctors_registered_in_section') }}
+                                                            </p>
                                                         </div>
                                                     @endif
                                                 </div>
                                             </div>
                                         </div>
-
-                                        {{-- <a href="{{ route('department.details', $section->id) }}" class="theme-btn btn-style-two">
-                                        <span class="txt">عرض المزيد</span>
-                                    </a> --}}
                                     </div>
                                 </div>
                             @endforeach
@@ -348,54 +349,32 @@
 
     <!-- Hospital Management System Banner Section - Bootstrap Enhanced -->
     <section class="hospital-management-banner-section py-5 bg-light">
-        <!-- py-5 للتباعد العمودي, bg-light لخلفية خفيفة (اختياري) -->
         <div class="container">
             <div class="row align-items-center">
-                <!-- align-items-center لمحاذاة العناصر عمودياً في حال اختلاف ارتفاع الأعمدة -->
 
                 <!-- Content Column -->
                 <div class="col-lg-7 col-md-12 order-lg-1 order-2 mb-4 mb-lg-0">
-                    <!-- order للتحكم بترتيب الظهور على الشاشات المختلفة, mb للتباعد السفلي -->
-                    <div class="content-inner p-lg-4"> <!-- p-lg-4 لإضافة padding داخلي على الشاشات الكبيرة -->
-                        <!-- ممكن نضيف خط فاصل هنا باستخدام بوتستراب إذا أردت -->
-                        <!-- <hr class="border-primary border-2 opacity-50" style="width: 50px;"> -->
-
+                    <div class="content-inner p-lg-4">
                         <h2 class="display-5 fw-bold mb-3">
-                            <!-- display-5 لكبر الخط, fw-bold للخط العريض, mb-3 للتباعد السفلي -->
-                            نظام إدارة المستشفيات <br class="d-none d-md-block">
-                            <!-- d-none d-md-block لإظهار الـ br فقط على شاشات متوسطة فأكبر -->
-                            <span class="text-primary">نحو رعاية صحية متطورة</span>
-                            <!-- text-primary لتلوين جزء من النص بلون البوتستراب الأساسي -->
+                            {{ trans('patients.hms_banner_title') }} <br class="d-none d-md-block">
+                            <span class="text-primary">{{ trans('patients.hms_banner_subtitle') }}</span>
                         </h2>
                         <hr class="w-25 my-4 border-2">
-                        <!-- فاصل بوتستراب: w-25 لعرض 25%, my-4 للتباعد العمودي, border-2 لسمك الخط -->
-                        <p class="lead mb-4"> <!-- lead لجعل النص أكبر قليلاً وأكثر بروزاً, mb-4 للتباعد السفلي -->
-                            نقدم حلولاً برمجية متكاملة لإدارة المستشفيات والمراكز الطبية بكفاءة عالية. نظامنا يهدف إلى تبسيط
-                            العمليات، تحسين تجربة المرضى، وتمكين الكوادر الطبية من تقديم أفضل رعاية ممكنة.
+                        <p class="lead mb-4">
+                            {{ trans('patients.hms_banner_text') }}
                         </p>
                         <a href="{{ route('home') }}" class="btn btn-primary btn-lg px-4">
-                            <!-- btn, btn-primary, btn-lg كلاسات بوتستراب للزر, px-4 لتباعد أفقي داخلي -->
-                            <span class="txt">اكتشف النظام</span>
+                            <span class="txt">{{ trans('patients.discover_the_system') }}</span>
                             <i class="fas fa-arrow-left ms-2"></i>
-                            <!-- مثال لإضافة أيقونة (إذا كنت تستخدم Font Awesome), ms-2 للتباعد الأيسر -->
                         </a>
                     </div>
                 </div>
 
                 <!-- Image Column -->
-                <div class="col-lg-5 col-md-12 order-lg-2 order-1"> <!-- order للتحكم بترتيب الظهور -->
+                <div class="col-lg-5 col-md-12 order-lg-2 order-1">
                     <div class="image-inner wow fadeInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
-                        <!--  !!! مهم: غيّر مسار الصورة واسمها لتناسب مشروعك !!! -->
                         <img src="{{ URL::asset('Dashboard/img/media/hsptl.jpg') }}"
-                            alt="نظام إدارة المستشفيات - واجهة حديثة" class="img-fluid rounded shadow-sm" />
-                        <!--
-                                    img-fluid: لجعل الصورة متجاوبة
-                                    rounded: لحواف دائرية خفيفة
-                                    shadow-sm: لظل خفيف
-                                    اقترح صورة تعبر عن التكنولوجيا في المستشفى، مثل شاشة كمبيوتر تعرض واجهة نظام، أو طبيب يستخدم تابلت،
-                                    أو رسم توضيحي يمثل تدفق البيانات في النظام.
-                                    يفضل استخدام صيغة .webp للصور لكونها أخف وأفضل أداءً.
-                                -->
+                            alt="{{ trans('patients.hms_banner_image_alt') }}" class="img-fluid rounded shadow-sm" />
                     </div>
                 </div>
 
@@ -406,18 +385,17 @@
 
     <br style="border: 1px solid #e0e0e0; margin: 40px 0;">
 
-
     @if (isset($latestServices) && $latestServices->count() > 0)
         <section class="grouped-services-section py-5 bg-white" id="single_service">
             <div class="container">
                 <div class="row justify-content-center mb-5">
                     <div class="col-lg-8 text-center">
-                        <h2 class="display-5 fw-bold text-primary mb-3">أحدث خدماتنا الطبية المتميزة</h2>
+                        <h2 class="display-5 fw-bold text-primary mb-3">
+                            {{ trans('patients.latest_medical_services_title') }}</h2>
                         <div class="animated-separator mx-auto">
                             <span class="animated-bar"></span>
                         </div>
-                        <p class="text-muted mt-3">اكتشف مجموعة واسعة من الخدمات الطبية المتخصصة التي نقدمها بأعلى معايير
-                            الجودة</p>
+                        <p class="text-muted mt-3">{{ trans('patients.latest_medical_services_subtitle') }}</p>
                     </div>
                 </div>
 
@@ -430,34 +408,30 @@
                                     @if (isset($service->price) && is_numeric($service->price))
                                         <div class="package-price">
                                             {{ number_format($service->price, 2) }}
-                                            <span>{{ config('app.currency_symbol', 'ر.س') }}</span>
+                                            <span>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</span>
                                         </div>
                                     @endif
                                 </div>
                                 <div class="package-body">
                                     <div class="service-excerpt mb-3">
-                                        {{ Str::limit(strip_tags($service->description ?? 'وصف مختصر للخدمة...'), 100) }}
+                                        {{ Str::limit(strip_tags($service->description ?? trans('patients.brief_service_description')), 100) }}
                                     </div>
 
-                                    {{-- تصحيح: يجب استخدام $service->doctor هنا وليس $doctor --}}
                                     @if ($service->doctor)
-                                        <div class="doctor-info mb-3 d-flex align-items-center"> {{-- Added d-flex and align-items-center --}}
+                                        <div class="doctor-info mb-3 d-flex align-items-center">
                                             @if ($service->doctor->image)
-                                                {{-- Corrected: $service->doctor --}}
                                                 <img src="{{ asset('Dashboard/img/doctors/' . $service->doctor->image->filename) }}"
                                                     alt="{{ $service->doctor->name }}"
                                                     class="doctor-avatar img-fluid rounded-circle me-2"
-                                                    {{-- Added me-2 for margin --}}
                                                     style="width: 60px; height: 60px; object-fit: cover;"
                                                     onerror="this.src='{{ asset('Dashboard/img/doctor_default.png') }}'">
                                             @else
                                                 <img src="{{ asset('Dashboard/img/doctor_default.png') }}"
-                                                    alt="صورة افتراضية"
+                                                    alt="{{ trans('patients.default_image_alt') }}"
                                                     class="doctor-avatar img-fluid rounded-circle me-2"
-                                                    {{-- Added me-2 for margin --}}
                                                     style="width: 60px; height: 60px; object-fit: cover;">
                                             @endif
-                                            <div class="ms-1"> {{-- Adjusted margin --}}
+                                            <div class="ms-1">
                                                 <div class="doctor-name fw-bold">{{ $service->doctor->name }}</div>
                                                 @if ($service->doctor->section)
                                                     <div class="doctor-specialty text-muted small">
@@ -469,25 +443,27 @@
 
                                     <div class="package-features">
                                         <ul>
-                                            <li><i class="fas fa-check text-success"></i> تشخيص دقيق</li>
-                                            <li><i class="fas fa-check text-success"></i> أحدث التقنيات</li>
-                                            <li><i class="fas fa-check text-success"></i> متابعة مستمرة</li>
+                                            <li><i class="fas fa-check text-success"></i>
+                                                {{ trans('patients.feature_accurate_diagnosis') }}</li>
+                                            <li><i class="fas fa-check text-success"></i>
+                                                {{ trans('patients.feature_latest_technologies') }}</li>
+                                            <li><i class="fas fa-check text-success"></i>
+                                                {{ trans('patients.feature_continuous_follow_up') }}</li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="package-footer">
-                                    {{-- ======== بداية التعديل على الزر ======== --}}
-                                    <button type="button" {{-- تغيير a إلى button لعدم الحاجة لـ href --}}
+                                    <button type="button"
                                         class="btn btn-outline-primary btn-package-book book-service-trigger"
-                                        {{-- إضافة كلاس book-service-trigger --}} data-service-name="{{ $service->name }}"
+                                        data-service-name="{{ $service->name }}"
                                         @if ($service->doctor) data-doctor-id="{{ $service->doctor->id }}"
                                         @if ($service->doctor->section)
                                             data-section-id="{{ $service->doctor->section->id }}" @endif
                                         @endif
                                         >
-                                        حجز الخدمة <i class="fas fa-calendar-alt ms-2"></i>
+                                        {{ trans('patients.book_service_button') }} <i
+                                            class="fas fa-calendar-alt ms-2"></i>
                                     </button>
-                                    {{-- ======== نهاية التعديل على الزر ======== --}}
                                 </div>
                             </div>
                         </div>
@@ -502,24 +478,25 @@
             <div class="container">
                 <div class="row justify-content-center mb-5">
                     <div class="col-lg-8 text-center">
-                        <h2 class="display-5 fw-bold text-primary mb-3">باقاتنا الطبية الشاملة</h2>
+                        <h2 class="display-5 fw-bold text-primary mb-3">
+                            {{ trans('patients.comprehensive_medical_packages_title') }}</h2>
                         <div class="animated-separator mx-auto">
                             <span class="animated-bar"></span>
                         </div>
-                        <p class="text-muted mt-3">وفر وقتك ومالك مع باقاتنا المتكاملة المصممة خصيصًا لراحتك</p>
+                        <p class="text-muted mt-3">{{ trans('patients.comprehensive_medical_packages_subtitle') }}</p>
                     </div>
                 </div>
 
                 <div class="row g-4 justify-content-center">
                     @foreach ($latestGroupedServices as $group)
-                        <div class="col-md-6 col-lg-4 d-flex"> {{-- Added d-flex --}}
+                        <div class="col-md-6 col-lg-4 ">
                             <div class="package-card h-100 d-flex flex-column">
                                 <div class="package-header">
                                     <h3 class="package-title">{{ $group->name }}</h3>
                                     @if (isset($group->Total_with_tax))
                                         <div class="package-price">
                                             {{ number_format($group->Total_with_tax, 2) }}
-                                            <span>{{ config('app.currency_symbol', 'ر.س') }}</span>
+                                            <span>{{ config('app.currency_symbol', trans('patients.currency_sar')) }}</span>
                                         </div>
                                     @endif
                                 </div>
@@ -530,12 +507,12 @@
                                         </p>
                                     @endif
 
-                                    {{-- عرض الطبيب الرئيسي للباقة إذا كان موجودًا --}}
                                     @if ($group->doctor)
                                         <div class="alert alert-soft-primary py-2 px-3 mb-2" style="font-size: 0.85em;">
                                             <i class="fas fa-user-shield me-1"></i>
                                             <small>
-                                                <strong>مقدمة بواسطة:</strong> {{ $group->doctor->name }}
+                                                <strong>{{ trans('patients.provided_by') }}</strong>
+                                                {{ $group->doctor->name }}
                                                 @if ($group->doctor->section)
                                                     ({{ $group->doctor->section->name }})
                                                 @endif
@@ -543,9 +520,10 @@
                                         </div>
                                     @endif
 
-                                    @if($group->service_group->isNotEmpty())
+                                    @if ($group->service_group->isNotEmpty())
                                         <div class="package-features">
-                                            <h6 class="mb-2" style="font-size: 0.9em;">تشمل الباقة:</h6>
+                                            <h6 class="mb-2" style="font-size: 0.9em;">
+                                                {{ trans('patients.package_includes') }}</h6>
                                             <ul class="list-unstyled" style="font-size: 0.85em;">
                                                 @foreach ($group->service_group->take(3) as $service_item)
                                                     <li class="mb-1">
@@ -556,7 +534,7 @@
                                                 @if ($group->service_group->count() > 3)
                                                     <li class="text-muted">
                                                         <i class="fas fa-plus-circle me-1"></i>
-                                                        + {{ $group->service_group->count() - 3 }} خدمات أخرى
+                                                        {{ trans('patients.and_x_more_services', ['count' => $group->service_group->count() - 3]) }}
                                                     </li>
                                                 @endif
                                             </ul>
@@ -564,22 +542,18 @@
                                     @endif
                                 </div>
                                 <div class="package-footer mt-auto">
-                                    {{-- ======== بداية التعديل على الزر ======== --}}
-                                    <a href="{{ route('home') }}#appointment" {{-- رابط إلى صفحة الحجز --}}
+                                    <a href="{{ route('home') }}#appointment"
                                         class="btn btn-primary btn-block btn-package-book book-service-trigger"
-                                        data-service-name="{{ $group->name }}"
-                                        data-service-type="package"
-                                        @if ($group->doctor) {{-- إذا كانت الباقة مرتبطة بطبيب --}}
-                                            data-doctor-id="{{ $group->doctor->id }}"
-                                            @if ($group->doctor->section) {{-- وإذا كان للطبيب قسم --}}
-                                                data-section-id="{{ $group->doctor->section->id }}"
-                                            @endif
+                                        data-service-name="{{ $group->name }}" data-service-type="package"
+                                        @if ($group->doctor) data-doctor-id="{{ $group->doctor->id }}"
+                                            @if ($group->doctor->section)
+                                                data-section-id="{{ $group->doctor->section->id }}" @endif
                                         @endif
-                                        data-action="fillAppointmentForm" {{-- علامة للـ JavaScript في صفحة الحجز --}}
+                                        data-action="fillAppointmentForm"
                                         >
-                                        حجز الباقة <i class="fas fa-calendar-alt ms-2"></i>
+                                        {{ trans('patients.book_package_button') }} <i
+                                            class="fas fa-calendar-alt ms-2"></i>
                                     </a>
-                                    {{-- ======== نهاية التعديل على الزر ======== --}}
                                 </div>
                             </div>
                         </div>
@@ -596,7 +570,8 @@
             <div class="content">
                 <a href="https://www.youtube.com/watch?v=kxPCFljwJws" class="lightbox-image play-box"><span
                         class="flaticon-play-button"><i class="ripple"></i></span></a>
-                <div class="text">نحن نهتم بصحتك<h2>نحن نهتم بك</h2>
+                <div class="text">{{ trans('patients.video_section_subtitle') }}<h2>
+                        {{ trans('patients.video_section_title') }}</h2>
                 </div>
             </div>
     </section>
@@ -619,7 +594,7 @@
 
                     <div class="container my-5" id="appointment">
                         <div class="sec-title">
-                            <h2>حجز موعد</h2>
+                            <h2>{{ trans('patients.book_an_appointment_title') }}</h2>
                             <div class="separator"></div>
                         </div>
                         <div class="row">
@@ -638,12 +613,11 @@
         </div>
     </section>
 
-    <!-- Testimonial Section Two -->
     <section class="testimonial-section-two">
         <div class="auto-container">
             <!-- Sec Title -->
             <div class="sec-title centered">
-                <h2>ماذا يقول مرضانا</h2>
+                <h2>{{ trans('patients.testimonials_section_title') }}</h2>
                 <div class="separator"></div>
             </div>
 
@@ -665,7 +639,7 @@
                                                 <h3>{{ $testimonial->patient_name }}</h3>
                                                 <br>
 
-                                                <div class="author"> مرضانا الكرام</div>
+                                                <div class="author"> {{ trans('patients.our_valued_patients') }}</div>
 
                                             </div>
                                         </div>
@@ -678,14 +652,14 @@
             @else
                 <div class="no-testimonials text-center" style="padding: 20px 0;">
                     {{-- يمكنك وضع رسالة أو تصميم بديل هنا إذا لم تكن هناك آراء --}}
-                    <p>لا توجد آراء من المرضى لعرضها حاليًا.</p>
+                    <p>{{ trans('patients.no_testimonials_yet') }}</p>
                 </div>
             @endif
         </div>
     </section>
     <!-- End Testimonial Section Two -->
 
-    <!-- Counter Section -->
+     <!-- Counter Section -->
     <section class="counter-section style-two" style="background-image: url(images/background/pattern-3.png)">
         <div class="auto-container">
 
@@ -701,9 +675,8 @@
                                 <div class="count-outer count-box">
                                     +<span class="count-text" data-speed="2500"
                                         data-stop="{{ $patientsCount ?? 0 }}">0</span>
-                                    {{-- <span class="count-text" data-speed="2500" data-stop="2350">0</span> --}}
                                 </div>
-                                <h4 class="counter-title">مرضى راضون</h4>
+                                <h4 class="counter-title">{{ trans('patients.counter_satisfied_patients') }}</h4>
                             </div>
                         </div>
                     </div>
@@ -716,9 +689,8 @@
                                 <div class="count-outer count-box alternate">
                                     +<span class="count-text" data-speed="3000"
                                         data-stop="{{ $doctorsCount ?? 0 }}">0</span>
-                                    {{-- +<span class="count-text" data-speed="3000" data-stop="350">0</span> --}}
                                 </div>
-                                <h4 class="counter-title">فريق الطبيب</h4>
+                                <h4 class="counter-title">{{ trans('patients.counter_doctors_team') }}</h4>
                             </div>
                         </div>
                     </div>
@@ -731,9 +703,8 @@
                                 <div class="count-outer count-box">
                                     +<span class="count-text" data-speed="3000"
                                         data-stop="{{ $appointmentCount ?? 0 }}">0</span>
-                                    {{-- <span class="count-text" data-speed="3000" data-stop="2150">0</span> --}}
                                 </div>
-                                <h4 class="counter-title">الاستشارات </h4>
+                                <h4 class="counter-title">{{ trans('patients.counter_consultations') }}</h4>
                             </div>
                         </div>
                     </div>
@@ -746,9 +717,8 @@
                                 <div class="count-outer count-box">
                                     +<span class="count-text" data-speed="2500"
                                         data-stop="{{ $successfulSurgeriesCount ?? 0 }}">0</span>
-                                    {{-- +<span class="count-text" data-speed="2500" data-stop="225">0</span> --}}
                                 </div>
-                                <h4 class="counter-title">الاستشارات ناجحة</h4>
+                                <h4 class="counter-title">{{ trans('patients.counter_successful_consultations') }}</h4>
                             </div>
                         </div>
                     </div>
@@ -769,42 +739,37 @@
                     <!-- Doctor Block -->
                     <div class="doctor-block col-lg-4 col-md-6 col-sm-12">
                         <div class="inner-box wow fadeInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <h3>ساعات العمل</h3>
+                            <h3>{{ trans('patients.info_working_hours') }}</h3>
                             <ul class="doctor-time-list">
-                                <li>من الإثنين إلى الجمعة<span>8:00am–7:00pm</span></li>
-                                <li>السبت <span>9:00am–5:00pm</span></li>
-                                <li>الأحد<span>9:00am–3:00pm</span></li>
+                                <li>{{ trans('patients.info_monday_to_friday') }}<span>8:00am–7:00pm</span></li>
+                                <li>{{ trans('patients.info_saturday') }} <span>9:00am–5:00pm</span></li>
+                                <li>{{ trans('patients.info_sunday') }}<span>9:00am–3:00pm</span></li>
                             </ul>
-                            <h4>حالات الطوارئ</h4>
+                            <h4>{{ trans('patients.info_emergency_cases') }}</h4>
                             <div class="phone">
-                                اتصل بنا ! <a href="tel:+970567077179"
+                                {{ trans('patients.info_call_us') }} <a href="tel:+970567077179"
                                     style="text-decoration: none; color: inherit;"><strong>+970567077179</strong></a></div>
-                            {{-- <div class="phone">اتصل بنا ! <strong>+970567077179</strong></div> --}}
                         </div>
                     </div>
 
                     <!-- Doctor Block -->
                     <div class="doctor-block col-lg-4 col-md-6 col-sm-12">
                         <div class="inner-box wow fadeInUp" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <h3>جدول الأطباء</h3>
+                            <h3>{{ trans('patients.info_doctors_schedule_title') }}</h3>
                             <div class="text">
-                                ما يلي هو للإرشاد فقط لمساعدتك في التخطيط لموعدك
-                                طبيب أو ممرضة مفضلة. لا تضمن توافر الأطباء أو الممرضات
-                                قد يكون في بعض الأحيان يحضر إلى واجبات أخرى
+                                {{ trans('patients.info_doctors_schedule_text') }}
                             </div>
-                            <a href="#" class="detail">تفاصيل اكثر</a>
+                            <a href="#" class="detail">{{ trans('patients.info_more_details') }}</a>
                         </div>
                     </div>
 
                     <!-- Doctor Block -->
                     <div class="doctor-block col-lg-4 col-md-6 col-sm-12">
                         <div class="inner-box wow fadeInRight" data-wow-delay="0ms" data-wow-duration="1500ms">
-                            <h3>العناية الصحية الاولية</h3>
-                            <div class="text">عندما تعلم أنك تستخدم أفضل مواهبك من أجل شيء تحبه ، فأنت
-                                لا تستطيع ذلك. التواصل الفعال هو الأساس لبناء علامات تجارية صلبة مثل
-                                علاقة السفن بالبناء مع عملائنا
+                            <h3>{{ trans('patients.info_primary_health_care_title') }}</h3>
+                            <div class="text">{{ trans('patients.info_primary_health_care_text') }}
                             </div>
-                            <a href="#" class="detail">اتصل الآن</a>
+                            <a href="#" class="detail">{{ trans('patients.info_call_now') }}</a>
                         </div>
                     </div>
 
@@ -812,82 +777,6 @@
             </div>
         </div>
     </section>
-    <!-- End Doctor Info Section -->
-
-    <!-- News Section Two -->
-    {{-- <section class="news-section-two">
-        <div class="auto-container">
-            <!-- Sec Title -->
-            <div class="sec-title centered">
-                <h2>آخر الأخبار والمقالات</h2>
-                <div class="separator style-three"></div>
-            </div>
-            <div class="row clearfix">
-
-                <!-- News Block Two -->
-                <div class="news-block-two col-lg-6 col-md-12 col-sm-12">
-                    <div class="inner-box">
-                        <div class="image">
-                            <a href="blog-detail.html"><img src="images/resource/news-4.jpg" alt="" /></a>
-                        </div>
-                        <div class="lower-content">
-                            <div class="content">
-                                <ul class="post-info">
-                                    <li><span class="icon flaticon-chat-comment-oval-speech-bubble-with-text-lines"></span>
-                                        02
-                                    </li>
-                                    <li><span class="icon flaticon-heart"></span> 126</li>
-                                </ul>
-                                <ul class="post-meta">
-                                    <li>21 يونيو 2018 الساعة 8:12 مساءً</li>
-                                    <li>Post بواسطة: Admin</li>
-                                </ul>
-                                <h3><a href="blog-detail.html">خدمات التشخيص لانتقاء نتائج فعالة بشكل صحيح</a></h3>
-                                <div class="text">
-                                    هناك الكثير من النساء اللواتي يجهلن المخاطر العديدة
-                                    المرتبطة بصحتهم وتجاهل في النهاية
-                                </div>
-                                <a href="blog-detail.html" class="theme-btn btn-style-five"><span class="txt">اقرا
-                                        المزيد</span></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- News Block Two -->
-                <div class="news-block-two col-lg-6 col-md-12 col-sm-12">
-                    <div class="inner-box">
-                        <div class="image">
-                            <a href="blog-detail.html"><img src="images/resource/news-5.jpg" alt="" /></a>
-                        </div>
-                        <div class="lower-content">
-                            <div class="content">
-                                <ul class="post-info">
-                                    <li><span class="icon flaticon-chat-comment-oval-speech-bubble-with-text-lines"></span>
-                                        02
-                                    </li>
-                                    <li><span class="icon flaticon-heart"></span> 126</li>
-                                </ul>
-                                <ul class="post-meta">
-                                    <li>21 يونيو 2018 الساعة 8:12 مساءً</li>
-                                    <li>Post بواسطة: Admin</li>
-                                </ul>
-                                <h3><a href="blog-detail.html">خدمات التشخيص لانتقاء نتائج فعالة بشكل صحيح</a></h3>
-                                <div class="text">
-                                    هناك الكثير من النساء اللواتي يجهلن المخاطر العديدة
-                                    المرتبطة بصحتهم وتجاهل في النهاية
-                                </div>
-                                <a href="blog-detail.html" class="theme-btn btn-style-five"><span class="txt">اقرا
-                                        المزيد</span></a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-    </section> --}}
-
-    <!--Clients Section-->
     <section class="clients-section">
         <div class="outer-container">
 
@@ -927,7 +816,6 @@
 
         </div>
     </section>
-    <!--End Clients Section-->
 
 
     <style>
@@ -1141,9 +1029,9 @@
             }
 
             /* .doctor-avatar {
-                                                                                        width: 50px;
-                                                                                        height: 100px;
-                                                                                    } */
+                                                                                            width: 50px;
+                                                                                            height: 100px;
+                                                                                        } */
 
             .doctor-details {
                 padding: 15px;

@@ -3,8 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>خدماتنا الطبية - {{ config('app.name', 'اسم المستشفى/المنصة') }}</title>
-
+<title>{{ trans('patients.our_medical_services') }} - {{ config('app.name', trans('patients.medical_platform')) }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -102,30 +101,28 @@
 <body>
 
     <header class="standalone-service-header">
-        {{-- ... (Header content remains the same) ... --}}
         <div class="container-fluid">
             <div class="site-branding">
-                <a href="{{ route('home') }}" class="site-title" title="العودة إلى الرئيسية {{ config('app.name') }}">
-                    {{ config('app.name', 'المنصة الطبية') }}
+                <a href="{{ route('home') }}" class="site-title" title="{{ trans('patients.back_to_home_title', ['appName' => config('app.name')]) }}">
+                    {{ config('app.name', trans('patients.medical_platform')) }}
                 </a>
             </div>
             <div class="back-to-home">
-                <a href="{{ route('website.group_services.all') }}" class="me-3"><i class="fas fa-layer-group"></i> الخدمات المجمعة</a>
-                <a href="{{ route('home') }}"><i class="fas fa-home"></i> العودة للرئيسية</a>
+                <a href="{{ route('website.group_services.all') }}" class="me-3"><i class="fas fa-layer-group"></i> {{ trans('patients.nav_group_services') }}</a>
+                <a href="{{ route('home') }}"><i class="fas fa-home"></i> {{ trans('patients.back_to_home') }}</a>
             </div>
         </div>
     </header>
 
     <main class="services-standalone-container">
         <section class="services-page-title-standalone">
-            {{-- ... (Title section remains the same) ... --}}
-            <h1 class="animate__animated animate__fadeInDown">اكتشف خدماتنا الطبية المتكاملة</h1>
+            <h1 class="animate__animated animate__fadeInDown">{{ trans('patients.services_page_title') }}</h1>
             <p class="title-description-standalone animate__animated animate__fadeInUp" data-wow-delay="0.2s">
-                نقدم مجموعة شاملة من الخدمات الطبية عالية الجودة، المصممة خصيصًا لتلبية احتياجاتك الصحية المتنوعة ودعم رحلتك نحو العافية.
+                {{ trans('patients.services_page_description') }}
             </p>
              <ul class="breadcrumb-custom-service">
-                <li><a href="{{ route('home') }}">الرئيسية</a></li>
-                <li>الخدمات الطبية</li>
+                <li><a href="{{ route('home') }}">{{ trans('patients.nav_home') }}</a></li>
+                <li>{{ trans('patients.medical_services') }}</li>
             </ul>
         </section>
 
@@ -141,14 +138,13 @@
                                 {{ $service->name }}
                             </h3>
 
-                            {{-- Display Doctor and Section Info --}}
                             @if ($service->doctor)
                                 <div class="service-provider-info">
-                                    <span class="provider-item" data-bs-toggle="tooltip" title="مقدم الخدمة">
+                                    <span class="provider-item" data-bs-toggle="tooltip" title="{{ trans('patients.service_provider_tooltip') }}">
                                         <i class="fas fa-user-md"></i> {{ $service->doctor->name }}
                                     </span>
                                     @if ($service->doctor->section)
-                                    <span class="provider-item" data-bs-toggle="tooltip" title="القسم الطبي">
+                                    <span class="provider-item" data-bs-toggle="tooltip" title="{{ trans('patients.medical_department_tooltip') }}">
                                         <i class="fas fa-clinic-medical"></i> {{ $service->doctor->section->name }}
                                     </span>
                                     @endif
@@ -156,30 +152,27 @@
                             @endif
 
                             <p class="service-description-standalone">
-                                {{ Str::limit(strip_tags($service->description ?? 'وصف تفصيلي لهذه الخدمة سيكون متاحًا قريبًا.'), 100) }}
+                                {{ Str::limit(strip_tags($service->description ?? trans('patients.service_description_coming_soon')), 100) }}
                             </p>
                             @if(isset($service->price) && is_numeric($service->price))
                                 <span class="service-price-standalone">
-                                    {{ number_format($service->price, 2) }} <small>{{ config('app.currency', 'ر.س') }}</small>
+                                    {{ number_format($service->price, 2) }} <small>{{ config('app.currency', trans('patients.currency_sar')) }}</small>
                                 </span>
                             @endif
-                             {{--  --}}
                         </div>
                     </div>
                 </div>
             @empty
-                {{-- ... (No services message remains the same) ... --}}
                 <div class="col-12">
                     <div class="no-services-standalone animate__animated animate__fadeInUp" data-wow-delay="0.3s">
                         <div class="no-serv-icon"><i class="fas fa-notes-medical"></i></div>
-                        <h3>لا توجد خدمات متاحة حاليًا</h3>
-                        <p>نعمل على تحديث قائمة خدماتنا. يرجى التحقق مرة أخرى قريبًا أو التواصل معنا للاستفسار.</p>
+                        <h3>{{ trans('patients.no_services_available_title') }}</h3>
+                        <p>{{ trans('patients.no_services_available_message') }}</p>
                     </div>
                 </div>
             @endforelse
         </div>
 
-        {{-- Pagination --}}
         @if ($services->hasPages())
             <div class="d-flex justify-content-center mt-5 pagination-standalone">
                 {{ $services->links('pagination::bootstrap-5') }}
@@ -188,10 +181,7 @@
 
     </main>
 
-    <footer class="standalone-service-footer">
-        {{-- ... (Footer content remains the same) ... --}}
-        <p>© {{ date('Y') }} جميع الحقوق محفوظة - {{ config('app.name', 'منصتنا الطبية') }}.</p>
-    </footer>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
