@@ -25,7 +25,7 @@ class DoctorRepository implements DoctorRepositoryInterface
 
     public function index()
     {
-        $doctors = Doctor::with(['translations','section', 'image', 'workingDays'])
+        $doctors = Doctor::with(['translations', 'section', 'image', 'workingDays'])
             ->orderBy('created_at', 'desc')
             ->get();
         return view('Dashboard.Doctors.index', compact('doctors'));
@@ -288,9 +288,8 @@ class DoctorRepository implements DoctorRepositoryInterface
             DB::commit();
             // إزالة رسالة الخطأ القديمة إذا كانت العملية ناجحة
             session()->forget('error'); // مسح أي رسالة خطأ سابقة
-            session()->flash('success', 'تم تحديث جدول ساعات العمل بنجاح.');
-           return redirect()->route('admin.Doctors.index'); // إرجاع true للإشارة للنجاح
-
+            return redirect()->route('admin.Doctors.index')
+                ->with('success', 'تم تحديث الجدول الزمني بنجاح');
         } catch (\Exception $e) {
             Log::error("--- Rolling Back Transaction for Doctor ID: {$doctorId}. Error: " . $e->getMessage() . " at Line: " . $e->getLine() . " ---");
             DB::rollback();
@@ -321,7 +320,7 @@ class DoctorRepository implements DoctorRepositoryInterface
         $daysOfWeek = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
         $workingHoursData = [];
         foreach ($daysOfWeek as $day) {
-            $workingDay = $doctor->workingDays->firstWhere('day', $day); // استخدام firstWhere أبسط
+            $workingDay = $doctor->workingDays->firstWhere('day', $day);
 
             $workingHoursData[$day] = [
                 'exists' => (bool)$workingDay,
@@ -331,12 +330,22 @@ class DoctorRepository implements DoctorRepositoryInterface
                 'appointment_duration' => $workingDay?->appointment_duration ?? 30,
                 'working_day_id' => $workingDay?->id ?? null,
                 'breaks' => $workingDay?->breaks->map(function ($break) {
-                    return [ /* ... تنسيق الاستراحات ... */];
+                    return [
+                        'id' => $break->id,
+                        'start_time' => Carbon::parse($break->start_time)->format('H:i'),
+                        'end_time' => Carbon::parse($break->end_time)->format('H:i')
+                    ];
                 }) ?? collect()
             ];
         }
 
-        return view('Dashboard.Doctors.edit_Days', compact( // *** يعرض ملف edit_Days.blade.php الجديد ***
+        // إذا كان هناك طلب إعادة توجيه (مثلاً بعد التعديل)
+        if (request()->has('redirected')) {
+            return redirect()->route('admin.Doctors.index')
+                ->with('success', 'تم تحديث الجدول الزمني بنجاح');
+        }
+
+        return view('Dashboard.Doctors.edit_Days', compact(
             'doctor',
             'daysOfWeek',
             'workingHoursData'

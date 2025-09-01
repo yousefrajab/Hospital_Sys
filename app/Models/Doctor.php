@@ -19,7 +19,7 @@ class Doctor extends Authenticatable implements TranslatableContract, CanResetPa
 
     protected $fillable = [
         'national_id',
-        // 'name',
+        'name',
         'email',
         'password',
         'phone',

@@ -95,7 +95,7 @@ class PatientRepository implements PatientRepositoryInterface
     public function create()
     {
         $diseases_list = Disease::where('is_chronic', true)
-            ->orderBy('name') 
+            ->orderBy('name')
             ->pluck('name', 'id');
 
         // جلب قيم Enum لحالة المرض المزمن للمريض

@@ -972,7 +972,7 @@
                         <div class="form-group">
                             <label for="Address_edit" class="form-label">{{ trans('AdminSb.detailed_address') }}</label>
                             <textarea rows="2" class="form-control @error('Address') is-invalid @enderror" id="Address_edit"
-                                name="Address" placeholder="{{ trans('AdminSb.address_placeholder_example') }}">{{ old('Address', $Patient->getTranslation('Address', 'ar')) }}</textarea>
+                                name="Address" placeholder="{{ trans('AdminSb.address_placeholder_example') }}">{{ old('Address', $Patient->Address) }}</textarea>
                             @error('Address')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

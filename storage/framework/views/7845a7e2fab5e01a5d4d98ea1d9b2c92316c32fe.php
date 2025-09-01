@@ -1083,7 +1083,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" id="Address_edit"
-                                name="Address" placeholder="<?php echo e(trans('AdminSb.address_placeholder_example')); ?>"><?php echo e(old('Address', $Patient->getTranslation('Address', 'ar'))); ?></textarea>
+                                name="Address" placeholder="<?php echo e(trans('AdminSb.address_placeholder_example')); ?>"><?php echo e(old('Address', $Patient->Address)); ?></textarea>
                             <?php $__errorArgs = ['Address'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -1278,7 +1278,7 @@ unset($__errorArgs, $__bag); ?>
                     <div class="col-md-6">
                         <div class="form-group password-wrapper">
                             <label for="password_confirmation_edit"
-                                class="form-label"><?php echo e(trans('AdminSb.confirm_new_password')); ?></label>
+                                class="form-label"><?php echo e(trans('patients.confirm_new_password')); ?></label>
                             <input type="password" id="password_confirmation_edit" name="password_confirmation"
                                 class="form-control <?php $__errorArgs = ['password_confirmation'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');

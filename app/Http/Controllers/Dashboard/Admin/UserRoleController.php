@@ -51,7 +51,7 @@ class UserRoleController extends Controller
         }])
             ->get()
             ->map(function ($user) use ($mapUser, $locale) {
-                $user = $mapUser($user, __('AdminSb.Doctors'), 'doctor', true);
+                $user = $mapUser($user, __('AdminSb.Doctors'), 'doctor');
                 $user->section_name = $user->section->name ?? 'غير محدد';
                 return $user;
             });
@@ -59,7 +59,7 @@ class UserRoleController extends Controller
 
         $patients = Patient::with(['image'])
             ->get()
-            ->map(fn($user) => $mapUser($user, __('AdminSb.Patients'), 'patient', true));
+            ->map(fn($user) => $mapUser($user, __('AdminSb.Patients'), 'patient'));
 
         $rayEmployees = RayEmployee::with('image')
             ->select('id', 'name', 'email', 'created_at', 'status', 'phone')
