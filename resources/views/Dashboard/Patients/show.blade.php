@@ -455,10 +455,10 @@
                                     <i class="fas fa-calendar-check mr-1"></i> {{ trans('AdminSb.diagnosis_date_colon') }}
                                     <strong>{{ $diagnosedDisease->pivot->diagnosed_at ? \Carbon\Carbon::parse($diagnosedDisease->pivot->diagnosed_at)->format('d M, Y') : trans('AdminSb.undefined') }}</strong>
                                 </small>
-                                <small class="d-block text-muted">
+                                {{-- <small class="d-block text-muted">
                                     <i class="fas fa-user-md mr-1"></i> {{ trans('AdminSb.diagnosed_by_colon') }}
                                     <strong>{{ $diagnosedDisease->pivot->diagnosed_by ?? trans('AdminSb.undefined') }}</strong>
-                                </small>
+                                </small> --}}
                                 <small class="d-block text-muted">
                                     <i class="fas fa-thermometer-half mr-1"></i>
                                     {{ trans('AdminSb.current_status_colon') }}

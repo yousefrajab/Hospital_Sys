@@ -413,7 +413,7 @@
 
                 <div class="row g-4 justify-content-center">
                     <?php $__currentLoopData = $latestServices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="col-md-6 col-lg-4">
+                        <div class="col-md-6 col-lg-3">
                             <div class="package-card">
                                 <div class="package-header">
                                     <h3 class="package-title"><?php echo e($service->name); ?></h3>
@@ -455,16 +455,7 @@
                                         </div>
                                     <?php endif; ?>
 
-                                    <div class="package-features">
-                                        <ul>
-                                            <li><i class="fas fa-check text-success"></i>
-                                                <?php echo e(trans('patients.feature_accurate_diagnosis')); ?></li>
-                                            <li><i class="fas fa-check text-success"></i>
-                                                <?php echo e(trans('patients.feature_latest_technologies')); ?></li>
-                                            <li><i class="fas fa-check text-success"></i>
-                                                <?php echo e(trans('patients.feature_continuous_follow_up')); ?></li>
-                                        </ul>
-                                    </div>
+                                    
                                 </div>
                                 <div class="package-footer">
                                     <button type="button"
@@ -622,15 +613,15 @@
                                 <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('appointments.create', [])->html();
-} elseif ($_instance->childHasBeenRendered('vMgCX5n')) {
-    $componentId = $_instance->getRenderedChildComponentId('vMgCX5n');
-    $componentTag = $_instance->getRenderedChildComponentTagName('vMgCX5n');
+} elseif ($_instance->childHasBeenRendered('rbXpeAB')) {
+    $componentId = $_instance->getRenderedChildComponentId('rbXpeAB');
+    $componentTag = $_instance->getRenderedChildComponentTagName('rbXpeAB');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('vMgCX5n');
+    $_instance->preserveRenderedChild('rbXpeAB');
 } else {
     $response = \Livewire\Livewire::mount('appointments.create', []);
     $html = $response->html();
-    $_instance->logRenderedChild('vMgCX5n', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('rbXpeAB', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

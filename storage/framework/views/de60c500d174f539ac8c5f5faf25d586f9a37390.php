@@ -463,11 +463,7 @@
 
                                     <strong><?php echo e($diagnosedDisease->pivot->diagnosed_at ? \Carbon\Carbon::parse($diagnosedDisease->pivot->diagnosed_at)->format('d M, Y') : trans('AdminSb.undefined')); ?></strong>
                                 </small>
-                                <small class="d-block text-muted">
-                                    <i class="fas fa-user-md mr-1"></i> <?php echo e(trans('AdminSb.diagnosed_by_colon')); ?>
-
-                                    <strong><?php echo e($diagnosedDisease->pivot->diagnosed_by ?? trans('AdminSb.undefined')); ?></strong>
-                                </small>
+                                
                                 <small class="d-block text-muted">
                                     <i class="fas fa-thermometer-half mr-1"></i>
                                     <?php echo e(trans('AdminSb.current_status_colon')); ?>

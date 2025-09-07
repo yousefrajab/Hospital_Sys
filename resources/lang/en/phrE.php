@@ -131,5 +131,65 @@ return [
     'settings' => 'Settings',
     'view_profile' => 'View Profile',
     'logout' => 'Logout',
+
+
+    'page_header_title' => 'Medications and Stock',
+    'breadcrumb_main' => 'Medications and Stock',
+    'breadcrumb_sub' => 'Search and Query',
+
+    // Filter Card
+    'filter_card_title' => 'Filter Medications',
+    'filter_search_label' => 'Name/Scientific/Barcode:',
+    'filter_search_placeholder' => 'Search term...',
+    'filter_category_label' => 'Category:',
+    'filter_stock_status_label' => 'Stock Status:',
+    'filter_expiry_status_label' => 'Expiry Status:',
+    'filter_select_all' => 'All',
+    'filter_button_search' => 'Search',
+    'filter_button_clear' => 'Clear',
+
+    // Medications List Card
+    'medications_list_title' => 'List of Medications',
+
+    // Table Headers
+    'table_header_number' => '#',
+    'table_header_medication_name' => 'Medication Name',
+    'table_header_scientific_name' => 'Scientific Name',
+    'table_header_barcode' => 'Barcode',
+    'table_header_available_quantity' => 'Available Quantity',
+    'table_header_nearest_expiry' => 'Nearest Expiry Date',
+    'table_header_stock_status' => 'Stock Status',
+    'table_header_actions' => 'Action',
+
+    // Table Content & Tooltips
+    'tooltip_nearest_expiry' => 'Nearest expiry date for available quantities',
+    'status_unknown' => 'Unknown',
+    'tooltip_view_batches' => 'View detailed stock batches',
+    'action_batches' => 'Batches',
+
+    // Empty State
+    'empty_state_title' => 'No medications match the search criteria.',
+    'empty_state_description' => 'Try adjusting the filters or adding new medications (if you are the administrator).',
+
+    'all_stock_statuses' => 'All Stock Statuses',
+    'in_stock'           => 'In Stock',
+    'low_stock'          => 'Low Stock',
+    'out_of_stock'       => 'Out of Stock',
+
+    // Expiry Status Options
+    'all_expiry_statuses' => 'All Expiry Statuses',
+    'valid'               => 'Good Expiry',
+    'expires_soon'        => 'Expires Soon (within :days days)',
+    'no_valid_stock'      => 'No Valid Batches',
+
+      'status_out_of_stock'       => 'Out of Stock',
+    'status_low_stock'          => 'Low Stock',
+    'status_in_stock'           => 'In Stock',
+
+    // Expiry Statuses Texts
+    'status_no_valid_batches'   => 'No Valid Batches',
+    'status_expired'            => 'Expired',
+    'status_expires_soon'       => 'Expires Soon',
+    'status_good_expiry'        => 'Good Expiry',
 ];
 

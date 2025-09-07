@@ -80,7 +80,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th><?php echo e(trans('doctors.service_name')); ?></th>
+                                                            <th><?php echo e(trans('AdminSb.service_name')); ?></th>
                                                             <th><?php echo e(trans('doctors.doctor_name')); ?></th>
                                                             <th><?php echo e(trans('doctors.radiology_technician')); ?></th>
                                                             <th><?php echo e(trans('doctors.examination_status')); ?></th>
@@ -137,7 +137,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th><?php echo e(trans('doctors.service_name')); ?></th>
+                                                            <th><?php echo e(trans('AdminSb.service_name')); ?></th>
                                                             <th><?php echo e(trans('doctors.doctor_name')); ?></th>
                                                             <th><?php echo e(trans('doctors.lab_technician')); ?></th>
                                                             <th><?php echo e(trans('doctors.Processes')); ?></th>

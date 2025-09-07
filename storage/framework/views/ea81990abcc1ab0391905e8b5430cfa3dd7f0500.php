@@ -173,10 +173,11 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-capsules text-primary me-2"></i>الأدوية والمخزون
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-capsules text-primary me-2"></i><?php echo e(trans('phrE.page_header_title')); ?>
+
                 </h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="text-muted mt-1 tx-13">بحث واستعلام</span>
+                <span class="text-muted mt-1 tx-13"><?php echo e(trans('phrE.breadcrumb_sub')); ?></span>
             </div>
         </div>
     </div>
@@ -187,21 +188,21 @@
 
     <div class="card card-custom filter-card" data-aos="fade-down">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة الأدوية</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i><?php echo e(trans('phrE.filter_card_title')); ?></h5>
         </div>
         <div class="card-body">
             <form method="GET" action="<?php echo e(route('pharmacy_employee.medications.search')); ?>">
-                <div class="row g-2 align-items-end"> 
+                <div class="row g-2 align-items-end">
                     <div class="col-lg-3 col-md-6">
-                        <label for="search_med_term_pharma" class="form-label">اسم/علمي/باركود:</label>
+                        <label for="search_med_term_pharma" class="form-label"><?php echo e(trans('phrE.filter_search_label')); ?></label>
                         <input type="text" name="search_medication_term" id="search_med_term_pharma" class="form-control"
-                            placeholder="مصطلح البحث..." value="<?php echo e($request->input('search_medication_term')); ?>">
+                            placeholder="<?php echo e(trans('phrE.filter_search_placeholder')); ?>" value="<?php echo e($request->input('search_medication_term')); ?>">
                     </div>
                     <div class="col-lg-2 col-md-6">
-                        <label for="category_filter_pharma_search" class="form-label">التصنيف:</label>
+                        <label for="category_filter_pharma_search" class="form-label"><?php echo e(trans('phrE.filter_category_label')); ?></label>
                         <select name="category_filter" id="category_filter_pharma_search" class="form-select select2-filter"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="<?php echo e(trans('phrE.filter_select_all')); ?>">
+                            <option value=""><?php echo e(trans('phrE.filter_select_all')); ?></option>
                             <?php if(isset($categories)): ?>
                                 <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <option value="<?php echo e($key); ?>"
@@ -213,9 +214,9 @@
                         </select>
                     </div>
                     <div class="col-lg-2 col-md-6">
-                        <label for="stock_status_filter_search" class="form-label">حالة المخزون:</label>
+                        <label for="stock_status_filter_search" class="form-label"><?php echo e(trans('phrE.filter_stock_status_label')); ?></label>
                         <select name="stock_status_filter" id="stock_status_filter_search"
-                            class="form-select select2-filter" data-placeholder="الكل">
+                            class="form-select select2-filter" data-placeholder="<?php echo e(trans('phrE.filter_select_all')); ?>">
                             <?php if(isset($stockStatusOptions)): ?>
                                 <?php $__currentLoopData = $stockStatusOptions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <option value="<?php echo e($key); ?>"
@@ -227,9 +228,9 @@
                         </select>
                     </div>
                     <div class="col-lg-3 col-md-6">
-                        <label for="expiry_status_filter_search" class="form-label">حالة الصلاحية:</label>
+                        <label for="expiry_status_filter_search" class="form-label"><?php echo e(trans('phrE.filter_expiry_status_label')); ?></label>
                         <select name="expiry_status_filter" id="expiry_status_filter_search"
-                            class="form-select select2-filter" data-placeholder="الكل">
+                            class="form-select select2-filter" data-placeholder="<?php echo e(trans('phrE.filter_select_all')); ?>">
                             <?php if(isset($expiryStatusOptions)): ?>
                                 <?php $__currentLoopData = $expiryStatusOptions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <option value="<?php echo e($key); ?>"
@@ -241,11 +242,12 @@
                         </select>
                     </div>
                     <div class="col-lg-2 col-md-12">
-                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> بحث</button>
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> <?php echo e(trans('phrE.filter_button_search')); ?></button>
                         <?php if(request()->hasAny(['search_medication_term', 'category_filter', 'stock_status_filter', 'expiry_status_filter'])): ?>
                             <a href="<?php echo e(route('pharmacy_employee.medications.search')); ?>"
                                 class="btn btn-outline-secondary w-100 mt-2 btn-sm">
-                                <i class="fas fa-eraser me-1"></i> مسح
+                                <i class="fas fa-eraser me-1"></i> <?php echo e(trans('phrE.filter_button_clear')); ?>
+
                             </a>
                         <?php endif; ?>
                     </div>
@@ -256,7 +258,7 @@
 
     <div class="card card-custom mt-4" data-aos="fade-up" data-aos-delay="100">
         <div class="card-header">
-            <h4 class="card-title">قائمة الأدوية (<?php if(isset($medications) && $medications->total() > 0): ?>
+            <h4 class="card-title"><?php echo e(trans('phrE.medications_list_title')); ?> (<?php if(isset($medications) && $medications->total() > 0): ?>
                     <?php echo e($medications->total()); ?>
 
                 <?php else: ?>
@@ -269,13 +271,13 @@
                     <table class="table table-medications table-hover">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>اسم الدواء</th>
-                                <th>الاسم العلمي</th>
-                                <th>الباركود</th>
-                                <th class="text-center">الكمية المتاحة</th>
-                                <th class="text-center">أقرب تاريخ انتهاء</th>
-                                <th class="text-center">حالة المخزون</th>
+                                <th><?php echo e(trans('phrE.table_header_number')); ?></th>
+                                <th><?php echo e(trans('phrE.table_header_medication_name')); ?></th>
+                                <th><?php echo e(trans('phrE.table_header_scientific_name')); ?></th>
+                                <th><?php echo e(trans('phrE.table_header_barcode')); ?></th>
+                                <th class="text-center"><?php echo e(trans('phrE.table_header_available_quantity')); ?></th>
+                                <th class="text-center"><?php echo e(trans('phrE.table_header_nearest_expiry')); ?></th>
+                                <th class="text-center"><?php echo e(trans('phrE.table_header_stock_status')); ?></th>
                                 
                             </tr>
                         </thead>
@@ -301,7 +303,7 @@
                                         <?php if($medication->nearest_expiry_date): ?>
                                             <span
                                                 class="stock-status-badge stock-status-<?php echo e($medication->expiry_status_class ?? 'secondary'); ?>"
-                                                data-bs-toggle="tooltip" title="أقرب تاريخ انتهاء صلاحية للكميات المتاحة">
+                                                data-bs-toggle="tooltip" title="<?php echo e(trans('phrE.tooltip_nearest_expiry')); ?>">
                                                 <?php echo e(\Carbon\Carbon::parse($medication->nearest_expiry_date)->translatedFormat('M Y')); ?>
 
                                             </span>
@@ -312,7 +314,7 @@
                                     <td class="text-center">
                                         <span
                                             class="stock-status-badge stock-status-<?php echo e($medication->stock_status_class ?? 'secondary'); ?>">
-                                            <?php echo e($medication->stock_status_text ?? 'غير معروف'); ?>
+                                            <?php echo e($medication->stock_status_text ?? trans('phrE.status_unknown')); ?>
 
                                         </span>
                                     </td>
@@ -331,15 +333,13 @@
             <?php else: ?>
                 <div class="empty-state p-5">
                     <i class="fas fa-tablets fa-3x"></i>
-                    <h5 class="mt-3">لا توجد أدوية تطابق معايير البحث.</h5>
-                    <p class="text-muted">حاول تعديل الفلاتر أو إضافة أدوية جديدة (إذا كنت المسؤول).</p>
+                    <h5 class="mt-3"><?php echo e(trans('phrE.empty_state_title')); ?></h5>
+                    <p class="text-muted"><?php echo e(trans('phrE.empty_state_description')); ?></p>
                 </div>
             <?php endif; ?>
         </div>
     </div>
-
 <?php $__env->stopSection(); ?>
-
 <?php $__env->startSection('js'); ?>
     <?php echo \Illuminate\View\Factory::parentPlaceholder('js'); ?>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

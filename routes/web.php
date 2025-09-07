@@ -17,16 +17,21 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 |
 */
 
+
+// الصفحة الرئيسية تفتح login
+Route::get('/', function () {
+    return redirect('/login');
+});
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'auth']
     ],
     function () {
-       
+
         //################################ dashboard patient ########################################
 
-       
+
         //################################ end dashboard patient #####################################
     }
 );

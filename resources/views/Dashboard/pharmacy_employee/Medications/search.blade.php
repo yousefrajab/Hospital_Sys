@@ -174,10 +174,10 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <h4 class="content-title mb-0 my-auto"><i class="fas fa-capsules text-primary me-2"></i>الأدوية والمخزون
+                <h4 class="content-title mb-0 my-auto"><i class="fas fa-capsules text-primary me-2"></i>{{ trans('phrE.page_header_title') }}
                 </h4>
                 <span class="text-muted mt-1 tx-13 mx-2">/</span>
-                <span class="text-muted mt-1 tx-13">بحث واستعلام</span>
+                <span class="text-muted mt-1 tx-13">{{ trans('phrE.breadcrumb_sub') }}</span>
             </div>
         </div>
     </div>
@@ -188,21 +188,21 @@
 
     <div class="card card-custom filter-card" data-aos="fade-down">
         <div class="card-header pb-0">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>فلترة الأدوية</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2"></i>{{ trans('phrE.filter_card_title') }}</h5>
         </div>
         <div class="card-body">
             <form method="GET" action="{{ route('pharmacy_employee.medications.search') }}">
-                <div class="row g-2 align-items-end"> {{-- g-2 لتقليل المسافة بين عناصر الفلتر --}}
+                <div class="row g-2 align-items-end">
                     <div class="col-lg-3 col-md-6">
-                        <label for="search_med_term_pharma" class="form-label">اسم/علمي/باركود:</label>
+                        <label for="search_med_term_pharma" class="form-label">{{ trans('phrE.filter_search_label') }}</label>
                         <input type="text" name="search_medication_term" id="search_med_term_pharma" class="form-control"
-                            placeholder="مصطلح البحث..." value="{{ $request->input('search_medication_term') }}">
+                            placeholder="{{ trans('phrE.filter_search_placeholder') }}" value="{{ $request->input('search_medication_term') }}">
                     </div>
                     <div class="col-lg-2 col-md-6">
-                        <label for="category_filter_pharma_search" class="form-label">التصنيف:</label>
+                        <label for="category_filter_pharma_search" class="form-label">{{ trans('phrE.filter_category_label') }}</label>
                         <select name="category_filter" id="category_filter_pharma_search" class="form-select select2-filter"
-                            data-placeholder="الكل">
-                            <option value="">الكل</option>
+                            data-placeholder="{{ trans('phrE.filter_select_all') }}">
+                            <option value="">{{ trans('phrE.filter_select_all') }}</option>
                             @if (isset($categories))
                                 @foreach ($categories as $key => $value)
                                     <option value="{{ $key }}"
@@ -213,9 +213,9 @@
                         </select>
                     </div>
                     <div class="col-lg-2 col-md-6">
-                        <label for="stock_status_filter_search" class="form-label">حالة المخزون:</label>
+                        <label for="stock_status_filter_search" class="form-label">{{ trans('phrE.filter_stock_status_label') }}</label>
                         <select name="stock_status_filter" id="stock_status_filter_search"
-                            class="form-select select2-filter" data-placeholder="الكل">
+                            class="form-select select2-filter" data-placeholder="{{ trans('phrE.filter_select_all') }}">
                             @if (isset($stockStatusOptions))
                                 @foreach ($stockStatusOptions as $key => $value)
                                     <option value="{{ $key }}"
@@ -226,9 +226,9 @@
                         </select>
                     </div>
                     <div class="col-lg-3 col-md-6">
-                        <label for="expiry_status_filter_search" class="form-label">حالة الصلاحية:</label>
+                        <label for="expiry_status_filter_search" class="form-label">{{ trans('phrE.filter_expiry_status_label') }}</label>
                         <select name="expiry_status_filter" id="expiry_status_filter_search"
-                            class="form-select select2-filter" data-placeholder="الكل">
+                            class="form-select select2-filter" data-placeholder="{{ trans('phrE.filter_select_all') }}">
                             @if (isset($expiryStatusOptions))
                                 @foreach ($expiryStatusOptions as $key => $value)
                                     <option value="{{ $key }}"
@@ -239,11 +239,11 @@
                         </select>
                     </div>
                     <div class="col-lg-2 col-md-12">
-                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> بحث</button>
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i> {{ trans('phrE.filter_button_search') }}</button>
                         @if (request()->hasAny(['search_medication_term', 'category_filter', 'stock_status_filter', 'expiry_status_filter']))
                             <a href="{{ route('pharmacy_employee.medications.search') }}"
                                 class="btn btn-outline-secondary w-100 mt-2 btn-sm">
-                                <i class="fas fa-eraser me-1"></i> مسح
+                                <i class="fas fa-eraser me-1"></i> {{ trans('phrE.filter_button_clear') }}
                             </a>
                         @endif
                     </div>
@@ -254,7 +254,7 @@
 
     <div class="card card-custom mt-4" data-aos="fade-up" data-aos-delay="100">
         <div class="card-header">
-            <h4 class="card-title">قائمة الأدوية (@if (isset($medications) && $medications->total() > 0)
+            <h4 class="card-title">{{ trans('phrE.medications_list_title') }} (@if (isset($medications) && $medications->total() > 0)
                     {{ $medications->total() }}
                 @else
                     0
@@ -266,14 +266,14 @@
                     <table class="table table-medications table-hover">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>اسم الدواء</th>
-                                <th>الاسم العلمي</th>
-                                <th>الباركود</th>
-                                <th class="text-center">الكمية المتاحة</th>
-                                <th class="text-center">أقرب تاريخ انتهاء</th>
-                                <th class="text-center">حالة المخزون</th>
-                                {{-- <th class="text-center">الإجراء</th> --}}
+                                <th>{{ trans('phrE.table_header_number') }}</th>
+                                <th>{{ trans('phrE.table_header_medication_name') }}</th>
+                                <th>{{ trans('phrE.table_header_scientific_name') }}</th>
+                                <th>{{ trans('phrE.table_header_barcode') }}</th>
+                                <th class="text-center">{{ trans('phrE.table_header_available_quantity') }}</th>
+                                <th class="text-center">{{ trans('phrE.table_header_nearest_expiry') }}</th>
+                                <th class="text-center">{{ trans('phrE.table_header_stock_status') }}</th>
+                                {{-- <th class="text-center">{{ trans('phrE.table_header_actions') }}</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -297,7 +297,7 @@
                                         @if ($medication->nearest_expiry_date)
                                             <span
                                                 class="stock-status-badge stock-status-{{ $medication->expiry_status_class ?? 'secondary' }}"
-                                                data-bs-toggle="tooltip" title="أقرب تاريخ انتهاء صلاحية للكميات المتاحة">
+                                                data-bs-toggle="tooltip" title="{{ trans('phrE.tooltip_nearest_expiry') }}">
                                                 {{ \Carbon\Carbon::parse($medication->nearest_expiry_date)->translatedFormat('M Y') }}
                                             </span>
                                         @else
@@ -307,15 +307,15 @@
                                     <td class="text-center">
                                         <span
                                             class="stock-status-badge stock-status-{{ $medication->stock_status_class ?? 'secondary' }}">
-                                            {{ $medication->stock_status_text ?? 'غير معروف' }}
+                                            {{ $medication->stock_status_text ?? trans('phrE.status_unknown') }}
                                         </span>
                                     </td>
                                     {{-- <td class="text-center">
                                         <a href="{{ route('pharmacy_employee.medications.stocks.index', $medication->id) }}"
                                             class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip"
-                                            title="عرض دفعات المخزون التفصيلية">
+                                            title="{{ trans('phrE.tooltip_view_batches') }}">
                                             <i class="fas fa-layer-group"></i> <span
-                                                class="d-none d-md-inline">الدفعات</span>
+                                                class="d-none d-md-inline">{{ trans('phrE.action_batches') }}</span>
                                         </a>
                                     </td> --}}
                                 </tr>
@@ -331,15 +331,13 @@
             @else
                 <div class="empty-state p-5">
                     <i class="fas fa-tablets fa-3x"></i>
-                    <h5 class="mt-3">لا توجد أدوية تطابق معايير البحث.</h5>
-                    <p class="text-muted">حاول تعديل الفلاتر أو إضافة أدوية جديدة (إذا كنت المسؤول).</p>
+                    <h5 class="mt-3">{{ trans('phrE.empty_state_title') }}</h5>
+                    <p class="text-muted">{{ trans('phrE.empty_state_description') }}</p>
                 </div>
             @endif
         </div>
     </div>
-
 @endsection
-
 @section('js')
     @parent
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

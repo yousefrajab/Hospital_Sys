@@ -132,5 +132,65 @@ return [
     'view_profile' => 'عرض الملف الشخصي',
     'logout' => 'تسجيل الخروج',
 
+    'page_header_title' => 'الأدوية والمخزون',
+    'breadcrumb_main' => 'الأدوية والمخزون',
+    'breadcrumb_sub' => 'بحث واستعلام',
+
+    // Filter Card
+    'filter_card_title' => 'فلترة الأدوية',
+    'filter_search_label' => 'اسم/علمي/باركود:',
+    'filter_search_placeholder' => 'مصطلح البحث...',
+    'filter_category_label' => 'التصنيف:',
+    'filter_stock_status_label' => 'حالة المخزون:',
+    'filter_expiry_status_label' => 'حالة الصلاحية:',
+    'filter_select_all' => 'الكل',
+    'filter_button_search' => 'بحث',
+    'filter_button_clear' => 'مسح',
+
+    // Medications List Card
+    'medications_list_title' => 'قائمة الأدوية',
+
+    // Table Headers
+    'table_header_number' => '#',
+    'table_header_medication_name' => 'اسم الدواء',
+    'table_header_scientific_name' => 'الاسم العلمي',
+    'table_header_barcode' => 'الباركود',
+    'table_header_available_quantity' => 'الكمية المتاحة',
+    'table_header_nearest_expiry' => 'أقرب تاريخ انتهاء',
+    'table_header_stock_status' => 'حالة المخزون',
+    'table_header_actions' => 'الإجراء',
+
+    // Table Content & Tooltips
+    'tooltip_nearest_expiry' => 'أقرب تاريخ انتهاء صلاحية للكميات المتاحة',
+    'status_unknown' => 'غير معروف',
+    'tooltip_view_batches' => 'عرض دفعات المخزون التفصيلية',
+    'action_batches' => 'الدفعات',
+
+    // Empty State
+    'empty_state_title' => 'لا توجد أدوية تطابق معايير البحث.',
+    'empty_state_description' => 'حاول تعديل الفلاتر أو إضافة أدوية جديدة (إذا كنت المسؤول).',
+
+     // Stock Status Options
+    'all_stock_statuses' => 'كل حالات المخزون',
+    'in_stock'           => 'متوفر',
+    'low_stock'          => 'منخفض المخزون',
+    'out_of_stock'       => 'نفذت الكمية',
+
+    // Expiry Status Options
+    'all_expiry_statuses' => 'كل حالات الصلاحية',
+    'valid'               => 'صلاحية جيدة',
+    'expires_soon'        => 'قريبة الانتهاء (خلال :days يوم)',
+    'no_valid_stock'      => 'لا توجد دفعات صالحة',
+
+      'status_out_of_stock'       => 'نفذت الكمية',
+    'status_low_stock'          => 'منخفض المخزون',
+    'status_in_stock'           => 'متوفر',
+
+    // Expiry Statuses Texts
+    'status_no_valid_batches'   => 'لا دفعات صالحة',
+    'status_expired'            => 'منتهي الصلاحية',
+    'status_expires_soon'       => 'قريب الانتهاء',
+    'status_good_expiry'        => 'صلاحية جيدة',
+
 
 ];

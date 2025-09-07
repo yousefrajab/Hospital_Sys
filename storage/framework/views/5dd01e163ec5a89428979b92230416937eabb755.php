@@ -1,0 +1,51 @@
+ <?php $__env->startSection('title'); ?>
+     اضافة تشخيص
+ <?php $__env->stopSection(); ?>
+ <?php $__env->startSection('css'); ?>
+
+ <?php $__env->stopSection(); ?>
+ <?php $__env->startSection('page-header'); ?>
+     <!-- breadcrumb -->
+     <div class="breadcrumb-header justify-content-between">
+         <div class="my-auto">
+             <div class="d-flex">
+                 <h4 class="content-title mb-0 my-auto"><?php echo e(trans('ray.add_diagnosis')); ?></h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ <?php echo e($invoice->Patient->name); ?></span>
+             </div>
+         </div>
+     </div>
+     <!-- breadcrumb -->
+ <?php $__env->stopSection(); ?>
+ <?php $__env->startSection('content'); ?>
+
+     <div class="row">
+         <div class="col-lg-12 col-md-12">
+             <div class="card">
+                 <div class="card-body">
+                     <form action="<?php echo e(route('ray_employee.invoices_ray_employee.update',$invoice->id)); ?>" method="post" enctype="multipart/form-data">
+                         <?php echo csrf_field(); ?>
+                         <?php echo method_field('PUT'); ?>
+                         <div class="form-group">
+                             <label for="exampleFormControlTextarea1"><?php echo e(trans('ray.diagnosis')); ?></label>
+                             <textarea class="form-control" id="exampleFormControlTextarea1" name="description_employee" rows="3" required></textarea>
+                         </div>
+                         <div class="form-group">
+                             <label for="exampleFormControlTextarea1"><?php echo e(trans('ray.attachments')); ?></label>
+                             <input type="file" name="photos[]" accept="image/*" multiple required>
+                         </div>
+                         <button type="submit" class="btn btn-primary"><?php echo e(trans('ray.confirm')); ?></button>
+                     </form>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <!-- row closed -->
+     </div>
+     <!-- Container closed -->
+     </div>
+     <!-- main-content closed -->
+ <?php $__env->stopSection(); ?>
+ <?php $__env->startSection('js'); ?>
+
+ <?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('Dashboard.layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH H:\Hospital_Sys\resources\views/Dashboard/dashboard_RayEmployee/invoices/add_diagnosis.blade.php ENDPATH**/ ?>

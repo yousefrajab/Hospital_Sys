@@ -81,7 +81,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>{{ trans('doctors.service_name') }}</th>
+                                                            <th>{{ trans('AdminSb.service_name') }}</th>
                                                             <th>{{ trans('doctors.doctor_name') }}</th>
                                                             <th>{{ trans('doctors.radiology_technician') }}</th>
                                                             <th>{{ trans('doctors.examination_status') }}</th>
@@ -138,7 +138,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>{{ trans('doctors.service_name') }}</th>
+                                                            <th>{{ trans('AdminSb.service_name') }}</th>
                                                             <th>{{ trans('doctors.doctor_name') }}</th>
                                                             <th>{{ trans('doctors.lab_technician') }}</th>
                                                             <th>{{ trans('doctors.Processes') }}</th>

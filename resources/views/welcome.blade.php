@@ -401,7 +401,7 @@
 
                 <div class="row g-4 justify-content-center">
                     @foreach ($latestServices as $service)
-                        <div class="col-md-6 col-lg-4">
+                        <div class="col-md-6 col-lg-3">
                             <div class="package-card">
                                 <div class="package-header">
                                     <h3 class="package-title">{{ $service->name }}</h3>
@@ -441,7 +441,7 @@
                                         </div>
                                     @endif
 
-                                    <div class="package-features">
+                                    {{-- <div class="package-features">
                                         <ul>
                                             <li><i class="fas fa-check text-success"></i>
                                                 {{ trans('patients.feature_accurate_diagnosis') }}</li>
@@ -450,7 +450,7 @@
                                             <li><i class="fas fa-check text-success"></i>
                                                 {{ trans('patients.feature_continuous_follow_up') }}</li>
                                         </ul>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="package-footer">
                                     <button type="button"

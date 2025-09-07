@@ -241,38 +241,42 @@ class MedicationController extends Controller
             $medication->nearest_expiry_date = $activeStocks->isNotEmpty() ? $activeStocks->min('expiry_date') : null;
 
             // تحديد حالة المخزون
+
+
+            // ...
+
             if ($medication->total_available_quantity == 0) {
                 $medication->stock_status_key = 'out_of_stock'; // مفتاح للفلترة
-                $medication->stock_status_text = 'نفذت الكمية';
+                $medication->stock_status_text = trans('phrE.status_out_of_stock');
                 $medication->stock_status_class = 'danger'; // كلاس CSS
             } elseif ($medication->total_available_quantity <= $medication->minimum_stock_level) {
                 $medication->stock_status_key = 'low_stock';
-                $medication->stock_status_text = 'منخفض المخزون';
+                $medication->stock_status_text = trans('phrE.status_low_stock');
                 $medication->stock_status_class = 'warning';
             } else {
                 $medication->stock_status_key = 'in_stock';
-                $medication->stock_status_text = 'متوفر';
+                $medication->stock_status_text = trans('phrE.status_in_stock');
                 $medication->stock_status_class = 'success';
             }
 
             // تحديد حالة الصلاحية
             $medication->expiry_status_key = 'no_valid_stock'; // افتراضي
-            $medication->expiry_status_text = 'لا دفعات صالحة';
+            $medication->expiry_status_text = trans('phrE.status_no_valid_batches');
             $medication->expiry_status_class = 'secondary';
             if ($medication->nearest_expiry_date) {
                 $expiryDateCarbon = \Carbon\Carbon::parse($medication->nearest_expiry_date);
                 $warningDays = config('pharmacy.stock_expiry_warning_days', 90); // من ملف config
                 if ($expiryDateCarbon->isPast()) { // نظريًا لن يحدث بسبب فلتر whereDate أعلاه
                     $medication->expiry_status_key = 'expired';
-                    $medication->expiry_status_text = 'منتهي الصلاحية';
+                    $medication->expiry_status_text = trans('phrE.status_expired');
                     $medication->expiry_status_class = 'dark';
                 } elseif ($expiryDateCarbon->isBefore(now()->addDays($warningDays))) {
                     $medication->expiry_status_key = 'expired_soon';
-                    $medication->expiry_status_text = 'قريب الانتهاء';
+                    $medication->expiry_status_text = trans('phrE.status_expires_soon');
                     $medication->expiry_status_class = 'warning';
                 } else {
                     $medication->expiry_status_key = 'valid';
-                    $medication->expiry_status_text = 'صلاحية جيدة';
+                    $medication->expiry_status_text = trans('phrE.status_good_expiry');
                     $medication->expiry_status_class = 'success';
                 }
             }
@@ -307,18 +311,19 @@ class MedicationController extends Controller
 
         $categories = Medication::getCommonCategories();
         $stockStatusOptions = [
-            '' => 'كل حالات المخزون',
-            'in_stock' => 'متوفر',
-            'low_stock' => 'منخفض المخزون',
-            'out_of_stock' => 'نفذت الكمية',
+            ''             => trans('phrE.all_stock_statuses'),
+            'in_stock'     => trans('phrE.in_stock'),
+            'low_stock'    => trans('phrE.low_stock'),
+            'out_of_stock' => trans('phrE.out_of_stock'),
         ];
+
         $expiryWarningDaysConfig = config('pharmacy.stock_expiry_warning_days', 90);
+
         $expiryStatusOptions = [
-            '' => 'كل حالات الصلاحية',
-            'valid' => 'صلاحية جيدة',
-            'expired_soon' => "قريبة الانتهاء (خلال {$expiryWarningDaysConfig} يوم)",
-            'no_valid_stock' => 'لا توجد دفعات صالحة',
-            // يمكنك إضافة 'expired' إذا كنت ستعرض الأدوية منتهية الصلاحية من دفعات غير فعالة
+            ''               => trans('phrE.all_expiry_statuses'),
+            'valid'          => trans('phrE.valid'),
+            'expired_soon'   => trans('phrE.expires_soon', ['days' => $expiryWarningDaysConfig]),
+            'no_valid_stock' => trans('phrE.no_valid_stock'),
         ];
 
         return view('Dashboard.pharmacy_employee.Medications.search', compact(

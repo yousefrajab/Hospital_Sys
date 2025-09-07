@@ -19,7 +19,7 @@ return [
     'book_new_appointment' => 'Book a New Appointment',
     'back_to_home' => 'Back to Home',
     'my_due_invoices' => 'My Due Invoices',
-    'currency_sar' => 'SAR',
+    'currency_sar' => 'ILS',
     'view_invoices' => 'View Invoices',
     'my_total_payments' => 'My Total Payments',
     'view_account_statement' => 'View Account Statement',

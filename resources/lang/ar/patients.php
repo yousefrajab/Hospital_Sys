@@ -19,7 +19,7 @@ return [
     'book_new_appointment' => 'حجز موعد جديد',
     'back_to_home' => 'العودة للرئيسية',
     'my_due_invoices' => 'فواتيري المستحقة',
-    'currency_sar' => 'ر.س',
+    'currency_sar' => 'ش',
     'view_invoices' => 'عرض الفواتير',
     'my_total_payments' => 'إجمالي مدفوعاتي',
     'view_account_statement' => 'عرض كشف الحساب',
