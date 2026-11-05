@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             PatientTableSeeder::class,
             RayEmployeeTableSeeder::class,
             ServiceTableSeeder::class,
+            PharmacyTableSeeder::class,
 
 
         ]);

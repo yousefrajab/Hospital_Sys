@@ -298,17 +298,16 @@ class PatientRepository implements PatientRepositoryInterface
 
         $patientExistingChronicDiseases = [];
         foreach ($Patient->diagnosedChronicDiseases as $diagnosedDisease) {
-            // $diagnosedDisease هو كائن Disease
-            // $diagnosedDisease->pivot هو كائن PatientChronicDisease (بيانات الجدول الوسيط)
-            $patientExistingChronicDiseases[] = [ // تعديل ليكون مصفوفة من الكائنات/المصفوفات
+
+            $patientExistingChronicDiseases[] = [
                 'disease_id' => $diagnosedDisease->id,
-                'disease_name' => $diagnosedDisease->name, // اسم المرض للعرض
+                'disease_name' => $diagnosedDisease->name,
                 'diagnosed_at' => $diagnosedDisease->pivot->diagnosed_at ? \Carbon\Carbon::parse($diagnosedDisease->pivot->diagnosed_at)->format('Y-m-d') : null,
                 'diagnosed_by' => $diagnosedDisease->pivot->diagnosed_by,
                 'current_status' => $diagnosedDisease->pivot->current_status,
                 'treatment_plan' => $diagnosedDisease->pivot->treatment_plan,
                 'notes' => $diagnosedDisease->pivot->notes,
-                'pivot_record_id' => $diagnosedDisease->pivot->id // ID سجل patient_chronic_diseases نفسه (مفيد إذا أردت تحديث سجل معين)
+                'pivot_record_id' => $diagnosedDisease->pivot->id
             ];
         }
         Log::info("PatientRepository@edit: Loading edit patient form for ID: {$id}");
@@ -390,9 +389,8 @@ class PatientRepository implements PatientRepositoryInterface
         }
     }
 
-    // في ملف PatientController.php
 
-    public function destroy($id) // ✅ تم التعديل: نستقبل الـ id مباشرة من الرابط
+    public function destroy($id)
     {
         // ✅ تم التعديل: لا حاجة للبحث في الـ request، الـ id موجود بالفعل
         $patientId = $id;

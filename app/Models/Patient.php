@@ -65,9 +65,9 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
         return $this->morphOne(Image::class, 'imageable');
     }
 
-    public function diseases() // هذه قد تكون عامة (كل الأمراض المرتبطة)
+    public function diseases()
     {
-        return $this->belongsToMany(Disease::class, 'disease_patient') // افترض أن الجدول الوسيط اسمه disease_patient
+        return $this->belongsToMany(Disease::class, 'disease_patient')
             ->withTimestamps();
     }
 
@@ -96,19 +96,14 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
             ->where('patient_admissions.status', PatientAdmission::STATUS_ADMITTED);
     }
 
-    public function chronicDiseasesRecords() // الاسم القديم كان diseases()، تم تغييره ليكون أوضح
+    public function chronicDiseasesRecords()
     {
-        // هذه العلاقة للوصول إلى سجلات الجدول الوسيط patient_chronic_diseases
         return $this->hasMany(PatientChronicDisease::class);
     }
 
     public function diagnosedChronicDiseases()
     {
-        // هذه العلاقة للوصول إلى موديلات Disease نفسها مع بيانات الجدول الوسيط
-        return $this->belongsToMany(Disease::class, 'patient_chronic_diseases') // اسم الجدول الوسيط الصحيح
-            // يمكنك إضافة فلتر هنا إذا أردت فقط الأمراض التي is_chronic = true من جدول diseases
-            // ->wherePivot('is_chronic_for_patient', true) // إذا كان لديك هذا العمود في الجدول الوسيط
-            // أو ->whereHas('diseaseDetail', function($q){ $q->where('is_chronic', true); }) إذا كانت العلاقة مختلفة
+        return $this->belongsToMany(Disease::class, 'patient_chronic_diseases')
             ->withPivot('id', 'diagnosed_at', 'diagnosed_by', 'current_status', 'treatment_plan', 'notes')
             ->withTimestamps()
             ->orderBy('pivot_diagnosed_at', 'desc');
@@ -125,7 +120,6 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
             $infoLines = [];
             $locale = app()->getLocale();
 
-            // 1. المعلومات الأساسية من جدول patients
             $patientName = $this->getTranslation('name', $locale, false) ?: $this->name; // استخدام الترجمة
             $infoLines[] = "الاسم: " . ($patientName ?? 'غير متوفر');
             $infoLines[] = "الهوية: " . ($this->national_id ?? 'غير متوفر');
@@ -134,9 +128,8 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
             $infoLines[] = "الجنس: " . ($this->Gender == 1 ? 'ذكر' : ($this->Gender == 2 ? 'أنثى' : '-'));
             $infoLines[] = "فصيلة الدم: " . ($this->Blood_Group ?: 'غير محددة');
 
-            // 2. الحساسيات (من الحقل النصي 'allergies' في جدول patients)
             if (!empty($this->allergies)) {
-                $infoLines[] = "حساسيات: " . Str::limit($this->allergies, 50); // تحديد الطول
+                $infoLines[] = "حساسيات: " . Str::limit($this->allergies, 50); 
             }
 
             // 3. الأمراض المزمنة

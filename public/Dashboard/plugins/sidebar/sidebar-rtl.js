@@ -135,7 +135,7 @@
 	
 	
 	// ______________ PerfectScrollbar	
-	const ps1 = new PerfectScrollbar('.sidebar-left', {
+	if (document.querySelector('.sidebar-left')) new PerfectScrollbar('.sidebar-left', {
 		useBothWheelAxes:false,
 		suppressScrollX:false,
 	});

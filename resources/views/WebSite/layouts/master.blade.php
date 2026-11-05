@@ -20,7 +20,7 @@
 
                     <!--Info-->
                     <div class="logo-outer">
-                        <div class="logo"><a href="index.html"><img src="images/logo-3.png" alt=""
+                        <div class="logo"><a href="{{ url('/') }}"><img src="{{ asset('WebSite/images/logo-3.png') }}" alt=""
                                     title=""></a></div>
                     </div>
 
@@ -36,7 +36,7 @@
                 <div class="auto-container clearfix">
                     <!--Logo-->
                     <div class="logo pull-left">
-                        <a href="index.html" class="img-responsive"><img src="images/logo-small.png" alt=""
+                        <a href="{{ url('/') }}" class="img-responsive"><img src="{{ asset('WebSite/images/logo-small.png') }}" alt=""
                                 title=""></a>
                     </div>
 
@@ -63,7 +63,7 @@
 
                 <!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header-->
                 <nav class="menu-box">
-                    <div class="nav-logo"><a href="index.html"><img src="images/nav-logo.png" alt=""
+                    <div class="nav-logo"><a href="{{ url('/') }}"><img src="{{ asset('WebSite/images/nav-logo.png') }}" alt=""
                                 title=""></a></div>
 
                     <ul class="navigation clearfix"><!--Keep This Empty / Menu will come through Javascript--></ul>
@@ -129,7 +129,7 @@
                     <div class="sidebar-info-contents">
                         <div class="content-inner">
                             <div class="logo">
-                                <a href="index.html"><img src="images/logo-3.png" alt="" /></a>
+                                <a href="{{ url('/') }}"><img src="{{ asset('WebSite/images/logo-3.png') }}" alt="" /></a>
                             </div>
                             <div class="content-box">
                                 <h2>{{ trans('patients.sidebar_about_us_title') }}</h2>

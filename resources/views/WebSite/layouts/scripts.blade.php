@@ -2,7 +2,7 @@
 <script src="{{URL::asset('WebSite/js/jquery.js')}}"></script>
 <script src="{{URL::asset('WebSite/js/popper.min.js')}}"></script>
 <script src="{{URL::asset('WebSite/js/jquery-ui.js')}}"></script>
-<script src="{{URL::asset('WebSite/js/bootstrap.min.js')}}js/bootstrap.min.js"></script>
+<script src="{{URL::asset('WebSite/js/bootstrap.min.js')}}"></script>
 <script src="{{URL::asset('WebSite/js/jquery.fancybox.js')}}"></script>
 <script src="{{URL::asset('WebSite/js/parallax.min.js')}}"></script>
 <script src="{{URL::asset('WebSite/js/jquery.paroller.min.js')}}"></script>

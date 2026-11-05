@@ -3,14 +3,14 @@
     <div class="container-fluid">
         <div class="main-header-left ">
             <div class="responsive-logo">
-                <a href="{{ url('/' . ($page = 'index')) }}"><img src="{{ URL::asset('Dashboard/img/brand/logo.png') }}"
+                <a href="{{ url('/') }}"><img src="{{ URL::asset('Dashboard/img/brand/logo.png') }}"
                         class="logo-1" alt="logo"></a>
-                <a href="{{ url('/' . ($page = 'index')) }}"><img
+                <a href="{{ url('/') }}"><img
                         src="{{ URL::asset('Dashboard/img/brand/logo-white.png') }}" class="dark-logo-1"
                         alt="logo"></a>
-                <a href="{{ url('/' . ($page = 'index')) }}"><img
+                <a href="{{ url('/') }}"><img
                         src="{{ URL::asset('Dashboard/img/brand/favicon.png') }}" class="logo-2" alt="logo"></a>
-                <a href="{{ url('/' . ($page = 'index')) }}"><img
+                <a href="{{ url('/') }}"><img
                         src="{{ URL::asset('Dashboard/img/brand/favicon.png') }}" class="dark-logo-2"
                         alt="logo"></a>
             </div>
@@ -170,7 +170,7 @@
                             </a>
                         </div>
                         <div class="text-center dropdown-footer">
-                            <a href="text-center">VIEW ALL</a>
+                            <a href="javascript:void(0)">VIEW ALL</a>
                         </div>
                     </div>
                 </div>
@@ -227,7 +227,7 @@
                             @endforeach
                         </div>
                         <div class="dropdown-footer">
-                            <a href="">VIEW ALL</a>
+                            <a href="javascript:void(0)">VIEW ALL</a>
                         </div>
                     </div>
                 </div>
@@ -466,7 +466,8 @@
     var new_message = notificationsWrapper.find('.new_message');
     new_message.hide();
 
-    Echo.private('create-invoice.{{ auth()->user() }}').listen('.create-invoice', (data) => {
+    @if (auth('doctor')->check())
+    Echo.private('create-invoice.{{ auth('doctor')->id() }}').listen('.create-invoice', (data) => {
         var newNotificationHtml = `
        <h4 class="notification-label mb-1">` + data.message + data.patient + `</h4>
        <div class="notification-subtext">` + data.created_at + `</div>`;
@@ -477,6 +478,7 @@
         notificationsWrapper.find('.notif-count').text(notificationsCount);
         notificationsWrapper.show();
     });
+    @endif
 </script>
 
 

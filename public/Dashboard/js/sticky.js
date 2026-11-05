@@ -1,4 +1,5 @@
 $(document).ready(function(){
+  if (!$(".sticky").length) return;
 
   var stickyElement = $(".sticky"),
       stickyClass = "sticky-pin",

@@ -210,7 +210,6 @@
     <div class="appointments-page-container">
         <div class="page-header-flex animate__animated animate__fadeInDown">
             <h1 class="page-title-flex"><i class="fas fa-archive"></i> {{ trans('patients.past_appointments_record') }}</h1>
-            {{-- يمكنك إضافة فلاتر هنا (مثلاً، حسب السنة أو الشهر) --}}
         </div>
 
         @if(isset($appointments) && $appointments->isNotEmpty())
@@ -301,10 +300,10 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({
-            duration: 700, // مدة أطول قليلاً للأنيميشن
+            duration: 700,
             easing: 'ease-out-quad',
             once: true,
-            offset: 50 // بدء الأنيميشن عند ظهور 50px من العنصر
+            offset: 50 
         });
 
         $(document).ready(function() {

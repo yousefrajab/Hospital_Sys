@@ -241,7 +241,7 @@
 
     <!-- Department Section Three -->
     <section class="department-section-three">
-        <div class="image-layer" style="background-image:url(images/background/6.jpg)"></div>
+        <div class="image-layer" style="background-image:url({{ asset('WebSite/images/background/6.jpg') }})"></div>
         <div class="auto-container">
             <!-- Department Tabs-->
             <div class="department-tabs tabs-box">
@@ -325,7 +325,7 @@
                                                         </div>
                                                     @else
                                                         <div class="no-doctors text-center py-5">
-                                                            <img src="{{ asset('Dashboard/img/no-doctors.svg') }}"
+                                                            <img src="{{ asset('Dashboard/img/doctor_default.png') }}"
                                                                 alt="{{ trans('patients.no_doctors_in_this_section_alt') }}"
                                                                 class="img-fluid mb-3" style="max-width: 200px;">
                                                             <p class="text-muted">
@@ -565,7 +565,7 @@
 
     <br>
     <!-- Video Section -->
-    <section class="video-section" style="background-image:url(images/background/5.jpg)">
+    <section class="video-section" style="background-image:url({{ asset('WebSite/images/background/5.jpg') }})">
         <div class="auto-container">
             <div class="content">
                 <a href="https://www.youtube.com/watch?v=kxPCFljwJws" class="lightbox-image play-box"><span
@@ -587,7 +587,7 @@
                     <div class="image-column col-lg-6 col-md-12 col-sm-12">
                         <div class="inner-column wow slideInLeft" data-wow-delay="0ms" data-wow-duration="1500ms">
                             <div class="image">
-                                <img src="images/resource/doctor-2.png" alt="" />
+                                <img src="{{ asset('WebSite/images/resource/doctor-2.png') }}" alt="" />
                             </div>
                         </div>
                     </div>
@@ -660,7 +660,7 @@
     <!-- End Testimonial Section Two -->
 
      <!-- Counter Section -->
-    <section class="counter-section style-two" style="background-image: url(images/background/pattern-3.png)">
+    <section class="counter-section style-two" style="background-image: url({{ asset('WebSite/images/background/pattern-3.png') }})">
         <div class="auto-container">
 
             <!-- Fact Counter -->
@@ -784,31 +784,31 @@
                 <!--Sponsors Carousel-->
                 <ul class="sponsors-carousel owl-carousel owl-theme">
                     <li class="slide-item">
-                        <figure class="image-box"><a href="#"><img src="images/clients/1.png" alt=""></a>
+                        <figure class="image-box"><a href="#"><img src="{{ asset('WebSite/images/clients/1.png') }}" alt=""></a>
                         </figure>
                     </li>
                     <li class="slide-item">
-                        <figure class="image-box"><a href="#"><img src="images/clients/2.png" alt=""></a>
+                        <figure class="image-box"><a href="#"><img src="{{ asset('WebSite/images/clients/2.png') }}" alt=""></a>
                         </figure>
                     </li>
                     <li class="slide-item">
-                        <figure class="image-box"><a href="#"><img src="images/clients/3.png" alt=""></a>
+                        <figure class="image-box"><a href="#"><img src="{{ asset('WebSite/images/clients/3.png') }}" alt=""></a>
                         </figure>
                     </li>
                     <li class="slide-item">
-                        <figure class="image-box"><a href="#"><img src="images/clients/4.png" alt=""></a>
+                        <figure class="image-box"><a href="#"><img src="{{ asset('WebSite/images/clients/4.png') }}" alt=""></a>
                         </figure>
                     </li>
                     <li class="slide-item">
-                        <figure class="image-box"><a href="#"><img src="images/clients/5.png" alt=""></a>
+                        <figure class="image-box"><a href="#"><img src="{{ asset('WebSite/images/clients/5.png') }}" alt=""></a>
                         </figure>
                     </li>
                     <li class="slide-item">
-                        <figure class="image-box"><a href="#"><img src="images/clients/1.png" alt=""></a>
+                        <figure class="image-box"><a href="#"><img src="{{ asset('WebSite/images/clients/1.png') }}" alt=""></a>
                         </figure>
                     </li>
                     <li class="slide-item">
-                        <figure class="image-box"><a href="#"><img src="images/clients/2.png" alt=""></a>
+                        <figure class="image-box"><a href="#"><img src="{{ asset('WebSite/images/clients/2.png') }}" alt=""></a>
                         </figure>
                     </li>
                 </ul>

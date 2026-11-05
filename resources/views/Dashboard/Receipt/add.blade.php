@@ -149,13 +149,13 @@
 
 
                 if (itemName !== undefined && itemValue !== "" && (currentDescription === "" ||
-                        currentDescription.startsWith("رسوم خدمة:") || currentDescription.startsWith(
-                            "رسوم باقة:"))) {
-                    var prefix = itemValue.startsWith("service_") ? "رسوم خدمة: " : (itemValue.startsWith(
-                        "group_") ? "رسوم باقة: " : "");
+                      currentDescription.startsWith('{{ trans("AdminSb.service_fees_prefix") }}') ||
+        currentDescription.startsWith('{{ trans("AdminSb.package_fees_prefix") }}'))) {
+                    var prefix = itemValue.startsWith("service_") ? '{{ trans("AdminSb.service_fees_prefix") }} ' : (itemValue.startsWith(
+                        "group_") ? '{{ trans("AdminSb.package_fees_prefix") }} ' : "");
                     $('#description').val(prefix + itemName);
-                } else if (itemValue === "" && (currentDescription.startsWith("رسوم خدمة:") ||
-                        currentDescription.startsWith("رسوم باقة:"))) {
+                } else if (itemValue === "" && (currentDescription.startsWith('{{ trans("AdminSb.service_fees_prefix") }}') ||
+                        currentDescription.startsWith('{{ trans("AdminSb.package_fees_prefix") }}'))) {
                     // $('#description').val(''); // أو اتركه إذا كان المستخدم قد كتب شيئاً آخر
                 }
             });

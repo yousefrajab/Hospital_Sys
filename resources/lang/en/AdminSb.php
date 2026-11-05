@@ -817,6 +817,9 @@
         'external_website'=>'External Website',
         'logout'=>'Logout',
 
+        'service_fees_prefix' => 'Service Fees:',
+    'package_fees_prefix' => 'Package Fees:', 
+
 
 
 
