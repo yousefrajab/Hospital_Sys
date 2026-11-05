@@ -83,7 +83,7 @@ class ReceiptRepository implements ReceiptRepositoryInterface
             $receipt_accounts->service_id = $service_id;
             $receipt_accounts->group_id = $group_id;
             $receipt_accounts->amount = $request->Debit;
-            $receipt_accounts->description = $description;
+            $receipt_accounts->description = $description ?: trans('AdminSb.receipt_default_description');
             $receipt_accounts->save();
 
             $fund_accounts = new FundAccount();
@@ -169,7 +169,7 @@ class ReceiptRepository implements ReceiptRepositoryInterface
             $receipt_accounts->service_id = $service_id;
             $receipt_accounts->group_id = $group_id;
             $receipt_accounts->amount = $validatedData['Debit'];
-            $receipt_accounts->description = $description;
+            $receipt_accounts->description = $description ?: trans('AdminSb.receipt_default_description');
             $receipt_accounts->save();
 
             $fund_accounts = FundAccount::where('receipt_id', $receipt_accounts->id)->first();

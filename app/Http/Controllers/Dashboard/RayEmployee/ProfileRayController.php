@@ -75,7 +75,7 @@ class ProfileRayController extends Controller // يمكنك تسميته Profile
         $employee = Auth::guard('ray_employee')->user();
         if (!$employee) {
             // يمكنك التوجيه لصفحة تسجيل الدخول أو عرض خطأ
-            return redirect()->route('ray_employee.login.form'); // افترض وجود هذا الـ route
+            return redirect()->route('login'); // افترض وجود هذا الـ route
         }
         // تحميل علاقة الصورة إذا كانت موجودة
         $employee->load('image');
@@ -89,7 +89,7 @@ class ProfileRayController extends Controller // يمكنك تسميته Profile
     {
         $employee = Auth::guard('ray_employee')->user();
         if (!$employee) {
-            return redirect()->route('ray_employee.login.form');
+            return redirect()->route('login');
         }
         $employee->load('image');
         return view('Dashboard.ray_employee.profile.edit', compact('employee'));
@@ -147,17 +147,16 @@ class ProfileRayController extends Controller // يمكنك تسميته Profile
                         $employee->id,
                         'App\Models\RayEmployee'
                     );
-
-                    $this->verifyAndStoreImage(
-                        $request,
-                        'photo',
-                        'rayEmployees',
-                        'upload_image',
-                        $employee->id,
-                        'App\Models\RayEmployee'
-                    );
                 }
                 // رفع الصورة الجديدة
+                $this->verifyAndStoreImage(
+                    $request,
+                    'photo',
+                    'rayEmployees',
+                    'upload_image',
+                    $employee->id,
+                    'App\Models\RayEmployee'
+                );
 
             }
 

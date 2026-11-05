@@ -174,4 +174,8 @@ return [
         'photo' => 'photo',
     ],
 
+
+    // added: keys used in views but previously undefined
+    'current_password' => 'The current password is incorrect.',
+    'sometimes' => 'This field is invalid.',
 ];

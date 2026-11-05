@@ -267,6 +267,9 @@ class WebsiteController extends Controller
             return response()->json(['message' => $message], 422);
         }
         $cancellationWindowHours = config('settings.patient_appointment_cancellation_window_hours', 24);
+        if (Carbon::parse($appointment->appointment)->isPast()) {
+            return response()->json(['message' => 'لا يمكن إلغاء موعد قد فات وقته.'], 422);
+        }
         if (Carbon::parse($appointment->appointment)->isPast() || Carbon::parse($appointment->appointment)->diffInHours(now(), false) < $cancellationWindowHours) {
             if (Carbon::parse($appointment->appointment)->isFuture() && Carbon::parse($appointment->appointment)->diffInHours(now()) < $cancellationWindowHours) {
                 $errorMessage = "لا يمكن إلغاء الموعد قبل أقل من {$cancellationWindowHours} ساعة من وقته المحدد. يرجى التواصل مباشرة مع العيادة إذا لزم الأمر.";
@@ -376,12 +379,12 @@ class WebsiteController extends Controller
         ]);
 
         $hospitalSettings = [
-            'name' => config('app.name', 'المنصة الطبية'),
-            'logo' => asset('path/to/your/logo_for_print.png'),
-            'address' => '123 شارع الصحة، مدينة العافية',
-            'phone' => '012-345-6789',
-            'email' => 'info@example.com',
-            'tax_number' => '123456789012345',
+            'name' => config('hospital.name'),
+            'logo' => asset(config('hospital.logo')),
+            'address' => config('hospital.address'),
+            'phone' => config('hospital.phone'),
+            'email' => config('hospital.email'),
+            'tax_number' => config('hospital.tax_number'),
         ];
 
         return view('WebSite.invoices.print_invoice_standalone', compact('invoice', 'hospitalSettings'));
@@ -431,12 +434,12 @@ class WebsiteController extends Controller
 
 
         $hospitalSettings = [
-            'name' => config('app.name', 'المنصة الطبية'),
-            'logo' => asset('path/to/your/logo_for_print.png'),
-            'address' => '123 شارع الصحة، مدينة العافية',
-            'phone' => '012-345-6789',
-            'email' => 'info@example.com',
-            'tax_number' => '123456789012345',
+            'name' => config('hospital.name'),
+            'logo' => asset(config('hospital.logo')),
+            'address' => config('hospital.address'),
+            'phone' => config('hospital.phone'),
+            'email' => config('hospital.email'),
+            'tax_number' => config('hospital.tax_number'),
         ];
 
         return view('WebSite.account.print_receipt_standalone', compact('receiptAccount', 'hospitalSettings'));

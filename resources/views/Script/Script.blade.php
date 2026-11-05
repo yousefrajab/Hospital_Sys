@@ -7,7 +7,6 @@
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.min.js') }}"></script>
-    <script src="{{ URL::asset('Dashboard/plugins/neomorphic-ui/neomorphic.js') }}"></script>
 
     <!-- Internal Data tables -->
     <script src="{{ URL::asset('Dashboard/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>

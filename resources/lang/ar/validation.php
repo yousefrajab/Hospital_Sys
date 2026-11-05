@@ -167,4 +167,8 @@ return [
         'number_of_statements' => 'عدد الكشوفات',
         'photo' => 'الصورة',
     ],
+
+    // added: keys used in views but previously undefined
+    'current_password' => 'كلمة المرور الحالية غير صحيحة.',
+    'sometimes' => 'قيمة هذا الحقل غير صالحة.',
 ];

@@ -587,6 +587,7 @@ class PrescriptionController extends Controller
                     if (isset($itemData['renew']) && $itemData['renew'] === 'on' && isset($itemData['refills_allowed_new'])) {
                         $originalItem->refills_allowed = (int)$itemData['refills_allowed_new'];
                         $originalItem->refills_done = 0; // *** مهم: تصفير مرات الصرف السابقة لهذا البند ***
+                        $originalItem->quantity_dispensed = 0; // a renewed item can be dispensed again in full
                         // (اختياري) يمكنك إضافة ملاحظات الطبيب الخاصة بالبند هنا إذا كان لديك حقل لها
                         // $originalItem->renewal_notes_by_doctor = $itemData['item_notes_new'] ?? null;
                         $originalItem->save();

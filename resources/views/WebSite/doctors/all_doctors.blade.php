@@ -1011,7 +1011,7 @@
                         data-wow-delay="{{ ($loop->index % 6) * 0.1 + 0.2 }}s">
                         <div class="image-wrapper-standalone">
                             <a href="{{ route('website.doctor.details', $doctor->id) }}">
-                                <img src="{{ $doctor->image_url ?? ($doctor->image && $doctor->image->filename ? asset('Dashboard/img/doctors/' . $doctor->image->filename) : asset('WebSite/images/resource/doctor-placeholder.png')) }}"
+                                <img src="{{ $doctor->image_url ?? ($doctor->image && $doctor->image->filename ? asset('Dashboard/img/doctors/' . $doctor->image->filename) : asset('Dashboard/img/doctor_default.png')) }}"
                                     alt="{{ $doctor->name }}"
                                     onerror="this.onerror=null; this.src='{{ asset('Dashboard/img/doctor_default.png') }}';">
                             </a>
@@ -1067,7 +1067,7 @@
             @endif
         @else
             <div class="no-results-standalone animate__animated animate__fadeIn">
-                <img src="{{ asset('WebSite/images/icons/search-not-found.svg') }}" alt="{{ trans('patients.no_doctors_found_title') }}">
+                <img src="{{ asset('Dashboard/img/doctor_default.png') }}" alt="{{ trans('patients.no_doctors_found_title') }}">
                 <h3>{{ trans('patients.no_doctors_found_title') }}</h3>
                 <p>{{ trans('patients.no_doctors_found_message') }} <a
                         href="{{ route('website.doctors.all') }}">{{ trans('patients.view_all_doctors_link') }}</a>.</p>

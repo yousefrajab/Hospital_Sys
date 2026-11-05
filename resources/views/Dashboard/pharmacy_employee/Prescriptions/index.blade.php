@@ -6,7 +6,7 @@
     @parent
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('Dashboard/plugins/select2/css/select2.min.css') }}" rel="stylesheet" /> {{-- للفلتر --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet"> {{-- للفلتر بالتاريخ --}}
@@ -196,8 +196,8 @@
 @section('js')
     @parent
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.full.min.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/select2/js/i18n/ar.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

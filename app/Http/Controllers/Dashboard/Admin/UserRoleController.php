@@ -37,7 +37,7 @@ class UserRoleController extends Controller
             } else {
                 $user->display_name = $user->name;
             }
-            if (property_exists($user, 'status') && $user->status !== null) {
+            if (array_key_exists('status', $user->getAttributes()) && $user->status !== null) {
                 $user->status_display = $user->status ?  __('AdminSb.active') : __('AdminSb.Inactive');
             } else {
                 $user->status = true;
@@ -99,7 +99,7 @@ class UserRoleController extends Controller
         if ($request->filled('status') && $request->status !== '') {
             $statusValue = (bool) $request->status;
             $filteredUsers = $filteredUsers->filter(function ($user) use ($statusValue) {
-                return property_exists($user, 'status') && $user->status === $statusValue;
+                return (bool) $user->status === $statusValue;
             });
         }
 

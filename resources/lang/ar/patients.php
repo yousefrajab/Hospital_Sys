@@ -711,4 +711,11 @@ return [
     'footer_thank_you' => 'شكراً لتعاملكم معنا.',
 
 
+
+    // added: keys used in views but previously undefined
+    'email_placeholder' => 'example@email.com',
+    'phone_placeholder_sa' => '05XXXXXXXX',
+    'unknown_patient' => 'مريض غير معروف',
+    'unspecified' => 'غير محدد',
+    'view_original_prescription_details' => 'عرض تفاصيل الوصفة الأصلية',
 ];

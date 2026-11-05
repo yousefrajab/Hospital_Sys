@@ -25,7 +25,7 @@ class ProfilePharmacyManagerController extends Controller // يمكنك تسمي
         $employee = Auth::guard('pharmacy_manager')->user();
         if (!$employee) {
             // يمكنك التوجيه لصفحة تسجيل الدخول أو عرض خطأ
-            return redirect()->route('pharmacy_manager.login.form'); // افترض وجود هذا الـ route
+            return redirect()->route('login'); // افترض وجود هذا الـ route
         }
         // تحميل علاقة الصورة إذا كانت موجودة
         $employee->load('image');
@@ -39,7 +39,7 @@ class ProfilePharmacyManagerController extends Controller // يمكنك تسمي
     {
         $employee = Auth::guard('pharmacy_manager')->user();
         if (!$employee) {
-            return redirect()->route('pharmacy_manager.login.form');
+            return redirect()->route('login');
         }
         $employee->load('image');
         return view('Dashboard.PharmacyManager.profile.edit', compact('employee'));
@@ -97,17 +97,16 @@ class ProfilePharmacyManagerController extends Controller // يمكنك تسمي
                         $employee->id,
                         'App\Models\PharmacyManager'
                     );
-
-                    $this->verifyAndStoreImage(
-                        $request,
-                        'photo',
-                        'pharmacy_managers',
-                        'upload_image',
-                        $employee->id,
-                        'App\Models\PharmacyManager'
-                    );
                 }
                 // رفع الصورة الجديدة
+                $this->verifyAndStoreImage(
+                    $request,
+                    'photo',
+                    'pharmacy_managers',
+                    'upload_image',
+                    $employee->id,
+                    'App\Models\PharmacyManager'
+                );
 
             }
 
@@ -117,7 +116,7 @@ class ProfilePharmacyManagerController extends Controller // يمكنك تسمي
             Log::info("Profile update committed successfully for PharmacyManager ID {$employee->id}");
 
             // إعادة التوجيه مع رسالة نجاح
-            return redirect()->route('PharmacyManager.profile.show') // اسم route عرض الملف الشخصي
+            return redirect()->route('pharmacy_manager.profile.show') // اسم route عرض الملف الشخصي
                 ->with('success', 'تم تحديث الملف الشخصي بنجاح.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack(); // تراجع في حالة خطأ التحقق الداخلي (مثل كلمة المرور الحالية)

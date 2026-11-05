@@ -13,6 +13,7 @@ use App\Models\Notification;
 use App\Events\CreateInvoice;
 use App\Models\Admin;
 use App\Models\PatientAccount;
+use App\Models\Section;
 use App\Models\single_invoice;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -89,7 +90,7 @@ class SingleInvoices extends Component
         $this->single_invoice_id = $single_invoice->id;
         $this->patient_id = $single_invoice->patient_id;
         $this->doctor_id = $single_invoice->doctor_id;
-        $this->section_id = DB::table('section_translations')->where('id', $single_invoice->section_id)->first()->name;
+        $this->section_id = optional(Section::find($single_invoice->section_id))->name;
         $this->Service_id = $single_invoice->Service_id;
         $this->price = $single_invoice->price;
         $this->discount_value = $single_invoice->discount_value;
@@ -114,7 +115,7 @@ class SingleInvoices extends Component
                     $single_invoices->invoice_date = date('Y-m-d');
                     $single_invoices->patient_id = $this->patient_id;
                     $single_invoices->doctor_id = $this->doctor_id;
-                    $single_invoices->section_id = DB::table('section_translations')->where('name', $this->section_id)->first()->section_id;
+                    $single_invoices->section_id = Doctor::findOrFail($this->doctor_id)->section_id;
                     $single_invoices->Service_id = $this->Service_id;
                     $single_invoices->price = $this->price;
                     $single_invoices->discount_value = $this->discount_value;
@@ -126,7 +127,9 @@ class SingleInvoices extends Component
                     $single_invoices->type = $this->type;
                     $single_invoices->save();
 
-                    $fund_accounts = FundAccount::where('invoice_id',$this->single_invoice_id)->first();
+                    // The payment type may have changed (cash <-> credit): keep only the matching ledger row.
+                    PatientAccount::where('invoice_id', $this->single_invoice_id)->delete();
+                    $fund_accounts = FundAccount::where('invoice_id', $this->single_invoice_id)->first() ?? new FundAccount();
                     $fund_accounts->date = date('Y-m-d');
                     $fund_accounts->invoice_id = $single_invoices->id;
                     $fund_accounts->Debit = $single_invoices->total_with_tax;
@@ -146,7 +149,7 @@ class SingleInvoices extends Component
                     $single_invoices->invoice_date = date('Y-m-d');
                     $single_invoices->patient_id = $this->patient_id;
                     $single_invoices->doctor_id = $this->doctor_id;
-                    $single_invoices->section_id = DB::table('section_translations')->where('name', $this->section_id)->first()->section_id;
+                    $single_invoices->section_id = Doctor::findOrFail($this->doctor_id)->section_id;
                     $single_invoices->Service_id = $this->Service_id;
                     $single_invoices->price = $this->price;
                     $single_invoices->discount_value = $this->discount_value;
@@ -173,15 +176,11 @@ class SingleInvoices extends Component
                     if ($appointment_info) {
                         $appointment = Appointment::find($appointment_info->id);
                         $appointment->update([
-                            'type' => trans('AdminSb.appointment_status_completed')
+                            'type' => Appointment::STATUS_COMPLETED
                         ]);
                     }
 
-                    $notifications = new Notification();
-                    $notifications->user_id = $this->doctor_id;
-                    $patient = Patient::find($this->patient_id);
-                    $notifications->message = trans('AdminSb.new_examination_notification') . $patient->name;
-                    $notifications->save();
+                    Notification::send(Doctor::findOrFail($this->doctor_id), trans('AdminSb.new_examination_notification', ['patient_name' => $patient->name]));
 
 
                     $data=[
@@ -219,7 +218,7 @@ class SingleInvoices extends Component
                     $single_invoices->invoice_date = date('Y-m-d');
                     $single_invoices->patient_id = $this->patient_id;
                     $single_invoices->doctor_id = $this->doctor_id;
-                    $single_invoices->section_id = DB::table('section_translations')->where('name', $this->section_id)->first()->section_id;
+                    $single_invoices->section_id = Doctor::findOrFail($this->doctor_id)->section_id;
                     $single_invoices->Service_id = $this->Service_id;
                     $single_invoices->price = $this->price;
                     $single_invoices->discount_value = $this->discount_value;
@@ -232,7 +231,9 @@ class SingleInvoices extends Component
                     $single_invoices->save();
 
 
-                    $patient_accounts = PatientAccount::where('invoice_id',$this->single_invoice_id)->first();
+                    // The payment type may have changed (cash <-> credit): keep only the matching ledger row.
+                    FundAccount::where('invoice_id', $this->single_invoice_id)->delete();
+                    $patient_accounts = PatientAccount::where('invoice_id', $this->single_invoice_id)->first() ?? new PatientAccount();
                     $patient_accounts->date = date('Y-m-d');
                     $patient_accounts->invoice_id = $single_invoices->id;
                     $patient_accounts->patient_id = $single_invoices->patient_id;
@@ -252,7 +253,7 @@ class SingleInvoices extends Component
                     $single_invoices->invoice_date = date('Y-m-d');
                     $single_invoices->patient_id = $this->patient_id;
                     $single_invoices->doctor_id = $this->doctor_id;
-                    $single_invoices->section_id = DB::table('section_translations')->where('name', $this->section_id)->first()->section_id;
+                    $single_invoices->section_id = Doctor::findOrFail($this->doctor_id)->section_id;
                     $single_invoices->Service_id = $this->Service_id;
                     $single_invoices->price = $this->price;
                     $single_invoices->discount_value = $this->discount_value;
@@ -280,7 +281,7 @@ class SingleInvoices extends Component
                     if ($appointment_info) {
                         $appointment = Appointment::find($appointment_info->id);
                         $appointment->update([
-                            'type' => trans('AdminSb.appointment_status_completed')
+                            'type' => Appointment::STATUS_COMPLETED
                         ]);
                     }
                 }

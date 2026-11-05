@@ -34,6 +34,7 @@ class YourCustomDbChannel
         try {
             CustomNotificationModel::create([
                 'user_id' => $notifiable->id,
+                'user_type' => get_class($notifiable),
                 'message' => $notificationText,
                 'reader_status' => false,
 

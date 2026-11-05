@@ -1,7 +1,7 @@
 @extends('Dashboard.layouts.master')
 @section('css')
     <!-- Internal Select2 css -->
-    <link href="{{URL::asset('dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
+    <link href="{{URL::asset('Dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
     <link href="{{URL::asset('Dashboard/plugins/select2/css/select2.min.css')}}" rel="stylesheet">
 @endsection
 
@@ -65,7 +65,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-main-primary pd-x-30 mg-r-5 mg-t-5">{{ trans('Doctors.submit') }}</button>
+                            <button type="submit" class="btn btn-main-primary pd-x-30 mg-r-5 mg-t-5">{{ trans('doctors.submit') }}</button>
                         </div>
                     </form>
                 </div>
@@ -81,7 +81,7 @@
 @section('js')
 
     <!--Internal  Notify js -->
-    <script src="{{URL::asset('dashboard/plugins/notify/js/notifIt.js')}}"></script>
+    <script src="{{URL::asset('Dashboard/plugins/notify/js/notifIt.js')}}"></script>
     <script src="{{URL::asset('/plugins/notify/js/notifit-custom.js')}}"></script>
 
     <!--Internal  Datepicker js -->

@@ -85,7 +85,6 @@ Route::group(
 
             Route::patch('/appointments/{appointment}/cancel-by-patient', [PatientController::class, 'cancelAppointmentByPatient'])->name('appointments.cancelByPatient');
 
-            Route::view('dashboard', 'livewire.dashboard.patient-appointment-form')->name('patient-appointment-form');
         });
 
 

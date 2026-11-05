@@ -5,7 +5,7 @@
     @parent
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     <!--  Owl-carousel css-->
     <link href="{{ URL::asset('Dashboard/plugins/owl-carousel/owl.carousel.css') }}" rel="stylesheet" />
     <!-- Maps css -->
@@ -227,7 +227,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="{{-- route('pharmacy_employee.medications.low_stock') --}}" class="card-link">{{ trans('phrE.view_details') }} <i
+                <a href="{{ route('pharmacy_employee.medications.search', ['stock_status_filter' => 'low_stock']) }}" class="card-link">{{ trans('phrE.view_details') }} <i
                         class="fas fa-arrow-circle-left"></i></a>
             </div>
         </div>
@@ -257,7 +257,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="{{-- route('pharmacy_employee.medications.soon_to_expire') --}}" class="card-link">{{ trans('phrE.view_details') }} <i
+                <a href="{{ route('pharmacy_employee.medications.search', ['expiry_status_filter' => 'expired_soon']) }}" class="card-link">{{ trans('phrE.view_details') }} <i
                         class="fas fa-arrow-circle-left"></i></a>
             </div>
         </div>
@@ -376,8 +376,8 @@
 @section('js')
     @parent
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.40.0/dist/apexcharts.min.js"></script>
     {{-- قم بتضمين ملفات JS الأخرى من قالبك إذا كانت ضرورية لـ compositeline (عادةً flot أو peity) --}}
     {{-- <script src="{{URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.js')}}"></script> --}}

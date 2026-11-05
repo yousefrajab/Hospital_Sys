@@ -238,7 +238,6 @@
         }
     </style>
     <link href="{{ URL::asset('Dashboard/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('Dashboard/plugins/neomorphic-ui/neomorphic.css') }}" rel="stylesheet">
 
 @endsection
 
@@ -420,7 +419,6 @@
 
 @section('js')
     <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.min.js') }}"></script>
-    <script src="{{ URL::asset('Dashboard/plugins/neomorphic-ui/neomorphic.js') }}"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Flatpickr -->

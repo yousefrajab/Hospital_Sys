@@ -218,7 +218,14 @@ class PharmacyEmployeePrescriptionController extends Controller
                     continue; // تجاهل هذا البند إذا كان غير صالح
                 }
 
-                // (اختياري) يمكنك إضافة عمود 'quantity_dispensed_so_far' في prescription_items وتحديثه
+                // Never hand out more than what is still owed on this item.
+                if ($prescriptionItem->quantity_prescribed !== null) {
+                    $remaining = max(0, (int) $prescriptionItem->quantity_prescribed - (int) $prescriptionItem->quantity_dispensed);
+                    if ($dispensedQuantity > $remaining) {
+                        DB::rollBack();
+                        return redirect()->back()->withInput()->with('error', "الكمية المتبقية للصرف من " . $prescriptionItem->medication->name . " هي {$remaining} فقط.");
+                    }
+                }
 
                 if ($dispensedQuantity > 0) {
                     if (empty($dispensedItemData['pharmacy_stock_id'])) {
@@ -238,6 +245,7 @@ class PharmacyEmployeePrescriptionController extends Controller
 
                     // تحديث كمية المخزون
                     $stock->decrement('quantity_on_hand', $dispensedQuantity);
+                    $prescriptionItem->increment('quantity_dispensed', $dispensedQuantity);
                     Log::info("Stock ID {$stock->id} (Med: {$stock->medication->name}) decremented by {$dispensedQuantity}. New QOH: {$stock->quantity_on_hand}");
 
                     // (متقدم) تسجيل في جدول dispensed_items
@@ -245,17 +253,23 @@ class PharmacyEmployeePrescriptionController extends Controller
                 }
 
                 // تحديث حالة بند الوصفة (مثال بسيط)
-                if ($dispensedQuantity >= ($prescriptionItem->quantity_prescribed ?? $dispensedQuantity)) { // إذا كانت الكمية الموصوفة غير محددة، افترض أن ما صرف هو المطلوب
+                $dispensedSoFar = (int) $prescriptionItem->quantity_dispensed;
+                if ($prescriptionItem->quantity_prescribed === null ? $dispensedSoFar > 0 : $dispensedSoFar >= $prescriptionItem->quantity_prescribed) { // إذا كانت الكمية الموصوفة غير محددة، افترض أن ما صرف هو المطلوب
                     $fullyDispensedItemsCount++;
-                } elseif ($dispensedQuantity > 0) {
+                } elseif ($dispensedSoFar > 0) {
                     $partiallyDispensedItemsCount++;
                 }
             }
 
             // تحديث حالة الوصفة الرئيسية
-            if ($fullyDispensedItemsCount === $totalItems) {
+            // Status comes from every item of the prescription, including ones dispensed in earlier visits.
+            $items = $prescription->items()->get();
+            $itemDone = fn($item) => $item->quantity_prescribed === null
+                ? $item->quantity_dispensed > 0
+                : $item->quantity_dispensed >= $item->quantity_prescribed;
+            if ($items->isNotEmpty() && $items->every($itemDone)) {
                 $prescription->status = Prescription::STATUS_DISPENSED;
-            } elseif ($fullyDispensedItemsCount > 0 || $partiallyDispensedItemsCount > 0) {
+            } elseif ($items->contains(fn($item) => $item->quantity_dispensed > 0)) {
                 $prescription->status = Prescription::STATUS_PARTIALLY_DISPENSED;
             } else {
                 // لم يتم صرف أي شيء، ربما تبقى الحالة كما هي أو تنتقل لـ on_hold
@@ -331,7 +345,7 @@ class PharmacyEmployeePrescriptionController extends Controller
 
         $query = Prescription::where('status', Prescription::STATUS_ON_HOLD)
             // يمكنك إضافة فلتر بالمستشفى/الفرع إذا كان نظامك يدعم ذلك
-            ->with(['patient:id,name', 'doctor:id,name'])
+            ->with(['patient:id', 'doctor:id'])
             ->orderBy('updated_at', 'desc'); // الأحدث تعديلاً (تاريخ وضعها قيد الانتظار)
 
         // --- الفلاتر (مشابهة لدالة index) ---

@@ -498,7 +498,6 @@
 @section('js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.min.js') }}"></script>
-    <script src="{{ URL::asset('Dashboard/plugins/neomorphic-ui/neomorphic.js') }}"></script>
 
     <script>
         // تحميل الصورة المعاينة

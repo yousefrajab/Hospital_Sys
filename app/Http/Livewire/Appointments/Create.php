@@ -57,8 +57,9 @@ class Create extends Component
         $this->sections = Section::all();
         $this->doctors = collect();
 
-        if (Auth::check()) {
-            $user = Auth::user();
+        // Livewire AJAX requests use the default (web) guard, so the patient guard is always named explicitly.
+        if (Auth::guard('patient')->check()) {
+            $user = Auth::guard('patient')->user();
             $this->form = [
                 'name' => $user->name,
                 'email' => $user->email,
@@ -198,7 +199,7 @@ class Create extends Component
         // 2. جلب المواعيد المحجوزة مسبقاً لهذا الطبيب في هذا اليوم
         $bookedAppointmentsTimes = Appointment::where('doctor_id', $this->doctor)
             ->whereDate('appointment', $this->selected_date)
-            // ->where('type', '!=', 'ملغي') // يمكن استثناء أنواع معينة إذا لزم الأمر
+            ->where('type', '!=', Appointment::STATUS_CANCELLED)
             ->pluck('appointment') // جلب كائنات Carbon
             ->map(function ($datetime) {
                 return $datetime->format('H:i'); // تحويل لصيغة H:i
@@ -321,6 +322,7 @@ class Create extends Component
         // أ. هل الوقت لا يزال متاحاً (لم يحجزه أحد آخر في هذه اللحظة)؟
         $isSlotStillAvailable = !Appointment::where('doctor_id', $this->doctor)
             ->where('appointment', $fullDateTime)
+            ->where('type', '!=', Appointment::STATUS_CANCELLED)
             ->exists();
 
         if (!$isSlotStillAvailable) {
@@ -337,6 +339,7 @@ class Create extends Component
         $doctorModel = Doctor::find($this->doctor);
         $dailyAppointmentCount = Appointment::where('doctor_id', $this->doctor)
             ->whereDate('appointment', $this->selected_date)
+            ->where('type', '!=', Appointment::STATUS_CANCELLED)
             ->count();
 
         if ($doctorModel && $doctorModel->number_of_statements > 0 && $dailyAppointmentCount >= $doctorModel->number_of_statements) {
@@ -351,7 +354,7 @@ class Create extends Component
             Appointment::create([
                 'doctor_id' => $this->doctor,
                 'section_id' => $this->section,
-                'patient_id' => Auth::id(), // معرّف المستخدم المسجل دخوله (إذا كان ضرورياً)
+                'patient_id' => Auth::guard('patient')->id(),
                 'name' => $this->form['name'],
                 'email' => $this->form['email'],
                 'phone' => $this->form['Phone'],
@@ -400,7 +403,7 @@ class Create extends Component
 
         // تحسين: جلب عدد المواعيد المحجوزة لكل يوم ضمن النطاق مرة واحدة
         $dailyAppointmentCounts = Appointment::where('doctor_id', $doctorId)
-            // ->where('type', '!=', 'ملغي') // حسب منطق العمل
+            ->where('type', '!=', Appointment::STATUS_CANCELLED)
             ->whereBetween('appointment', [$startDate, $endDate->endOfDay()])
             ->select(DB::raw('DATE(appointment) as appointment_date'), DB::raw('count(*) as count'))
             ->groupBy('appointment_date')

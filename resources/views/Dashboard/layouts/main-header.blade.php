@@ -95,82 +95,29 @@
                     <div class="dropdown-menu">
                         <div class="menu-header-content bg-primary text-right">
                             <div class="d-flex">
-                                <h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">Messages</h6>
+                                <h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">{{ trans('AdminSb.header_messages') }}</h6>
                                 <span class="badge badge-pill badge-warning mr-auto my-auto float-left">Mark All
                                     Read</span>
                             </div>
-                            <p class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 ">You have 4 unread
-                                messages</p>
+                            <p class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 ">{{ trans('AdminSb.header_unread_messages', ['count' => $unreadMessagesForHeader ?? 0]) }}</p>
                         </div>
                         <div class="main-message-list chat-scroll">
-                            <a href="#" class="p-3 d-flex border-bottom">
-                                <div class="  drop-img  cover-image  "
-                                    data-image-src="{{ URL::asset('Dashboard/img/faces/3.jpg') }}">
-                                    <span class="avatar-status bg-teal"></span>
-                                </div>
-                                <div class="wd-90p">
-                                    <div class="d-flex">
-                                        <h5 class="mb-1 name">Petey Cruiser</h5>
+                            @forelse ($latestMessagesForHeader ?? [] as $headerMessage)
+                                <a href="{{ $chatRouteForHeader ?? '#' }}" class="p-3 d-flex border-bottom">
+                                    <div class="wd-90p">
+                                        <div class="d-flex">
+                                            <h5 class="mb-1 name">{{ $headerMessage->sender_display_name }}</h5>
+                                        </div>
+                                        <p class="mb-0 desc">{{ \Illuminate\Support\Str::limit($headerMessage->body, 60) }}</p>
+                                        <p class="time mb-0 text-left float-right mr-2 mt-2">{{ $headerMessage->created_at->diffForHumans() }}</p>
                                     </div>
-                                    <p class="mb-0 desc">I'm sorry but i'm not sure how to help you with that......</p>
-                                    <p class="time mb-0 text-left float-right mr-2 mt-2">Mar 15 3:55 PM</p>
-                                </div>
-                            </a>
-                            <a href="#" class="p-3 d-flex border-bottom">
-                                <div class="drop-img cover-image"
-                                    data-image-src="{{ URL::asset('Dashboard/img/faces/2.jpg') }}">
-                                    <span class="avatar-status bg-teal"></span>
-                                </div>
-                                <div class="wd-90p">
-                                    <div class="d-flex">
-                                        <h5 class="mb-1 name">Jimmy Changa</h5>
-                                    </div>
-                                    <p class="mb-0 desc">All set ! Now, time to get to you now......</p>
-                                    <p class="time mb-0 text-left float-right mr-2 mt-2">Mar 06 01:12 AM</p>
-                                </div>
-                            </a>
-                            <a href="#" class="p-3 d-flex border-bottom">
-                                <div class="drop-img cover-image"
-                                    data-image-src="{{ URL::asset('Dashboard/img/faces/9.jpg') }}">
-                                    <span class="avatar-status bg-teal"></span>
-                                </div>
-                                <div class="wd-90p">
-                                    <div class="d-flex">
-                                        <h5 class="mb-1 name">Graham Cracker</h5>
-                                    </div>
-                                    <p class="mb-0 desc">Are you ready to pickup your Delivery...</p>
-                                    <p class="time mb-0 text-left float-right mr-2 mt-2">Feb 25 10:35 AM</p>
-                                </div>
-                            </a>
-                            <a href="#" class="p-3 d-flex border-bottom">
-                                <div class="drop-img cover-image"
-                                    data-image-src="{{ URL::asset('Dashboard/img/faces/12.jpg') }}">
-                                    <span class="avatar-status bg-teal"></span>
-                                </div>
-                                <div class="wd-90p">
-                                    <div class="d-flex">
-                                        <h5 class="mb-1 name">Donatella Nobatti</h5>
-                                    </div>
-                                    <p class="mb-0 desc">Here are some products ...</p>
-                                    <p class="time mb-0 text-left float-right mr-2 mt-2">Feb 12 05:12 PM</p>
-                                </div>
-                            </a>
-                            <a href="#" class="p-3 d-flex border-bottom">
-                                <div class="drop-img cover-image"
-                                    data-image-src="{{ URL::asset('Dashboard/img/faces/5.jpg') }}">
-                                    <span class="avatar-status bg-teal"></span>
-                                </div>
-                                <div class="wd-90p">
-                                    <div class="d-flex">
-                                        <h5 class="mb-1 name">Anne Fibbiyon</h5>
-                                    </div>
-                                    <p class="mb-0 desc">I'm sorry but i'm not sure how...</p>
-                                    <p class="time mb-0 text-left float-right mr-2 mt-2">Jan 29 03:16 PM</p>
-                                </div>
-                            </a>
+                                </a>
+                            @empty
+                                <p class="p-3 mb-0 text-muted text-center">{{ trans('AdminSb.header_no_messages') }}</p>
+                            @endforelse
                         </div>
                         <div class="text-center dropdown-footer">
-                            <a href="javascript:void(0)">VIEW ALL</a>
+                            <a href="{{ $chatRouteForHeader ?? 'javascript:void(0)' }}">{{ trans('AdminSb.header_view_all') }}</a>
                         </div>
                     </div>
                 </div>
@@ -186,13 +133,13 @@
                     <div class="dropdown-menu dropdown-notifications">
                         <div class="menu-header-content bg-primary text-right">
                             <div class="d-flex">
-                                <h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">الاشعارات</h6>
+                                <h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">{{ trans('AdminSb.header_notifications') }}</h6>
                                 <span class="badge badge-pill badge-warning mr-auto my-auto float-left">Mark All
                                     Read</span>
                             </div>
-                            <p data-count="{{ App\Models\Notification::CountNotification(auth()->user())->count() }}"
+                            <p data-count="{{ $generalNotificationsCountForHeader ?? 0 }}"
                                 class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 notif-count">
-                                {{ App\Models\Notification::CountNotification(auth()->user())->count() }}</p>
+                                {{ $generalNotificationsCountForHeader ?? 0 }}</p>
                         </div>
                         <div class="main-notification-list Notification-scroll">
 
@@ -211,14 +158,14 @@
                                 </a>
                             </div>
 
-                            @foreach (App\Models\Notification::where('user_id', auth()->user())->where('reader_status', 0)->get() as $notification)
+                            @foreach ($latestGeneralNotificationsForHeader ?? [] as $notification)
                                 <a class="d-flex p-3 border-bottom" href="#">
                                     <div class="notifyimg bg-pink">
                                         <i class="la la-file-alt text-white"></i>
                                     </div>
                                     <div class="mr-3">
                                         <h5 class="notification-label mb-1">{{ $notification->message }}</h5>
-                                        <div class="notification-subtext">{{ $notification->created_at }}</div>
+                                        <div class="notification-subtext">{{ $notification->created_at->diffForHumans() }}</div>
                                     </div>
                                     <div class="mr-auto">
                                         <i class="las la-angle-left text-left text-muted"></i>
@@ -227,7 +174,7 @@
                             @endforeach
                         </div>
                         <div class="dropdown-footer">
-                            <a href="javascript:void(0)">VIEW ALL</a>
+                            <a href="javascript:void(0)">{{ trans('AdminSb.header_view_all') }}</a>
                         </div>
                     </div>
                 </div>

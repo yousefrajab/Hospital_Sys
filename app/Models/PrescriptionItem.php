@@ -17,6 +17,7 @@ class PrescriptionItem extends Model
         'duration',
         'route_of_administration',
         'quantity_prescribed',
+        'quantity_dispensed',
         'instructions_for_patient',
         'refills_allowed', // عدد مرات إعادة الصرف المسموح بها لهذا البند
         'refills_done',    // عدد مرات إعادة الصرف التي تمت لهذا البند
@@ -27,6 +28,7 @@ class PrescriptionItem extends Model
         'is_prn' => 'boolean',
         'refills_allowed' => 'integer',
         'refills_done' => 'integer',
+        'quantity_dispensed' => 'integer',
         'quantity_prescribed' => 'decimal:2', // أو integer حسب ما تخزن
     ];
 

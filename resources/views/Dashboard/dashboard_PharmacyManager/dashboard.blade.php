@@ -5,7 +5,7 @@
     @parent
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="{{ asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet">
+    <link href="{{ asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/apexcharts@3.40.0/dist/apexcharts.css" rel="stylesheet">
     <style>
         :root {
@@ -354,8 +354,8 @@
 @section('js')
     @parent
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="{{ asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ asset('dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         $(document).ready(function() {

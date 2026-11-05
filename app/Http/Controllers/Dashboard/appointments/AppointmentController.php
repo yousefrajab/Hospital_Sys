@@ -32,6 +32,7 @@ class AppointmentController extends Controller
             ->orderBy('appointment', 'asc');
 
         if ($request->filled('search_pending')) {
+            $this->applySearch($query, $request->search_pending);
         }
 
         $appointments = $query->paginate(config('pagination.admin_pending', 10))->appends($request->query());
@@ -51,11 +52,27 @@ class AppointmentController extends Controller
             ->orderBy('appointment', 'asc');
 
         if ($request->filled('search_confirmed')) {
+            $this->applySearch($query, $request->search_confirmed);
         }
 
         $appointments = $query->paginate(config('pagination.admin_confirmed', 10))->appends($request->query());
 
         return view('Dashboard.appointments.index2', compact('appointments', 'request'));
+    }
+
+    /**
+     * Search by the name/email/phone written on the appointment, the patient's or the doctor's (translated) name.
+     * patients/doctors have no `name` column — names live in the translation tables.
+     */
+    private function applySearch($query, string $term): void
+    {
+        $query->where(function ($q) use ($term) {
+            $q->where('appointments.name', 'like', "%{$term}%")
+                ->orWhere('appointments.email', 'like', "%{$term}%")
+                ->orWhere('appointments.phone', 'like', "%{$term}%")
+                ->orWhereHas('patient', fn($pq) => $pq->whereTranslationLike('name', "%{$term}%"))
+                ->orWhereHas('doctor', fn($dq) => $dq->whereTranslationLike('name', "%{$term}%"));
+        });
     }
 
     public function indexCompleted()
@@ -103,14 +120,7 @@ class AppointmentController extends Controller
             ->orderBy('appointment', 'asc');
 
         if ($request->filled('search_lapsed')) {
-            $searchTerm = $request->search_lapsed;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->whereHas('patient', fn($pq) => $pq->where('name', 'like', "%{$searchTerm}%")
-                    ->orWhereTranslationLike('name', "%{$searchTerm}%"))
-                    ->orWhereHas('doctor', fn($dq) => $dq->where('name', 'like', "%{$searchTerm}%")
-                        ->orWhereTranslationLike('name', "%{$searchTerm}%"))
-                    ->orWhere('appointments.name', 'like', "%{$searchTerm}%");
-            });
+            $this->applySearch($query, $request->search_lapsed);
         }
         if ($request->filled('date_lapsed_filter')) {
             try {
@@ -208,7 +218,7 @@ class AppointmentController extends Controller
                 session()->flash('add', 'تم تأكيد الموعد بنجاح وإرسال الإشعارات.');
             }
 
-            return redirect()->route('appointments.index');
+            return redirect()->route('admin.appointments.index');
 
         } catch (ModelNotFoundException $e) {
             Log::error("Appointment not found for approval. ID: {$id}");
@@ -222,8 +232,8 @@ class AppointmentController extends Controller
     public function adminCancelAppointment(Request $request, Appointment $appointment)
     {
         Log::info("Admin attempting to cancel appointment ID: {$appointment->id}");
-        if (in_array($appointment->type, ['ملغي', 'منتهي'])) { /* ... */
-            return redirect()->back()->with('error', '...');
+        if (in_array($appointment->type, ['ملغي', 'منتهي'])) {
+            return redirect()->back()->with('error', 'لا يمكن إلغاء موعد ملغي أو منتهي.');
         }
 
         $cancelReason = $request->input('cancel_reason', 'تم الإلغاء من قبل الإدارة لأسباب ادارية');
@@ -235,9 +245,11 @@ class AppointmentController extends Controller
             $this->sendAdminCancellationNotifications($appointment, $cancelReason);
 
             session()->flash('success', 'تم إلغاء الموعد بنجاح وإرسال الإشعارات.');
-            return redirect()->route('appointments.index2');
+            return redirect()->route('admin.appointments.index2');
 
         } catch (\Exception $e) {
+            Log::error("Admin cancel failed for appointment ID {$appointment->id}: " . $e->getMessage());
+            return redirect()->back()->with('error', 'حدث خطأ أثناء إلغاء الموعد.');
         }
     }
     public function destroy($id)

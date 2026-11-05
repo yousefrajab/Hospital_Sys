@@ -11,7 +11,7 @@ class insuranceRepository implements insuranceRepositoryInterface
 
     public function index()
     {
-        $insurances = insurance::all();
+        $insurances = Insurance::all();
         return view('Dashboard.insurance.index', compact('insurances'));
     }
 
@@ -23,7 +23,7 @@ class insuranceRepository implements insuranceRepositoryInterface
     public function store($request)
     {
         try {
-            $insurances = new insurance();
+            $insurances = new Insurance();
             $insurances->insurance_code = $request->insurance_code;
             $insurances->discount_percentage = $request->discount_percentage;
             $insurances->Company_rate = $request->Company_rate;
@@ -44,7 +44,7 @@ class insuranceRepository implements insuranceRepositoryInterface
 
     public function edit($id)
     {
-        $insurances = insurance::findorfail($id);
+        $insurances = Insurance::findorfail($id);
         return view('Dashboard.insurance.edit', compact('insurances'));
     }
 
@@ -55,7 +55,7 @@ class insuranceRepository implements insuranceRepositoryInterface
         else
             $request->request->add(['status' => 1]);
 
-        $insurances = insurance::findOrFail($request->id);
+        $insurances = Insurance::findOrFail($request->id);
 
         $insurances->update($request->all());
 
@@ -65,14 +65,14 @@ class insuranceRepository implements insuranceRepositoryInterface
         $insurances->save();
 
         session()->flash('edit');
-        return redirect('insurance');
+        return redirect()->route('admin.insurance.index');
     }
 
     public function destroy($request)
     {
-        insurance::destroy($request->id);
+        Insurance::destroy($request->id);
         session()->flash('delete');
-        return redirect('insurance');
+        return redirect()->route('admin.insurance.index');
     }
 
 }

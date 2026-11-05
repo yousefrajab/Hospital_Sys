@@ -44,7 +44,8 @@ class VitalSignController extends Controller
         try {
             $vitalSign = new VitalSign($request->validated()); // استخدم validated()
             $vitalSign->patient_admission_id = $patientAdmission->id;
-            $vitalSign->recorded_by_user_id = Auth::id();
+            // recorded_by_user_id references `users`; readings are entered by admins (another table), so it stays empty.
+            $vitalSign->recorded_by_user_id = null;
             $vitalSign->save();
 
             Log::info("Vital signs recorded for admission ID: {$patientAdmission->id} by user ID: " . Auth::id());

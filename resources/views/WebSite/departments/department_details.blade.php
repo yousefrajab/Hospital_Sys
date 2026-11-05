@@ -555,9 +555,9 @@
                                     {{ $settings['hospital_phone'] ?? '+970567077179' }}</a>
                             </div>
                             <div class="contact-info-item">
-                                <a href="mailto:{{ $settings['hospital_email'] ?? 'momensarsour5@gmail.com' }}"><i
+                                <a href="mailto:{{ $settings['hospital_email'] ?? config('hospital.email') }}"><i
                                         class="fas fa-envelope"></i>
-                                    {{ $settings['hospital_email'] ?? 'momensarsour5@gmail.com' }}</a>
+                                    {{ $settings['hospital_email'] ?? config('hospital.email') }}</a>
                             </div>
                             {{-- <a href="{{route('contact')}}" class="btn btn-light btn-sm mt-3">{{ trans('patients.full_contact_page') }}</a> --}}
                         </div>

@@ -769,6 +769,15 @@
         'testimonial_rejected_successfully' => 'The comment has been rejected.',
         'fees_for_service' => 'Fees for service: ',
         'fees_for_package' => 'Fees for package: ',
+        'receipt_default_description' => 'Receipt voucher',
+        'header_messages' => 'Messages',
+        'header_unread_messages' => 'You have :count unread messages',
+        'header_no_messages' => 'No new messages',
+        'header_notifications' => 'Notifications',
+        'header_view_all' => 'View all',
+        'save' => 'Save',
+        'add_testimonial' => 'Add testimonial',
+        'edit_testimonial' => 'Edit testimonial',
         'receipt_saved_successfully' => 'Receipt saved successfully.',
         'receipt_updated_successfully' => 'Receipt updated successfully.',
         'receipt_id_not_provided' => 'Receipt ID not provided for deletion.',
@@ -843,4 +852,16 @@
 
 
 
-    );
+    
+    // added: keys used in views but previously undefined
+    'Edit Profile' => 'Edit Profile',
+    'Inactive' => 'Inactive',
+    'Total' => 'Total',
+    'admission_datetime' => 'Admission date & time',
+    'back_to_list' => 'Back to list',
+    'bed_room_department' => 'Bed / Room / Department',
+    'external website' => 'External website',
+    'medical_record_entry' => 'Medical record entry',
+    'patient_record' => 'Patient record',
+    'save_changes' => 'Save changes',
+);

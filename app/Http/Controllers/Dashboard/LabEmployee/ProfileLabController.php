@@ -62,7 +62,7 @@ class ProfileLabController extends Controller
     {
         $employee = Auth::guard('laboratorie_employee')->user();
         if (!$employee) {
-            return redirect()->route('laboratorie_employee.login.form');
+            return redirect()->route('login');
         }
         $employee->load('image');
         return view('Dashboard.laboratorie_employee.profile.show', compact('employee'));

@@ -124,7 +124,7 @@ class DoctorRepository implements DoctorRepositoryInterface
 
             if ($request->filename) {
 
-                $this->Delete_attachment('upload_image', 'doctors/' . $request->filename, $request->id, $request->filename);
+                $this->Delete_attachment('upload_image', 'doctors/' . $request->filename, (int) $request->id, Doctor::class, $request->filename);
             }
             Doctor::destroy($request->id);
             session()->flash('delete');
@@ -141,7 +141,7 @@ class DoctorRepository implements DoctorRepositoryInterface
             foreach ($delete_select_id as $ids_doctors) {
                 $doctor = Doctor::findorfail($ids_doctors);
                 if ($doctor->image) {
-                    $this->Delete_attachment('upload_image', 'doctors/' . $doctor->image->filename, $ids_doctors, $doctor->image->filename);
+                    $this->Delete_attachment('upload_image', 'doctors/' . $doctor->image->filename, (int) $ids_doctors, Doctor::class, $doctor->image->filename);
                 }
             }
 

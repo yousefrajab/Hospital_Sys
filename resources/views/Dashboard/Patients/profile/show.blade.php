@@ -378,8 +378,8 @@
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content">
-            @if (Route::has('patient.profile.edit'))
-                <a href="{{ route('patient.profile.edit') }}" class="edit-profile-action-button">
+            @if (Route::has('profile.edit'))
+                <a href="{{ route('profile.edit') }}" class="edit-profile-action-button">
                     <i class="fas fa-user-pen"></i> {{ trans('patients.edit_my_data') }}
                 </a>
             @endif
@@ -543,7 +543,7 @@
                             </div>
                         @endif
 
-                        {{-- @if (Route::has('patient.profile.edit')) --}}
+                        {{-- @if (Route::has('profile.edit')) --}}
                             <div class="text-center mt-5 no-print">
                                 <a href="{{ route('profile.edit') }}"
                                     class="btn edit-profile-action-button px-5 py-3">

@@ -122,19 +122,6 @@ class SendMessage extends Component
             Log::error("[SendMessage] Failed to send Laravel Notification: " . $e->getMessage());
         }
 
-        // 2. *** إنشاء سجل في جدول notifications المخصص لك للمستقبِل ***
-        try {
-            CustomNotification::create([
-                'user_id' => $receiverObject->id, // ID المستقبِل
-                'message' => "رسالة جديدة من {$senderDisplayName}: \"" . Str::limit($message->body, 45) . "\"",
-                'reader_status' => false,
-                // 'data' => json_encode(['conversation_id' => $message->conversation_id, 'message_id' => $message->id, 'link' => ...])
-            ]);
-            Log::info("[SendMessage] Custom App\\Models\\Notification record CREATED for Receiver ID: {$receiverObject->id} for message ID: {$message->id}.");
-        } catch (\Exception $e) {
-            Log::error("[SendMessage] FAILED to create Custom App\\Models\\Notification for Receiver ID: {$receiverObject->id}. Error: " . $e->getMessage());
-        }
-
         // 3. بث الحدث عبر Echo (إذا كان هذا جزء من نظامك الحالي)
         try {
             if ($senderObject instanceof Patient && $receiverObject instanceof Doctor) {

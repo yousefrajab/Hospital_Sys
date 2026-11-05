@@ -25,7 +25,7 @@ class ProfilePatController extends Controller
         $patient = Auth::guard('patient')->user();
         if (!$patient) {
             Log::warning("ProfilePatController@show: Patient not authenticated for profile view.");
-            return redirect()->route('login.patient'); // أو أي route تسجيل دخول مناسب للمرضى
+            return redirect()->route('login'); // أو أي route تسجيل دخول مناسب للمرضى
         }
 
         // تحميل العلاقات التي قد تحتاجها في صفحة الملف الشخصي أو في توليد نص الـ QR
@@ -61,7 +61,7 @@ class ProfilePatController extends Controller
         // ... يمكنك إضافة المزيد من المعلومات إلى $displayInfoForQr إذا أردت ...
 
         Log::info("ProfilePatController@show: Displaying profile for Patient ID: {$patient->id}");
-        return view('Dashboard.patients.profile.show', compact(
+        return view('Dashboard.Patients.profile.show', compact(
             'patient',
             'qrCodeSvg',
             'displayInfoForQr' // (اختياري)
@@ -77,7 +77,7 @@ class ProfilePatController extends Controller
         if (!$patient) {
             return redirect()->route('login');
         }
-        return view('Dashboard.patients.profile.edit', compact('patient')); // سننشئ هذا الـ view
+        return view('Dashboard.Patients.profile.edit', compact('patient')); // سننشئ هذا الـ view
     }
 
     /**
@@ -133,17 +133,16 @@ class ProfilePatController extends Controller
                         $patient->id,
                         'App\Models\Patient'
                     );
-
-                    $this->verifyAndStoreImage(
-                        $request,
-                        'photo',
-                        'patients',
-                        'upload_image',
-                        $patient->id,
-                        'App\Models\Patient'
-                    );
                 }
                 // رفع الصورة الجديدة
+                $this->verifyAndStoreImage(
+                    $request,
+                    'photo',
+                    'patients',
+                    'upload_image',
+                    $patient->id,
+                    'App\Models\Patient'
+                );
 
             }
 

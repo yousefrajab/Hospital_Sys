@@ -56,8 +56,6 @@ Route::group([
             Route::delete('/{service}', [ServiceManagementController::class, 'destroy'])->name('destroy'); // حذف خدمة (إذا كان هو المنشئ)
 
             // لربط/فصل الخدمات العامة التي لم ينشئها هو
-            Route::post('/attach-existing', [ServiceManagementController::class, 'attachExistingService'])->name('attach_existing');
-            Route::delete('/detach-existing/{service}', [ServiceManagementController::class, 'detachExistingService'])->name('detach_existing');
         });
         //############################# END SERVICES MANAGEMENT BY DOCTOR #################################
 
@@ -96,14 +94,14 @@ Route::group([
 
         //############################# rays route ##########################################
 
-        Route::resource('rays', RayController::class);
+        Route::resource('rays', RayController::class)->only(['store', 'update', 'destroy']);
 
         //############################# end rays route ######################################
 
 
         //############################# Laboratories route ##########################################
 
-        Route::resource('Laboratories', LaboratorieController::class);
+        Route::resource('Laboratories', LaboratorieController::class)->only(['store', 'update', 'destroy']);
         Route::get('show_laboratorie/{id}', [InvoiceController::class, 'showLaboratorie'])->name('show.laboratorie');
 
         //############################# end Laboratories route ######################################

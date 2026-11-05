@@ -935,8 +935,8 @@
     @parent
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     {{-- NotifIt --}}
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

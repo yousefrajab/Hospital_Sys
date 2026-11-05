@@ -34,6 +34,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">{{ trans('AdminSb.comments_list') }}</h4>
+                        <a href="{{ route('admin.testimonials.create') }}" class="btn btn-primary btn-sm">{{ trans('AdminSb.add_testimonial') }}</a>
                     </div><!--end card-header-->
                     <div class="card-body">
                         <div class="table-responsive">
@@ -119,6 +120,9 @@
                                                             {{ trans('AdminSb.approve') }}</button>
                                                     </form>
                                                 @endif
+
+                                                <a href="{{ route('admin.testimonials.edit', $testimonial->id) }}"
+                                                    class="btn btn-sm btn-info">{{ trans('AdminSb.edit') }}</a>
 
                                                 <form action="{{ route('admin.testimonials.destroy', $testimonial->id) }}"
                                                     method="POST" class="d-inline"

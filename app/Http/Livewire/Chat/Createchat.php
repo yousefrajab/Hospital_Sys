@@ -69,20 +69,6 @@ class Createchat extends Component // Patient sees Doctors List
                     $patientSenderAvatar = $currentPatient->image ? asset('Dashboard/img/patients/' . $currentPatient->image->filename) : null; //  مسار صورة المريض
                     $doctorReceiver->notify(new \App\Notifications\NewChatMessageNotification($newMessage, $patientSenderName, $patientSenderAvatar));
                     Log::info("[Createchat] Laravel Notification (NewChatMessageNotification) sent to Doctor ID: {$doctorReceiver->id} for message ID: {$newMessage->id}");
-
-                    // 2. *** إنشاء سجل في جدول notifications المخصص لك للطبيب ***
-                    try {
-                        CustomNotification::create([
-                            'user_id' => $doctorReceiver->id, // ID الطبيب المستقبِل
-                            'message' => "رسالة جديدة من المريض: {$patientSenderName} - \"". Str::limit($newMessage->body, 45) ."\"",
-                            'reader_status' => false, // الإشعار جديد
-                            // يمكنك إضافة 'type' => 'chat_message', 'link' => route('doctor.chat.patients', ['conversation_id' => $conversation->id]) هنا
-                            // إذا كان جدول notifications لديك يدعم هذه الأعمدة
-                        ]);
-                        Log::info("[Createchat] Custom App\\Models\\Notification record CREATED for Doctor ID: {$doctorReceiver->id} for message ID: {$newMessage->id}.");
-                    } catch (\Exception $e) {
-                        Log::error("[Createchat] FAILED to create Custom App\\Models\\Notification for Doctor ID: {$doctorReceiver->id}. Error: " . $e->getMessage());
-                    }
                 }
             }
             // --- نهاية جزء الإشعار ---

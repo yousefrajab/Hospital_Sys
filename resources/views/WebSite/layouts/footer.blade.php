@@ -112,8 +112,8 @@
                                     <li>
                                         <span class="icon flaticon-message"></span>
                                         {{ trans('patients.footer_ask_a_question') }}<br class="mt-3"><br>
-                                        <a href="mailto:momensarsour5@gmail.com"
-                                            style="text-decoration: none; color: inherit;">momensarsour5@gmail.com</a>
+                                        <a href="mailto:{{ config('hospital.email') }}"
+                                            style="text-decoration: none; color: inherit;">{{ config('hospital.email') }}</a>
                                     </li>
                                 </ul>
                             </div>

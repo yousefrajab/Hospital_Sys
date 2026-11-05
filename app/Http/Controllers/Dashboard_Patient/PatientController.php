@@ -232,6 +232,9 @@ class PatientController extends Controller
 
 
         $cancellationWindowHours = config('settings.patient_appointment_cancellation_window_hours', 24);
+        if (Carbon::parse($appointment->appointment)->isPast()) {
+            return response()->json(['message' => 'لا يمكن إلغاء موعد قد فات وقته.'], 422);
+        }
         if (Carbon::parse($appointment->appointment)->isPast() || Carbon::parse($appointment->appointment)->diffInHours(now(), false) < $cancellationWindowHours) {
             if (Carbon::parse($appointment->appointment)->isFuture() && Carbon::parse($appointment->appointment)->diffInHours(now()) < $cancellationWindowHours) {
                 $errorMessage = "لا يمكن إلغاء الموعد قبل أقل من {$cancellationWindowHours} ساعة من وقته المحدد. يرجى التواصل مباشرة مع العيادة إذا لزم الأمر.";
@@ -289,61 +292,7 @@ class PatientController extends Controller
             return response()->json(['message' => 'حدث خطأ غير متوقع أثناء إلغاء الموعد. تم تسجيل الخطأ.'], 500);
         }
     }
-    public function create()
-    {
-        $sections = Section::orderByTranslation('name')->get();
-        $doctors = Doctor::orderByTranslation('name')->get();
-        return view('Dashboard.Patients.appointments.create', compact('sections', 'doctors'));
-    }
 
-    public function store(Request $request)
-    {
-        Log::info('Patient appointment store request received: ', $request->all());
-        $validated = $request->validate([
-            'doctor_id' => 'required|exists:doctors,id',
-            'section_id' => 'required|exists:sections,id',
-            'appointment_date' => 'required|date|after_or_equal:today',
-            'appointment_time' => 'required|date_format:H:i',
-            'notes' => 'nullable|string|max:1000'
-        ], [
-            'doctor_id.required' => 'حقل الطبيب مطلوب.',
-            'section_id.required' => 'حقل القسم مطلوب.',
-            'appointment_date.required' => 'حقل تاريخ الموعد مطلوب.',
-            'appointment_date.after_or_equal' => 'تاريخ الموعد يجب أن يكون اليوم أو في المستقبل.',
-            'appointment_time.required' => 'حقل وقت الموعد مطلوب.',
-            'appointment_time.date_format' => 'صيغة وقت الموعد غير صحيحة (مثال: 14:30).',
-        ]);
-        $patient = Auth::guard('patient')->user();
-
-        try {
-            $appointmentDateTime = Carbon::parse($validated['appointment_date'] . ' ' . $validated['appointment_time']);
-
-            $appointment = Appointment::create([
-                'doctor_id' => $validated['doctor_id'],
-                'section_id' => $validated['section_id'],
-                'patient_id' => $patient->id,
-                'name' => $patient->name,
-                'email' => $patient->email,
-                'phone' => $patient->Phone,
-                'appointment' => $appointmentDateTime,
-                'notes' => $validated['notes'],
-                'type' => Appointment::STATUS_PENDING ?? 'غير مؤكد'
-            ]);
-
-            Log::info("Appointment created with ID: {$appointment->id} for patient {$patient->id} with doctor {$validated['doctor_id']}");
-            // if ($appointment->doctor && $appointment->doctor->email) {
-            //     Mail::to($appointment->doctor->email)->send(new \App\Mail\AppointmentCreated($appointment));
-            // }
-
-            return redirect()->route('patient.appointment.success')
-                ->with('success_message', 'تم إرسال طلب حجز الموعد بنجاح. سيتم التواصل معك للتأكيد قريباً.');
-        } catch (\Exception $e) {
-            Log::error("Error creating appointment for patient {$patient->id}: " . $e->getMessage(), ['trace' => $e->getTraceAsString(), 'request_data' => $request->all()]);
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'حدث خطأ أثناء حجز الموعد: ' . $e->getMessage());
-        }
-    }
 
 
 

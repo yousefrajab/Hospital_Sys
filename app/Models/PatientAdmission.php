@@ -124,6 +124,8 @@ class PatientAdmission extends Model
                     ? Bed::STATUS_OCCUPIED
                     : Bed::STATUS_AVAILABLE;
                 $admission->bed->saveQuietly();
+                // saveQuietly skips Bed's own saved hook, so refresh the room occupancy here.
+                optional($admission->bed->room)->updateOccupancyStatus();
             }
 
             if ($admission->isDirty('bed_id') && $admission->getOriginal('bed_id')) {
@@ -131,6 +133,7 @@ class PatientAdmission extends Model
                 if ($oldBed) {
                     $oldBed->status = Bed::STATUS_AVAILABLE;
                     $oldBed->saveQuietly();
+                    optional($oldBed->room)->updateOccupancyStatus();
                 }
             }
         });
@@ -139,6 +142,7 @@ class PatientAdmission extends Model
             if ($admission->bed) {
                 $admission->bed->status = Bed::STATUS_AVAILABLE;
                 $admission->bed->saveQuietly();
+                optional($admission->bed->room)->updateOccupancyStatus();
             }
         });
     }

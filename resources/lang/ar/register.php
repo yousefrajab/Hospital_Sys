@@ -74,4 +74,8 @@ return array(
     'Medical History Help Text' => 'يرجى تقديم معلومات حول تاريخك الطبي، بما في ذلك أي حالات صحية سابقة أو عمليات جراحية.',
 
 
+
+    // added: keys used in views but previously undefined
+    'We may use cookies to enhance your experience on the system.' => 'قد نستخدم ملفات تعريف الارتباط لتحسين تجربتك في النظام.',
+    'You have the right to access, modify, or request deletion of your data at any time in accordance with applicable procedures.' => 'يحق لك الوصول إلى بياناتك أو تعديلها أو طلب حذفها في أي وقت وفقًا للإجراءات المعمول بها.',
 );

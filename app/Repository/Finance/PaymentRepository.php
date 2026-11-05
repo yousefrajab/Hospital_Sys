@@ -35,13 +35,18 @@ class PaymentRepository implements PaymentRepositoryInterface
 
     public function store($request)
     {
+        $request->validate([
+            'patient_id' => 'required|exists:patients,id',
+            'credit' => 'required|numeric|min:0.01',
+            'description' => 'required|string|max:500',
+        ]);
         DB::beginTransaction();
 
         try {
 
             // store receipt_accounts
             $payment_accounts = new PaymentAccount();
-            $payment_accounts->date =date('y-m-d');
+            $payment_accounts->date =date('Y-m-d');
             $payment_accounts->patient_id = $request->patient_id;
             $payment_accounts->amount = $request->credit;
             $payment_accounts->description = $request->description;
@@ -49,7 +54,7 @@ class PaymentRepository implements PaymentRepositoryInterface
 
             // store fund_accounts
             $fund_accounts = new FundAccount();
-            $fund_accounts->date =date('y-m-d');
+            $fund_accounts->date =date('Y-m-d');
             $fund_accounts->Payment_id = $payment_accounts->id;
             $fund_accounts->credit = $request->credit;
             $fund_accounts->Debit = 0.00;
@@ -57,7 +62,7 @@ class PaymentRepository implements PaymentRepositoryInterface
 
             // store patient_accounts
             $patient_accounts = new PatientAccount();
-            $patient_accounts->date =date('y-m-d');
+            $patient_accounts->date =date('Y-m-d');
             $patient_accounts->patient_id = $request->patient_id;
             $patient_accounts->Payment_id = $payment_accounts->id;
             $patient_accounts->Debit = $request->credit;
@@ -87,29 +92,35 @@ class PaymentRepository implements PaymentRepositoryInterface
 
     public function update($request)
     {
+        $request->validate([
+            'id' => 'required|exists:payment_accounts,id',
+            'patient_id' => 'required|exists:patients,id',
+            'credit' => 'required|numeric|min:0.01',
+            'description' => 'required|string|max:500',
+        ]);
         DB::beginTransaction();
 
         try {
 
             // update receipt_accounts
             $payment_accounts = PaymentAccount::findorfail($request->id);
-            $payment_accounts->date =date('y-m-d');
+            $payment_accounts->date =date('Y-m-d');
             $payment_accounts->patient_id = $request->patient_id;
             $payment_accounts->amount = $request->credit;
             $payment_accounts->description = $request->description;
             $payment_accounts->save();
 
             // update fund_accounts
-            $fund_accounts = FundAccount::where('Payment_id',$payment_accounts->id)->first();
-            $fund_accounts->date =date('y-m-d');
+            $fund_accounts = FundAccount::where('Payment_id',$payment_accounts->id)->first() ?? new FundAccount();
+            $fund_accounts->date =date('Y-m-d');
             $fund_accounts->Payment_id = $payment_accounts->id;
             $fund_accounts->credit = $request->credit;
             $fund_accounts->Debit = 0.00;
             $fund_accounts->save();
 
             // update patient_accounts
-            $patient_accounts = PatientAccount::where('Payment_id',$payment_accounts->id)->first();
-            $patient_accounts->date =date('y-m-d');
+            $patient_accounts = PatientAccount::where('Payment_id',$payment_accounts->id)->first() ?? new PatientAccount();
+            $patient_accounts->date =date('Y-m-d');
             $patient_accounts->patient_id = $request->patient_id;
             $patient_accounts->Payment_id = $payment_accounts->id;
             $patient_accounts->Debit = $request->credit;

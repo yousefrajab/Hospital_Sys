@@ -1,6 +1,6 @@
 @extends('Dashboard.layouts.master')
 @section('css')
-    <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('Dashboard/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
 @endsection
 @section('title', 'تعديل سند قبض')
@@ -123,10 +123,10 @@
     </div>
 @endsection
 @section('js')
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.min.js') }}"></script>
-    <script src="{{ URL::asset('dashboard/js/form-elements.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/js/form-elements.js') }}"></script>
     <script>
         $(document).ready(function() {
             if ($.fn.select2) {

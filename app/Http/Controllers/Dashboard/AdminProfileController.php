@@ -107,7 +107,7 @@ class AdminProfileController extends Controller
         $admin = Auth::guard('admin')->user();
         if (!$admin) {
             // يمكنك توجيه إلى صفحة تسجيل الدخول أو خطأ مخصص
-            return redirect()->route('admin.login.form')->with('error', 'يرجى تسجيل الدخول أولاً.');
+            return redirect()->route('login')->with('error', 'يرجى تسجيل الدخول أولاً.');
         }
         return view('Dashboard.Admin.profile.show', compact('admin'));
     }
@@ -116,7 +116,7 @@ class AdminProfileController extends Controller
     {
         $admin = Auth::guard('admin')->user();
         if (!$admin) {
-            return redirect()->route('admin.login.form')->with('error', 'يرجى تسجيل الدخول أولاً.');
+            return redirect()->route('login')->with('error', 'يرجى تسجيل الدخول أولاً.');
         }
         return view('Dashboard.Admin.profile.edit', compact('admin'));
     }

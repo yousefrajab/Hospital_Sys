@@ -195,8 +195,8 @@
             <a href="{{ route('appointments.upcoming') }}" class="btn btn-outline-success btn-sm me-2" style="border-radius:var(--admin-radius-md);">
                 <i class="fas fa-calendar-check me-1"></i> {{ trans('patients.upcoming_appointments') }}
             </a>
-            @if(Route::has('appointments.book'))
-            <a href="{{ route('appointments.book') }}" class="btn btn-primary btn-sm" style="border-radius:var(--admin-radius-md);">
+            @if(Route::has('patient.appointments.create.form'))
+            <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-primary btn-sm" style="border-radius:var(--admin-radius-md);">
                 <i class="fas fa-plus-circle me-1"></i> {{ trans('patients.request_new_appointment') }}
             </a>
             @endif

@@ -213,7 +213,7 @@
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     {{-- <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.min.js') }}"></script> --}}
-    {{-- <script src="{{ URL::asset('Dashboard/plugins/neomorphic-ui/neomorphic.js') }}"></script> --}}
+    {{----}}
 
     <script>
         // دالة معاينة الصورة (يجب أن تكون متاحة، تأكد من اسمها loadFile)

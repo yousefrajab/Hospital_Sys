@@ -250,8 +250,8 @@
             </div>
         </div>
         <div class="d-flex my-xl-auto right-content align-items-center">
-            @if (Route::has('patient.appointments.past'))
-                <a href="{{ route('patient.appointments.past') }}" class="btn btn-outline-secondary-patient btn-sm me-2">
+            @if (Route::has('appointments.past'))
+                <a href="{{ route('appointments.past') }}" class="btn btn-outline-secondary-patient btn-sm me-2">
                     <i class="fas fa-history me-1"></i> {{ trans('patients.past_appointments') }}
                 </a>
             @endif

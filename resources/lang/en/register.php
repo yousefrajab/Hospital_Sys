@@ -74,4 +74,8 @@ return [
     'Notes Help Text' => 'You can add additional notes about the disease here. This is optional.',
     'Chronic Diseases Section' => 'Chronic Diseases Section',
 
+
+    // added: keys used in views but previously undefined
+    'An integrated system for managing patient records and providing smart healthcare' => 'An integrated system for managing patient records and providing smart healthcare.',
+    'We may use cookies to enhance your experience on the system.' => 'We may use cookies to enhance your experience on the system.',
 ];

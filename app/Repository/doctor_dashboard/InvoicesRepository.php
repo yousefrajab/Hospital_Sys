@@ -35,7 +35,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
         $rays = Ray::findorFail($id);
         if($rays->doctor_id !=auth()->user()->id){
             //abort(404);
-            return redirect()->route('404');
+            abort(403);
         }
         return view('Dashboard.doctor.invoices.view_rays', compact('rays'));
     }
@@ -44,7 +44,7 @@ class InvoicesRepository implements InvoicesRepositoryInterface
          $laboratories = Laboratorie::findorFail($id);
          if($laboratories->doctor_id !=auth()->user()->id){
              //abort(404);
-             return redirect()->route('404');
+             abort(403);
          }
          return view('Dashboard.doctor.invoices.view_laboratories', compact('laboratories'));
      }

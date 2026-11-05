@@ -8,6 +8,7 @@ use App\Models\Section;
 use App\Models\SectionTranslation;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 use App\Interfaces\Sections\SectionRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class SectionRepository implements SectionRepositoryInterface
 {
@@ -36,10 +37,10 @@ class SectionRepository implements SectionRepositoryInterface
         $tr = new GoogleTranslate($otherLang); // نترجم للغة الأخرى
 
         // ترجمة الاسم
-        $translatedName = $tr->translate($request->input('name'));
+        $translatedName = $this->translateOrKeep($tr, $request->input('name'));
 
         // ترجمة الوصف فقط إذا كان موجودًا
-        $translatedDesc = $request->input('description') ? $tr->translate($request->input('description')) : '';
+        $translatedDesc = $request->input('description') ? $this->translateOrKeep($tr, $request->input('description')) : '';
 
         // نحفظ البيانات بلغتين
         Section::create([
@@ -75,10 +76,10 @@ class SectionRepository implements SectionRepositoryInterface
         $translator = new GoogleTranslate($otherLocale);
 
         // ترجمة الاسم
-        $translatedName = $translator->translate($name);
+        $translatedName = $this->translateOrKeep($translator, $name);
 
         // ترجمة الوصف فقط إذا كان موجودًا
-        $translatedDesc = $description ? $translator->translate($description) : '';
+        $translatedDesc = $description ? $this->translateOrKeep($translator, $description) : '';
 
         // تحقق من وجود ترجمة سابقة إذا كانت موجودة، وإذا كانت الترجمة غير دقيقة يمكن للمستخدم تعديلها
         $section->translateOrNew($currentLocale)->name = $name;
@@ -125,6 +126,17 @@ class SectionRepository implements SectionRepositoryInterface
         }
         session()->flash('delete');
         return redirect()->route('admin.Sections.index')->with('success', 'تم حذف القسم بنجاح');
+    }
+
+    // Google Translate needs internet access; when it fails keep the original text instead of failing the save.
+    private function translateOrKeep(GoogleTranslate $translator, string $text): string
+    {
+        try {
+            return $translator->translate($text) ?? $text;
+        } catch (\Throwable $e) {
+            Log::warning('Section auto-translation failed: ' . $e->getMessage());
+            return $text;
+        }
     }
 
     public function show($id)

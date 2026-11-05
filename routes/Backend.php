@@ -66,7 +66,7 @@ Route::group(
 
             //############################# sections route ##########################################
 
-            Route::resource('Sections', SectionController::class);
+            Route::resource('Sections', SectionController::class)->except(['create', 'edit']);
 
             //############################# end sections route ######################################
 
@@ -86,7 +86,7 @@ Route::group(
 
             //############################# sections route ##########################################
 
-            Route::resource('Service', SingleServiceController::class);
+            Route::resource('Service', SingleServiceController::class)->only(['index', 'store', 'update', 'destroy']);
 
             //############################# end sections route ######################################
 
@@ -98,13 +98,13 @@ Route::group(
 
             //############################# insurance route ##########################################
 
-            Route::resource('insurance', InsuranceController::class);
+            Route::resource('insurance', InsuranceController::class)->except(['show']);
 
             //############################# end insurance route ######################################
 
             //############################# Ambulance route ##########################################
 
-            Route::resource('Ambulance', AmbulanceController::class);
+            Route::resource('Ambulance', AmbulanceController::class)->except(['show']);
 
             //############################# end Ambulance route ######################################
 
@@ -142,14 +142,14 @@ Route::group(
 
             //############################# RayEmployee route ##########################################
 
-            Route::resource('ray_employee', RayEmployeeController::class);
+            Route::resource('ray_employee', RayEmployeeController::class)->except(['create', 'show']);
             Route::get('/ray_employee/{id}/edit', [RayEmployeeController::class, 'edit'])->name('ray_employee.edit');
 
             //############################# end RayEmployee route ######################################
 
             //############################# laboratorie_employee route ##########################################
 
-            Route::resource('laboratorie_employee', LaboratorieEmployeeController::class);
+            Route::resource('laboratorie_employee', LaboratorieEmployeeController::class)->except(['create', 'show']);
 
             Route::get('/laboratorie_employee/{id}/edit', [LaboratorieEmployeeController::class, 'edit'])->name('laboratorie_employee.edit');
 
@@ -159,9 +159,9 @@ Route::group(
 
             //############################# single_invoices route ##########################################
 
-            Route::view('group_invoices', 'livewire.Group_invoices.index')->name('group_invoices');
+            Route::view('group_invoices', 'livewire.group_invoices.index')->name('group_invoices');
 
-            Route::view('group_Print_single_invoices', 'livewire.Group_invoices.print')->name('group_Print_single_invoices');
+            Route::view('group_Print_single_invoices', 'livewire.group_invoices.print')->name('group_Print_single_invoices');
 
             //############################# end single_invoices route ######################################
 
@@ -183,7 +183,6 @@ Route::group(
             Route::get('/users-roles', [UserRoleController::class, 'index'])->name('users.roles.index');
 
             Route::get('/users-roles/{role_key}/{id}/edit', [UserRoleController::class, 'editUser'])->name('users.roles.edit');
-            Route::match(['put', 'patch'], '/users-roles/{role_key}/{id}', [UserRoleController::class, 'updateUser'])->name('users.roles.update');
 
             Route::resource('rooms', RoomController::class);
             Route::resource('beds', BedController::class);
@@ -192,13 +191,13 @@ Route::group(
 
             Route::resource('diseases', DiseaseController::class)->names('diseases');
 
-            Route::resource('pharmacy_employee', PharmacyEmployeeController::class);
+            Route::resource('pharmacy_employee', PharmacyEmployeeController::class)->except(['create', 'show']);
             Route::get('/pharmacy_employee/{id}/edit', [PharmacyEmployeeController::class, 'edit'])->name('pharmacy_employee.edit');
 
             Route::resource('medications', MedicationController::class);
 
 
-            Route::resource('pharmacy_manager', PharmacyManagercontroller::class);
+            Route::resource('pharmacy_manager', PharmacyManagercontroller::class)->except(['create', 'show']);
             Route::get('/pharmacy_manager/{id}/edit', [PharmacyManagerController::class, 'edit'])->name('pharmacy_manager.edit');
 
             Route::post('/patient-admissions/{patient_admission}/vital-signs', [VitalSignController::class, 'store'])->name('vital_signs.store');

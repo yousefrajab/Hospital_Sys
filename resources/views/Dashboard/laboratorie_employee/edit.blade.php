@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     {{-- <link href="{{ URL::asset('Dashboard/plugins/select2/css/select2.min.css') }}" rel="stylesheet"> --}} {{-- لا نحتاج Select2 هنا --}}
-    {{-- <link href="{{ URL::asset('Dashboard/plugins/neomorphic-ui/neomorphic.css') }}" rel="stylesheet"> --}} {{-- Neomorphic UI إذا كنت تستخدمه --}}
+    {{----}} {{-- Neomorphic UI إذا كنت تستخدمه --}}
 
     {{-- نسخ الأنماط الممتازة من تصميم الطبيب --}}
     <style>
@@ -526,7 +526,7 @@
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     {{-- <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.min.js') }}"></script> --}}
-    {{-- <script src="{{ URL::asset('Dashboard/plugins/neomorphic-ui/neomorphic.js') }}"></script> --}}
+    {{----}}
 
     <script>
         // دالة معاينة الصورة (يجب أن تكون متاحة، تأكد من اسمها loadFile)

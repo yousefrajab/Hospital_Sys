@@ -49,7 +49,7 @@ class PatientAdmissionController extends Controller
         if ($request->filled('search_patient')) {
             $searchTerm = $request->search_patient;
             $query->whereHas('patient', function ($q) use ($searchTerm) {
-                $q->where('name', 'like', "%{$searchTerm}%") // افترض أن name عمود نصي أو لديك طريقة للبحث في الترجمة
+                $q->whereTranslationLike('name', "%{$searchTerm}%")
                     ->orWhere('national_id', 'like', "%{$searchTerm}%")
                     ->orWhere('email', 'like', "%{$searchTerm}%");
             });
@@ -349,6 +349,7 @@ class PatientAdmissionController extends Controller
                 if ($oldBed) {
                     $oldBed->status = Bed::STATUS_AVAILABLE;
                     $oldBed->saveQuietly(); // لتجنب حلقة إذا كان هناك observer على Bed
+                    optional($oldBed->room)->updateOccupancyStatus();
                     Log::info("Old Bed ID: {$originalBedId} status set to available after patient transfer/discharge.");
                 }
             }

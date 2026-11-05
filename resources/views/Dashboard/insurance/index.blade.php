@@ -1,8 +1,8 @@
 @extends('Dashboard.layouts.master')
 @section('css')
     <!--Internal   Notify -->
-    <link href="{{ URL::asset('Admin/assets/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('path/to/notifIt.css') }}">
+    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('Dashboard/plugins/notify/css/notifIt.css') }}">
     @include('Style.Style')
 @endsection
 @section('title')
@@ -92,9 +92,9 @@
 @endsection
 @section('js')
     <!--Internal  Notify js -->
-    <script src="{{ URL::asset('Admin/assets/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ asset('path/to/notifIt.min.js') }}"></script>
-    <script src="{{ URL::asset('Admin/assets/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
 
     @include('Script.Script')
 @endsection

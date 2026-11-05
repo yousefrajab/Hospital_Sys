@@ -110,9 +110,6 @@
 
 @section('js')
     {{-- إذا كان لديك أي سكربتات إضافية تحتاجها في هذا المودال --}}
-    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap-select.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const dischargeReasonSelect = document.getElementById('discharge_reason_select{{ $admission->id }}');

@@ -63,7 +63,7 @@
          $laboratorie = Laboratorie::findorFail($id);
          if($laboratorie->employee_id !=auth()->user()->id){
              //abort(404);
-             return redirect()->route('404');
+             abort(403);
          }
          return view('Dashboard.dashboard_LaboratorieEmployee.invoices.patient_details', compact('laboratorie'));
      }

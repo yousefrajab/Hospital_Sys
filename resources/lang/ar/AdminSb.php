@@ -773,6 +773,15 @@
         'testimonial_rejected_successfully' => 'تم رفض التعليق.',
         'fees_for_service' => 'رسوم خدمة: ',
         'fees_for_package' => 'رسوم باقة: ',
+        'receipt_default_description' => 'سند قبض',
+        'header_messages' => 'الرسائل',
+        'header_unread_messages' => 'لديك :count رسائل غير مقروءة',
+        'header_no_messages' => 'لا توجد رسائل جديدة',
+        'header_notifications' => 'الإشعارات',
+        'header_view_all' => 'عرض الكل',
+        'save' => 'حفظ',
+        'add_testimonial' => 'إضافة رأي',
+        'edit_testimonial' => 'تعديل رأي',
         'receipt_saved_successfully' => 'تم حفظ سند القبض بنجاح.',
         'receipt_updated_successfully' => 'تم تحديث سند القبض بنجاح.',
         'receipt_id_not_provided' => 'لم يتم توفير معرف سند القبض للحذف.',
@@ -842,4 +851,15 @@
 
 
 
-    );
+    
+    // added: keys used in views but previously undefined
+    'Edit Profile' => 'تعديل الملف الشخصي',
+    'Inactive' => 'غير نشط',
+    'Total' => 'الإجمالي',
+    'admission_datetime' => 'تاريخ ووقت الدخول',
+    'back_to_list' => 'العودة للقائمة',
+    'bed_room_department' => 'السرير / الغرفة / القسم',
+    'medical_record_entry' => 'إدخال سجل طبي',
+    'patient_record' => 'سجل المريض',
+    'save_changes' => 'حفظ التغييرات',
+);

@@ -1007,7 +1007,7 @@
                             data-wow-delay="{{ ($loop->index % 6) * 0.1 + 0.2 }}s">
                             <div class="image-wrapper-standalone">
                                 <a href="{{ route('website.doctor.details', $rdoctor->id) }}">
-                                    <img src="{{ $rdoctor->image_url ?? ($rdoctor->image && $rdoctor->image->filename ? asset('Dashboard/img/doctors/' . $rdoctor->image->filename) : asset('WebSite/images/resource/doctor-placeholder.png')) }}"
+                                    <img src="{{ $rdoctor->image_url ?? ($rdoctor->image && $rdoctor->image->filename ? asset('Dashboard/img/doctors/' . $rdoctor->image->filename) : asset('Dashboard/img/doctor_default.png')) }}"
                                         alt="{{ $rdoctor->name }}"
                                         onerror="this.onerror=null; this.src='{{ asset('Dashboard/img/doctor_default.png') }}';">
                                 </a>

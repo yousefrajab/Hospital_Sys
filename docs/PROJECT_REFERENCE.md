@@ -725,7 +725,7 @@ Valex demo pages (`Dashboard/{mail*,map-*,media-object,margin,list-group,lockscr
   `public/css/app.css` (Tailwind v4 — only used by Breeze layouts).
 
 ### 5.7 Linux / production portability (works on Windows only)
-- **1,156 calls to `trans('doctors.…')` while the file is `Doctors.php`** ⇒ on a case-sensitive filesystem every one of them shows
+- (fixed 2026-11-06: file renamed to `doctors.php`) **1,156 calls to `trans('doctors.…')` while the file was `Doctors.php`** ⇒ on a case-sensitive filesystem every one of them shows
   the raw key. (Only 7 calls use `Doctors.`.)
 - **232 `asset('dashboard/…')` references in 66 views** while the folder is `public/Dashboard` ⇒ 404 on Linux (select2, notify, pickers…).
 - View names with wrong case: `Dashboard.patients.profile.*`, `livewire.Group_invoices.*`; class name `insurance::`.
@@ -774,17 +774,42 @@ sections_trans, validation), `Website/*`, `vendor/*`; `doctorSb.php` exists only
 8. ⏳ Still open: `APP_DEBUG=true` in `.env` (fine locally, must be false in production) and controllers returning `$e->getMessage()`.
    Doctors can still open any patient's details (clinical access policy to be decided).
 
-### 7.2 Broken features (will error or misbehave now)
-- Admin confirm / cancel appointment redirect to missing routes (4.2); missing routes listed in 4.3; missing views in 5.5.
-- Appointments booked from the patient home widget get `patient_id = NULL` (4.19).
-- Invoices in the English UI fail (writes 'Completed' into the Arabic enum) (4.7); invoice edit loads the wrong section.
-- Header message/notification counters always 0 (2.3, 5.2); notifications have no user type (2.4).
-- Searching admissions / lapsed appointments by patient name → SQL error (4.5).
-- Room occupancy not updated on discharge (3.2); `refills_done` never incremented, partial dispensing not tracked (4.15).
-- Profile photo can't be added when the user has none (4.13); pharmacy manager redirected to admin URLs after saving medications (4.16).
-- `patient/dashboard` 500; `admin/Service/create|edit`, `users-roles` update, doctor `attach-existing`/`detach-existing`,
-  `doctor.appointments.confirm` point to methods that don't exist.
-- `onHoldPrescriptions` selects non-existent `name` columns.
+### 7.2 Broken features
+**Fixed on branch `fix/full-cleanup` (2026-11-06)** — verified by a crawl of every page for all 7 roles in English and Arabic
+(~580 pages, 0 errors) plus functional tests (booking, admin confirm/cancel, doctor confirm, searches, payments, receipts,
+partial dispensing, profile photo, Livewire invoice in English, Livewire booking widget, doctor header notifications):
+- Appointments: admin confirm/cancel redirect to `admin.appointments.*` (cancel no longer returns a blank page); doctor
+  `confirmAppointment` implemented; admin search on pending/confirmed/lapsed lists works (translated names); patients can't
+  cancel past appointments.
+- Booking widget (`Livewire\Appointments\Create`) saves `patient_id` via the patient guard and ignores cancelled appointments
+  when computing free slots / daily limit. Broken `PatientAppointmentForm` component and its `patient/dashboard` route removed.
+- Invoices: completed status written as `Appointment::STATUS_COMPLETED` (works in English); section taken from the doctor
+  (no more translation-name lookups); cash/credit change on edit keeps exactly one matching ledger row; group invoices run in a
+  transaction. Payments validated (description required, 4-digit year); receipts get a default description.
+- Notifications: new `notifications.user_type` column (migration) + `Notification::send($user, $msg)`, `forUser()`, `unread()`;
+  `$fillable` added (creates were silently failing). Header shows real unread messages (sender names, link to chat) and real
+  notifications from `HeaderDataComposer` (detects the active guard). Chat no longer duplicates messages as notifications nor
+  marks every notification read. Duplicate `app/Channels/YourCustomDbChannel.php` removed.
+- Admissions: patient search fixed; room occupancy recalculated on discharge / bed change / delete. Vital signs no longer write
+  an admin id into the `users` FK. Users & roles: status display/filter fixed.
+- Pharmacy: new `prescription_items.quantity_dispensed` (migration); dispensing can't exceed what is still owed, status computed
+  from all items; refill approval resets it. On-hold list query fixed. Medication saves return the pharmacy manager to his own list.
+- Profiles: users without a photo can add one (ray, patient, pharmacy employee & manager); patient profile view path case fixed.
+- Routes: resources limited to existing methods (`except`/`only`); removed routes to missing methods (`users-roles` update,
+  doctor `attach/detach-existing`, stock `show`); wrong names fixed (`*.login.form`, `404`, `PharmacyManager.profile.show`,
+  `doctor.schedule.updatee`, hidden buttons in patient/pharmacy views, forgot-password "back to login").
+- Missing views added: admin testimonials create/edit (+ buttons on the index).
+- Translations: added `admissions.php`, `messages.php`, `forms.php` and ~90 missing keys; 0 keys used-but-undefined remain.
+- Linux portability: `resources/lang/*/Doctors.php` renamed to `doctors.php` (1,165 uses), 232 `asset('dashboard/...')` ->
+  `Dashboard/`, view/class name case fixed (`livewire.group_invoices`, `Dashboard.Patients.profile`, `Insurance`), missing assets
+  in used views pointed to existing files or removed (0 left). 20 dead template/demo views deleted.
+- Hospital contact/print details now come from `config/hospital.php` (`HOSPITAL_*` in `.env`) instead of placeholders and a
+  personal e-mail address. Section auto-translation falls back to the original text when Google Translate is unreachable.
+
+**Still open (design decisions / larger work, not errors):** `APP_DEBUG` must be false in production and several controllers
+still show `$e->getMessage()`; doctors can open any patient's record; refill counting (`refills_done`) is reset by the doctor's
+approval rather than consumed per dispense; mail/SMS are sent synchronously (slow when SMTP/Twilio are unreachable — the `.env`
+currently has an inactive Twilio account and SMTP credentials that fail); Laravel 8 is end-of-life; inline CSS / Valex template.
 
 ### 7.3 Architecture / maintainability
 - 7 separate user tables + guards + observers to fake a global identity (`global_emails`, `global_identifiers`) — a single

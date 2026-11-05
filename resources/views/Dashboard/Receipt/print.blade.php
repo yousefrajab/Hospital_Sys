@@ -268,7 +268,7 @@
                                             {{ $settings['address'] ?? '201 Mohandseen St, Cairo' }}<br>
                                             {{ trans('AdminSb.phone_colon') }} {{ $settings['phone'] ?? '011111111' }}<br>
                                             {{ trans('AdminSb.email_colon') }}
-                                            {{ $settings['email'] ?? 'Hospital@gmail.com' }}
+                                            {{ $settings['email'] ?? config('hospital.email') }}
                                         </p>
                                     </div>
                                 </div>

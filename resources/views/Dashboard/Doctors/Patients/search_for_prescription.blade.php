@@ -4,7 +4,7 @@
 
 @section('css')
     @parent
-    <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     {{-- Select2 (إذا كنت ستستخدمه للبحث المتقدم لاحقًا) --}}
@@ -497,8 +497,8 @@
 @endsection
 @section('js')
     @parent
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     {{-- <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.full.min.js') }}"></script> --}}
     {{-- <script src="{{ URL::asset('Dashboard/plugins/select2/js/i18n/ar.js') }}"></script> --}}
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

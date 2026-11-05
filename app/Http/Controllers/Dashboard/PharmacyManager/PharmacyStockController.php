@@ -93,16 +93,6 @@ class PharmacyStockController extends Controller
         }
     }
 
-    /**
-     * عرض تفاصيل دفعة مخزون معينة (عادة لا نحتاج صفحة show منفصلة للدفعة).
-     */
-    public function show(PharmacyStock $stock) // Route Model Binding لـ PharmacyStock
-    {
-        // سأوجه إلى صفحة تعديلها، أو يمكنك إنشاء view خاص بـ show إذا أردت
-        $stock->load('medication');
-        return view('Dashboard.PharmacyManager.Stocks.show', compact('stock')); // إنشاء view show إذا أردت
-        // return redirect()->route('pharmacy_manager.stocks.edit', $stock->id);
-    }
 
     /**
      * عرض فورم تعديل دفعة مخزون.

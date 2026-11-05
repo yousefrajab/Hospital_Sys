@@ -1,71 +1,69 @@
 <?php
-namespace App\Http\View\Composers; // تأكد أن الـ namespace صحيح
+namespace App\Http\View\Composers;
 
+use App\Models\Doctor;
 use App\Models\Message;
 use App\Models\Notification as CustomNotification;
+use App\Models\Patient;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Log; // لإضافة تسجيل
 
 class HeaderDataComposer
 {
+    // Every role has its own guard; the first one that is logged in is the current user.
+    private const GUARDS = [
+        'admin', 'doctor', 'patient', 'ray_employee', 'laboratorie_employee', 'pharmacy_employee', 'pharmacy_manager',
+    ];
+
     public function compose(View $view)
     {
         $unreadMessagesForHeader = 0;
         $generalNotificationsCountForHeader = 0;
-        $latestMessagesForHeader = collect(); // Initialize as empty collection
-        $latestGeneralNotificationsForHeader = collect(); // Initialize as empty collection
+        $latestMessagesForHeader = collect();
+        $latestGeneralNotificationsForHeader = collect();
+        $chatRouteForHeader = null;
 
-        if (Auth::check()) { // تحقق أولاً أن هناك مستخدم مسجل
-            $currentUser = Auth::user(); // الـ guard النشط حالياً
-
-            // 1. حساب الرسائل الجديدة من جدول messages للمستخدم الحالي
-            if (property_exists($currentUser, 'email')) {
-                try {
-                    $unreadMessagesForHeader = Message::where('receiver_email', $currentUser->email)
-                                                     ->where('read', false)
-                                                     ->count();
-
-                    $latestMessagesForHeader = Message::where('receiver_email', $currentUser->email)
-                                                     ->where('read', false)
-                                                     // ->with('senderUserObject') // (اختياري) علاقة لجلب بيانات المرسل
-                                                     ->latest('created_at') // تأكد من وجود عمود الترتيب
-                                                     ->take(3)
-                                                     ->get();
-                } catch (\Exception $e) {
-                    Log::error("HeaderDataComposer: Error fetching messages for user {$currentUser->id}: " . $e->getMessage());
-                }
-            } else {
-                Log::warning("HeaderDataComposer: Current user (ID: {$currentUser->id}) does not have an email property for fetching messages.");
+        $currentUser = null;
+        $currentGuard = null;
+        foreach (self::GUARDS as $guard) {
+            if (Auth::guard($guard)->check()) {
+                $currentUser = Auth::guard($guard)->user();
+                $currentGuard = $guard;
+                break;
             }
+        }
 
+        if ($currentUser) {
+            try {
+                // Chat exists only between doctors and patients.
+                if (in_array($currentGuard, ['doctor', 'patient'], true) && $currentUser->email) {
+                    $unread = Message::where('receiver_email', $currentUser->email)->where('read', false);
+                    $unreadMessagesForHeader = (clone $unread)->count();
+                    $latestMessagesForHeader = $unread->latest('created_at')->take(3)->get();
 
-            // 2. حساب الإشعارات "العامة" من جدول notifications المخصص للمستخدم الحالي
-            if (property_exists($currentUser, 'id')) {
-                try {
-                    $generalNotificationsCountForHeader = CustomNotification::where('user_id', $currentUser->id)
-                                                                      ->where('reader_status', false)
-                                                                      ->count();
-                    $latestGeneralNotificationsForHeader = CustomNotification::where('user_id', $currentUser->id)
-                                                                      ->where('reader_status', false)
-                                                                      ->latest('created_at') // تأكد من وجود عمود الترتيب
-                                                                      ->take(5)
-                                                                      ->get();
-                } catch (\Exception $e) {
-                    Log::error("HeaderDataComposer: Error fetching custom notifications for user {$currentUser->id}: " . $e->getMessage());
+                    $senderModel = $currentGuard === 'doctor' ? Patient::class : Doctor::class;
+                    $senders = $senderModel::whereIn('email', $latestMessagesForHeader->pluck('sender_email')->unique())
+                        ->get()->keyBy('email');
+                    $latestMessagesForHeader->each(function ($message) use ($senders) {
+                        $message->sender_display_name = optional($senders->get($message->sender_email))->name ?? $message->sender_email;
+                    });
+
+                    $chatRouteForHeader = $currentGuard === 'doctor' ? route('doctor.chat.patients') : route('chat.doctors');
                 }
-            } else {
-                 Log::warning("HeaderDataComposer: Current user does not have an ID property for fetching custom notifications.");
+
+                $notifications = CustomNotification::forUser($currentUser)->unread();
+                $generalNotificationsCountForHeader = (clone $notifications)->count();
+                $latestGeneralNotificationsForHeader = $notifications->latest('created_at')->take(5)->get();
+            } catch (\Exception $e) {
+                Log::error("HeaderDataComposer: error loading header data for {$currentGuard} #{$currentUser->id}: " . $e->getMessage());
             }
-
-
-        } else {
-            Log::info("HeaderDataComposer: No authenticated user for header data.");
         }
 
         $view->with('unreadMessagesForHeader', $unreadMessagesForHeader)
              ->with('latestMessagesForHeader', $latestMessagesForHeader)
              ->with('generalNotificationsCountForHeader', $generalNotificationsCountForHeader)
-             ->with('latestGeneralNotificationsForHeader', $latestGeneralNotificationsForHeader);
+             ->with('latestGeneralNotificationsForHeader', $latestGeneralNotificationsForHeader)
+             ->with('chatRouteForHeader', $chatRouteForHeader);
     }
 }

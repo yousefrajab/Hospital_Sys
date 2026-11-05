@@ -18,7 +18,9 @@ Bilingual ar/en (mcamara localization + astrotomic translatable). Owner plans to
   (`admin.`, `doctor.`, `ray_employee.`, …; patient routes have no prefix).
 - Appointment status lives in `appointments.type` as Arabic strings (`Appointment::STATUS_*`); never write `trans()` output to the DB.
 - `invoices.invoice_status`: 1 new, 2 review, 3 completed. `invoices.type`: 1 cash, 2 credit. `invoice_type`: 1 single, 2 package.
-- Case sensitivity: translation file is `Doctors.php` but code calls `trans('doctors.*')`; assets folder is `public/Dashboard` but
-  many views use `dashboard/`. Works on Windows only — keep new code case-exact.
+- Keep file/view/asset/translation names case-exact (production will be Linux): `trans('doctors.*')` lives in
+  `resources/lang/*/doctors.php`, assets in `public/Dashboard/...`.
+- In-app notifications: `App\Models\Notification::send($recipientModel, $message)`; read with `forUser($user)->unread()`.
+- Hospital name/contact for prints: `config('hospital.*')` (`HOSPITAL_*` in `.env`).
 - Uploaded images go to `public/Dashboard/img/<folder>` via `App\Traits\UploadTrait` (disk `upload_image`), tracked in `images` (morph).
 - Comments and UI strings in the codebase are mostly Arabic; keep new UI text in `resources/lang/{ar,en}`.

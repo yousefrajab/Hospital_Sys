@@ -427,6 +427,31 @@ class DoctorController extends Controller
     }
 
     /**
+     * تأكيد موعد غير مؤكد بواسطة الطبيب.
+     * PATCH /my-appointments/{appointment}/confirm
+     */
+    public function confirmAppointment(Request $request, Appointment $appointment)
+    {
+        if ($appointment->doctor_id !== Auth::guard('doctor')->id()) {
+            return response()->json(['message' => 'غير مصرح لك بتأكيد هذا الموعد.'], 403);
+        }
+        if ($appointment->type !== Appointment::STATUS_PENDING) {
+            return response()->json(['message' => 'يمكن فقط تأكيد المواعيد غير المؤكدة.'], 422);
+        }
+        if ($appointment->appointment && Carbon::parse($appointment->appointment)->isPast()) {
+            return response()->json(['message' => 'لا يمكن تأكيد موعد قد فات وقته.'], 422);
+        }
+
+        $appointment->update(['type' => Appointment::STATUS_CONFIRMED]);
+
+        return response()->json([
+            'message' => 'تم تأكيد الموعد بنجاح.',
+            'new_status' => Appointment::STATUS_CONFIRMED,
+            'appointment_id' => $appointment->id,
+        ]);
+    }
+
+    /**
      * إلغاء موعد محدد بواسطة الطبيب.
      * PATCH /doctor/my-appointments/{appointment}/cancel
      */

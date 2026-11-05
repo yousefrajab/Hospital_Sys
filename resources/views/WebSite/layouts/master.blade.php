@@ -134,7 +134,7 @@
                             <div class="content-box">
                                 <h2>{{ trans('patients.sidebar_about_us_title') }}</h2>
                                 <p class="text">{{ trans('patients.sidebar_about_us_text') }}</p>
-                                <a href="mailto:momensarsour5@gmail.com" class="theme-btn btn-style-two"><span class="txt">{{ trans('patients.sidebar_contact_us_button') }}
+                                <a href="mailto:{{ config('hospital.email') }}" class="theme-btn btn-style-two"><span class="txt">{{ trans('patients.sidebar_contact_us_button') }}
                                     </span></a>
                             </div>
                             <div class="contact-info">
@@ -145,8 +145,8 @@
                                             style="text-decoration: none; color: inherit; direction: ltr; display: inline-block;">+970
                                             56 707 7179</a></li>
                                     <li><span class="icon flaticon-message-1"></span><a
-                                            href="mailto:momensarsour5@gmail.com"
-                                            style="text-decoration: none; color: inherit;">momensarsour5@gmail.com</a>
+                                            href="mailto:{{ config('hospital.email') }}"
+                                            style="text-decoration: none; color: inherit;">{{ config('hospital.email') }}</a>
                                     </li>
                                     <li><span class="icon flaticon-timetable"></span>{{ trans('patients.sidebar_working_hours') }}</li>
                                 </ul>

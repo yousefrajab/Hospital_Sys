@@ -556,7 +556,7 @@
     {{-- تأكد من تحميل Chart.js إما هنا أو في التخطيط الرئيسي --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {{-- أو من ملفاتك المحلية إذا قمت بتثبيته --}}
-    <script src="{{ asset('dashboard/assets/plugins/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ asset('Dashboard/plugins/chart.js/Chart.min.js') }}"></script>
 
 
     @if (!empty($vitalSignsDataForChart) && count($vitalSignsDataForChart['labels']) > 1)

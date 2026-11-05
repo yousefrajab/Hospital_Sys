@@ -835,7 +835,31 @@ return array(
     'Choose the dose or write' => 'اختر الجرعة أو اكتب',
     'Choose the frequency or write' => 'اختر التكرار أو اكتب',
     'Choose the duration or write' => 'اختر المدة أو اكتب',
-    'Choose the route of administration or write' => 'اختر طريقة الإعطاء أو اكتب'
+    'Choose the route of administration or write' => 'اختر طريقة الإعطاء أو اكتب',
 
 
+
+    // added: keys used in views but previously undefined
+    'choice_made' => 'تم الاختيار',
+    'disease' => 'المرض',
+    'doctor_registered_successfully' => 'تم تسجيل الطبيب بنجاح',
+    'email_feedback_valid' => 'البريد الإلكتروني صالح',
+    'feedback_selection_made' => 'تم الاختيار',
+    'lab_test_title' => 'طلب تحليل مخبري',
+    'more_details' => 'مزيد من التفاصيل',
+    'name_validation_10_chars' => 'يجب أن يتكون الاسم من 10 أحرف على الأقل',
+    'national_id_feedback_9_digits' => 'رقم الهوية يجب أن يتكون من 9 أرقام',
+    'national_id_placeholder_9_digits' => 'أدخل رقم الهوية (9 أرقام)',
+    'national_id_validation_9_digits' => 'رقم الهوية يجب أن يتكون من 9 أرقام',
+    'no_chronic_diseases_registered' => 'لا توجد أمراض مزمنة مسجلة',
+    'other_manual_entry' => 'أخرى (إدخال يدوي)',
+    'password_feedback_8_chars_letters_numbers' => '8 أحرف على الأقل وتحتوي على حروف وأرقام',
+    'password_feedback_strong' => 'كلمة مرور قوية',
+    'password_title_letters_numbers' => 'يجب أن تحتوي كلمة المرور على حروف وأرقام',
+    'phone_feedback_10_digits_start_05' => 'رقم الجوال يجب أن يبدأ بـ 05 ويتكون من 10 أرقام',
+    'please_select_medication_for_item' => 'يرجى اختيار الدواء لهذا البند',
+    'registration_error' => 'حدث خطأ أثناء التسجيل',
+    'section_feedback_required' => 'يجب اختيار القسم',
+    'statements_feedback_between_1_20' => 'عدد المواعيد اليومية يجب أن يكون بين 1 و 20',
+    'valid' => 'صالح',
 );

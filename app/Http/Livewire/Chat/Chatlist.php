@@ -50,7 +50,6 @@ class Chatlist extends Component
         }
 
         // تعليم الإشعارات كمقروءة عند تحميل القائمة لأول مرة
-        $this->markChatNotificationsAsReadGeneral();
     }
 
 

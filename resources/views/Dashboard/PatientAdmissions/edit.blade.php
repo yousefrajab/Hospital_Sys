@@ -6,9 +6,7 @@
 
 @section('css')
     <!-- Select2 CSS -->
-    <link href="{{ asset('dashboard/assets/plugins/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('dashboard/assets/plugins/select2-bootstrap5-theme/select2-bootstrap-5-theme.min.css') }}"
-        rel="stylesheet" type="text/css" />
+    <link href="{{ asset('Dashboard/plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
     <style>
         /* يمكنك إضافة أي CSS مخصص هنا */
     </style>
@@ -95,7 +93,7 @@
 @endsection
 @section('js')
     <!-- Select2 JS -->
-    <script src="{{ asset('dashboard/assets/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('Dashboard/plugins/select2/js/select2.full.min.js') }}"></script>
     @stack('js_after_form') {{-- لجلب الـ JS من ملف _form.blade.php --}}
     @stack('js_after_modal') {{-- لجلب الـ JS من ملف _discharge_modal.blade.php إذا تم تضمينه --}}
     <script>

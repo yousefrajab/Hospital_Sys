@@ -25,7 +25,7 @@ class ProfilePharmacyController extends Controller // يمكنك تسميته Pr
         $employee = Auth::guard('pharmacy_employee')->user();
         if (!$employee) {
             // يمكنك التوجيه لصفحة تسجيل الدخول أو عرض خطأ
-            return redirect()->route('pharmacy_employee.login.form'); // افترض وجود هذا الـ route
+            return redirect()->route('login'); // افترض وجود هذا الـ route
         }
         // تحميل علاقة الصورة إذا كانت موجودة
         $employee->load('image');
@@ -39,7 +39,7 @@ class ProfilePharmacyController extends Controller // يمكنك تسميته Pr
     {
         $employee = Auth::guard('pharmacy_employee')->user();
         if (!$employee) {
-            return redirect()->route('pharmacy_employee.login.form');
+            return redirect()->route('login');
         }
         $employee->load('image');
         return view('Dashboard.pharmacy_employee.profile.edit', compact('employee'));
@@ -97,17 +97,16 @@ class ProfilePharmacyController extends Controller // يمكنك تسميته Pr
                         $employee->id,
                         'App\Models\PharmacyEmployee'
                     );
-
-                    $this->verifyAndStoreImage(
-                        $request,
-                        'photo',
-                        'pharmacyEmployees',
-                        'upload_image',
-                        $employee->id,
-                        'App\Models\PharmacyEmployee'
-                    );
                 }
                 // رفع الصورة الجديدة
+                $this->verifyAndStoreImage(
+                    $request,
+                    'photo',
+                    'pharmacyEmployees',
+                    'upload_image',
+                    $employee->id,
+                    'App\Models\PharmacyEmployee'
+                );
 
             }
 

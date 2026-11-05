@@ -85,9 +85,9 @@
                         </div>
                     </form>
 
-                    @if (Route::has('doctor.login')) {{-- افترض أن لديك route تسجيل دخول للأدمن --}}
+                    @if (Route::has('login')) {{-- افترض أن لديك route تسجيل دخول للأدمن --}}
                         <div class="text-center mt-4">
-                            <a href="{{ route('doctor.login') }}">العودة لتسجيل الدخول</a>
+                            <a href="{{ route('login') }}">العودة لتسجيل الدخول</a>
                         </div>
                     @endif
                 </div>

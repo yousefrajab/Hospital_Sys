@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard; // أو المسار الصحيح مث
 
 use App\Models\Medication;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\Paginator;
@@ -104,7 +105,7 @@ class MedicationController extends Controller
 
             Log::info("MedicationController@store: New medication created successfully.", $validatedData);
             // تأكد من اسم الـ route الصحيح هنا (الذي استخدمته في Route::resource)
-            return redirect()->route('admin.medications.index') // أو 'pharmacy_manager.medications.index'
+            return redirect()->route($this->medicationsIndexRoute()) // أو 'pharmacy_manager.medications.index'
                 ->with('success', 'تمت إضافة الدواء بنجاح.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             // FormRequest يعالج هذا عادةً ويعيد التوجيه مع الأخطاء
@@ -167,7 +168,7 @@ class MedicationController extends Controller
             $medication->update($validatedData);
 
             Log::info("MedicationController@update: Medication ID {$medication->id} updated successfully.", $validatedData);
-            return redirect()->route('admin.medications.index') // تأكد من اسم الـ route
+            return redirect()->route($this->medicationsIndexRoute()) // تأكد من اسم الـ route
                 ->with('success', 'تم تعديل بيانات الدواء بنجاح.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error("MedicationController@update: Validation exception for Med ID {$medication->id}.", ['errors' => $e->errors()]);
@@ -189,7 +190,7 @@ class MedicationController extends Controller
             // (stocks هي العلاقة مع PharmacyStock)
             if ($medication->prescriptionItems()->exists() || $medication->stocks()->where('quantity_on_hand', '>', 0)->exists()) {
                 Log::warning("MedicationController@destroy: Attempt to delete medication ID {$medication->id} which is in use or has stock.");
-                return redirect()->route('admin.medications.index') // تأكد من اسم الـ route
+                return redirect()->route($this->medicationsIndexRoute()) // تأكد من اسم الـ route
                     ->with('error', 'لا يمكن حذف هذا الدواء لأنه مستخدم في وصفات حالية أو لديه رصيد في المخزون.');
             }
 
@@ -197,14 +198,20 @@ class MedicationController extends Controller
             $medication->delete();
 
             Log::info("MedicationController@destroy: Medication '{$medicationName}' (ID {$medication->id}) deleted successfully.");
-            return redirect()->route('admin.medications.index') // تأكد من اسم الـ route
+            return redirect()->route($this->medicationsIndexRoute()) // تأكد من اسم الـ route
                 ->with('success', "تم حذف الدواء '{$medicationName}' بنجاح.");
         } catch (\Exception $e) {
             Log::error("MedicationController@destroy: Error deleting medication ID {$medication->id}: " . $e->getMessage(), ['trace' => substr($e->getTraceAsString(), 0, 500)]);
-            return redirect()->route('admin.medications.index') // تأكد من اسم الـ route
+            return redirect()->route($this->medicationsIndexRoute()) // تأكد من اسم الـ route
                 ->with('error', 'حدث خطأ أثناء حذف الدواء.');
         }
     }
+    // This controller is mounted for both the pharmacy manager and the admin; send each back to their own list.
+    private function medicationsIndexRoute(): string
+    {
+        return Auth::guard('pharmacy_manager')->check() ? 'pharmacy_manager.medications.index' : 'admin.medications.index';
+    }
+
     public function searchIndexForPharmacy(Request $request) // تم تغيير اسم الدالة ليتطابق مع المسار
     {
         Log::info("MedicationController@searchIndexForPharmacy: Pharmacy employee searching for medications.");

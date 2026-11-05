@@ -1,6 +1,6 @@
 @extends('Dashboard.layouts.master')
 @section('css')
-    <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
 @endsection
 @section('title')
     معلومات المريض
@@ -191,6 +191,6 @@
     </div>
 @endsection
 @section('js')
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
     <script src="{{ URL::asset('/plugins/notify/js/notifit-custom.js') }}"></script>
 @endsection

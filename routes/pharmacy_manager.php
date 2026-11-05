@@ -48,7 +48,6 @@ Route::group(
 
             // لـ show, edit, update, destroy (تحتاج لمعرف الدفعة فقط، معرف الدواء موجود في الدفعة نفسها)
             // يمكن استخدام Route Model Binding لـ PharmacyStock مباشرة هنا
-            Route::get('/stocks/{stock}', [PharmacyStockController::class, 'show'])->name('stocks.show'); // اسم route بسيط
             Route::get('/stocks/{stock}/edit', [PharmacyStockController::class, 'edit'])->name('stocks.edit');
             Route::put('/stocks/{stock}', [PharmacyStockController::class, 'update'])->name('stocks.update'); // أو PATCH
             Route::delete('/stocks/{stock}', [PharmacyStockController::class, 'destroy'])->name('stocks.destroy');

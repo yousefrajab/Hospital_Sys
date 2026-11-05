@@ -713,4 +713,11 @@ return [
     'footer_notice' => 'This voucher serves as a receipt for the amount mentioned above.',
     'footer_thank_you' => 'Thank you for your business.',
 
+
+    // added: keys used in views but previously undefined
+    'email_placeholder' => 'example@email.com',
+    'phone_placeholder_sa' => '05XXXXXXXX',
+    'unknown_patient' => 'Unknown patient',
+    'unspecified' => 'Not specified',
+    'view_original_prescription_details' => 'View original prescription details',
 ];

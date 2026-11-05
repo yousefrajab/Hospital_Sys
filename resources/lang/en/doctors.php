@@ -812,4 +812,35 @@ return array(
 
 
 
+
+    // added: keys used in views but previously undefined
+    'allergies_label' => 'Allergies:',
+    'choice_made' => 'Selected',
+    'chronic_diseases_label' => 'Chronic diseases:',
+    'disease' => 'Disease',
+    'doctor_registered_successfully' => 'Doctor registered successfully',
+    'email_feedback_valid' => 'Valid email',
+    'feedback_selection_made' => 'Selection made',
+    'lab_test_title' => 'Lab test request',
+    'more_details' => 'More details',
+    'more_link' => 'More',
+    'name_regex' => 'Enter the full name (at least 10 letters, Arabic or English only)',
+    'name_validation_10_chars' => 'Name must be at least 10 characters',
+    'national_id_feedback_9_digits' => 'National ID must be 9 digits',
+    'national_id_placeholder_9_digits' => 'Enter national ID (9 digits)',
+    'national_id_validation_9_digits' => 'National ID must be 9 digits',
+    'no_chronic_diseases_registered' => 'No chronic diseases recorded',
+    'other_manual_entry' => 'Other (manual entry)',
+    'password_feedback_8_chars_letters_numbers' => 'At least 8 characters with letters and numbers',
+    'password_feedback_strong' => 'Strong password',
+    'password_regex' => 'Password must contain at least letters and numbers',
+    'password_title_letters_numbers' => 'Password must contain letters and numbers',
+    'phone_feedback_10_digits_start_05' => 'Phone must start with 05 and have 10 digits',
+    'phone_regex' => 'Phone number must start with 05 and have 10 digits',
+    'please_select_medication_for_item' => 'Please select a medication for this item',
+    'registration_error' => 'An error occurred during registration',
+    'remove_medication' => 'Remove medication',
+    'section_feedback_required' => 'Please select a department',
+    'statements_feedback_between_1_20' => 'Daily appointments must be between 1 and 20',
+    'valid' => 'Looks good',
 );

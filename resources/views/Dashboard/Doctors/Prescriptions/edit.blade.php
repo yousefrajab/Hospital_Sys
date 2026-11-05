@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-    <link href="{{ URL::asset('dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
@@ -221,7 +221,7 @@
                                             <label class="form-label required">{{ trans('doctors.frequency_label') }}</label>
                                              <div class="input-group input-group-custom-select">
                                                 <select class="form-select select2-common-options frequency-select" name="items[{{$index}}][frequency_select]" data-placeholder="{{ trans('doctors.select_or_write_placeholder') }}">
-                                                    <option></option><option value="{{ trans('doctors.once_daily') }}">{{ trans('doctors.once_daily') }}</option><option value="{{ trans('doctors.twice_daily') }}">{{ trans('doctors.twice_daily') }}</option><option value="{{ trans('doctors.thrice_daily') }}">{{ trans('doctors.thrice_daily') }}</option><option value="{{ trans('doctors.every_6_hours') }}">{{ trans('doctors.every_6_hours') }}</option><option value="{{ trans('doctors.every_8_hours') }}">{{ trans('doctors.every_8_hours') }}</option><option value="{{ trans('doctors.every_12_hours') }}">{{ trans('doctors.every_12_hours') }}</option><option value="{{ trans('doctors.as_needed') }}">{{ trans('doctors.as_needed') }}</option><option value="other">{{ trans('Doctors.other') }}</option>
+                                                    <option></option><option value="{{ trans('doctors.once_daily') }}">{{ trans('doctors.once_daily') }}</option><option value="{{ trans('doctors.twice_daily') }}">{{ trans('doctors.twice_daily') }}</option><option value="{{ trans('doctors.thrice_daily') }}">{{ trans('doctors.thrice_daily') }}</option><option value="{{ trans('doctors.every_6_hours') }}">{{ trans('doctors.every_6_hours') }}</option><option value="{{ trans('doctors.every_8_hours') }}">{{ trans('doctors.every_8_hours') }}</option><option value="{{ trans('doctors.every_12_hours') }}">{{ trans('doctors.every_12_hours') }}</option><option value="{{ trans('doctors.as_needed') }}">{{ trans('doctors.as_needed') }}</option><option value="other">{{ trans('doctors.other') }}</option>
                                                 </select>
                                                 <input type="text" name="items[{{$index}}][frequency_text]" value="{{ $itemData['frequency'] ?? '' }}" class="form-control frequency-text-input @error('items.'.$index.'.frequency') is-invalid @enderror" placeholder="{{ trans('doctors.write_here_placeholder') }}" style="display: none;">
                                                 <input type="hidden" name="items[{{$index}}][frequency]" class="final-frequency-value" value="{{ $itemData['frequency'] ?? '' }}">
@@ -234,7 +234,7 @@
                                             <label class="form-label">{{ trans('doctors.duration_label') }}</label>
                                             <div class="input-group input-group-custom-select">
                                                 <select class="form-select select2-common-options duration-select" name="items[{{$index}}][duration_select]" data-placeholder="{{ trans('doctors.select_or_write_placeholder') }}">
-                                                     <option></option><option value="{{ trans('doctors.3_days') }}">{{ trans('doctors.3_days') }}</option><option value="{{ trans('doctors.5_days') }}">{{ trans('doctors.5_days') }}</option><option value="{{ trans('doctors.7_days') }}">{{ trans('doctors.7_days') }}</option><option value="{{ trans('doctors.10_days') }}">{{ trans('doctors.10_days') }}</option><option value="{{ trans('doctos.two_weeks') }}">{{ trans('doctos.two_weeks') }}</option><option value="{{ trans('doctors.one_month') }}">{{ trans('doctors.one_month') }}</option><option value="{{ trans('doctors.until_further_notice') }}">{{ trans('doctors.until_further_notice') }}</option><option value="other">{{ trans('Doctors.other') }}</option>
+                                                     <option></option><option value="{{ trans('doctors.3_days') }}">{{ trans('doctors.3_days') }}</option><option value="{{ trans('doctors.5_days') }}">{{ trans('doctors.5_days') }}</option><option value="{{ trans('doctors.7_days') }}">{{ trans('doctors.7_days') }}</option><option value="{{ trans('doctors.10_days') }}">{{ trans('doctors.10_days') }}</option><option value="{{ trans('doctors.two_weeks') }}">{{ trans('doctors.two_weeks') }}</option><option value="{{ trans('doctors.one_month') }}">{{ trans('doctors.one_month') }}</option><option value="{{ trans('doctors.until_further_notice') }}">{{ trans('doctors.until_further_notice') }}</option><option value="other">{{ trans('doctors.other') }}</option>
                                                 </select>
                                                 <input type="text" name="items[{{$index}}][duration_text]" value="{{ $itemData['duration'] ?? '' }}" class="form-control duration-text-input @error('items.'.$index.'.duration') is-invalid @enderror" placeholder="{{ trans('doctors.write_here_placeholder') }}" style="display: none;">
                                                 <input type="hidden" name="items[{{$index}}][duration]" class="final-duration-value" value="{{ $itemData['duration'] ?? '' }}">
@@ -274,10 +274,10 @@
 
                 <div class="form-actions-footer mt-4">
                     <a href="{{ route('prescriptions.show', $prescription->id) }}" class="btn btn-outline-secondary me-2">
-                        <i class="fas fa-times me-1"></i> {{ trans('Doctors.cancel') }}
+                        <i class="fas fa-times me-1"></i> {{ trans('doctors.cancel') }}
                     </a>
                     <button type="submit" class="btn btn-primary btn-submit-prescription" id="submitPrescriptionEditBtn">
-                        <span class="btn-text"><i class="fas fa-save me-2"></i> {{ trans('Doctors.save_changes') }}</span>
+                        <span class="btn-text"><i class="fas fa-save me-2"></i> {{ trans('doctors.save_changes') }}</span>
                         <i class="fas fa-spinner fa-spin spinner-icon"></i>
                     </button>
                 </div>
@@ -401,8 +401,8 @@
 @endsection
 
 @section('js')
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ar.js"></script>
     <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.full.min.js') }}"></script>

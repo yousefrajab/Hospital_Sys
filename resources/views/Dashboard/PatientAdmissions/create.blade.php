@@ -6,8 +6,7 @@
 
 @section('css')
     <!-- Select2 CSS -->
-    <link href="{{ asset('dashboard/assets/plugins/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('dashboard/assets/plugins/select2-bootstrap5-theme/select2-bootstrap-5-theme.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('Dashboard/plugins/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
     <style>
         /* يمكنك إضافة أي CSS مخصص هنا */
     </style>
@@ -66,7 +65,7 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('dashboard/assets/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('Dashboard/plugins/select2/js/select2.full.min.js') }}"></script>
     @stack('js_after_form')
     <script>
         $(document).ready(function() {

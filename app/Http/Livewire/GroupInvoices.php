@@ -9,6 +9,7 @@ use App\Models\group_invoice;
 use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\PatientAccount;
+use App\Models\Section;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Component;
@@ -39,7 +40,7 @@ class GroupInvoices extends Component
             'Groups' => Group::all(),
             'subtotal' => $Total_after_discount = ((is_numeric($this->price) ? $this->price : 0)) - ((is_numeric($this->discount_value) ? $this->discount_value : 0)),
             'tax_value' => $Total_after_discount * ((is_numeric($this->tax_rate) ? $this->tax_rate : 0) / 100)
-        ])->extends('Dashboard.layouts');
+        ]);
     }
 
 
@@ -65,6 +66,19 @@ class GroupInvoices extends Component
 
     public function store()
     {
+        // The invoice and its ledger row must be saved together.
+        $this->catchError = null;
+        DB::beginTransaction();
+        $this->saveInvoice();
+        if ($this->catchError) {
+            DB::rollBack();
+        } else {
+            DB::commit();
+        }
+    }
+
+    private function saveInvoice()
+    {
 
         if ($this->type == 1) {
 
@@ -76,7 +90,7 @@ class GroupInvoices extends Component
                     $group_invoices->invoice_date = date('Y-m-d');
                     $group_invoices->patient_id = $this->patient_id;
                     $group_invoices->doctor_id = $this->doctor_id;
-                    $group_invoices->section_id = DB::table('section_translations')->where('name', $this->section_id)->first()->section_id;
+                    $group_invoices->section_id = Doctor::findOrFail($this->doctor_id)->section_id;
                     $group_invoices->Group_id = $this->Group_id;
                     $group_invoices->price = $this->price;
                     $group_invoices->discount_value = $this->discount_value;
@@ -86,7 +100,9 @@ class GroupInvoices extends Component
                     $group_invoices->type = $this->type;
                     $group_invoices->save();
 
-                    $fund_accounts = FundAccount::where('invoice_id', $this->group_invoice_id)->first();
+                    // The payment type may have changed (cash <-> credit): keep only the matching ledger row.
+                    PatientAccount::where('invoice_id', $this->group_invoice_id)->delete();
+                    $fund_accounts = FundAccount::where('invoice_id', $this->group_invoice_id)->first() ?? new FundAccount();
                     $fund_accounts->date = date('Y-m-d');
                     $fund_accounts->invoice_id = $group_invoices->id;
                     $fund_accounts->Debit = $group_invoices->total_with_tax;
@@ -103,7 +119,7 @@ class GroupInvoices extends Component
                     $group_invoices->invoice_date = date('Y-m-d');
                     $group_invoices->patient_id = $this->patient_id;
                     $group_invoices->doctor_id = $this->doctor_id;
-                    $group_invoices->section_id = DB::table('section_translations')->where('name', $this->section_id)->first()->section_id;
+                    $group_invoices->section_id = Doctor::findOrFail($this->doctor_id)->section_id;
                     $group_invoices->Group_id = $this->Group_id;
                     $group_invoices->price = $this->price;
                     $group_invoices->discount_value = $this->discount_value;
@@ -138,7 +154,7 @@ class GroupInvoices extends Component
                     $group_invoices->invoice_date = date('Y-m-d');
                     $group_invoices->patient_id = $this->patient_id;
                     $group_invoices->doctor_id = $this->doctor_id;
-                    $group_invoices->section_id = DB::table('section_translations')->where('name', $this->section_id)->first()->section_id;
+                    $group_invoices->section_id = Doctor::findOrFail($this->doctor_id)->section_id;
                     $group_invoices->Group_id = $this->Group_id;
                     $group_invoices->price = $this->price;
                     $group_invoices->discount_value = $this->discount_value;
@@ -148,7 +164,9 @@ class GroupInvoices extends Component
                     $group_invoices->type = $this->type;
                     $group_invoices->save();
 
-                    $patient_accounts = PatientAccount::where('invoice_id', $this->group_invoice_id)->first();
+                    // The payment type may have changed (cash <-> credit): keep only the matching ledger row.
+                    FundAccount::where('invoice_id', $this->group_invoice_id)->delete();
+                    $patient_accounts = PatientAccount::where('invoice_id', $this->group_invoice_id)->first() ?? new PatientAccount();
                     $patient_accounts->date = date('Y-m-d');
                     $patient_accounts->invoice_id = $group_invoices->id;
                     $patient_accounts->patient_id = $group_invoices->patient_id;
@@ -168,7 +186,7 @@ class GroupInvoices extends Component
                     $group_invoices->invoice_date = date('Y-m-d');
                     $group_invoices->patient_id = $this->patient_id;
                     $group_invoices->doctor_id = $this->doctor_id;
-                    $group_invoices->section_id = DB::table('section_translations')->where('name', $this->section_id)->first()->section_id;
+                    $group_invoices->section_id = Doctor::findOrFail($this->doctor_id)->section_id;
                     $group_invoices->Group_id = $this->Group_id;
                     $group_invoices->price = $this->price;
                     $group_invoices->discount_value = $this->discount_value;
@@ -205,7 +223,7 @@ class GroupInvoices extends Component
         $this->group_invoice_id = $group_invoices->id;
         $this->patient_id = $group_invoices->patient_id;
         $this->doctor_id = $group_invoices->doctor_id;
-        $this->section_id = DB::table('section_translations')->where('id', $group_invoices->section_id)->first()->name;
+        $this->section_id = optional(Section::find($group_invoices->section_id))->name;
         $this->Group_id = $group_invoices->Group_id;
         $this->price = $group_invoices->price;
         $this->discount_value = $group_invoices->discount_value;
