@@ -31,7 +31,14 @@
 
      public function update($request, $id)
      {
-         $invoice = Laboratorie::findorFail($id);
+         $request->validate([
+             'description_employee' => 'required|string|max:5000',
+             'photos' => 'required|array',
+             'photos.*' => 'image|mimes:jpeg,jpg,png,webp|max:5120',
+         ]);
+
+         // Only pending requests can be completed, so one employee can't overwrite another's result.
+         $invoice = Laboratorie::where('id', $id)->where('case', 0)->firstOrFail();
 
          $invoice->update([
              'employee_id'=> auth()->user()->id,

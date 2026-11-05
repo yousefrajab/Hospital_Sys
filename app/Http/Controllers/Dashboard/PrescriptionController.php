@@ -217,6 +217,7 @@ class PrescriptionController extends Controller
 
     public function show(Prescription $prescription)
     {
+        abort_unless(Auth::guard('doctor')->id() === $prescription->doctor_id, 403, 'غير مصرح لك بعرض هذه الوصفة.');
         $prescription->load(['patient.image', 'doctor.image', 'items.medication', 'dispensedByPharmacyEmployee']);
         Log::info("PrescriptionController@show: Displaying Prescription ID: {$prescription->id}");
         // تأكد من أن مسار الـ view هذا صحيح

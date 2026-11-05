@@ -274,14 +274,16 @@ class Patient extends Authenticatable implements TranslatableContract, CanResetP
     }
     public function pastAppointments()
     {
+        // Conditions are grouped so the OR stays inside this patient's appointments.
         return $this->hasMany(Appointment::class)
-            ->where('appointment', '<', now()) // ** استخدام 'appointment' **
-            ->orWhereIn('type', [             // ** استخدام 'type' **
-                Appointment::STATUS_COMPLETED,
-                Appointment::STATUS_CANCELLED, // افترض أن لديك حالة إلغاء عامة
-
-            ])
-            ->orderBy('appointment', 'desc');    // ** استخدام 'appointment' **
+            ->where(function ($query) {
+                $query->where('appointment', '<', now())
+                    ->orWhereIn('type', [
+                        Appointment::STATUS_COMPLETED,
+                        Appointment::STATUS_CANCELLED,
+                    ]);
+            })
+            ->orderBy('appointment', 'desc');
     }
 
 

@@ -45,7 +45,7 @@ class AdminLoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (auth('admin')->attempt($this->only('email', 'password'), $this->filled('remember'))) {
+        if (! auth('admin')->attempt($this->only('email', 'password'), $this->filled('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -54,6 +54,8 @@ class AdminLoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        return true;
     }
 
     /**

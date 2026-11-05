@@ -58,7 +58,7 @@ class StorePharmacyManagerRequest extends FormRequest
                 'regex:/^05\d{8}$/',
                 Rule::unique('pharmacy_managers', 'phone')->ignore($employeeId),
             ],
-            'password' => 'nullable|string|min:8',
+            'password' => 'required|string|min:8',
           
         ];
     }

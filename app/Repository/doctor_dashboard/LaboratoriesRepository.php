@@ -3,6 +3,7 @@
 namespace App\Repository\doctor_dashboard;
 
 use App\Interfaces\doctor_dashboard\LaboratoriesRepositoryInterface;
+use App\Models\Invoice;
 use App\Models\Laboratorie;
 
 class LaboratoriesRepository implements LaboratoriesRepositoryInterface
@@ -11,12 +12,15 @@ class LaboratoriesRepository implements LaboratoriesRepositoryInterface
     public function store($request)
     {
         try {
-
+            // Patient and doctor come from the invoice, which must belong to the logged-in doctor.
+            $invoice = Invoice::where('id', $request->invoice_id)
+                ->where('doctor_id', auth('doctor')->id())
+                ->firstOrFail();
             Laboratorie::create([
                 'description'=>$request->description,
-                'invoice_id'=>$request->invoice_id,
-                'patient_id'=>$request->patient_id,
-                'doctor_id'=>$request->doctor_id,
+                'invoice_id'=>$invoice->id,
+                'patient_id'=>$invoice->patient_id,
+                'doctor_id'=>$invoice->doctor_id,
             ]);
             session()->flash('add');
             return redirect()->back();
@@ -29,7 +33,7 @@ class LaboratoriesRepository implements LaboratoriesRepositoryInterface
     public function update($request, $id)
     {
         try {
-            $Laboratorie = Laboratorie::findOrFail($id);
+            $Laboratorie = Laboratorie::where('id', $id)->where('doctor_id', auth('doctor')->id())->firstOrFail();
             $Laboratorie->update([
                 'description' => $request->description,
             ]);
@@ -44,7 +48,7 @@ class LaboratoriesRepository implements LaboratoriesRepositoryInterface
     public function destroy($id)
     {
         try {
-            Laboratorie ::destroy($id);
+            Laboratorie::where('id', $id)->where('doctor_id', auth('doctor')->id())->firstOrFail()->delete();
             session()->flash('delete');
             return redirect()->back();
         }

@@ -19,13 +19,13 @@ trait UploadTrait
 
             // Check img
             if (!$request->file($inputname)->isValid()) {
-                flash('Invalid Image!')->error()->important();
-                return redirect()->back()->withInput();
+                return null;
             }
 
             $photo = $request->file($inputname);
-            $name = Str::slug($request->input('name'));
-            $filename = $name . '.' . $photo->getClientOriginalExtension();
+            // Unique name: two people with the same name must not overwrite each other's photo.
+            $name = Str::slug($request->input('name')) ?: 'image';
+            $filename = $name . '-' . time() . '-' . Str::random(6) . '.' . strtolower($photo->getClientOriginalExtension());
 
             // insert Image
             $Image = new Image();

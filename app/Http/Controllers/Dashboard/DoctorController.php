@@ -189,7 +189,7 @@ class DoctorController extends Controller
         return $this->Doctors->getScheduleForEdit($id);
         if ($success) {
             // إعادة التوجيه لصفحة *عرض* الجدول بعد الحفظ
-            return redirect()->route('admin.doctor.schedule.show')->with('success', 'تم تحديث جدول العمل بنجاح.'); // <--- تعديل اسم المسار
+            return redirect()->route('doctor.schedule.show')->with('success', 'تم تحديث جدول العمل بنجاح.'); // <--- تعديل اسم المسار
         } else {
             // العودة لصفحة *تعديل* الجدول مع الأخطاء
             return redirect()->route('admin.doctors.schedule.edit', $id)->withInput()->withErrors(['schedule_error' => session('error', 'فشل تحديث الجدول.')]); // <--- تعديل اسم المسار وتمرير الخطأ// سننشئ هذه الدالة
@@ -202,7 +202,7 @@ class DoctorController extends Controller
         // مثال إذا كانت الـ routes ضمن مجموعة الطبيب
         // $doctor = Auth::guard('doctor')->user();
         // أو إذا كان ID الطبيب يمرر عبر الـ route parameter
-        // abort_unless(Auth::id() === $doctor->user_id || Auth::user()->isAdmin(), 403, 'غير مصرح لك بعرض هذا الجدول.'); // مثال: تحقق من أن المستخدم الحالي هو مالك البروفايل أو أدمن
+        abort_unless(Auth::guard('doctor')->id() === $doctor->id, 403, 'غير مصرح لك بعرض هذا الجدول.');
 
         // --- جلب أيام العمل النشطة فقط مع استراحاتها ---
         $doctor->load(['workingDays' => function ($query) {
@@ -241,6 +241,8 @@ class DoctorController extends Controller
     }
     public function updateSchedulee(Request $request, Doctor $doctor)
     {
+        abort_unless(Auth::guard('doctor')->id() === $doctor->id, 403, 'غير مصرح لك بتعديل هذا الجدول.');
+
         // --- جلب قائمة الأيام التي يُسمح للطبيب بتعديلها (النشطة فقط في قاعدة البيانات) ---
         $allowedActiveDays = $doctor->workingDays()->where('active', true)->pluck('day')->toArray();
         Log::info("Allowed active days for Doctor ID {$doctor->id}: ", $allowedActiveDays);
@@ -339,7 +341,7 @@ class DoctorController extends Controller
 
             DB::commit();
             Log::info("--- Schedule update committed successfully for Doctor ID: {$doctor->id} ---");
-            return redirect()->route('admin.doctor.schedule.show')->with('success', 'تم تحديث ساعات العمل بنجاح.');
+            return redirect()->route('doctor.schedule.show')->with('success', 'تم تحديث ساعات العمل بنجاح.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             Log::warning("--- Validation Exception during schedule update for Doctor ID: {$doctor->id} ---", ['errors' => $e->errors()]);

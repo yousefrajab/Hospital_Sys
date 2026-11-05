@@ -121,14 +121,19 @@ Route::group(
 
 
 
-        Route::get('patient/pharmacy/', [PatientPharmacyController::class, 'index'])->name('patient.pharmacy.index'); // هذا هو الرابط المطلوب
-        Route::get('/{prescription}', [PatientPharmacyController::class, 'show'])->name('patient.pharmacy.show'); // لاحقًا لتفاصيل الوصفة
-        Route::post('/{prescription}/request-refill', [PatientPharmacyController::class, 'requestRefill'])->name('patient.pharmacy.request-refill');
-        Route::get('/refill-requests/pending', [PatientPharmacyController::class, 'pendingRefillRequests'])
-            ->name('patient.pharmacy.refill-requests.pending');
+        // Patient pharmacy: kept under patient/pharmacy so {prescription} is no longer a catch-all for every one-segment URL.
+        Route::middleware(['auth:patient'])->prefix('patient/pharmacy')->group(function () {
+            Route::get('/', [PatientPharmacyController::class, 'index'])->name('patient.pharmacy.index');
+            Route::get('/refill-requests/pending', [PatientPharmacyController::class, 'pendingRefillRequests'])
+                ->name('patient.pharmacy.refill-requests.pending');
+            Route::get('/{prescription}', [PatientPharmacyController::class, 'show'])->name('patient.pharmacy.show');
+            Route::post('/{prescription}/request-refill', [PatientPharmacyController::class, 'requestRefill'])->name('patient.pharmacy.request-refill');
+        });
 
-        Route::get('/testimonials/create', [App\Http\Controllers\Dashboard_Patient\PatientController::class, 'createTestimonial'])->name('patient.testimonials.create');
-        Route::post('/testimonials', [App\Http\Controllers\Dashboard_Patient\PatientController::class, 'storeTestimonial'])->name('patient.testimonials.store');
+        Route::middleware(['auth:patient'])->group(function () {
+            Route::get('/testimonials/create', [App\Http\Controllers\Dashboard_Patient\PatientController::class, 'createTestimonial'])->name('patient.testimonials.create');
+            Route::post('/testimonials', [App\Http\Controllers\Dashboard_Patient\PatientController::class, 'storeTestimonial'])->name('patient.testimonials.store');
+        });
 
 
 

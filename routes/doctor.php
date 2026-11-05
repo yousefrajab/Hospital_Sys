@@ -91,7 +91,7 @@ Route::group([
             ->name('doctors.schedule.editt'); // ->middleware('can:view,doctor') // يمكنك إضافة policy
 
         Route::put('/doctors/{doctor}/update-schedule', [DoctorController::class, 'updateSchedulee'])
-            ->name('doctor.schedule.updatee');
+            ->name('schedule.updatee'); // full name: doctor.schedule.updatee (group adds "doctor.")
 
 
         //############################# rays route ##########################################
@@ -132,6 +132,9 @@ Route::group([
         })->name('404');
     });
 
+    // Doctor-only routes that keep their original URLs and names (outside the `doctor/` prefix).
+    Route::middleware(['auth:doctor', 'doctor.status'])->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'showProfile'])->name('doctor.profile.show'); // <--- تغيير اسم الدالة إذا أردت
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('doctor.profile.edit'); // للتعديل
     Route::put('/profile', [ProfileController::class, 'update'])->name('doctor.profile.update'); // لحفظ التعديل
@@ -157,6 +160,7 @@ Route::group([
     Route::patch('/my-appointments/{appointment}/cancel', [DoctorController::class, 'cancelAppointment'])->name('doctor.appointments.cancel');
     Route::patch('/my-appointments/{appointment}/complete', [DoctorController::class, 'completeAppointment'])->name('doctor.appointments.complete');
 
+    });
 
     require __DIR__ . '/auth.php';
 });

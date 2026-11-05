@@ -45,7 +45,7 @@ class PharmacyManagerLoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (auth('pharmacy_manager')->attempt($this->only('email', 'password'), $this->filled('remember'))) {
+        if (! auth('pharmacy_manager')->attempt($this->only('email', 'password'), $this->filled('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -54,6 +54,8 @@ class PharmacyManagerLoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        return true;
     }
 
     /**

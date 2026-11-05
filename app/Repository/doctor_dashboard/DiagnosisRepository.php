@@ -15,14 +15,15 @@
 
          try {
 
-             $this->invoice_status($request->invoice_id,3);
+             $invoice = $this->doctorInvoice($request->invoice_id);
+             $this->invoice_status($invoice->id,3);
              $diagnosis = new Diagnostic();
              $diagnosis->date = date('Y-m-d');
              $diagnosis->diagnosis = $request->diagnosis;
              $diagnosis->medicine = $request->medicine;
-             $diagnosis->invoice_id = $request->invoice_id;
-             $diagnosis->patient_id = $request->patient_id;
-             $diagnosis->doctor_id = $request->doctor_id;
+             $diagnosis->invoice_id = $invoice->id;
+             $diagnosis->patient_id = $invoice->patient_id;
+             $diagnosis->doctor_id = $invoice->doctor_id;
              $diagnosis->save();
 
              DB::commit();
@@ -47,15 +48,16 @@
          DB::beginTransaction();
          try {
 
-             $this->invoice_status($request->invoice_id,2);
+             $invoice = $this->doctorInvoice($request->invoice_id);
+             $this->invoice_status($invoice->id,2);
              $diagnosis = new Diagnostic();
              $diagnosis->date = date('Y-m-d');
              $diagnosis->review_date = date('Y-m-d H:i:s');
              $diagnosis->diagnosis = $request->diagnosis;
              $diagnosis->medicine = $request->medicine;
-             $diagnosis->invoice_id = $request->invoice_id;
-             $diagnosis->patient_id = $request->patient_id;
-             $diagnosis->doctor_id = $request->doctor_id;
+             $diagnosis->invoice_id = $invoice->id;
+             $diagnosis->patient_id = $invoice->patient_id;
+             $diagnosis->doctor_id = $invoice->doctor_id;
              $diagnosis->save();
 
              DB::commit();
@@ -69,6 +71,14 @@
          }
      }
 
+
+     // Patient and doctor always come from the invoice, never from the form; the invoice must belong to the logged-in doctor.
+     private function doctorInvoice($invoice_id)
+     {
+         return Invoice::where('id', $invoice_id)
+             ->where('doctor_id', auth('doctor')->id())
+             ->firstOrFail();
+     }
 
      public function invoice_status($invoice_id,$id_status){
          $invoice_status = Invoice::findorFail($invoice_id);

@@ -2,6 +2,7 @@
 
 namespace App\Repository\doctor_dashboard;
 use App\Interfaces\doctor_dashboard\RaysRepositoryInterface;
+use App\Models\Invoice;
 use App\Models\Ray;
 
 class RaysRepository implements RaysRepositoryInterface
@@ -10,11 +11,15 @@ class RaysRepository implements RaysRepositoryInterface
     public function store($request)
     {
         try {
+            // Patient and doctor come from the invoice, which must belong to the logged-in doctor.
+            $invoice = Invoice::where('id', $request->invoice_id)
+                ->where('doctor_id', auth('doctor')->id())
+                ->firstOrFail();
             Ray::create([
                 'description'=>$request->description,
-                'invoice_id'=>$request->invoice_id,
-                'patient_id'=>$request->patient_id,
-                'doctor_id'=>$request->doctor_id,
+                'invoice_id'=>$invoice->id,
+                'patient_id'=>$invoice->patient_id,
+                'doctor_id'=>$invoice->doctor_id,
             ]);
             session()->flash('add');
             return redirect()->back();
@@ -27,7 +32,7 @@ class RaysRepository implements RaysRepositoryInterface
     public function update($request, $id)
     {
         try {
-            $Ray = Ray::findOrFail($id);
+            $Ray = Ray::where('id', $id)->where('doctor_id', auth('doctor')->id())->firstOrFail();
             $Ray->update([
                 'description' => $request->description,
             ]);
@@ -42,7 +47,7 @@ class RaysRepository implements RaysRepositoryInterface
     public function destroy($id)
     {
         try {
-            Ray ::destroy($id);
+            Ray::where('id', $id)->where('doctor_id', auth('doctor')->id())->firstOrFail()->delete();
             session()->flash('delete');
             return redirect()->back();
         }

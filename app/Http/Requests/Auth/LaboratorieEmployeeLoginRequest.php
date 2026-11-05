@@ -45,7 +45,7 @@
      {
          $this->ensureIsNotRateLimited();
 
-         if (auth('laboratorie_employee')->attempt($this->only('email', 'password'), $this->filled('remember'))) {
+         if (! auth('laboratorie_employee')->attempt($this->only('email', 'password'), $this->filled('remember'))) {
              RateLimiter::hit($this->throttleKey());
 
              throw ValidationException::withMessages([
@@ -54,6 +54,8 @@
          }
 
          RateLimiter::clear($this->throttleKey());
+
+         return true;
      }
 
      /**

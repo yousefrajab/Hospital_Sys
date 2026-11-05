@@ -63,7 +63,7 @@ class StoreLaboratorieEmployeeRequest extends FormRequest
                 'regex:/^05\d{8}$/',
                 Rule::unique('laboratorie_employees', 'phone')->ignore($employeeId),
             ],
-            'password' => 'nullable|string|min:8',
+            'password' => 'required|string|min:8',
             // 'status' => 'required|boolean',
             // 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];

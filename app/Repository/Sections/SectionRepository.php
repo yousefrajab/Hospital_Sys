@@ -105,6 +105,16 @@ class SectionRepository implements SectionRepositoryInterface
     public function destroy($request)
     {
         $section = Section::findOrFail($request->id);
+
+        // doctors.section_id and rooms.section_id cascade on delete, so a section in use must not be removed.
+        if ($section->doctors()->exists() || $section->rooms()->exists()) {
+            $message = 'لا يمكن حذف هذا القسم لأنه مرتبط بأطباء أو غرف. انقلهم إلى قسم آخر أولاً.';
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message' => $message], 422);
+            }
+            return redirect()->route('admin.Sections.index')->withErrors(['section' => $message]);
+        }
+
         $section->delete();
 
         if ($request->ajax()) {

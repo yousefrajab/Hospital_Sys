@@ -29,7 +29,7 @@
      {
          $this->ensureIsNotRateLimited();
 
-         if (auth('patient')->attempt($this->only('email', 'password'), $this->filled('remember'))) {
+         if (! auth('patient')->attempt($this->only('email', 'password'), $this->filled('remember'))) {
              RateLimiter::hit($this->throttleKey());
 
              throw ValidationException::withMessages([
@@ -38,6 +38,8 @@
          }
 
          RateLimiter::clear($this->throttleKey());
+
+         return true;
      }
 
      /**
