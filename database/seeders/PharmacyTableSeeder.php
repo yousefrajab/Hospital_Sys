@@ -16,7 +16,7 @@ class PharmacyTableSeeder extends Seeder
      */
     public function run()
     {
-        PharmacyManager::firstOrCreate(['email' => 'pm@gmail.com'], [
+        PharmacyManager::firstOrCreate(['email' => 'pharmacy.manager@hospital.com'], [
             'national_id' => 900000001,
             'name' => 'Pharmacy Manager',
             'phone' => '0590000001',
@@ -25,7 +25,7 @@ class PharmacyTableSeeder extends Seeder
             'status' => 1,
         ]);
 
-        PharmacyEmployee::firstOrCreate(['email' => 'pe@gmail.com'], [
+        PharmacyEmployee::firstOrCreate(['email' => 'pharmacy.employee@hospital.com'], [
             'national_id' => 900000002,
             'name' => 'Pharmacy Employee',
             'phone' => '0590000002',

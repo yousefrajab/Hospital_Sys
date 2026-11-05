@@ -19,7 +19,7 @@ class AdminTableSeeder extends Seeder
         DB::table('admins')->delete();
         DB::table('admins')->insert([
             'name' => 'admin',
-            'email' => 'admin@gmail.com',
+            'email' => 'admin@hospital.com',
             'password' => Hash::make('12345678'),
             'phone'=>'0597301646'
         ]);

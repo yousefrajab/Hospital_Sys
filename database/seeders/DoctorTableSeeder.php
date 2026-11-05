@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DoctorTableSeeder extends Seeder
 {
@@ -15,7 +16,10 @@ class DoctorTableSeeder extends Seeder
      */
     public function run()
     {
-        Doctor::factory()->count(6)->create();
+        Doctor::factory()->create([
+            'email' => 'doctor@hospital.com',
+            'password' => Hash::make('12345678'),
+        ]);
 
     //     $Appointments = Appointment::all();
 

@@ -13,9 +13,11 @@ if errorlevel 1 (
 )
 
 echo [2/3] Opening browser...
-start "" "http://127.0.0.1:8000/login"
+start "" "http://localhost:8000/login"
 
-echo [3/3] Starting Laravel server on http://127.0.0.1:8000
+echo [3/3] Starting Laravel server
+echo     On this computer:        http://localhost:8000
+for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /c:"IPv4"') do for /f "tokens=1" %%b in ("%%a") do echo     From phone (same Wi-Fi): http://%%b:8000
 echo     Close this window to stop the server.
-php artisan serve --host=127.0.0.1 --port=8000
+php artisan serve --host=0.0.0.0 --port=8000
 pause

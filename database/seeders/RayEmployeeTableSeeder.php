@@ -16,7 +16,7 @@ class RayEmployeeTableSeeder extends Seeder
         $ray_employee->name = 'محمد احمد';
         $ray_employee->national_id = '123478569';
 
-        $ray_employee->email = 'm@yahoo.com';
+        $ray_employee->email = 'ray@hospital.com';
         $ray_employee->phone = '0592612643';
         $ray_employee->status = 1;
         $ray_employee->password = Hash::make('12345678');
