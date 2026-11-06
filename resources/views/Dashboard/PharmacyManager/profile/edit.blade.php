@@ -11,7 +11,7 @@
     <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     <style>
         :root {
-            --ray-primary: #5e72e4;
+            --ray-primary: #0d9488;
             --ray-secondary: #11cdef;
             --ray-gradient: linear-gradient(135deg, var(--ray-primary), var(--ray-secondary));
             --ray-dark: #32325d;

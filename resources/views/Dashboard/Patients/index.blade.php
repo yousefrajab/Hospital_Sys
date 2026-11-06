@@ -18,9 +18,9 @@
     <style>
         /* --- استخدام نفس المتغيرات والأنماط العامة من الردود السابقة --- */
         :root {
-            --admin-primary: #4f46e5;
+            --admin-primary: #0d9488;
             /* بنفسجي جذاب */
-            --admin-primary-dark: #4338ca;
+            --admin-primary-dark: #0f766e;
             --admin-secondary: #10b981;
             /* أخضر مائل للأزرق */
             --admin-success: #22c55e;
@@ -57,7 +57,7 @@
             --admin-transition: all 0.25s ease-in-out;
             /* انتقال سلس وسريع */
 
-            --admin-primary-rgb: 79, 70, 229;
+            --admin-primary-rgb: 13, 148, 136;
             --admin-secondary-rgb: 16, 185, 129;
             --admin-success-rgb: 34, 197, 94;
             --admin-danger-rgb: 239, 68, 68;
@@ -185,7 +185,7 @@
         }
 
         .stats-card-patient.info .icon {
-            background: linear-gradient(45deg, var(--admin-info), #2563eb);
+            background: linear-gradient(45deg, var(--admin-info), #0f766e);
         }
 
         /* الجدول */

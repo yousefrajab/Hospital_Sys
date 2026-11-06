@@ -18,8 +18,8 @@
            Global Variables & Base Styles for Admin Dashboard (Full)
            ========================================================================== */
         :root {
-            --admin-primary: #4f46e5; /* بنفسجي جذاب (Indigo-600) */
-            --admin-primary-dark: #4338ca; /* أغمق قليلاً للـ hover */
+            --admin-primary: #0d9488; /* بنفسجي جذاب (Indigo-600) */
+            --admin-primary-dark: #0f766e; /* أغمق قليلاً للـ hover */
             --admin-primary-light: #c7d2fe;
             --admin-secondary: #10b981; /* أخضر زمردي (Emerald-600) */
             --admin-success: #22c55e; /* Green-500 */
@@ -40,7 +40,7 @@
             --admin-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.07);
             --admin-shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.07), 0 2px 6px -2px rgba(0, 0, 0, 0.07);
             --admin-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --bs-primary-rgb: 79, 70, 229;
+            --bs-primary-rgb: 13, 148, 136;
             --admin-success-rgb: 34,197,94;
             --admin-danger-rgb: 239,68,68;
         }
@@ -49,8 +49,8 @@
             :root {
                 --admin-bg: #111827; --admin-card-bg: #1f2937; --admin-text: #e5e7eb;
                 --admin-text-secondary: #9ca3af; --admin-border-color: #374151;
-                --admin-input-border: #4b5563; --admin-primary: #6366f1;
-                --admin-primary-dark: #4f46e5; --admin-secondary: #34d399;
+                --admin-input-border: #4b5563; --admin-primary: #0d9488;
+                --admin-primary-dark: #0d9488; --admin-secondary: #34d399;
             }
             .form-control, .form-select, .flatpickr-input, .select2-container--bootstrap-5 .select2-selection {
                 background-color: #2d3748 !important;

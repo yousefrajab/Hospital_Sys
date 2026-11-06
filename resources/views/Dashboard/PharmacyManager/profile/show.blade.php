@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --ray-primary: #5e72e4;
+            --ray-primary: #0d9488;
             --ray-secondary: #11cdef;
             --ray-gradient: linear-gradient(135deg, var(--ray-primary), var(--ray-secondary));
             --ray-dark: #32325d;

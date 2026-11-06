@@ -11,7 +11,7 @@
     <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     <style>
         :root {
-            --bs-primary-rgb: 67, 97, 238;
+            --bs-primary-rgb: 13, 148, 136;
             --bs-primary: rgb(var(--bs-primary-rgb));
             --bs-secondary-rgb: 108, 117, 125;
             --bs-success-rgb: 25, 135, 84;

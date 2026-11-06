@@ -19,8 +19,8 @@
             --admin-card-bg: #ffffff;
             --admin-text-primary: #1e293b;
             --admin-text-secondary: #64748b;
-            --admin-primary: #4f46e5;
-            --admin-primary-hover: #4338ca;
+            --admin-primary: #0d9488;
+            --admin-primary-hover: #0f766e;
             --admin-secondary: #10b981;
             --admin-border-color: #e5e7eb;
             --admin-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -36,8 +36,8 @@
                 --admin-text-primary: #f3f4f6;
                 --admin-text-secondary: #9ca3af;
                 --admin-border-color: #374151;
-                --admin-primary: #6366f1;
-                --admin-primary-hover: #4f46e5;
+                --admin-primary: #0d9488;
+                --admin-primary-hover: #0d9488;
                 --admin-secondary: #34d399;
                 --admin-shadow: 0 4px 6px -1px rgb(255 255 255 / 0.05), 0 2px 4px -2px rgb(255 255 255 / 0.05);
             }
@@ -50,13 +50,13 @@
             --admin-text-primary: #f3f4f6;
             --admin-text-secondary: #9ca3af;
             --admin-border-color: #374151;
-            --admin-primary: #6366f1;
-            --admin-primary-hover: #4f46e5;
+            --admin-primary: #0d9488;
+            --admin-primary-hover: #0d9488;
             --admin-secondary: #34d399;
             --admin-shadow: 0 4px 6px -1px rgb(255 255 255 / 0.05), 0 2px 4px -2px rgb(255 255 255 / 0.05);
         }
         .dark .profile-header-card::before {
-             background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent 70%);
+             background: radial-gradient(circle, rgba(13, 148, 136, 0.1), transparent 70%);
         }
         /* ... (أضف أي تجاوزات أخرى للوضع الداكن هنا إذا لزم الأمر) ... */
 
@@ -96,7 +96,7 @@
             right: -50px;
             width: 150px;
             height: 150px;
-            background: radial-gradient(circle, rgba(79, 70, 229, 0.05), transparent 70%);
+            background: radial-gradient(circle, rgba(13, 148, 136, 0.05), transparent 70%);
             opacity: 0.6;
             z-index: 0;
             pointer-events: none;

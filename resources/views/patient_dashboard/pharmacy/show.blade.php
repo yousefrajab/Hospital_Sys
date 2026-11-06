@@ -11,7 +11,7 @@
     <style>
         /* --- Root Variables & Basic Styling (Adopted from your previous clean styles) --- */
         :root {
-            --bs-primary-rgb: 67, 97, 238;
+            --bs-primary-rgb: 13, 148, 136;
             --bs-primary: rgb(var(--bs-primary-rgb));
             --bs-primary-dark: #3a58d8;
             --bs-secondary-rgb: 108, 117, 125;
@@ -60,7 +60,7 @@
         .prescription-details-card { margin-top: 1rem; } /* Add some top margin */
 
         .prescription-main-header {
-            background: linear-gradient(135deg, #4e73df 0%, #36b9cc 100%); /* Example gradient */
+            background: linear-gradient(135deg, #0d9488 0%, #36b9cc 100%); /* Example gradient */
             color: #fff;
             padding: 1.5rem 1.75rem;
             border-radius: var(--bs-card-border-radius) var(--bs-card-border-radius) 0 0;

@@ -18,7 +18,7 @@
     {{-- نسخ الأنماط الممتازة من تصميم الطبيب --}}
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+            --primary-gradient: linear-gradient(135deg, #0d9488, #8B5CF6);
             --secondary-gradient: linear-gradient(135deg, #06B6D4, #0EA5E9);
             --glass-effect: rgba(255, 255, 255, 0.25);
             --primary-color: #4e73ff;
@@ -143,7 +143,7 @@
         .section-title {
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            background: linear-gradient(135deg, #0d9488, #8B5CF6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             position: relative;
@@ -157,7 +157,7 @@
             right: 0;
             width: 50px;
             height: 4px;
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            background: linear-gradient(135deg, #0d9488, #8B5CF6);
             border-radius: 2px;
         }
 
@@ -188,7 +188,7 @@
             background: white;
             padding: 0 8px;
             font-size: 13px;
-            color: #6366F1;
+            color: #0d9488;
             font-weight: 600;
             transition: all 0.2s ease-out;
             pointer-events: none;
@@ -199,7 +199,7 @@
         .floating-label input:not(:placeholder-shown)~label {
             top: -10px;
             font-size: 13px;
-            color: #6366F1;
+            color: #0d9488;
         }
 
         /* إزالة padding-top من input إذا استخدمت floating label */

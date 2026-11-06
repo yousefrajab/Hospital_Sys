@@ -15,7 +15,7 @@
     <style>
         :root {
             /* لوحة الألوان */
-            --primary-color: #4A90E2;
+            --primary-color: #0d9488;
             --secondary-color: #4A4A4A;
             --accent-color: #50E3C2;
             --light-bg: #f9fbfd;

@@ -59,7 +59,7 @@
         }
 
         .bg-custom-primary {
-            background-color: #007bff !important;
+            background-color: #0d9488 !important;
         }
 
         /* استبدل بألوانك المفضلة */
@@ -332,12 +332,11 @@
     <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.pie.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.resize.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.categories.js') }}"></script>
-    {{-- <script src="{{ URL::asset('Dashboard/js/dashboard.sampledata.js') }}"></script> --}} {{-- قد لا تحتاج هذا إذا كانت بياناتك ديناميكية --}}
-    {{-- <script src="{{ URL::asset('Dashboard/js/chart.flot.sampledata.js') }}"></script> --}}
+    {{----}} {{-- قد لا تحتاج هذا إذا كانت بياناتك ديناميكية --}}
+    {{----}}
     <script src="{{ URL::asset('Dashboard/js/apexcharts.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
-    <script src="{{ URL::asset('Dashboard/js/modal-popup.js') }}"></script>
-    <script src="{{ URL::asset('Dashboard/js/index.js') }}"></script> {{-- كن حذرًا، هذا قد يعيد تهيئة بعض الأشياء --}}
-    {{-- <script src="{{ URL::asset('Dashboard/js/jquery.vmap.sampledata.js') }}"></script> --}}
+{{-- كن حذرًا، هذا قد يعيد تهيئة بعض الأشياء --}}
+    {{----}}
 @endsection

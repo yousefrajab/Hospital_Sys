@@ -64,7 +64,7 @@
 <style>
     /* Modern Styling */
     .bg-gradient-primary {
-        background: linear-gradient(135deg, #4361ee, #3a0ca3);
+        background: linear-gradient(135deg, #0d9488, #3a0ca3);
     }
 
     .wave-bg {

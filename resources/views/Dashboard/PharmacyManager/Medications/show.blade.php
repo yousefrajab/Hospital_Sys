@@ -13,7 +13,7 @@
     <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
     <style>
         :root {
-            --admin-primary: #0d6efd;
+            --admin-primary: #0d9488;
             --admin-secondary: #6c757d;
             --admin-success: #198754;
             --admin-info: #0dcaf0;
@@ -229,7 +229,7 @@
         .alert-custom-info {
             background-color: var(--admin-info-bg, #e0f7fa);
             /* لون أزرق فاتح جداً */
-            color: var(--admin-info-text, #007bff);
+            color: var(--admin-info-text, #0d9488);
             border-color: var(--admin-info-border, #b3e5fc);
             padding: 1rem;
             border-radius: var(--admin-radius-md);

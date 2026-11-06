@@ -124,7 +124,7 @@
 
     <!--Internal  Notify js -->
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
 
     <!--Internal  Datepicker js -->
     <script src="{{ URL::asset('Dashboard/plugins/jquery-ui/ui/widgets/datepicker.js') }}"></script>
@@ -142,8 +142,6 @@
     <script src="{{ URL::asset('Dashboard/plugins/jquery-simple-datetimepicker/jquery.simple-dtpicker.js') }}"></script>
     <!--Internal  pickerjs js -->
     <script src="{{ URL::asset('Dashboard/plugins/pickerjs/picker.min.js') }}"></script>
-    <!-- Internal form-elements js -->
-    <script src="{{ URL::asset('Dashboard/js/form-elements.js') }}"></script>
 
 
     <script>

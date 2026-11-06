@@ -103,7 +103,7 @@
         top: 5px;
         height: 20px;
         width: 4px;
-        background: linear-gradient(to bottom, #667eea, #764ba2);
+        background: linear-gradient(to bottom, #0d9488, #0f766e);
         border-radius: 4px;
     }
 
@@ -115,16 +115,16 @@
         font-weight: 500;
         letter-spacing: 0.5px;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
     }
 
     .btn-primary-gradient {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
     }
 
     .btn-add:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 6px 20px rgba(13, 148, 136, 0.4);
     }
 
     /* Card Styling */
@@ -137,7 +137,7 @@
 
     /* Table Header */
     .bg-gradient-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%) !important;
     }
 
     .table-advanced thead th {
@@ -154,7 +154,7 @@
     }
 
     .table-advanced tbody tr:hover {
-        background-color: rgba(102, 126, 234, 0.05);
+        background-color: rgba(13, 148, 136, 0.05);
         transform: translateY(-1px);
     }
 
@@ -163,7 +163,7 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background-color: rgba(102, 126, 234, 0.1);
+        background-color: rgba(13, 148, 136, 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -244,7 +244,7 @@
     }
 
     .description-tooltip:hover {
-        color: #667eea;
+        color: #0d9488;
     }
 
     /* Badge Styling */

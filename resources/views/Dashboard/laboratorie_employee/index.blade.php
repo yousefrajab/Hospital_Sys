@@ -9,9 +9,9 @@
     <link href="{{ URL::asset('Dashboard/plugins/datatable/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
     <style>
         <style> :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --accent-color: #4895ef;
+            --primary-color: #0d9488;
+            --secondary-color: #0f766e;
+            --accent-color: #14b8a6;
             --light-color: #f8f9fa;
             --dark-color: #212529;
             --danger-color: #dc3545;
@@ -38,7 +38,7 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 5px 15px rgba(13, 148, 136, 0.3);
         }
 
         .table thead th {

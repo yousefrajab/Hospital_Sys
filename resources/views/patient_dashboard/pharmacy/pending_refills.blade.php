@@ -11,7 +11,7 @@
     <style>
         /* --- Root Variables & Basic Styling (Adopted from your previous clean styles) --- */
         :root {
-            --bs-primary-rgb: 67, 97, 238; /* #4361ee */
+            --bs-primary-rgb: 13, 148, 136; /* #0d9488 */
             --bs-primary: rgb(var(--bs-primary-rgb));
             /* ... (باقي متغيرات الألوان الأساسية) ... */
             --bs-body-bg: #f8f9fc;

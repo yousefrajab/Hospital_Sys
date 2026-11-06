@@ -6,7 +6,7 @@
     @include('Style.Style')
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+            --primary-gradient: linear-gradient(135deg, #0d9488, #8B5CF6);
             --secondary-gradient: linear-gradient(135deg, #06B6D4, #0EA5E9);
             --glass-effect: rgba(255, 255, 255, 0.25);
         }
@@ -79,7 +79,7 @@
             background: white;
             padding: 0 8px;
             font-size: 13px;
-            color: #6366F1;
+            color: #0d9488;
             font-weight: 600;
             z-index: 1;
         }
@@ -121,7 +121,7 @@
 
         /* تأثيرات خاصة بصفحة التأمين */
         .insurance-header {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(139, 92, 246, 0.1));
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 30px;
@@ -283,7 +283,7 @@
 
 @section('js')
     <script src="{{URL::asset('Dashboard/plugins/notify/js/notifIt.js')}}"></script>
-    <script src="{{URL::asset('/plugins/notify/js/notifit-custom.js')}}"></script>
+    <script src="{{URL::asset('Dashboard/plugins/notify/js/notifit-custom.js')}}"></script>
     <script>
         // يمكنك إضافة أي JavaScript إضافي هنا
         document.addEventListener('DOMContentLoaded', function() {
@@ -295,7 +295,7 @@
                 });
 
                 input.addEventListener('blur', function() {
-                    this.parentElement.querySelector('label').style.color = '#6366F1';
+                    this.parentElement.querySelector('label').style.color = '#0d9488';
                 });
             });
         });

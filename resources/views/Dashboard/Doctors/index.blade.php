@@ -173,7 +173,7 @@
                                                             fill="none" stroke="#e0e0e0" stroke-width="3" />
                                                         <path class="count-circle-fill"
                                                             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                                            fill="none" stroke="#4361ee" stroke-width="3"
+                                                            fill="none" stroke="#0d9488" stroke-width="3"
                                                             stroke-dasharray="0, 100" />
                                                     </svg>
                                                 </div> <span class="count-label">{{ trans('doctors.Reports') }}</span>

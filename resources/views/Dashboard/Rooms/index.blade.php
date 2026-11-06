@@ -19,7 +19,7 @@
     <style>
         /* يمكنك استخدام نفس متغيرات CSS التي استخدمتها في صفحات المستخدمين لتوحيد المظهر */
         :root {
-            --admin-primary: #4f46e5;
+            --admin-primary: #0d9488;
             /* بنفسجي جذاب */
             --admin-secondary: #10b981;
             /* أخضر زمردي */
@@ -44,7 +44,7 @@
                 --admin-text: #f9fafb;
                 --admin-text-secondary: #9ca3af;
                 --admin-border-color: #4b5563;
-                --admin-primary: #6366f1;
+                --admin-primary: #0d9488;
                 --admin-secondary: #34d399;
             }
 
@@ -116,7 +116,7 @@
         }
 
         .table tbody tr:hover {
-            background-color: rgba(79, 70, 229, 0.04);
+            background-color: rgba(13, 148, 136, 0.04);
         }
 
         .badge {
@@ -145,7 +145,7 @@
         /* أحمر ناعم */
         .bg-info-soft {
             background-color: rgba(59, 130, 246, 0.1);
-            color: #1d4ed8;
+            color: #0f766e;
         }
 
         /* أزرق معلومات ناعم */
@@ -172,7 +172,7 @@
         .form-control:focus,
         .form-select:focus {
             border-color: var(--admin-primary);
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
+            box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.15);
         }
 
         .select2-container--bootstrap-5 .select2-selection {

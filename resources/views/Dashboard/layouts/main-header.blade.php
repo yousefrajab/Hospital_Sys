@@ -1,434 +1,133 @@
-<!-- main-header opened -->
-<div class="main-header sticky side-header nav nav-item">
-    <div class="container-fluid">
-        <div class="main-header-left ">
-            <div class="responsive-logo">
-                <a href="{{ url('/') }}"><img src="{{ URL::asset('Dashboard/img/brand/logo.png') }}"
-                        class="logo-1" alt="logo"></a>
-                <a href="{{ url('/') }}"><img
-                        src="{{ URL::asset('Dashboard/img/brand/logo-white.png') }}" class="dark-logo-1"
-                        alt="logo"></a>
-                <a href="{{ url('/') }}"><img
-                        src="{{ URL::asset('Dashboard/img/brand/favicon.png') }}" class="logo-2" alt="logo"></a>
-                <a href="{{ url('/') }}"><img
-                        src="{{ URL::asset('Dashboard/img/brand/favicon.png') }}" class="dark-logo-2"
-                        alt="logo"></a>
-            </div>
-            <div class="app-sidebar__toggle" data-toggle="sidebar">
-                <a class="open-toggle" href="#"><i class="header-icon fe fe-align-left"></i></a>
-                <a class="close-toggle" href="#"><i class="header-icons fe fe-x"></i></a>
-            </div>
-            <div class="main-header-center mr-3 d-sm-none d-md-none d-lg-block">
-                <input class="form-control" placeholder="Search for anything..." type="search">
-                <button class="btn"><i class="fas fa-search d-none d-md-block"></i></button>
+{{-- Dashboard top bar. Data: $hmsUser (CurrentUser) and the HeaderDataComposer variables. --}}
+<header class="hms-topbar">
+    <button type="button" class="hms-icon-btn" data-hms-toggle="sidebar" aria-label="{{ trans('ui.toggle_menu') }}">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="hms-topbar__spacer"></div>
+
+    {{-- Language --}}
+    <div class="dropdown">
+        <button type="button" class="hms-icon-btn hms-icon-btn--text" data-toggle="dropdown" data-display="static" aria-label="{{ trans('ui.language') }}">
+            <i class="fas fa-globe"></i>
+            <span class="hms-hide-sm">{{ LaravelLocalization::getCurrentLocaleNative() }}</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end hms-dropdown">
+            @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                <a class="dropdown-item {{ App::getLocale() === $localeCode ? 'active' : '' }}" rel="alternate" hreflang="{{ $localeCode }}"
+                    href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                    {{ $properties['native'] }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- Theme --}}
+    <button type="button" class="hms-icon-btn" data-hms-toggle="theme" title="{{ trans('ui.dark_mode') }} / {{ trans('ui.light_mode') }}"
+        aria-label="{{ trans('ui.dark_mode') }}">
+        <i class="fas fa-moon hms-when-light"></i>
+        <i class="fas fa-sun hms-when-dark"></i>
+    </button>
+
+    {{-- Messages (doctor and patient chat) --}}
+    @if ($chatRouteForHeader ?? null)
+        <div class="dropdown">
+            <button type="button" class="hms-icon-btn" data-toggle="dropdown" data-display="static" aria-label="{{ trans('ui.messages') }}">
+                <i class="far fa-comment-dots"></i>
+                <span class="hms-badge" id="headerChatCountBadge" @if (! ($unreadMessagesForHeader ?? 0)) style="display:none" @endif>{{ $unreadMessagesForHeader ?? 0 }}</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end hms-dropdown hms-dropdown--wide">
+                <div class="hms-dropdown__head">{{ trans('ui.messages') }}</div>
+                <div class="hms-dropdown__list" id="headerMessageListContainer">
+                    @forelse ($latestMessagesForHeader ?? [] as $headerMessage)
+                        <a href="{{ $chatRouteForHeader }}" class="hms-dropdown__item">
+                            <span class="hms-dropdown__icon"><i class="fas fa-user"></i></span>
+                            <span>
+                                <strong>{{ $headerMessage->sender_display_name }}</strong>
+                                <small class="d-block text-muted">{{ \Illuminate\Support\Str::limit($headerMessage->body, 60) }}</small>
+                                <small class="hms-dropdown__time">{{ $headerMessage->created_at->diffForHumans() }}</small>
+                            </span>
+                        </a>
+                    @empty
+                        <p class="hms-dropdown__empty text-center text-muted">{{ trans('ui.no_messages') }}</p>
+                    @endforelse
+                </div>
+                <a href="{{ $chatRouteForHeader }}" class="hms-dropdown__foot">{{ trans('ui.view_all') }}</a>
             </div>
         </div>
-        <div class="main-header-right">
-            <ul class="nav">
-                <li class="">
-                    <div class="dropdown  nav-itemd-none d-md-flex">
-                        <a href="#" class="d-flex  nav-item nav-link pl-0 country-flag1" data-toggle="dropdown"
-                            aria-expanded="false">
-                            @if (App::getLocale() == 'ar')
-                                <span class="avatar country-Flag mr-0 align-self-center bg-transparent"><img
-                                        src="{{ URL::asset('Dashboard/img/flags/pal_flag.png') }}"
-                                        alt="img"></span>
-                                <strong
-                                    class="mr-2 ml-2 my-auto">{{ LaravelLocalization::getCurrentLocaleName() }}</strong>
-                            @else
-                                <span class="avatar country-Flag mr-0 align-self-center bg-transparent"><img
-                                        src="{{ URL::asset('Dashboard/img/flags/us_flag.jpg') }}"
-                                        alt="img"></span>
-                                <strong
-                                    class="mr-2 ml-2 my-auto">{{ LaravelLocalization::getCurrentLocaleName() }}</strong>
-                            @endif
-                            <div class="my-auto">
-                            </div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-left dropdown-menu-arrow" x-placement="bottom-end">
-                            @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-                                <a class="dropdown-item" rel="alternate" hreflang="{{ $localeCode }}"
-                                    href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
-                                    @if ($properties['native'] == 'English')
-                                        <i class="flag-icon flag-icon-us"></i>
-                                    @elseif($properties['native'] == 'العربية')
-                                        <i class="flag-icon flag-icon-ps"></i>
-                                    @endif
-                                    {{ $properties['native'] }}
-                                </a>
-                            @endforeach
-                        </div>
+    @endif
+
+    {{-- Notifications --}}
+    <div class="dropdown">
+        <button type="button" class="hms-icon-btn" data-toggle="dropdown" data-display="static" aria-label="{{ trans('ui.notifications') }}">
+            <i class="far fa-bell"></i>
+            <span class="hms-badge" id="generalNotificationsCountBadge" @if (! ($generalNotificationsCountForHeader ?? 0)) style="display:none" @endif>{{ $generalNotificationsCountForHeader ?? 0 }}</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end hms-dropdown hms-dropdown--wide">
+            <div class="hms-dropdown__head">{{ trans('ui.notifications') }}</div>
+            <div class="hms-dropdown__list" id="hmsNotificationList">
+                @forelse ($latestGeneralNotificationsForHeader ?? [] as $notification)
+                    <div class="hms-dropdown__item">
+                        <span class="hms-dropdown__icon"><i class="fas fa-file-medical"></i></span>
+                        <span>
+                            <span class="d-block">{{ $notification->message }}</span>
+                            <small class="hms-dropdown__time">{{ $notification->created_at->diffForHumans() }}</small>
+                        </span>
                     </div>
-                </li>
-            </ul>
-            <div class="nav nav-item  navbar-nav-right ml-auto">
-                <div class="nav-link" id="bs-example-navbar-collapse-1">
-                    <form class="navbar-form" role="search">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search">
-                            <span class="input-group-btn">
-                                <button type="reset" class="btn btn-default">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                                <button type="submit" class="btn btn-default nav-link resp-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-search">
-                                        <circle cx="11" cy="11" r="8"></circle>
-                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                    </svg>
-                                </button>
-                            </span>
-                        </div>
-                    </form>
-                </div>
-                <div class="dropdown nav-item main-header-message ">
-                    <a class="new nav-link" href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-mail">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                            </path>
-                            <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
-                        <span class=" pulse-danger"></span></a>
-                    <div class="dropdown-menu">
-                        <div class="menu-header-content bg-primary text-right">
-                            <div class="d-flex">
-                                <h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">{{ trans('AdminSb.header_messages') }}</h6>
-                                <span class="badge badge-pill badge-warning mr-auto my-auto float-left">Mark All
-                                    Read</span>
-                            </div>
-                            <p class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 ">{{ trans('AdminSb.header_unread_messages', ['count' => $unreadMessagesForHeader ?? 0]) }}</p>
-                        </div>
-                        <div class="main-message-list chat-scroll">
-                            @forelse ($latestMessagesForHeader ?? [] as $headerMessage)
-                                <a href="{{ $chatRouteForHeader ?? '#' }}" class="p-3 d-flex border-bottom">
-                                    <div class="wd-90p">
-                                        <div class="d-flex">
-                                            <h5 class="mb-1 name">{{ $headerMessage->sender_display_name }}</h5>
-                                        </div>
-                                        <p class="mb-0 desc">{{ \Illuminate\Support\Str::limit($headerMessage->body, 60) }}</p>
-                                        <p class="time mb-0 text-left float-right mr-2 mt-2">{{ $headerMessage->created_at->diffForHumans() }}</p>
-                                    </div>
-                                </a>
-                            @empty
-                                <p class="p-3 mb-0 text-muted text-center">{{ trans('AdminSb.header_no_messages') }}</p>
-                            @endforelse
-                        </div>
-                        <div class="text-center dropdown-footer">
-                            <a href="{{ $chatRouteForHeader ?? 'javascript:void(0)' }}">{{ trans('AdminSb.header_view_all') }}</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="dropdown nav-item main-header-notification">
-                    <a class="new nav-link" href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-bell">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                        </svg>
-                        <span class=" pulse"></span></a>
-                    <div class="dropdown-menu dropdown-notifications">
-                        <div class="menu-header-content bg-primary text-right">
-                            <div class="d-flex">
-                                <h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">{{ trans('AdminSb.header_notifications') }}</h6>
-                                <span class="badge badge-pill badge-warning mr-auto my-auto float-left">Mark All
-                                    Read</span>
-                            </div>
-                            <p data-count="{{ $generalNotificationsCountForHeader ?? 0 }}"
-                                class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 notif-count">
-                                {{ $generalNotificationsCountForHeader ?? 0 }}</p>
-                        </div>
-                        <div class="main-notification-list Notification-scroll">
-
-                            <div class="new_message">
-                                <a class="d-flex p-3 border-bottom" href="#">
-                                    <div class="notifyimg bg-pink">
-                                        <i class="la la-file-alt text-white"></i>
-                                    </div>
-                                    <div class="mr-3">
-                                        <h4 class="notification-label mb-1"></h4>
-                                        <div class="notification-subtext"></div>
-                                    </div>
-                                    <div class="mr-auto">
-                                        <i class="las la-angle-left text-left text-muted"></i>
-                                    </div>
-                                </a>
-                            </div>
-
-                            @foreach ($latestGeneralNotificationsForHeader ?? [] as $notification)
-                                <a class="d-flex p-3 border-bottom" href="#">
-                                    <div class="notifyimg bg-pink">
-                                        <i class="la la-file-alt text-white"></i>
-                                    </div>
-                                    <div class="mr-3">
-                                        <h5 class="notification-label mb-1">{{ $notification->message }}</h5>
-                                        <div class="notification-subtext">{{ $notification->created_at->diffForHumans() }}</div>
-                                    </div>
-                                    <div class="mr-auto">
-                                        <i class="las la-angle-left text-left text-muted"></i>
-                                    </div>
-                                </a>
-                            @endforeach
-                        </div>
-                        <div class="dropdown-footer">
-                            <a href="javascript:void(0)">{{ trans('AdminSb.header_view_all') }}</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="nav-item full-screen fullscreen-button">
-                    <a class="new nav-link full-screen-link" href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-maximize">
-                            <path
-                                d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
-                            </path>
-                        </svg>
-                    </a>
-                </div>
-                {{-- افترض أن هذا الجزء من ملف layout رئيسي أو include للهيدر --}}
-                <div class="dropdown main-profile-menu nav nav-item nav-link">
-                    @php
-                        $user = null;
-                        $imagePath = asset('Dashboard/img/faces/default_avatar.png'); // صورة افتراضية عامة
-                        $userName = 'زائر';
-                        $userEmail = '';
-
-                        if (Auth::guard('admin')->check()) {
-                            $user = Auth::guard('admin')->user();
-                            $userName = $user->name;
-                            $userEmail = $user->email;
-                            if ($user->image) {
-                                $imagePath = asset('Dashboard/img/admin_photos/' . $user->image->filename); // مسار صور الأدمن
-                            } else {
-                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة أدمن افتراضية
-                            }
-                        } elseif (Auth::guard('doctor')->check()) {
-                            $user = Auth::guard('doctor')->user();
-                            $userName = $user->name;
-                            $userEmail = $user->email;
-                            if ($user->image) {
-                                $imagePath = asset('Dashboard/img/doctors/' . $user->image->filename); // مسار صور الأطباء
-                            } else {
-                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة طبيب افتراضية
-                            }
-                        } elseif (Auth::guard('ray_employee')->check()) {
-                            $user = Auth::guard('ray_employee')->user();
-                            $userName = $user->name;
-                            $userEmail = $user->email;
-                            if ($user->image) {
-                                $imagePath = asset('Dashboard/img/rayEmployees/' . $user->image->filename); // مسار صور موظفي الأشعة
-                            } else {
-                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة موظف أشعة افتراضية
-                            }
-                        } elseif (Auth::guard('laboratorie_employee')->check()) {
-                            $user = Auth::guard('laboratorie_employee')->user();
-                            $userName = $user->name;
-                            $userEmail = $user->email;
-                            if ($user->image) {
-                                $imagePath = asset('Dashboard/img/laboratorieEmployees/' . $user->image->filename); // مسار صور موظفي المختبر
-                            } else {
-                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة موظف مختبر افتراضية
-                            }
-                        } elseif (Auth::guard('patient')->check()) {
-                            // افترض أن لديك guard وموديل للمرضى
-                            $user = Auth::guard('patient')->user();
-                            $userName = $user->name;
-                            $userEmail = $user->email;
-                            if ($user->image) {
-                                $imagePath = asset('Dashboard/img/patients/' . $user->image->filename); // مسار صور المرضى
-                            } else {
-                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مريض افتراضية
-                            }
-                        } elseif (Auth::guard('pharmacy_employee')->check()) {
-                            // افترض أن لديك guard وموديل للمرضى
-                            $user = Auth::guard('pharmacy_employee')->user();
-                            $userName = $user->name;
-                            $userEmail = $user->email;
-                            if ($user->image) {
-                                $imagePath = asset('Dashboard/img/pharmacyEmployees/' . $user->image->filename); // مسار صور المرضى
-                            } else {
-                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مريض افتراضية
-                            }
-                        } elseif (Auth::guard('pharmacy_manager')->check()) {
-                            // افترض أن لديك guard وموديل للمرضى
-                            $user = Auth::guard('pharmacy_manager')->user();
-                            $userName = $user->name;
-                            $userEmail = $user->email;
-                            if ($user->image) {
-                                $imagePath = asset('Dashboard/img/pharmacy_managers/' . $user->image->filename); // مسار صور المرضى
-                            } else {
-                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مريض افتراضية
-                            }
-                        } elseif (Auth::guard('web')->check()) {
-                            // للمستخدم العادي (إذا كان لديك)
-                            $user = Auth::guard('web')->user();
-                            $userName = $user->name;
-                            $userEmail = $user->email;
-                            if ($user->image) {
-                                // افترض أن المستخدم العادي لديه علاقة صورة أيضًا
-                                $imagePath = asset('Dashboard/img/user_photos/' . $user->image->filename); // مسار صور المستخدمين
-                            } else {
-                                $imagePath = asset('Dashboard/img/faces/doctor_default.png'); // صورة مستخدم افتراضية
-                            }
-                        }
-
-                    @endphp
-
-                    <a class="profile-user d-flex" href="#">
-                        <img alt="{{ $userName }}" src="{{ $imagePath }}">
-                    </a>
-
-                    <div class="dropdown-menu">
-                        <div class="main-header-profile bg-primary p-3">
-                            <div class="d-flex wd-100p">
-                                <div class="main-img-user">
-                                    <img alt="{{ $userName }}" src="{{ $imagePath }}" class="">
-                                </div>
-                                <div class="mr-3 my-auto">
-                                    <h6>{{ $userName }}</h6>
-                                    @if ($userEmail)
-                                        <span>{{ $userEmail }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        @php
-                            $profileShowRoute = '#'; // قيمة افتراضية
-                            $profileEditRoute = '#'; // قيمة افتراضية
-                            $webEditRoute = '#'; // قيمة افتراضية
-
-                            if (Auth::guard('admin')->check()) {
-                                $profileShowRoute = route('admin.profile.show');
-                                $profileEditRoute = route('admin.profile.edit');
-                            } elseif (Auth::guard('doctor')->check()) {
-                                $profileShowRoute = route('doctor.profile.show'); // تأكد من وجود هذا الـ route
-                                $profileEditRoute = route('doctor.profile.edit'); // تأكد من وجود هذا الـ route
-                            } elseif (Auth::guard('ray_employee')->check()) {
-                                $profileShowRoute = route('ray_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                $profileEditRoute = route('ray_employee.profile.edit');
-                            } elseif (Auth::guard('laboratorie_employee')->check()) {
-                                $profileShowRoute = route('laboratorie_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                $profileEditRoute = route('laboratorie_employee.profile.edit');
-                            } elseif (Auth::guard('patient')->check()) {
-                                $webEditRoute = url('/home');
-                                $profileShowRoute = route('profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                $profileEditRoute = route('profile.edit');
-                            } elseif (Auth::guard('pharmacy_employee')->check()) {
-                                $profileShowRoute = route('pharmacy_employee.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                $profileEditRoute = route('pharmacy_employee.profile.edit');
-                            } elseif (Auth::guard('pharmacy_manager')->check()) {
-                                $profileShowRoute = route('pharmacy_manager.profile.show'); // ستحتاج لإنشاء هذه الـ routes
-                                $profileEditRoute = route('pharmacy_manager.profile.edit');
-                            }
-                            // يمكنك إضافة المزيد من الشروط لأنواع المستخدمين الأخرى
-                        @endphp
-                        @if ($webEditRoute !== '#')
-                            <a class="dropdown-item" href="{{ $webEditRoute }}"
-                                class="btn btn-outline-secondary ripple" target="_blank" ;>
-                                <i class="fas fa-home me-1"></i> {{ trans('AdminSb.external website') }}
-                            </a>
-                        @endif
-                        @if ($profileShowRoute !== '#')
-                            <a class="dropdown-item" href="{{ $profileShowRoute }}">
-                                <i class="bx bx-user-circle"></i>
-                                {{ trans('AdminSb.Profile') }}
-                            </a>
-                        @endif
-
-                        @if ($profileEditRoute !== '#')
-                            <a class="dropdown-item" href="{{ $profileEditRoute }}">
-                                <i class="bx bx-cog"></i>
-                                {{ trans('AdminSb.EditProfile') }} </a>
-                        @endif
-
-
-
-                        {{-- قسم تسجيل الخروج --}}
-                        @php
-                            $logoutRoute = null;
-                            if (Auth::guard('web')->check()) {
-                                $logoutRoute = route('logout.user');
-                            } elseif (Auth::guard('admin')->check()) {
-                                $logoutRoute = route('logout.admin');
-                            } elseif (Auth::guard('doctor')->check()) {
-                                $logoutRoute = route('logout.doctor');
-                            } elseif (Auth::guard('ray_employee')->check()) {
-                                $logoutRoute = route('logout.ray_employee');
-                            } elseif (Auth::guard('laboratorie_employee')->check()) {
-                                $logoutRoute = route('logout.laboratorie_employee');
-                            } elseif (Auth::guard('patient')->check()) {
-                                $logoutRoute = route('logout.patient');
-                            } elseif (Auth::guard('pharmacy_employee')->check()) {
-                                $logoutRoute = route('logout.pharmacy_employee');
-                            } elseif (Auth::guard('pharmacy_manager')->check()) {
-                                $logoutRoute = route('logout.pharmacy_manager');
-                            }
-                        @endphp
-
-                        @if ($logoutRoute)
-                            <form method="POST" action="{{ $logoutRoute }}" id="logoutFormGlobal">
-                                @csrf
-                                <a class="dropdown-item" href="{{ $logoutRoute }}"
-                                    onclick="event.preventDefault(); document.getElementById('logoutFormGlobal').submit();">
-                                    <i class="bx bx-log-out"></i>
-                                    {{ trans('AdminSb.logout') }}
-                                </a>
-                            </form>
-                        @endif
-                    </div>
-                </div>
-                <div class="dropdown main-header-message right-toggle">
-                    <a class="nav-link pr-0" data-toggle="sidebar-left" data-target=".sidebar-left">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" class="feather feather-menu">
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
-                    </a>
-                </div>
+                @empty
+                    <p class="hms-dropdown__empty text-center text-muted">{{ trans('ui.no_notifications') }}</p>
+                @endforelse
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"
-    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-<script src="https://js.pusher.com/7.2.0/pusher.min.js"></script>
-
-<script src="{{ asset('js/app.js') }}"></script>
-
-<script>
-    var notificationsWrapper = $('.dropdown-notifications');
-    var notificationsCountElem = notificationsWrapper.find('p[data-count]');
-    var notificationsCount = parseInt(notificationsCountElem.data('count'));
-
-    var notifications = notificationsWrapper.find('h4.notification-label');
-    var new_message = notificationsWrapper.find('.new_message');
-    new_message.hide();
-
-    @if (auth('doctor')->check())
-    Echo.private('create-invoice.{{ auth('doctor')->id() }}').listen('.create-invoice', (data) => {
-        var newNotificationHtml = `
-       <h4 class="notification-label mb-1">` + data.message + data.patient + `</h4>
-       <div class="notification-subtext">` + data.created_at + `</div>`;
-        new_message.show();
-        notifications.html(newNotificationHtml);
-        notificationsCount += 1;
-        notificationsCountElem.attr('data-count', notificationsCount);
-        notificationsWrapper.find('.notif-count').text(notificationsCount);
-        notificationsWrapper.show();
-    });
+    {{-- Account --}}
+    @if ($hmsUser->check())
+        <div class="dropdown">
+            <button type="button" class="hms-account" data-toggle="dropdown" data-display="static">
+                @if ($hmsUser->avatarUrl())
+                    <img src="{{ $hmsUser->avatarUrl() }}" alt="" class="hms-avatar hms-avatar--sm">
+                @else
+                    <span class="hms-avatar hms-avatar--sm hms-avatar--initials">{{ $hmsUser->initials() }}</span>
+                @endif
+                <span class="hms-account__name hms-hide-sm">{{ $hmsUser->name() }}</span>
+                <i class="fas fa-chevron-down hms-hide-sm"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end hms-dropdown">
+                <div class="hms-dropdown__head">
+                    <strong class="d-block">{{ $hmsUser->name() }}</strong>
+                    <small class="text-muted">{{ $hmsUser->email() }}</small>
+                </div>
+                @if ($hmsUser->profileUrl())
+                    <a class="dropdown-item" href="{{ $hmsUser->profileUrl() }}"><i class="far fa-user"></i> {{ trans('ui.profile') }}</a>
+                @endif
+                @if ($hmsUser->profileEditUrl())
+                    <a class="dropdown-item" href="{{ $hmsUser->profileEditUrl() }}"><i class="far fa-edit"></i> {{ trans('ui.edit_profile') }}</a>
+                @endif
+                @if ($hmsUser->guard === 'patient' && Route::has('home'))
+                    <a class="dropdown-item" href="{{ route('home') }}"><i class="fas fa-globe-africa"></i> {{ trans('ui.website') }}</a>
+                @endif
+                @if ($hmsUser->logoutUrl())
+                    <div class="dropdown-divider"></div>
+                    <form method="POST" action="{{ $hmsUser->logoutUrl() }}" id="logoutFormGlobal">
+                        @csrf
+                        <button type="submit" class="dropdown-item text-danger"><i class="fas fa-sign-out-alt"></i> {{ trans('ui.logout') }}</button>
+                    </form>
+                @endif
+            </div>
+        </div>
     @endif
-</script>
+</header>
 
-
-
-
-<!-- /main-header -->
+@if (auth('doctor')->check())
+    @push('hms-scripts')
+        <script>
+            // Live "new examination" notification for doctors (Pusher via Laravel Echo).
+            if (window.Echo) {
+                window.Echo.private('create-invoice.{{ auth('doctor')->id() }}').listen('.create-invoice', function (data) {
+                    window.hms && window.hms.pushNotification((data.message || '') + ' ' + (data.patient || ''), data.created_at || '');
+                });
+            }
+        </script>
+    @endpush
+@endif

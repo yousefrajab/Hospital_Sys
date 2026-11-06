@@ -117,8 +117,8 @@
         }
 
         .summary-header-revised .icon-wrapper-revised {
-            background-color: rgba(var(--bs-primary-rgb, 79, 70, 229), 0.1);
-            color: var(--admin-primary, #4f46e5);
+            background-color: rgba(var(--bs-primary-rgb, 13, 148, 136), 0.1);
+            color: var(--admin-primary, #0d9488);
             width: 45px;
             /* تصغير الأيقونة قليلاً */
             height: 45px;
@@ -144,7 +144,7 @@
             font-size: 0.95rem;
             /* تصغير اسم الدواء */
             font-weight: 700;
-            color: var(--admin-primary, #4f46e5);
+            color: var(--admin-primary, #0d9488);
         }
 
         .summary-grid-revised.row {

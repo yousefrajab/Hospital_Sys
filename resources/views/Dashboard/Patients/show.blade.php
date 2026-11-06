@@ -9,10 +9,10 @@
 
     <style>
         :root {
-            --primary-color: #4361ee;
+            --primary-color: #0d9488;
             --primary-light: #e6e9ff;
-            --secondary-color: #3f37c9;
-            --accent-color: #4895ef;
+            --secondary-color: #0f766e;
+            --accent-color: #14b8a6;
             --success-color: #28a745;
             --danger-color: #dc3545;
             --warning-color: #ffc107;
@@ -30,7 +30,7 @@
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.2);
+            box-shadow: 0 10px 30px rgba(13, 148, 136, 0.2);
             transition: all 0.3s ease;
             overflow: hidden;
             /* To contain the avatar shadow if it's too large */
@@ -38,7 +38,7 @@
 
         .patient-profile-header:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 15px 35px rgba(13, 148, 136, 0.3);
         }
 
         .patient-profile-avatar {
@@ -103,7 +103,7 @@
 
         .modern-tabs .nav-link:hover:not(.active) {
             color: var(--primary-color);
-            background-color: rgba(67, 97, 238, 0.05);
+            background-color: rgba(13, 148, 136, 0.05);
         }
 
         .tab-content-card {
@@ -187,14 +187,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 5px 20px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 5px 20px rgba(13, 148, 136, 0.3);
             z-index: 100;
             transition: all 0.3s;
         }
 
         .floating-action-btn:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+            box-shadow: 0 8px 25px rgba(13, 148, 136, 0.4);
             color: white;
         }
 
@@ -766,7 +766,7 @@
                                                         </td>
                                                         <td class="text-center no-print">
                                                             @if ($ray->case == 1 && isset($ray->employee_id) && $ray->image && $ray->image->filename)
-                                                                <a href="{{ asset('ads/rays/' . $ray->image->filename) }}"
+                                                                <a href="{{ asset('Dashboard/img/Rays/' . $ray->image->filename) }}"
                                                                     data-lightbox="ray-images-{{ $patient->id }}"
                                                                     data-title="{{ trans('AdminSb.radiology') }}: {{ $ray->description }} - {{ trans('AdminSb.date') }}: {{ $ray->created_at ? $ray->created_at->translatedFormat('d M Y') : '' }}"
                                                                     class="btn btn-xs btn-outline-info px-2 py-1"

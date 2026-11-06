@@ -10,8 +10,8 @@
     <style>
         /* استخدام نفس متغيرات التصميم لتوحيد المظهر */
         :root {
-            --admin-primary: #4f46e5;
-            --admin-primary-dark: #4338ca;
+            --admin-primary: #0d9488;
+            --admin-primary-dark: #0f766e;
             --admin-secondary: #10b981;
             --admin-success: #22c55e;
             --admin-danger: #ef4444;
@@ -33,8 +33,8 @@
                 --admin-text: #f9fafb;
                 --admin-text-secondary: #9ca3af;
                 --admin-border-color: #4b5563;
-                --admin-primary: #6366f1;
-                --admin-primary-dark: #4f46e5;
+                --admin-primary: #0d9488;
+                --admin-primary-dark: #0d9488;
             }
 
             .form-control,
@@ -124,7 +124,7 @@
         .form-control:focus,
         .form-select:focus {
             border-color: var(--admin-primary);
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
+            box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.15);
         }
 
         .select2-container--bootstrap-5 .select2-selection {
@@ -143,7 +143,7 @@
         .select2-container--bootstrap-5.select2-container--focus .select2-selection,
         .select2-container--bootstrap-5.select2-container--open .select2-selection {
             border-color: var(--admin-primary) !important;
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15) !important;
+            box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.15) !important;
         }
 
         .btn-submit-form,

@@ -12,7 +12,7 @@
     <link href="{{ URL::asset('Dashboard/plugins/jqvmap/jqvmap.min.css') }}" rel="stylesheet">
     <style>
         :root {
-            --bs-primary-rgb: 67, 97, 238;
+            --bs-primary-rgb: 13, 148, 136;
             --bs-primary: rgb(var(--bs-primary-rgb));
             --bs-success-rgb: 25, 135, 84;
             --bs-danger-rgb: 220, 53, 69;
@@ -81,7 +81,7 @@
 
         /* ألوان البطاقات (يمكنك الاحتفاظ بتدرجات قالبك أو استخدام هذه) */
         .bg-primary-gradient {
-            background: linear-gradient(45deg, #4e73df 0%, #1a44aa 100%);
+            background: linear-gradient(45deg, #0d9488 0%, #1a44aa 100%);
         }
 
         .bg-danger-gradient {
@@ -381,7 +381,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.40.0/dist/apexcharts.min.js"></script>
     {{-- قم بتضمين ملفات JS الأخرى من قالبك إذا كانت ضرورية لـ compositeline (عادةً flot أو peity) --}}
     {{-- <script src="{{URL::asset('Dashboard/plugins/jquery.flot/jquery.flot.js')}}"></script> --}}
-    {{-- <script src="{{URL::asset('Dashboard/js/index.js')}}"></script> --}}
+    {{----}}
 
 
     <script>
@@ -539,7 +539,7 @@
             /*
             if (typeof $.fn.peity !== 'undefined') {
                 $("span#compositeline").peity("line", {
-                    fill: 'rgba(67, 97, 238, 0.1)', // Primary color with opacity
+                    fill: 'rgba(13, 148, 136, 0.1)', // Primary color with opacity
                     stroke: 'rgb(var(--bs-primary-rgb))',
                     width: '100%',
                     height: '40'

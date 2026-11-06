@@ -17,7 +17,7 @@
 
     <style>
         :root {
-            --bs-primary-rgb: 78, 115, 223;
+            --bs-primary-rgb: 13, 148, 136;
             --bs-primary: rgb(var(--bs-primary-rgb));
             --bs-secondary-rgb: 108, 117, 125;
             --bs-success-rgb: 25, 135, 84;
@@ -988,7 +988,7 @@
                                                                 </td>
                                                                 <td class="text-center no-print">
                                                                     @if ($ray->case == 1 && isset($ray->employee_id) && $ray->image && $ray->image->filename)
-                                                                        <a href="{{ asset('ads/rays/' . $ray->image->filename) }}"
+                                                                        <a href="{{ asset('Dashboard/img/Rays/' . $ray->image->filename) }}"
                                                                             data-lightbox="ray-images-{{ $patient->id }}"
                                                                             data-title="{{ trans('doctors.radiology') }}: {{ $ray->description }} - {{ trans('doctors.date') }}: {{ $ray->created_at ? $ray->created_at->translatedFormat('d M Y') : '' }}"
                                                                             class="btn btn-xs btn-outline-info px-2 py-1"

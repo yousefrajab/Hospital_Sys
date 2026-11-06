@@ -13,7 +13,7 @@
     <style>
         /* ... (نفس أنماط CSS من index.blade.php للوصفات، مع تعديل الألوان إذا أردت) ... */
         :root {
-            --bs-primary-rgb: 67, 97, 238; /* #4361ee */
+            --bs-primary-rgb: 13, 148, 136; /* #0d9488 */
             --bs-primary: rgb(var(--bs-primary-rgb));
             --bs-success-rgb: 25, 135, 84;  /* #198754 */
             --bs-success: rgb(var(--bs-success-rgb));

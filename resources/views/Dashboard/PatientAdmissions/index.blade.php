@@ -5,7 +5,7 @@
     <div class="breadcrumb-header justify-content-between no-print">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <i class="fas fa-procedures fa-lg me-2" style="color: var(--admin-primary, #4f46e5);"></i>
+                <i class="fas fa-procedures fa-lg me-2" style="color: var(--admin-primary, #0d9488);"></i>
                 <div>
                     <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.Patients Management') }}</h4>
                     <span class="text-muted mt-0 tx-13">/ {{ trans('AdminSb.admission_discharge_records') }}</span>
@@ -269,9 +269,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         :root {
-            --admin-primary: #4f46e5;
+            --admin-primary: #0d9488;
             /* بنفسجي جذاب (Indigo) */
-            --admin-primary-dark: #4338ca;
+            --admin-primary-dark: #0f766e;
             /* أغمق قليلاً للـ hover */
             --admin-primary-light: #c7d2fe;
             /* أفتح للتلميحات أو الخلفيات الناعمة */
@@ -335,7 +335,7 @@
             --admin-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
             /* متغيرات الألوان بصيغة RGB (مفيدة لـ rgba) */
-            --admin-primary-rgb: 79, 70, 229;
+            --admin-primary-rgb: 13, 148, 136;
             --admin-success-rgb: 34, 197, 94;
             --admin-danger-rgb: 239, 68, 68;
             --admin-secondary-rgb: 16, 185, 129;
@@ -357,9 +357,9 @@
                 /* حدود أغمق */
                 --admin-input-border: #4b5563;
 
-                --admin-primary: #6366f1;
+                --admin-primary: #0d9488;
                 /* لون أساسي أفتح قليلاً */
-                --admin-primary-dark: #4f46e5;
+                --admin-primary-dark: #0d9488;
                 --admin-primary-light: #a5b4fc;
 
                 --admin-secondary: #34d399;
@@ -382,8 +382,8 @@
             --admin-text-muted: #6b7280;
             --admin-border-color: #374151;
             --admin-input-border: #4b5563;
-            --admin-primary: #6366f1;
-            --admin-primary-dark: #4f46e5;
+            --admin-primary: #0d9488;
+            --admin-primary-dark: #0d9488;
             --admin-primary-light: #a5b4fc;
             --admin-secondary: #34d399;
             --admin-secondary-dark: #10b981;
@@ -400,7 +400,7 @@
 
         .dark .table tbody tr:hover,
         body.dark .table tbody tr:hover {
-            background-color: rgba(99, 102, 241, 0.08);
+            background-color: rgba(13, 148, 136, 0.08);
         }
 
         .dark .card,

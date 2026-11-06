@@ -12,10 +12,10 @@
     <style>
         /* استخدام متغيرات مشابهة لواجهة المريض مع تعديل ألوان الطبيب إذا أردت */
         :root {
-            --doctor-primary: #007bff;
+            --doctor-primary: #0d9488;
             /* أزرق Bootstrap القياسي */
             --doctor-primary-rgb: 0, 123, 255;
-            --doctor-primary-dark: #0056b3;
+            --doctor-primary-dark: #0f766e;
             --doctor-success: #28a745;
             --doctor-warning: #ffc107;
             --doctor-danger: #dc3545;
@@ -130,7 +130,7 @@
         }
 
         .stat-card-doctor .stat-icon-bg.bg-blue-gradient {
-            background: linear-gradient(135deg, #007bff 0%, #3699ff 100%);
+            background: linear-gradient(135deg, #0d9488 0%, #3699ff 100%);
         }
 
         .stat-card-doctor .stat-icon-bg.bg-green-gradient {

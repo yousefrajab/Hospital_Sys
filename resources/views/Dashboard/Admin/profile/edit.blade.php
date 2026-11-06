@@ -14,7 +14,7 @@
     <style>
         :root {
             --admin-bg: #f8f9fc; --admin-card-bg: #ffffff; --admin-text-primary: #1e293b;
-            --admin-text-secondary: #64748b; --admin-primary: #4f46e5; --admin-primary-hover: #4338ca;
+            --admin-text-secondary: #64748b; --admin-primary: #0d9488; --admin-primary-hover: #0f766e;
             --admin-secondary: #10b981; --admin-border-color: #e5e7eb; --admin-success: #22c55e; --admin-danger: #ef4444;
             --admin-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --admin-radius-lg: 1rem; --admin-radius-md: 0.5rem; --admin-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -22,8 +22,8 @@
         @media (prefers-color-scheme: dark) {
             :root {
                 --admin-bg: #111827; --admin-card-bg: #1f2937; --admin-text-primary: #f3f4f6;
-                --admin-text-secondary: #9ca3af; --admin-border-color: #374151; --admin-primary: #6366f1;
-                --admin-primary-hover: #4f46e5; --admin-secondary: #34d399;
+                --admin-text-secondary: #9ca3af; --admin-border-color: #374151; --admin-primary: #0d9488;
+                --admin-primary-hover: #0d9488; --admin-secondary: #34d399;
                 --admin-shadow: 0 4px 6px -1px rgb(255 255 255 / 0.05), 0 2px 4px -2px rgb(255 255 255 / 0.05);
             }
         }
@@ -58,7 +58,7 @@
             border-radius: var(--admin-radius-md); box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
             transition: var(--admin-transition);
         }
-        .form-control:focus { border-color: var(--admin-primary); outline: 0; box-shadow: inset 0 1px 2px rgba(0,0,0,0.075), 0 0 0 0.25rem rgba(79, 70, 229, 0.25); }
+        .form-control:focus { border-color: var(--admin-primary); outline: 0; box-shadow: inset 0 1px 2px rgba(0,0,0,0.075), 0 0 0 0.25rem rgba(13, 148, 136, 0.25); }
         .password-wrapper { position: relative; }
         .toggle-password-btn { position: absolute; top: 50%; left: 1rem; transform: translateY(-50%); background: none; border: none; color: var(--admin-text-secondary); cursor: pointer; padding: 0.5rem; z-index: 3; }
         .form-control[type="password"] { padding-left: 3.5rem; }

@@ -16,8 +16,8 @@
     {{-- نفس أنماط CSS من index.blade.php مع تعديلات طفيفة --}}
     <style>
         :root {
-            --admin-primary: #4f46e5;
-            --admin-primary-dark: #4338ca;
+            --admin-primary: #0d9488;
+            --admin-primary-dark: #0f766e;
             --admin-secondary: #10b981;
             --admin-success: #22c55e;
             --admin-danger: #ef4444;
@@ -35,7 +35,7 @@
             --admin-radius-lg: 0.75rem;
             --admin-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             --admin-transition: all 0.25s ease-in-out;
-            --admin-primary-rgb: 79, 70, 229;
+            --admin-primary-rgb: 13, 148, 136;
             --admin-success-rgb: 34, 197, 94;
             --admin-danger-rgb: 239, 68, 68;
             --admin-info-rgb: 59, 130, 246;

@@ -124,7 +124,6 @@
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/select2/js/select2.min.js') }}"></script>
-    <script src="{{ URL::asset('Dashboard/js/form-elements.js') }}"></script>
     <script>
         $(document).ready(function() {
             if ($.fn.select2) {

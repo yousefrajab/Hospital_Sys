@@ -11,8 +11,8 @@
     <style>
         /* --- المتغيرات الأساسية (Globals & Dark Mode) --- */
         :root {ض
-            --admin-primary: #4f46e5; /* Indigo-600 */
-            --admin-primary-dark: #4338ca; /* Indigo-700 */
+            --admin-primary: #0d9488; /* Indigo-600 */
+            --admin-primary-dark: #0f766e; /* Indigo-700 */
             --admin-secondary: #10b981; /* Emerald-500 */
             --admin-success: #22c55e; /* Green-500 */
             --admin-danger: #ef4444; /* Red-500 */
@@ -43,8 +43,8 @@
                 --admin-text: #f3f4f6;
                 --admin-text-secondary: #9ca3af;
                 --admin-border-color: #374151;
-                --admin-primary: #818cf8;
-                --admin-primary-dark: #6366f1;
+                --admin-primary: #14b8a6;
+                --admin-primary-dark: #0d9488;
                 --admin-secondary: #34d399;
                 /* ... (ألوان أخرى للوضع الداكن إذا أردت) ... */
             }
@@ -374,7 +374,7 @@
     @parent
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    {{-- <script src="{{ URL::asset('Dashboard/js/index.js') }}"></script> --}}
+    {{----}}
     <script>
         $(document).ready(function() {
             AOS.init({ duration: 600, easing: 'ease-out-cubic', once: true, offset: 30 });

@@ -19,9 +19,9 @@
 
     <style>
         :root {
-            --admin-primary: #4f46e5;
+            --admin-primary: #0d9488;
             /* Indigo-600 */
-            --admin-primary-dark: #4338ca;
+            --admin-primary-dark: #0f766e;
             /* Indigo-700 */
             --admin-primary-light: #c7d2fe;
             --admin-secondary: #10b981;
@@ -50,7 +50,7 @@
             --admin-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.07);
             --admin-shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.07), 0 2px 6px -2px rgba(0, 0, 0, 0.07);
             --admin-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --bs-primary-rgb: 79, 70, 229;
+            --bs-primary-rgb: 13, 148, 136;
             /* لـ Bootstrap 5 shadow/focus colors */
             --admin-success-rgb: 34, 197, 94;
             --admin-danger-rgb: 239, 68, 68;
@@ -66,8 +66,8 @@
                 --admin-text-secondary: #9ca3af;
                 --admin-border-color: #374151;
                 --admin-input-border: #4b5563;
-                --admin-primary: #6366f1;
-                --admin-primary-dark: #4f46e5;
+                --admin-primary: #0d9488;
+                --admin-primary-dark: #0d9488;
                 --admin-secondary: #34d399;
             }
 
@@ -78,7 +78,7 @@
             }
 
             .table tbody tr:hover {
-                background-color: rgba(99, 102, 241, 0.08);
+                background-color: rgba(13, 148, 136, 0.08);
             }
 
             .card {

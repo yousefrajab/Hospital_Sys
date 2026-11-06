@@ -1,45 +1,37 @@
-<!-- main-sidebar -->
-<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
-<aside class="app-sidebar sidebar-scroll">
-    <div class="main-sidebar-header active">
-        <a class="desktop-logo logo-light active" href="{{ url('/') }}"><img
-                src="{{ URL::asset('Dashboard/img/brand/logo.png') }}" class="main-logo" alt="logo"></a>
-        <a class="desktop-logo logo-dark active" href="{{ url('/') }}"><img
-                src="{{ URL::asset('Dashboard/img/brand/logo-white.png') }}" class="main-logo dark-theme"
-                alt="logo"></a>
-        <a class="logo-icon mobile-logo icon-light active" href="{{ url('/') }}"><img
-                src="{{ URL::asset('Dashboard/img/brand/favicon.png') }}" class="logo-icon" alt="logo"></a>
-        <a class="logo-icon mobile-logo icon-dark active" href="{{ url('/') }}"><img
-                src="{{ URL::asset('Dashboard/img/brand/favicon-white.png') }}" class="logo-icon dark-theme"
-                alt="logo"></a>
+{{-- Dashboard sidebar: brand, signed-in user, the role's menu. Opened/collapsed by public/hms/js/hms.js. --}}
+<aside class="hms-sidebar" id="hmsSidebar" aria-label="{{ trans('ui.toggle_menu') }}">
+    <div class="hms-brand">
+        <a href="{{ $hmsUser->homeUrl() }}" class="hms-brand__link">
+            <span class="hms-brand__mark"><i class="fas fa-plus"></i></span>
+            <span class="hms-brand__name">{{ trans('ui.app_name') }}</span>
+        </a>
+        <button type="button" class="hms-icon-btn hms-only-mobile" data-hms-toggle="sidebar" aria-label="{{ trans('ui.toggle_menu') }}">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
 
-    @if (\Auth::guard('admin')->check())
-        @include('Dashboard.layouts.main-sidebar.admin-sidebar-main')
+    @if ($hmsUser->check())
+        <a href="{{ $hmsUser->profileUrl() ?? '#' }}" class="hms-user-card">
+            @if ($hmsUser->avatarUrl())
+                <img src="{{ $hmsUser->avatarUrl() }}" alt="" class="hms-avatar">
+            @else
+                <span class="hms-avatar hms-avatar--initials">{{ $hmsUser->initials() }}</span>
+            @endif
+            <span class="hms-user-card__text">
+                <strong>{{ $hmsUser->name() }}</strong>
+                <small>{{ $hmsUser->roleLabel() }}</small>
+            </span>
+        </a>
     @endif
 
-    @if (\Auth::guard('doctor')->check())
-        @include('Dashboard.layouts.main-sidebar.doctor-sidebar-main')
-    @endif
+    <div class="hms-menu-search">
+        <i class="fas fa-search"></i>
+        <input type="search" id="hmsMenuSearch" placeholder="{{ trans('ui.search') }}" autocomplete="off">
+    </div>
 
-    @if (\Auth::guard('ray_employee')->check())
-        @include('Dashboard.layouts.main-sidebar.ray_employee-sidebar-main')
-    @endif
-
-    @if (\Auth::guard('laboratorie_employee')->check())
-        @include('Dashboard.layouts.main-sidebar.laboratorie_employee-sidebar-main')
-    @endif
-    @if (\Auth::guard('patient')->check())
-        @include('Dashboard.layouts.main-sidebar.patient-sidebar-main')
-    @endif
-
-    @if (\Auth::guard('pharmacy_employee')->check())
-        @include('Dashboard.layouts.main-sidebar.pharmacy_employee-sidebar-main')
-    @endif
-
-
-    @if (\Auth::guard('pharmacy_manager')->check())
-        @include('Dashboard.layouts.main-sidebar.pharmacy_manager-sidebar-main')
-    @endif
+    <nav class="hms-nav">
+        @if ($hmsUser->guard)
+            @include('Dashboard.layouts.menus.' . $hmsUser->guard)
+        @endif
+    </nav>
 </aside>
-<!-- main-sidebar -->

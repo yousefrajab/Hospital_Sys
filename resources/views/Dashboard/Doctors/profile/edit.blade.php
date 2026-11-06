@@ -20,8 +20,8 @@
             --profile-card-bg: #ffffff;
             --profile-text-primary: #1e293b;
             --profile-text-secondary: #64748b;
-            --profile-primary: #4f46e5;
-            --profile-primary-hover: #4338ca;
+            --profile-primary: #0d9488;
+            --profile-primary-hover: #0f766e;
             --profile-secondary: #10b981;
             --profile-border-color: #e5e7eb;
             --profile-success: #22c55e;
@@ -39,8 +39,8 @@
                 --profile-text-primary: #f3f4f6;
                 --profile-text-secondary: #9ca3af;
                 --profile-border-color: #374151;
-                --profile-primary: #6366f1;
-                --profile-primary-hover: #4f46e5;
+                --profile-primary: #0d9488;
+                --profile-primary-hover: #0d9488;
                 --profile-secondary: #34d399;
                 --profile-success: #4ade80;
                 --profile-danger: #f87171;
@@ -129,7 +129,7 @@
             outline: 0;
             background-color: var(--profile-card-bg);
             /* التأكد من بقاء لون الخلفية */
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 0 0.2rem rgba(79, 70, 229, 0.2);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 0 0.2rem rgba(13, 148, 136, 0.2);
             /* تعديل طفيف للـ box-shadow */
         }
 
@@ -143,7 +143,7 @@
             .form-control:focus {
                 background-color: #4b5563;
                 border-color: var(--profile-primary);
-                box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+                box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 0 0.2rem rgba(13, 148, 136, 0.25);
             }
         }
 
@@ -224,7 +224,7 @@
         }
 
         .btn-upload:hover {
-            background-color: rgba(79, 70, 229, 0.05);
+            background-color: rgba(13, 148, 136, 0.05);
         }
 
         .file-input-wrapper input[type=file] {
@@ -258,7 +258,7 @@
             }
 
             .btn-upload:hover {
-                background-color: rgba(99, 102, 241, 0.1);
+                background-color: rgba(13, 148, 136, 0.1);
             }
         }
 

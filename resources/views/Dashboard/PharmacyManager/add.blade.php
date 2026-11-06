@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content shadow-lg border-0">
             <div class="modal-header"
-                style="background: linear-gradient(135deg, var(--primary-color, #4A90E2), var(--secondary-color, #50E3C2)); color: white;">
+                style="background: linear-gradient(135deg, var(--primary-color, #0d9488), var(--secondary-color, #50E3C2)); color: white;">
                 <h5 class="modal-title" id="addPharmacyManagerLabel">
                     <i class="fas fa-user-plus mr-2"></i>{{ trans('AdminSb.Add a new pharmacy manager') }}
                 </h5>
@@ -27,7 +27,7 @@
                                     alt="{{ trans('AdminSb.image') }}"
                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
                                 <label for="add_avatar_upload_photo" class="btn btn-sm"
-                                    style="position: absolute; bottom: 5px; right: 5px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor:pointer; background-color: var(--primary-color, #4A90E2); color:white;">
+                                    style="position: absolute; bottom: 5px; right: 5px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor:pointer; background-color: var(--primary-color, #0d9488); color:white;">
                                     <i class="fas fa-camera"></i>
                                 </label>
                                 <input id="add_avatar_upload_photo" type="file" accept="image/*" name="photo"
@@ -39,7 +39,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                    style="color: var(--primary-color, #4A90E2);">{{ trans('AdminSb.full name') }}<span
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('AdminSb.full name') }}<span
                                         class="text-danger">*</span></label>
                                 <input type="text" name="name" value="{{ old('name') }}"
                                     class="form-control rounded-lg shadow-sm"  required>
@@ -50,7 +50,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                    style="color: var(--primary-color, #4A90E2);">{{ trans('AdminSb.national_id') }}<span
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('AdminSb.national_id') }}<span
                                         class="text-danger">*</span></label>
                                 <input type="text" name="national_id" value="{{ old('national_id') }}"
                                     class="form-control rounded-lg shadow-sm" 
@@ -63,7 +63,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                    style="color: var(--primary-color, #4A90E2);">{{ trans('AdminSb.email') }}<span
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('AdminSb.email') }}<span
                                         class="text-danger">*</span></label>
                                 <input type="email" name="email" value="{{ old('email') }}"
                                     class="form-control rounded-lg shadow-sm" placeholder="example@domain.com" required>
@@ -74,7 +74,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                    style="color: var(--primary-color, #4A90E2);">{{ trans('doctors.phone') }} <span
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('doctors.phone') }} <span
                                         class="text-danger">*</span></label>
                                 <input class="form-control rounded-lg shadow-sm" name="phone"
                                     value="{{ old('phone') }}" type="tel" pattern="^05\d{8}$"
@@ -86,7 +86,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                    style="color: var(--primary-color, #4A90E2);">{{ trans('AdminSb.new password') }}<span
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('AdminSb.new password') }}<span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="password" name="password" class="form-control rounded-lg shadow-sm"
@@ -109,7 +109,7 @@
                         <i class="fas fa-times mr-2"></i>{{ trans('Dashboard/sections_trans.Close') }}
                     </button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4"
-                        style="background: linear-gradient(135deg, var(--primary-color, #4A90E2), var(--secondary-color, #50E3C2)); border: none;">
+                        style="background: linear-gradient(135deg, var(--primary-color, #0d9488), var(--secondary-color, #50E3C2)); border: none;">
                         <i class="fas fa-save mr-2"></i>{{ trans('Dashboard/sections_trans.submit') }}
                     </button>
                 </div>
@@ -167,12 +167,12 @@
 
 <style>
     :root {
-        --primary-color: #4A90E2;
+        --primary-color: #0d9488;
         --secondary-color: #50E3C2;
     }
 
     .form-control:focus {
-        border-color: var(--primary-color, #4A90E2);
-        box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        border-color: var(--primary-color, #0d9488);
+        box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.25);
     }
 </style>

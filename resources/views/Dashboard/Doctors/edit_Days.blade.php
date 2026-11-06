@@ -10,7 +10,7 @@
 
     <style>
         :root {
-            --primary-color: #4A90E2;
+            --primary-color: #0d9488;
             --secondary-color: #4A4A4A;
             --accent-color: #50E3C2;
             --light-bg: #f9fbfd;
@@ -22,8 +22,8 @@
             --input-bg: #ffffff;
             --input-border: #d1d9e6;
             --input-focus-border: var(--primary-color);
-            --input-focus-shadow: rgba(74, 144, 226, 0.2);
-            --primary-gradient: linear-gradient(135deg, #4A90E2, #7FDBFF);
+            --input-focus-shadow: rgba(13, 148, 136, 0.2);
+            --primary-gradient: linear-gradient(135deg, #0d9488, #7FDBFF);
         }
 
         body {
@@ -203,7 +203,7 @@
             align-items: center;
             gap: 0.75rem;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+            box-shadow: 0 5px 15px rgba(13, 148, 136, 0.3);
             text-transform: uppercase;
             font-size: 0.9rem;
             letter-spacing: 0.5px;
@@ -211,7 +211,7 @@
 
         .btn-save-schedule:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.4);
+            box-shadow: 0 8px 20px rgba(13, 148, 136, 0.4);
         }
 
         .btn-save-schedule:active {

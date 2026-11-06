@@ -8,8 +8,8 @@
     <style>
         /* ... (استخدم نفس متغيرات CSS الرائعة التي صممتها لتوحيد المظهر) ... */
         :root {
-            --admin-primary: #4f46e5;
-            --admin-primary-dark: #4338ca;
+            --admin-primary: #0d9488;
+            --admin-primary-dark: #0f766e;
             --admin-secondary: #10b981;
             --admin-success: #22c55e;
             --admin-danger: #ef4444;

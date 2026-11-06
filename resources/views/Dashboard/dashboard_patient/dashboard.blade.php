@@ -13,9 +13,9 @@
 
     <style>
         :root {
-            --patient-primary: #4A90E2;
+            --patient-primary: #0d9488;
             /* أزرق سماوي منعش */
-            --patient-primary-rgb: 74, 144, 226;
+            --patient-primary-rgb: 13, 148, 136;
             --patient-primary-dark: #357ABD;
             --patient-primary-light: #EAF2FB;
             /* خلفية فاتحة للبطاقات مع لمسة زرقاء */
@@ -652,7 +652,7 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
-    {{-- <script src="{{ URL::asset('Dashboard/js/index.js') }}"></script>  --}}
+    {{----}}
 
     <script>
         $(document).ready(function() {

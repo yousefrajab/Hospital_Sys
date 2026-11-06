@@ -13,7 +13,7 @@
 
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+            --primary-gradient: linear-gradient(135deg, #0d9488, #8B5CF6);
             --secondary-gradient: linear-gradient(135deg, #06B6D4, #0EA5E9);
             --glass-effect: rgba(255, 255, 255, 0.25);
             --primary-color: #4e73ff;
@@ -47,14 +47,14 @@
 
         .card-3d { background: white; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .card-3d:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
-        .section-title { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #6366F1, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; position: relative; padding-bottom: 12px; }
-        .section-title:after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 4px; background: linear-gradient(135deg, #6366F1, #8B5CF6); border-radius: 2px; }
+        .section-title { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #0d9488, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; position: relative; padding-bottom: 12px; }
+        .section-title:after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 4px; background: linear-gradient(135deg, #0d9488, #8B5CF6); border-radius: 2px; }
 
         .form-control-modern { border-radius: 12px; border: 1px solid #E2E8F0; padding: 12px 16px; transition: all 0.3s; background: rgba(255, 255, 255, 0.7); }
         .form-control-modern:focus { border-color: #8B5CF6; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2); background: white; }
         .floating-label { position: relative; margin-bottom: 24px; }
-        .floating-label label { position: absolute; top: -10px; right: 16px; background: white; padding: 0 8px; font-size: 13px; color: #6366F1; font-weight: 600; transition: all 0.2s ease-out; pointer-events: none; z-index: 1;}
-        .floating-label input:focus ~ label, .floating-label input:not(:placeholder-shown) ~ label { top: -10px; font-size: 13px; color: #6366F1; }
+        .floating-label label { position: absolute; top: -10px; right: 16px; background: white; padding: 0 8px; font-size: 13px; color: #0d9488; font-weight: 600; transition: all 0.2s ease-out; pointer-events: none; z-index: 1;}
+        .floating-label input:focus ~ label, .floating-label input:not(:placeholder-shown) ~ label { top: -10px; font-size: 13px; color: #0d9488; }
         .avatar-upload { position: relative; width: 150px;  height: 150px; margin: 0 auto 24px;  }
         .avatar-upload img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 4px solid white; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); }
         .avatar-upload label { position: absolute; bottom: 5px; right: 5px; width: 40px; height: 40px; background: linear-gradient(135deg, #06B6D4, #0EA5E9);  border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); transition: all 0.3s ease; }

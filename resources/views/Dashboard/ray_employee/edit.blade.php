@@ -14,11 +14,11 @@
 
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+            --primary-gradient: linear-gradient(135deg, #0d9488, #8B5CF6);
             --secondary-gradient: linear-gradient(135deg, #06B6D4, #0EA5E9);
             --dark-gradient: linear-gradient(135deg, #1e293b, #0f172a);
             --glass-effect: rgba(255, 255, 255, 0.15);
-            --primary-color: #4f46e5;
+            --primary-color: #0d9488;
             --secondary-color: #94a3b8;
             --accent-color: #10b981;
             --light-bg: #f8fafc;
@@ -72,7 +72,7 @@
         .btn-save {
             background: var(--primary-gradient);
             color: white;
-            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.25);
+            box-shadow: 0 4px 6px rgba(13, 148, 136, 0.25);
         }
 
         .btn-cancel:hover {
@@ -84,7 +84,7 @@
 
         .btn-save:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 6px 12px rgba(13, 148, 136, 0.3);
             background: linear-gradient(135deg, #5b55e8, #7c3aed);
         }
 
@@ -195,7 +195,7 @@
 
         .form-control-modern:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
             background: white;
             outline: none;
         }
@@ -351,7 +351,7 @@
 
         .form-select-modern:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
             background-color: white;
             outline: none;
         }

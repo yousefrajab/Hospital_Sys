@@ -1,49 +1,33 @@
-<title>@yield('title')</title>
+<title>@hasSection('title')@yield('title') · @endif{{ trans('ui.app_name') }}</title>
 <meta name="csrf-token" content="{{ csrf_token() }}">
-@yield('css')
-@livewireStyles
+<link rel="icon" href="{{ asset('Dashboard/img/brand/favicon.png') }}" type="image/png">
 
-<link href="{{ URL::asset('Dashboard/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
-<link href="{{ URL::asset('Dashboard/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
-<link href="{{ URL::asset('Dashboard/plugins/datatable/css/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
-<link href="{{ URL::asset('Dashboard/plugins/datatable/css/jquery.dataTables.min.css') }}" rel="stylesheet">
-<link href="{{ URL::asset('Dashboard/plugins/datatable/css/responsive.dataTables.min.css') }}" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-
-@if (App::getLocale() == 'ar')
-    <!-- Favicon -->
-    <link rel="icon" href="{{ URL::asset('Dashboard/img/brand/favicon.png') }}" type="image/x-icon" />
-    <!-- Icons css -->
-    <link href="{{ URL::asset('Dashboard/css/icons.css') }}" rel="stylesheet">
-    <!--  Custom Scroll bar-->
-    <link href="{{ URL::asset('Dashboard/plugins/mscrollbar/jquery.mCustomScrollbar.css') }}" rel="stylesheet" />
-    <!--  Sidebar css -->
-    <link href="{{ URL::asset('Dashboard/plugins/sidebar/sidebar.css') }}" rel="stylesheet">
-    <!-- Sidemenu css -->
-    <link rel="stylesheet" href="{{ URL::asset('Dashboard/css-rtl/sidemenu.css') }}">
-    <!--- Style css -->
-    <link href="{{ URL::asset('Dashboard/css-rtl/style.css') }}" rel="stylesheet">
-    <!--- Dark-mode css -->
-    <link href="{{ URL::asset('Dashboard/css-rtl/style-dark.css') }}" rel="stylesheet">
-    <!---Skinmodes css-->
-    <link href="{{ URL::asset('Dashboard/css-rtl/skin-modes.css') }}" rel="stylesheet">
+{{-- Bootstrap 4.6 (MIT) and its RTL build: grid and components that the pages are written with. --}}
+@if (App::getLocale() === 'ar')
+    <link href="{{ asset('vendor/hms/bootstrap/bootstrap-rtl.min.css') }}" rel="stylesheet">
 @else
-    <!-- Favicon -->
-    <link rel="icon" href="{{ URL::asset('Dashboard/img/brand/favicon.png') }}" type="image/x-icon" />
-    <!-- Icons css -->
-    <link href="{{ URL::asset('Dashboard/css/icons.css') }}" rel="stylesheet">
-    <!--  Custom Scroll bar-->
-    <link href="{{ URL::asset('Dashboard/plugins/mscrollbar/jquery.mCustomScrollbar.css') }}" rel="stylesheet" />
-    <!--  Right-sidemenu css -->
-    <link href="{{ URL::asset('Dashboard/plugins/sidebar/sidebar.css') }}" rel="stylesheet">
-    <!-- Sidemenu css -->
-    <link rel="stylesheet" href="{{ URL::asset('Dashboard/css/sidemenu.css') }}">
-    <!-- Maps css -->
-    <link href="{{ URL::asset('Dashboard/plugins/jqvmap/jqvmap.min.css') }}" rel="stylesheet">
-    <!-- style css -->
-    <link href="{{ URL::asset('Dashboard/css/style.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('Dashboard/css/style-dark.css') }}" rel="stylesheet">
-    <!---Skinmodes css-->
-    <link href="{{ URL::asset('Dashboard/css/skin-modes.css') }}" rel="stylesheet" />
+    <link href="{{ asset('vendor/hms/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
 @endif
+
+{{-- Open-source icon fonts used across the pages. --}}
+<link href="{{ asset('Dashboard/plugins/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+<link href="{{ asset('Dashboard/plugins/line-awesome/css/line-awesome.min.css') }}" rel="stylesheet">
+<link href="{{ asset('Dashboard/plugins/feather/feather.css') }}" rel="stylesheet">
+<link href="{{ asset('Dashboard/plugins/typicons.font/typicons.css') }}" rel="stylesheet">
+<link href="{{ asset('Dashboard/plugins/themify/themify.css') }}" rel="stylesheet">
+<link href="{{ asset('Dashboard/plugins/materialdesignicons/materialdesignicons.css') }}" rel="stylesheet">
+<link href="{{ asset('Dashboard/plugins/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+
+{{-- Data tables and the date picker. --}}
+<link href="{{ asset('Dashboard/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+<link href="{{ asset('Dashboard/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
+<link href="{{ asset('Dashboard/plugins/datatable/css/responsive.bootstrap4.min.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+
+{{-- jQuery first: many pages run inline scripts that use it. --}}
+<script src="{{ asset('Dashboard/plugins/jquery/jquery.min.js') }}"></script>
+
+{{-- Our design system, then each page's own styles (which may refine it). --}}
+<link href="{{ asset('hms/css/hms.css') }}?v={{ @filemtime(public_path('hms/css/hms.css')) }}" rel="stylesheet">
+@livewireStyles
+@yield('css')

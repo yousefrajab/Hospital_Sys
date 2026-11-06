@@ -8,8 +8,8 @@
 
     <style>
         :root {
-            --admin-primary: #4f46e5;
-            --admin-primary-dark: #4338ca;
+            --admin-primary: #0d9488;
+            --admin-primary-dark: #0f766e;
             --admin-secondary: #10b981;
             --admin-success: #22c55e;
             --admin-danger: #ef4444;
@@ -36,8 +36,8 @@
                 --admin-text: #f3f4f6;
                 --admin-text-secondary: #9ca3af;
                 --admin-border-color: #374151;
-                --admin-primary: #818cf8;
-                --admin-primary-dark: #6366f1;
+                --admin-primary: #14b8a6;
+                --admin-primary-dark: #0d9488;
                 --admin-secondary: #34d399;
             }
 
@@ -55,7 +55,7 @@
             }
 
             .table tbody tr:hover {
-                background-color: rgba(99, 102, 241, 0.08) !important;
+                background-color: rgba(13, 148, 136, 0.08) !important;
             }
 
             .pagination-container {

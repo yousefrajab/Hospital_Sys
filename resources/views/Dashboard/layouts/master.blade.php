@@ -1,39 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-<title>{{ trans('doctors.Hospital Management System') }}</title>
+@php($hmsRtl = App::getLocale() === 'ar')
+<html lang="{{ App::getLocale() }}" dir="{{ $hmsRtl ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="Description" content="Bootstrap Responsive Admin Web Dashboard HTML5 Template">
-    <meta name="Author" content="Spruko Technologies Private Limited">
-    <meta name="Keywords"
-        content="admin,admin dashboard,admin dashboard template,admin panel template,admin template,admin theme,bootstrap 4 admin template,bootstrap 4 dashboard,bootstrap admin,bootstrap admin dashboard,bootstrap admin panel,bootstrap admin template,bootstrap admin theme,bootstrap dashboard,bootstrap form template,bootstrap panel,bootstrap ui kit,dashboard bootstrap 4,dashboard design,dashboard html,dashboard template,dashboard ui kit,envato templates,flat ui,html,html and css templates,html dashboard template,html5,jquery html,premium,premium quality,sidebar bootstrap 4,template admin bootstrap 4" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ trans('ui.app_name') }}">
+    {{-- Apply the saved theme before first paint, so dark mode never flashes white. --}}
+    <script>
+        try {
+            var t = localStorage.getItem('hms-theme');
+            if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            if (localStorage.getItem('hms-sidebar') === 'collapsed') {
+                document.documentElement.classList.add('hms-collapsed');
+            }
+        } catch (e) {}
+    </script>
     @include('Dashboard.layouts.head')
 </head>
 
-<body class="main-body app sidebar-mini">
-    <!-- Loader -->
-    <div id="global-loader">
-        <img src="{{ URL::asset('Dashboard/img/loader.svg') }}" class="loader-img" alt="Loader">
-    </div>
-    <!-- /Loader -->
+<body class="hms-body">
     @include('Dashboard.layouts.main-sidebar')
-    <!-- main-content -->
-    <div class="main-content app-content">
+    <div class="hms-backdrop" data-hms-toggle="sidebar"></div>
+
+    <div class="hms-main">
         @include('Dashboard.layouts.main-header')
-        <!-- container -->
-        <div class="container-fluid">
+
+        <main class="hms-content container-fluid">
             @yield('page-header')
             @yield('content')
-            @include('Dashboard.layouts.sidebar')
-            @include('Dashboard.layouts.models')
-            @include('Dashboard.layouts.footer')
-            @include('Dashboard.layouts.footer-scripts')
+        </main>
 
+        @include('Dashboard.layouts.footer')
+    </div>
 
-
+    @include('Dashboard.layouts.footer-scripts')
 </body>
 
 </html>

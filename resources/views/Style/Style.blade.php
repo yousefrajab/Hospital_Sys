@@ -23,7 +23,7 @@
     }
 
     .card-header {
-        background: linear-gradient(to right, #6a11cb, #2575fc);
+        background: linear-gradient(to right, #0d9488, #0f766e);
         color: #fff;
         padding: 1.2rem 1.5rem;
         border-radius: 20px 20px 0 0;
@@ -78,9 +78,9 @@
 {{-- --------------index Sections----------------- --}}
 <style>
     :root {
-        --primary-color: #4361ee;
-        --secondary-color: #3f37c9;
-        --accent-color: #4895ef;
+        --primary-color: #0d9488;
+        --secondary-color: #0f766e;
+        --accent-color: #14b8a6;
         --light-color: #f8f9fa;
         --dark-color: #212529;
         --danger-color: #dc3545;
@@ -109,7 +109,7 @@
     .btn-info:hover,
     .btn-danger:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        box-shadow: 0 5px 15px rgba(13, 148, 136, 0.3);
     }
 
     .table thead th {
@@ -137,7 +137,7 @@
 {{-- ---------------- edit Doctor--------------- --}}
 <style>
     :root {
-        --primary-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+        --primary-gradient: linear-gradient(135deg, #0d9488, #8B5CF6);
         --secondary-gradient: linear-gradient(135deg, #06B6D4, #0EA5E9);
         --glass-effect: rgba(255, 255, 255, 0.25);
     }
@@ -247,7 +247,7 @@
         padding: 1.5rem 2rem;
         border-radius: 16px;
         margin-bottom: 2rem;
-        box-shadow: 0 8px 24px rgba(67, 97, 238, 0.15);
+        box-shadow: 0 8px 24px rgba(13, 148, 136, 0.15);
         position: relative;
         overflow: hidden;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -283,7 +283,7 @@
 
     .breadcrumb-header:hover {
         transform: translateY(-3px);
-        box-shadow: 0 12px 32px rgba(67, 97, 238, 0.25);
+        box-shadow: 0 12px 32px rgba(13, 148, 136, 0.25);
     }
 
     .breadcrumb-header .content-title {
@@ -340,7 +340,7 @@
         background: white;
         padding: 0 8px;
         font-size: 13px;
-        color: #6366F1;
+        color: #0d9488;
         font-weight: 600;
     }
 </style>
@@ -455,9 +455,9 @@
 {{-- -------------index doctors---------------- --}}
 <style>
     :root {
-        --primary-color: #4361ee;
-        --secondary-color: #3f37c9;
-        --accent-color: #4895ef;
+        --primary-color: #0d9488;
+        --secondary-color: #0f766e;
+        --accent-color: #14b8a6;
         --light-color: #f8f9fa;
         --dark-color: #212529;
         --danger-color: #dc3545;
@@ -486,7 +486,7 @@
 
     .btn-primary-gradient:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        box-shadow: 0 5px 15px rgba(13, 148, 136, 0.3);
     }
 
     .btn-danger-gradient {
@@ -522,7 +522,7 @@
     }
 
     .bg-primary-light {
-        background-color: rgba(67, 97, 238, 0.1);
+        background-color: rgba(13, 148, 136, 0.1);
     }
 
     .bg-secondary-light {
@@ -586,7 +586,7 @@
         transform: translate(-50%, -50%);
         font-size: 12px;
         font-weight: 600;
-        color: #4361ee;
+        color: #0d9488;
     }
 
     .count-circle-bg {
@@ -678,7 +678,7 @@
     .pulse-effect {
         stroke: transparent;
         stroke-width: 0;
-        fill: rgba(67, 97, 238, 0);
+        fill: rgba(13, 148, 136, 0);
         transform-origin: center;
         transition: all 0.5s ease;
     }
@@ -695,18 +695,18 @@
 
     /* تأثيرات عند التركيز */
     .innovative-checkbox input:focus-visible~.check-label {
-        outline: 2px solid #4361ee;
+        outline: 2px solid #0d9488;
         outline-offset: 2px;
     }
 
     /* تأثيرات عند التحديد */
     .innovative-checkbox input:checked~.check-label .check-bg-circle {
-        stroke: #4361ee;
-        fill: rgba(67, 97, 238, 0.1);
+        stroke: #0d9488;
+        fill: rgba(13, 148, 136, 0.1);
     }
 
     .innovative-checkbox input:checked~.check-label .check-mark {
-        stroke: #4361ee;
+        stroke: #0d9488;
         stroke-dashoffset: 0;
     }
 
@@ -739,18 +739,18 @@
             transform: scale(0.8);
             opacity: 1;
             stroke-width: 0;
-            fill: rgba(67, 97, 238, 0.1);
+            fill: rgba(13, 148, 136, 0.1);
         }
 
         50% {
             transform: scale(1.2);
-            fill: rgba(67, 97, 238, 0.05);
+            fill: rgba(13, 148, 136, 0.05);
         }
 
         100% {
             transform: scale(1.4);
             opacity: 0;
-            fill: rgba(67, 97, 238, 0);
+            fill: rgba(13, 148, 136, 0);
         }
     }
 
@@ -799,7 +799,7 @@
 
     .time-period.evening {
         background-color: rgba(59, 130, 246, 0.1);
-        color: #1d4ed8;
+        color: #0f766e;
     }
 
     /* تأثيرات للوضع المظلم */
@@ -855,7 +855,7 @@
 {{-- ------------------------------------Add Sections------------------------------------------- --}}
 <style>
     .bg-gradient-primary {
-        background: linear-gradient(135deg, #007bff, #0069d9);
+        background: linear-gradient(135deg, #0d9488, #0069d9);
     }
 
     .bg-gradient-light {
@@ -964,7 +964,7 @@
 
     .doctor-avatar:hover {
         transform: scale(1.1);
-        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        box-shadow: 0 5px 15px rgba(13, 148, 136, 0.3);
     }
 </style>
 <style>
@@ -989,7 +989,7 @@
         transform: translate(-50%, -50%);
         font-size: 12px;
         font-weight: 600;
-        color: #4361ee;
+        color: #0d9488;
     }
 
     .count-circle-bg {
@@ -1037,7 +1037,7 @@
 <style>
     /* Modern Styling */
     .bg-gradient-primary {
-        background: linear-gradient(135deg, #4361ee, #3a0ca3);
+        background: linear-gradient(135deg, #0d9488, #3a0ca3);
     }
 
     .wave-bg {
@@ -1131,7 +1131,7 @@
 <style>
     /* Glass Morphism Effect */
     .glass-header {
-        background: rgba(102, 126, 234, 0.8);
+        background: rgba(13, 148, 136, 0.8);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -1145,7 +1145,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+        background: linear-gradient(135deg, rgba(13, 148, 136, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
         z-index: -1;
         animation: gradientAnimation 8s ease infinite;
         background-size: 200% 200%;
@@ -1205,7 +1205,7 @@
 
     .floating-input:focus {
         box-shadow: none;
-        border-bottom-color: #667eea;
+        border-bottom-color: #0d9488;
     }
 
     .floating-label {
@@ -1222,7 +1222,7 @@
         top: -20px;
         left: 0;
         font-size: 12px;
-        color: #667eea;
+        color: #0d9488;
     }
 
     /* Icon Styling */
@@ -1250,13 +1250,13 @@
     }
 
     .btn-primary-gradient {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
         border: none;
     }
 
     .btn-hover-transform:hover {
         transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 5px 15px rgba(13, 148, 136, 0.4);
     }
 
     /* Currency Input Styling */
@@ -1265,7 +1265,7 @@
         border: none;
         border-bottom: 2px solid #e0e0e0;
         border-radius: 0;
-        color: #667eea;
+        color: #0d9488;
     }
 
     /* Light Background for Footer */

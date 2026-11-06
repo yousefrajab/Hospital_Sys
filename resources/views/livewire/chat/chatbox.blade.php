@@ -193,7 +193,7 @@
     }
 
     .message-wrapper.sent .message-bubble {
-        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        background: linear-gradient(135deg, #3b82f6, #0f766e);
         color: white;
         border-bottom-right-radius: 4px;
     }

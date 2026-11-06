@@ -14,7 +14,7 @@
     <style>
         /* --- المتغيرات الأساسية (Globals & Dark Mode) --- */
         :root {
-            --primary-color: #4A90E2;
+            --primary-color: #0d9488;
             --primary-dark: #3A7BC8;
             --secondary-color: #4A4A4A;
             --accent-color: #50E3C2;

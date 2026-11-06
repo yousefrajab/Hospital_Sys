@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
         :root {
-            --admin-primary: #4f46e5;
-            --admin-primary-dark: #4338ca;
+            --admin-primary: #0d9488;
+            --admin-primary-dark: #0f766e;
             --admin-secondary: #10b981;
             --admin-success: #22c55e;
             --admin-danger: #ef4444;
@@ -32,8 +32,8 @@
                 --admin-text: #f9fafb;
                 --admin-text-secondary: #9ca3af;
                 --admin-border-color: #4b5563;
-                --admin-primary: #6366f1;
-                --admin-primary-dark: #4f46e5;
+                --admin-primary: #0d9488;
+                --admin-primary-dark: #0d9488;
             }
 
             .info-item strong {

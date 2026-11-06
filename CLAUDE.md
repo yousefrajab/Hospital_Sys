@@ -1,6 +1,6 @@
 # Hospital_Sys
 
-Hospital management system (Laravel 12, PHP 8.2, MySQL/MariaDB via XAMPP, Livewire 3, Pusher, Blade + Valex Bootstrap 4 template).
+Hospital management system (Laravel 12, PHP 8.2, MySQL/MariaDB via XAMPP, Livewire 3, Pusher, Blade + our own design system on Bootstrap 4.6).
 Bilingual ar/en (mcamara localization + astrotomic translatable). Owner plans to grow it into a large international product.
 
 **Full reference: `docs/PROJECT_REFERENCE.md`** — routes, data model, every module's logic, known bugs (section 7), roadmap (section 8). Read the relevant section before changing a module, and update it when behaviour changes.
@@ -36,3 +36,17 @@ Bilingual ar/en (mcamara localization + astrotomic translatable). Owner plans to
   `APP_DEBUG=true`, otherwise a reference code that is logged with the exception.
 - Production: `APP_DEBUG=false`, then `php artisan config:cache route:cache view:cache` must all succeed (route names must be unique).
 - Comments and UI strings in the codebase are mostly Arabic; keep new UI text in `resources/lang/{ar,en}`.
+
+## Dashboard UI (own design system, replaced the Valex template on 2026-11-07)
+- Shell: `Dashboard/layouts/master.blade.php` (+ `head`, `main-sidebar`, `main-header`, `footer`, `footer-scripts`).
+  Sign-in pages use `Dashboard/layouts/auth.blade.php`. Shell text lives in `resources/lang/{ar,en}/ui.php`.
+- Styles `public/hms/css/hms.css` (tokens on `:root`, dark mode via `html[data-theme=dark]`, RTL via logical properties);
+  behaviour `public/hms/js/hms.js` (sidebar, menu groups/search/active link, theme, default DataTables, `.select2`,
+  `.fc-datepicker`, `window.hms.pushNotification`). Bootstrap 4.6 + RTL build and the IBM Plex Sans Arabic font are in
+  `public/vendor/hms` (MIT / OFL). Use the `--hms-*` colour tokens, never hard-coded hex.
+- Menus: one partial per role in `Dashboard/layouts/menus/{guard}.blade.php` (markup: `li.slide > a[data-toggle=slide] + ul.slide-menu`).
+  Signed-in user for the shell: `App\Support\CurrentUser` (shared to the layout as `$hmsUser`).
+- Old pages still carry their own `<style>` blocks: `hms.css` section 11 pins their colour variables (`--admin-primary`, `--primary-color`, …)
+  to the theme, and `hms.js` swaps hard-coded light colours in dark mode. Section 10 maps template utility classes (`tx-13`, `mg-b-20`, …).
+  When a page is redesigned, drop its `<style>` block and use the shared components instead.
+

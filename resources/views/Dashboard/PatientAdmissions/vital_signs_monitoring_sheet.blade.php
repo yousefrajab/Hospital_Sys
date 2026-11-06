@@ -49,7 +49,7 @@
         .vitals-table thead th {
             background-color: #eef2ff;
             /* Tailwind indigo-50 */
-            color: #4338ca;
+            color: #0f766e;
             /* Tailwind indigo-700 */
             font-weight: 600;
             white-space: nowrap;

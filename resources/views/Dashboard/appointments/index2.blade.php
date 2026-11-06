@@ -17,7 +17,7 @@
     <style>
         :root {
             /* استخدام نفس لوحة الألوان لتوحيد الهوية */
-            --primary-color: #4A90E2;
+            --primary-color: #0d9488;
             --secondary-color: #4A4A4A;
             --accent-color: #50E3C2;
             --light-bg: #f9fbfd;
@@ -97,7 +97,7 @@
         .form-control-filter:focus,
         .form-select-filter:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
             outline: none;
         }
 

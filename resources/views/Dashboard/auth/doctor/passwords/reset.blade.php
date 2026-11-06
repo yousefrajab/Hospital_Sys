@@ -6,11 +6,11 @@
     {{-- نفس الـ CSS من email.blade.php --}}
     <style>
         .auth-card { max-width: 450px; margin: 50px auto; border: none; border-radius: 10px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
-        .auth-card-header { background-color: #4e73df; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px; padding: 1.25rem 1.5rem; }
+        .auth-card-header { background-color: #0d9488; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px; padding: 1.25rem 1.5rem; }
         .auth-card-body { padding: 2rem 2.5rem; }
         .form-control-auth { border-radius: 0.5rem; padding: 0.75rem 1rem; border: 1px solid #d1d3e2; }
-        .form-control-auth:focus { border-color: #4e73df; box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25); }
-        .btn-auth { background-color: #4e73df; border-color: #4e73df; color: white; padding: 0.75rem; border-radius: 0.5rem; font-weight: 600; }
+        .form-control-auth:focus { border-color: #0d9488; box-shadow: 0 0 0 0.25rem rgba(13, 148, 136, 0.25); }
+        .btn-auth { background-color: #0d9488; border-color: #0d9488; color: white; padding: 0.75rem; border-radius: 0.5rem; font-weight: 600; }
         .btn-auth:hover { background-color: #2e59d9; border-color: #2653d4; }
     </style>
 @endsection

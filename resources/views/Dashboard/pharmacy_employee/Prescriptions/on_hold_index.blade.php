@@ -13,7 +13,7 @@
     <style>
         /* --- نفس أنماط CSS من dispensed_index.blade.php مع تعديلات طفيفة إذا لزم الأمر --- */
         :root {
-            --bs-primary-rgb: 67, 97, 238;
+            --bs-primary-rgb: 13, 148, 136;
             --bs-primary: rgb(var(--bs-primary-rgb));
             --bs-success-rgb: 25, 135, 84;
             --bs-info-rgb: 13, 202, 240;

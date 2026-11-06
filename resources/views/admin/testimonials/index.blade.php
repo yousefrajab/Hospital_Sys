@@ -181,12 +181,12 @@
 
         .btn-soft-primary {
             background-color: rgba(0, 123, 255, 0.1);
-            color: #007bff !important;
+            color: #0d9488 !important;
             border-color: transparent;
         }
 
         .btn-soft-primary:hover {
-            background-color: #007bff;
+            background-color: #0d9488;
             color: #fff !important;
         }
 

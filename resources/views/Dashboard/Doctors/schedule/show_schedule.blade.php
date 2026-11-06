@@ -11,7 +11,7 @@
 
     <style>
         :root {
-            --primary-color: #4A90E2;
+            --primary-color: #0d9488;
             --primary-dark: #3a7bd5;
             --secondary-color: #4A4A4A;
             --accent-color: #50E3C2;
@@ -25,7 +25,7 @@
             --text-dark: #34495e;
             --text-muted: #95a5a6;
             --card-shadow: 0 8px 25px rgba(140, 152, 164, 0.1);
-            --primary-gradient: linear-gradient(135deg, #4A90E2 0%, #3a7bd5 100%);
+            --primary-gradient: linear-gradient(135deg, #0d9488 0%, #3a7bd5 100%);
             --success-gradient: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
         }
 
@@ -89,13 +89,13 @@
         }
 
         .doctor-info-card {
-            background: rgba(74, 144, 226, 0.1);
+            background: rgba(13, 148, 136, 0.1);
             border-radius: 12px;
             padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
             gap: 1rem;
-            border: 1px solid rgba(74, 144, 226, 0.2);
+            border: 1px solid rgba(13, 148, 136, 0.2);
         }
 
         .doctor-avatar {
@@ -192,7 +192,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: rgba(74, 144, 226, 0.1);
+            background: rgba(13, 148, 136, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -324,11 +324,11 @@
         .stat-item {
             flex: 1;
             min-width: 150px;
-            background: rgba(74, 144, 226, 0.05);
+            background: rgba(13, 148, 136, 0.05);
             border-radius: 8px;
             padding: 1rem;
             text-align: center;
-            border: 1px solid rgba(74, 144, 226, 0.1);
+            border: 1px solid rgba(13, 148, 136, 0.1);
         }
 
         .stat-value {
@@ -371,7 +371,7 @@
 
         .btn-edit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(74, 144, 226, 0.3);
+            box-shadow: 0 6px 15px rgba(13, 148, 136, 0.3);
             background: var(--primary-dark);
         }
 

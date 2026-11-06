@@ -10,14 +10,14 @@
     <style>
         /* --- نفس متغيرات CSS وأنماط البطاقات والفورم التي استخدمناها سابقًا --- */
         :root { /* ... (نفس متغيرات :root من ملف index.blade.php للأدوية) ... */
-            --admin-primary: #4f46e5; --admin-primary-dark: #4338ca; --admin-secondary: #10b981;
+            --admin-primary: #0d9488; --admin-primary-dark: #0f766e; --admin-secondary: #10b981;
             --admin-success: #22c55e; --admin-danger: #ef4444; --admin-warning: #f59e0b;
             --admin-info: #3b82f6; --admin-bg: #f8f9fc; --admin-card-bg: #ffffff;
             --admin-text: #1f2937; --admin-text-secondary: #6b7280; --admin-border-color: #e5e7eb;
             --admin-input-border: #d1d5db; --admin-radius-md: 0.375rem; --admin-radius-lg: 0.5rem;
             --admin-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.07);
             --admin-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --bs-primary-rgb: 79, 70, 229;
+            --bs-primary-rgb: 13, 148, 136;
         }
         @media (prefers-color-scheme: dark) { /* ... (أنماط الوضع الداكن) ... */ }
         body { background-color: var(--admin-bg); font-family: 'Tajawal', sans-serif; color: var(--admin-text); }

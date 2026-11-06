@@ -68,7 +68,7 @@
 
 @section('js')
     <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('/plugins/notify/js/notifit-custom.js') }}"></script>
+    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
     <!-- Internal Data tables -->
     <script src="{{ URL::asset('Dashboard/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ URL::asset('Dashboard/plugins/datatable/js/dataTables.dataTables.min.js') }}"></script>

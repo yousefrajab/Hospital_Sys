@@ -13,7 +13,7 @@
 
     <style>
         :root {
-            --bs-primary-rgb: 67, 97, 238;
+            --bs-primary-rgb: 13, 148, 136;
             --bs-primary: rgb(var(--bs-primary-rgb));
             --bs-primary-dark: #3a58d8;
             --bs-secondary-rgb: 108, 117, 125;

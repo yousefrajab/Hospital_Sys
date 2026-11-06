@@ -13,7 +13,7 @@
 
     <style>
         :root {
-            --primary-color: #007bff;
+            --primary-color: #0d9488;
             --secondary-color: #6c757d;
             --light-bg: #f8f9fa;
             --border-color: #dee2e6;

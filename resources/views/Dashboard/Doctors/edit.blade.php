@@ -4,7 +4,7 @@
     @include('Style.Style')
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #6366F1, #8B5CF6);
+            --primary-gradient: linear-gradient(135deg, #0d9488, #8B5CF6);
             --secondary-gradient: linear-gradient(135deg, #06B6D4, #0EA5E9);
             --glass-effect: rgba(255, 255, 255, 0.25);
         }
@@ -216,7 +216,7 @@
             background: white;
             padding: 0 8px;
             font-size: 13px;
-            color: #6366F1;
+            color: #0d9488;
             font-weight: 600;
         }
 
@@ -724,7 +724,7 @@
             $('.form-control-modern').focus(function() {
                 $(this).parent().find('label').css('color', '#8B5CF6');
             }).blur(function() {
-                $(this).parent().find('label').css('color', '#6366F1');
+                $(this).parent().find('label').css('color', '#0d9488');
             });
         });
     </script>

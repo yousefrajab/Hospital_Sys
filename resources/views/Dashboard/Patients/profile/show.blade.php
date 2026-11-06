@@ -18,9 +18,9 @@
 
     <style>
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --accent-color: #4895ef;
+            --primary-color: #0d9488;
+            --secondary-color: #0f766e;
+            --accent-color: #14b8a6;
             --light-color: #f8f9fa;
             --dark-color: #212529;
             --text-muted-custom: #6c757d;
@@ -322,7 +322,7 @@
             background: var(--primary-color);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(var(--primary-color-rgb, 67, 97, 238), 0.3);
+            box-shadow: 0 5px 15px rgba(var(--primary-color-rgb, 13, 148, 136), 0.3);
         }
 
         .edit-profile-action-button i {

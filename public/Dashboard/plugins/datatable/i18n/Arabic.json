@@ -1,0 +1,13 @@
+{
+    "emptyTable": "لا توجد بيانات",
+    "info": "عرض _START_ إلى _END_ من _TOTAL_",
+    "infoEmpty": "لا توجد بيانات",
+    "infoFiltered": "(من أصل _MAX_)",
+    "lengthMenu": "عرض _MENU_",
+    "loadingRecords": "جارٍ التحميل...",
+    "processing": "جارٍ المعالجة...",
+    "search": "",
+    "searchPlaceholder": "بحث...",
+    "zeroRecords": "لا توجد نتائج مطابقة",
+    "paginate": { "first": "الأول", "last": "الأخير", "next": "التالي", "previous": "السابق" }
+}

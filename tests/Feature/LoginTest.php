@@ -61,4 +61,14 @@ class LoginTest extends TestCase
 
         $this->assertGuest($guard);
     }
+
+    #[DataProvider('roles')]
+    public function test_remember_me_works(string $guard, string $email): void
+    {
+        $response = $this->post("/login/{$guard}", ['email' => $email, 'password' => '12345678', 'remember' => '1']);
+
+        $response->assertRedirect();
+        $this->assertAuthenticated($guard);
+        $this->assertNotNull(auth($guard)->user()->fresh()->remember_token);
+    }
 }

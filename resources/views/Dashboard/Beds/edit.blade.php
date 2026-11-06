@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
         :root {
-            --admin-primary: #4f46e5;
-            --admin-primary-dark: #4338ca;
+            --admin-primary: #0d9488;
+            --admin-primary-dark: #0f766e;
             --admin-secondary: #10b981;
             --admin-success: #22c55e;
             --admin-danger: #ef4444;
@@ -35,8 +35,8 @@
                 --admin-text: #f9fafb;
                 --admin-text-secondary: #9ca3af;
                 --admin-border-color: #4b5563;
-                --admin-primary: #6366f1;
-                --admin-primary-dark: #4f46e5;
+                --admin-primary: #0d9488;
+                --admin-primary-dark: #0d9488;
             }
 
             .form-control,
@@ -126,7 +126,7 @@
         .form-control:focus,
         .form-select:focus {
             border-color: var(--admin-primary);
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
+            box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.15);
         }
 
         .select2-container--bootstrap-5 .select2-selection {
@@ -145,7 +145,7 @@
         .select2-container--bootstrap-5.select2-container--focus .select2-selection,
         .select2-container--bootstrap-5.select2-container--open .select2-selection {
             border-color: var(--admin-primary) !important;
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15) !important;
+            box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.15) !important;
         }
 
         .btn-submit-form,
@@ -220,7 +220,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <i class="fas fa-bed-pulse fa-lg me-2" style="color: var(--admin-primary, #4f46e5);"></i>
+                <i class="fas fa-bed-pulse fa-lg me-2" style="color: var(--admin-primary, #0d9488);"></i>
                 <div>
                     <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.beds_management') }}</h4>
                     <span class="text-muted mt-0 tx-13">/ {{ trans('AdminSb.edit_bed_colon') }} {{ $bedIdentifier }}</span>

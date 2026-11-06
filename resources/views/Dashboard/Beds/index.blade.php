@@ -19,8 +19,8 @@
 
     <style>
         :root {
-            --admin-primary: #4f46e5;
-            --admin-primary-dark: #4338ca;
+            --admin-primary: #0d9488;
+            --admin-primary-dark: #0f766e;
             --admin-secondary: #10b981;
             --admin-success: #22c55e;
             --admin-danger: #ef4444;
@@ -46,8 +46,8 @@
                 --admin-text: #f9fafb;
                 --admin-text-secondary: #9ca3af;
                 --admin-border-color: #4b5563;
-                --admin-primary: #6366f1;
-                --admin-primary-dark: #4f46e5;
+                --admin-primary: #0d9488;
+                --admin-primary-dark: #0d9488;
             }
 
             .table thead th {
@@ -57,7 +57,7 @@
             }
 
             .table tbody tr:hover {
-                background-color: rgba(99, 102, 241, 0.08);
+                background-color: rgba(13, 148, 136, 0.08);
             }
 
             .card {
@@ -162,7 +162,7 @@
         }
 
         .table tbody tr:hover {
-            background-color: rgba(79, 70, 229, 0.04);
+            background-color: rgba(13, 148, 136, 0.04);
         }
 
         .badge {
@@ -204,7 +204,7 @@
         .form-control:focus,
         .form-select:focus {
             border-color: var(--admin-primary);
-            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15);
+            box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.15);
         }
 
         .select2-container--bootstrap-5 .select2-selection {
@@ -242,7 +242,7 @@
             background-color: var(--admin-primary);
             border-color: var(--admin-primary);
             color: white;
-            box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 2px 5px rgba(13, 148, 136, 0.3);
         }
 
         .page-item.disabled .page-link {
@@ -257,7 +257,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex align-items-center">
-                <i class="fas fa-bed fa-lg me-2" style="color: var(--admin-primary, #4f46e5);"></i>
+                <i class="fas fa-bed fa-lg me-2" style="color: var(--admin-primary, #0d9488);"></i>
                 <div>
                     <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.facilities_management') }}</h4>
                     <span class="text-muted mt-0 tx-13">/ {{ trans('AdminSb.beds_list') }}</span>

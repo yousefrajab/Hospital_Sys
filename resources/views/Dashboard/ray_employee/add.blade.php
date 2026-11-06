@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content shadow-lg border-0">
             <div class="modal-header"
-                style="background: linear-gradient(135deg, var(--primary-color, #007bff), var(--accent-color, #17a2b8)); color: white;">
+                style="background: linear-gradient(135deg, var(--primary-color, #0d9488), var(--accent-color, #17a2b8)); color: white;">
                 <h5 class="modal-title" id="addRayEmployeeModalLabel">
                     <i class="fas fa-user-plus mr-2"></i>{{ trans('AdminSb.add_new_ray_employee') }}
                 </h5>
@@ -29,7 +29,7 @@
                                     alt="{{ trans('AdminSb.employee_image') }}"
                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
                                 <label for="add_ray_avatar_upload_photo" class="btn btn-sm"
-                                    style="position: absolute; bottom: 5px; right: 5px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor:pointer; background-color: var(--primary-color, #007bff); color:white;"
+                                    style="position: absolute; bottom: 5px; right: 5px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor:pointer; background-color: var(--primary-color, #0d9488); color:white;"
                                     title="{{ trans('AdminSb.select_image') }}">
                                     <i class="fas fa-camera"></i>
                                 </label>
@@ -44,7 +44,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                    style="color: var(--primary-color, #007bff);">{{ trans('AdminSb.full name') }} <span
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('AdminSb.full name') }} <span
                                         class="text-danger">*</span></label>
                                 <input type="text" name="name" value="{{ old('name') }}"
                                     class="form-control rounded-lg shadow-sm"
@@ -56,7 +56,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                    style="color: var(--primary-color, #007bff);">{{ trans('AdminSb.national_id') }}
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('AdminSb.national_id') }}
                                     <span class="text-danger">*</span></label>
                                 <input type="text" name="national_id" value="{{ old('national_id') }}"
                                     class="form-control rounded-lg shadow-sm"
@@ -71,7 +71,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                    style="color: var(--primary-color, #007bff);">{{ trans('AdminSb.email') }} <span
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('AdminSb.email') }} <span
                                         class="text-danger">*</span></label>
                                 <input type="email" name="email" value="{{ old('email') }}"
                                     class="form-control rounded-lg shadow-sm" placeholder="example@domain.com" required>
@@ -82,7 +82,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                    style="color: var(--primary-color, #007bff);">{{ trans('AdminSb.phone') }} <span
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('AdminSb.phone') }} <span
                                         class="text-danger">*</span></label>
                                 <input class="form-control rounded-lg shadow-sm" name="phone"
                                     value="{{ old('phone') }}" type="tel" pattern="^05\d{8}$"
@@ -95,7 +95,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="add_ray_status_employee" class="font-weight-bold"
-                                    style="color: var(--primary-color, #007bff);">{{ trans('AdminSb.status') }} <span
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('AdminSb.status') }} <span
                                         class="text-danger">*</span></label>
                                 <select name="status" id="add_ray_status_employee"
                                     class="form-control rounded-lg shadow-sm custom-select" required>
@@ -111,7 +111,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold"
-                                    style="color: var(--primary-color, #007bff);">{{ trans('AdminSb.password') }}
+                                    style="color: var(--primary-color, #0d9488);">{{ trans('AdminSb.password') }}
                                     <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="password" name="password" class="form-control rounded-lg shadow-sm"
@@ -138,7 +138,7 @@
                         <i class="fas fa-times mr-2"></i>{{ trans('AdminSb.close') }}
                     </button>
                     <button type="submit" class="btn btn-primary rounded-pill px-4"
-                        style="background: linear-gradient(135deg, var(--primary-color, #007bff), var(--accent-color, #17a2b8)); border: none;">
+                        style="background: linear-gradient(135deg, var(--primary-color, #0d9488), var(--accent-color, #17a2b8)); border: none;">
                         <i class="fas fa-save mr-2"></i>{{ trans('AdminSb.add_the_employee') }}
                     </button>
                 </div>
@@ -190,12 +190,12 @@
 </script>
 <style>
     :root {
-        --primary-color: #007bff;
+        --primary-color: #0d9488;
         --accent-color: #17a2b8;
     }
 
     .form-control:focus {
-        border-color: var(--primary-color, #007bff);
+        border-color: var(--primary-color, #0d9488);
         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
 </style>

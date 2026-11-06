@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/apexcharts@3.40.0/dist/apexcharts.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #4361ee;
+            --primary: #0d9488;
             --secondary: #6c757d;
             --success: #28a745;
             --danger: #dc3545;

@@ -15,7 +15,7 @@
 
     <style>
         :root {
-            --bs-primary-rgb: 67, 97, 238;
+            --bs-primary-rgb: 13, 148, 136;
             --bs-primary: rgb(var(--bs-primary-rgb));
             --bs-success-rgb: 25, 135, 84;
             --bs-success: rgb(var(--bs-success-rgb));

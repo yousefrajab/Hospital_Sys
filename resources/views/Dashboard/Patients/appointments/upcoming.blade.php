@@ -14,9 +14,9 @@
 
     <style>
         :root {
-            --patient-primary: #007bff; /* Primary Blue */
+            --patient-primary: #0d9488; /* Primary Blue */
             --patient-primary-rgb: 0, 123, 255;
-            --patient-primary-dark: #0056b3;
+            --patient-primary-dark: #0f766e;
             --patient-primary-light: #cfe2ff;
             --patient-secondary: #6c757d; /* Secondary Gray */
             --patient-success: #198754;  /* Success Green */

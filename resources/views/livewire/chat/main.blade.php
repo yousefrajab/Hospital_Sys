@@ -159,7 +159,7 @@
 
 @section('js')
     <script src="{{ URL::asset('Dashboard/plugins/lightslider/js/lightslider.min.js') }}"></script>
-    <script src="{{ URL::asset('Dashboard/js/chat.js') }}"></script> {{-- ملف JS القالب الافتراضي للمحادثات --}}
+{{-- ملف JS القالب الافتراضي للمحادثات --}}
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

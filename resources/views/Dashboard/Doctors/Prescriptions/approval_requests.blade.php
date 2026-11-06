@@ -10,7 +10,7 @@
     <style>
         /* --- Root Variables & Basic Styling --- */
         :root {
-            --bs-primary-rgb: 67, 97, 238; --bs-primary: rgb(var(--bs-primary-rgb));
+            --bs-primary-rgb: 13, 148, 136; --bs-primary: rgb(var(--bs-primary-rgb));
             --bs-success-rgb: 25, 135, 84; --bs-success: rgb(var(--bs-success-rgb));
             --bs-warning-rgb: 255, 193, 7; --bs-warning: rgb(var(--bs-warning-rgb));
             --bs-danger-rgb: 220, 53, 69; --bs-danger: rgb(var(--bs-danger-rgb));

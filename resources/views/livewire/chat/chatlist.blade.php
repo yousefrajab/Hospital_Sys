@@ -117,7 +117,7 @@
     .conversation-item:hover { background-color: #f8f9fa; }
     .conversation-item.active-conversation {
         background-color: #eef2ff; /* لون أزرق فاتح للتحديد */
-        border-left: 4px solid #4f46e5; /* شريط جانبي للتمييز */
+        border-left: 4px solid #0d9488; /* شريط جانبي للتمييز */
     }
     .user-avatar { width: 48px; height: 48px; object-fit: cover; }
     .user-name { font-size: 0.9rem; }
