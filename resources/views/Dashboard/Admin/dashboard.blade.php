@@ -1,391 +1,116 @@
 @extends('Dashboard.layouts.master')
-@section('title', 'لوحة تحكم المشرف العام')
+@section('title', trans('ui.roles.admin'))
 
-@section('css')
-    @parent
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    {{-- FontAwesome if not globally included by master --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
-
-    <style>
-        /* --- المتغيرات الأساسية (Globals & Dark Mode) --- */
-        :root {ض
-            --admin-primary: #0d9488; /* Indigo-600 */
-            --admin-primary-dark: #0f766e; /* Indigo-700 */
-            --admin-secondary: #10b981; /* Emerald-500 */
-            --admin-success: #22c55e; /* Green-500 */
-            --admin-danger: #ef4444; /* Red-500 */
-            --admin-warning: #f59e0b; /* Amber-500 */
-            --admin-info: #3b82f6; /* Blue-500 */
-            --admin-purple: #8b5cf6; /* Violet-500 */
-            --admin-teal: #14b8a6; /* Teal-500 */
-            --admin-pink: #ec4899; /* Pink-500 */
-            --admin-cyan: #06b6d4; /* Cyan-500 */
-
-
-            --admin-bg: #f4f6f9;
-            --admin-card-bg: #ffffff;
-            --admin-text: #34495e;
-            --admin-text-secondary: #7f8c8d;
-            --admin-border-color: #e3e6f0;
-            --admin-radius-md: 0.5rem;
-            --admin-radius-lg: 0.75rem;
-            --admin-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            --admin-shadow-md: 0 6px 18px rgba(0, 0, 0, 0.08);
-            --admin-transition: all 0.25s ease-in-out;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --admin-bg: #111827;
-                --admin-card-bg: #1f2937;
-                --admin-text: #f3f4f6;
-                --admin-text-secondary: #9ca3af;
-                --admin-border-color: #374151;
-                --admin-primary: #14b8a6;
-                --admin-primary-dark: #0d9488;
-                --admin-secondary: #34d399;
-                /* ... (ألوان أخرى للوضع الداكن إذا أردت) ... */
-            }
-            /* ... (أنماط الوضع الداكن للـ table, pagination, filter-form من كودك السابق فهي جيدة) ... */
-             .stats-card { background-color: var(--admin-card-bg); border-color:var(--admin-border-color); }
-             .stats-card .info .count { color: var(--admin-text); }
-             .stats-card .info .label { color: var(--admin-text-secondary); }
-             .stats-card .stat-actions a { color: var(--admin-primary); }
-             .stats-card .stat-actions a:hover { color: var(--admin-primary-dark); }
-        }
-
-        body { background-color: var(--admin-bg); font-family: 'Tajawal', sans-serif; color: var(--admin-text); }
-        .main-content .container-fluid { padding-left: 20px; padding-right: 20px; }
-        .breadcrumb-header { margin-bottom: 1.5rem; }
-        .content-title { font-weight: 600; }
-
-
-        /* -- بطاقات الإحصائيات -- */
-        .stats-card {
-            background-color: var(--admin-card-bg);
-            border-radius: var(--admin-radius-lg);
-            padding: 1.5rem;
-            border: 1px solid var(--admin-border-color);
-            box-shadow: var(--admin-shadow);
-            display: flex;
-            align-items: stretch;
-            gap: 1rem;
-            transition: var(--admin-transition);
-            text-decoration: none !important; /* إزالة الخط من الرابط */
-            color: inherit; /* يرث لون النص من body */
-            height: 100%;
-        }
-        .stats-card:hover {
-            transform: translateY(-5px) scale(1.015); /* تأثير hover أفضل */
-            box-shadow: var(--admin-shadow-md);
-            border-left: 4px solid var(--hover-color, var(--admin-primary)); /* استخدام متغير للون الحافة  */
-        }
-        .stats-card .icon {
-            width: 55px; height: 55px;
-            border-radius: var(--admin-radius-md);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.75rem; flex-shrink: 0; color: white;
-            align-self: center;
-        }
-        .stats-card .info { display: flex; flex-direction: column; justify-content: center; flex-grow: 1; }
-        .stats-card .info .count { font-size: 2rem; font-weight: 700; color: var(--admin-text); margin-bottom: 0.1rem; display: block; line-height: 1.1; }
-        .stats-card .info .label { font-size: 0.75rem; color: var(--admin-text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 500; letter-spacing: 0.5px;}
-        .stats-card .stat-actions a { font-size: 0.75rem; font-weight: 500; color: var(--admin-primary-dark); display: inline-block; margin-top: auto; opacity: 0.8; letter-spacing: 0.3px;}
-        .stats-card .stat-actions a:hover { opacity:1; text-decoration: underline; }
-
-        /* ألوان أيقونات/خلفيات البطاقات بناءً على الكلاس */
-        .stats-card .icon.doctors                      { background: var(--admin-primary); }
-        .stats-card.doctors-card:hover                 { --hover-color: var(--admin-primary); }
-
-        .stats-card .icon.patients                     { background: var(--admin-secondary); }
-        .stats-card.patients-card:hover                { --hover-color: var(--admin-secondary); }
-
-        .stats-card .icon.sections                     { background: var(--admin-success); }
-        .stats-card.sections-card:hover                { --hover-color: var(--admin-success); }
-
-        .stats-card .icon.rooms                        { background: var(--admin-info); }
-        .stats-card.rooms-card:hover                   { --hover-color: var(--admin-info); }
-
-        .stats-card .icon.beds                         { background: var(--admin-teal); }
-        .stats-card.beds-card:hover                    { --hover-color: var(--admin-teal); }
-
-        .stats-card .icon.admissions                   { background: var(--admin-purple); }
-        .stats-card.admissions-card:hover              { --hover-color: var(--admin-purple); }
-
-        .stats-card .icon.pending-appointments         { background: var(--admin-warning); }
-        .stats-card.pending-appointments-card:hover    { --hover-color: var(--admin-warning); }
-
-        /* === ألوان بطاقات الصيدلية والأشعة والمختبر === */
-        .stats-card .icon.pharmacy_managers     { background: var(--admin-purple); opacity: 0.9; }
-        .stats-card.pharmacy_managers-card:hover        { --hover-color: var(--admin-purple); }
-
-        .stats-card .icon.pharmacy_employees    { background: var(--admin-teal); opacity: 0.9; }
-        .stats-card.pharmacy_employees-card:hover       { --hover-color: var(--admin-teal); }
-
-        .stats-card .icon.ray_employees { background-color: var(--admin-info); opacity:0.9; } /* Use solid color for variety */
-        .stats-card.ray_employees-card:hover  { --hover-color: var(--admin-info); }
-
-        .stats-card .icon.lab_employees { background-color: var(--admin-pink); opacity:0.9; } /*  استخدام لون جديد */
-        .stats-card.lab_employees-card:hover { --hover-color: var(--admin-pink); }
-
-        .stats-card .icon.system_users { background-color: var(--admin-cyan); opacity:0.9;}
-        .stats-card.system_users-card:hover { --hover-color: var(--admin-cyan);}
-
-
-        /* قسم التنبيهات الهامة للأدمن (من كودك السابق، فهو جيد) */
-        .admin-alert-section { margin-top: 2rem; }
-        .admin-alert-card { border-radius: var(--admin-radius-md); padding: 1.25rem; border: 1px solid; margin-bottom: 1rem; display: flex; align-items: center; background: var(--admin-card-bg); box-shadow: var(--admin-shadow); }
-        .admin-alert-card .alert-icon { font-size: 1.5rem; margin-left: 1rem; }
-        .admin-alert-card .alert-message strong { font-weight: 600; color:inherit; }
-        .admin-alert-card .alert-link { font-size: 0.85rem; font-weight: 500; color:inherit; text-decoration: underline; }
-        .alert-warning-custom { border-color: rgba(var(--admin-warning-rgb), 0.5); color: #856404; /* Bootstrap's default dark yellow */ }
-        .alert-warning-custom .alert-icon { color: var(--admin-warning); }
-        .alert-warning-custom .alert-message a { color: #664d03; }
-
-
-        /* قوائم مختصرة (من كودك السابق، فهي جيدة) */
-        .summary-list-card .card-header { background-color: #fbfdff; padding: 0.8rem 1.25rem; border-bottom: 1px solid var(--admin-border-color); }
-        .summary-list-card .card-title-css {font-size: 1.05rem;}
-        .summary-list-card .list-group-item { border-color: var(--admin-border-color); padding: 0.8rem 1.25rem; font-size:0.9rem; display:flex; justify-content: space-between; align-items:center; }
-        .summary-list-card .list-group-item:hover { background-color: #f5f7fa; }
-        .summary-list-card .item-main { font-weight: 500; color: var(--admin-text)}
-        .summary-list-card .item-meta { font-size: 0.75rem; color: var(--admin-text-secondary); }
-        .summary-list-card .item-action .btn {padding: 0.25rem 0.6rem; font-size:0.75rem;}
-    </style>
-@endsection
-
-@section('page-header')
-    <div class="breadcrumb-header justify-content-between">
-        <div class="my-auto">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-shield-alt fa-2x text-primary me-3"></i>
-                <div>
-                    <h4 class="content-title mb-0 my-auto">{{ trans('AdminSb.main_dashboard') }}</h4>
-                    <span class="text-muted mt-0 tx-13 op-8">{{ trans('AdminSb.dashboard_overview_subtitle') }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex my-xl-auto right-content align-items-center gap-2">
-            <span class="text-muted small"><i class="far fa-calendar-alt me-1"></i> {{ now()->translatedFormat('l, j F Y') }}</span>
-        </div>
-    </div>
-@endsection
+@php
+    use App\Services\Dashboard\Trend;
+    $hour = now()->hour;
+    $greetingKey = $hour < 12 ? 'ui.dash.greeting_morning' : 'ui.dash.greeting_evening';
+    $change = $kpis['revenue_change'];
+@endphp
 
 @section('content')
-    @include('Dashboard.messages_alert')
+    <x-hms.page-header :title="trans($greetingKey, ['name' => (auth('admin')->user()->name ?? '')])" :subtitle="trans('ui.dash.admin_subtitle') . ' · ' . now()->translatedFormat('l j F Y')">
+        <a href="{{ route('admin.appointments.index') }}" class="btn btn-outline-primary"><i class="far fa-calendar-check me-1"></i> {{ trans('ui.dash.appointments') }}</a>
+        <a href="{{ route('admin.single_invoices') }}" class="btn btn-primary"><i class="fas fa-plus me-1"></i> {{ trans('ui.dash.single_invoice') }}</a>
+    </x-hms.page-header>
 
-    <div class="users-management-container">
-        <div class="row g-3 mb-4">
-            {{-- Pending Appointments Card --}}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up">
-                <a href="{{ route('admin.appointments.index') }}" class="stats-card pending-appointments-card">
-                    <div class="icon pending-appointments"><i class="fas fa-hourglass-half"></i></div>
-                    <div class="info">
-                        <span class="count">{{ $pendingAppointmentsCount ?? 0 }}</span>
-                        <span class="label">{{ trans('AdminSb.appointments_waiting_confirmation') }}</span>
-                    </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.review_now') }}</span></div>
-                </a>
-            </div>
-            {{-- Doctors Card --}}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="50">
-                <a href="{{ route('admin.Doctors.index') }}" class="stats-card doctors-card">
-                    <div class="icon doctors"><i class="fas fa-user-md"></i></div>
-                    <div class="info">
-                        <span class="count">{{ $doctorsCount ?? 0 }}</span>
-                        <span class="label">{{ trans('AdminSb.Doctors') }}</span>
-                    </div>
-                     <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.manage_doctors') }}</span></div>
-                </a>
-            </div>
-            {{-- Patients Card --}}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="100">
-                 <a href="{{ route('admin.Patients.index') }}" class="stats-card patients-card">
-                    <div class="icon patients"><i class="fas fa-procedures"></i></div>
-                    <div class="info">
-                        <span class="count">{{ $patientsCount ?? 0 }}</span>
-                        <span class="label">{{ trans('AdminSb.patients') }}</span>
-                    </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.manage_patients') }}</span></div>
-                </a>
-            </div>
-            {{-- Sections Card --}}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="150">
-                <a href="{{ route('admin.Sections.index') }}" class="stats-card sections-card">
-                    <div class="icon sections"><i class="fas fa-hospital-symbol"></i></div>
-                    <div class="info">
-                        <span class="count">{{ $sectionsCount ?? 0 }}</span>
-                        <span class="label">{{ trans('AdminSb.medical_sections') }}</span>
-                    </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.manage_sections') }}</span></div>
-                </a>
-            </div>
-            {{-- Pharmacy Managers Card --}}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="200">
-                <a href="{{ route('admin.pharmacy_manager.index') }}" class="stats-card pharmacy_managers-card">
-                    <div class="icon pharmacy_managers"><i class="fas fa-store-alt"></i></div>
-                    <div class="info">
-                        <span class="count">{{ $pharmacyManagersCount ?? (\App\Models\PharmacyManager::count() ?? 0) }}</span>
-                        <span class="label">{{ trans('AdminSb.pharmacy_managers') }}</span>
-                    </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.manage_pharmacies') }}</span></div>
-                </a>
-            </div>
-            {{-- Pharmacy Employees Card --}}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="250">
-                <a href="{{ route('admin.pharmacy_employee.index') }}" class="stats-card pharmacy_employees-card">
-                    <div class="icon pharmacy_employees"><i class="fas fa-pills"></i></div>
-                    <div class="info">
-                        <span class="count">{{ $pharmacyEmployeesCount ?? (\App\Models\PharmacyEmployee::count() ?? 0) }}</span>
-                        <span class="label">{{ trans('AdminSb.pharmacy_employees') }}</span>
-                    </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.employees') }}</span></div>
-                </a>
-            </div>
-            {{-- Ray Employees Card --}}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="300">
-                <a href="{{ route('admin.ray_employee.index') }}" class="stats-card ray_employees-card">
-                    <div class="icon ray_employees"><i class="fas fa-x-ray"></i></div>
-                    <div class="info">
-                        <span class="count">{{ $rayEmployeesCount ?? (\App\Models\RayEmployee::count() ?? 0) }}</span>
-                        <span class="label">{{ trans('AdminSb.Radiology staff') }}</span>
-                    </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.radiology_department') }}</span></div>
-                </a>
-            </div>
-            {{-- Lab Employees Card --}}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" data-aos="fade-up" data-aos-delay="350">
-                <a href="{{ route('admin.laboratorie_employee.index') }}" class="stats-card lab_employees-card">
-                    <div class="icon lab_employees"><i class="fas fa-flask"></i></div>
-                    <div class="info">
-                        <span class="count">{{ $laboratorieEmployeesCount ?? (\App\Models\LaboratorieEmployee::count() ?? 0) }}</span>
-                        <span class="label">{{ trans('AdminSb.lab_staff') }}</span>
-                    </div>
-                    <div class="stat-actions align-self-end"><span class="stat-link">{{ trans('AdminSb.lab_department') }}</span></div>
-                </a>
-            </div>
-        </div>
+    <div class="hms-grid hms-grid--stats">
+        <x-hms.stat :label="trans('ui.dash.patients')" :value="number_format($kpis['patients'])" icon="fa-user-injured"
+            :hint="trans('ui.dash.new_this_month', ['count' => $kpis['new_patients']])" :href="route('admin.Patients.index')" />
+        <x-hms.stat :label="trans('ui.dash.today_appointments')" :value="number_format($kpis['today_appointments'])" icon="fa-calendar-day" tone="info"
+            :hint="trans('ui.dash.pending_hint', ['count' => $kpis['pending_appointments']])" :href="route('admin.appointments.index')" />
+        <x-hms.stat :label="trans('ui.dash.revenue_month')" :value="Trend::money($kpis['revenue'])" icon="fa-coins" tone="success"
+            :hint="$change === null ? null : trans('ui.dash.vs_last_month', ['value' => ($change > 0 ? '+' : '') . $change])" />
+        <x-hms.stat :label="trans('ui.dash.occupancy')" :value="$kpis['occupancy'] . '%'" icon="fa-procedures" tone="warning"
+            :hint="trans('ui.dash.beds_hint', ['occupied' => $kpis['occupied_beds'], 'total' => $kpis['total_beds'], 'admitted' => $kpis['admitted']])"
+            :href="route('admin.beds.index')" />
+    </div>
 
-        @if(isset($hasAdminAlerts) && $hasAdminAlerts)
-        <div class="row mt-2 admin-alert-section">
-            <div class="col-12 mb-2" data-aos="fade-up" data-aos-delay="50">
-                <h5 class="section-heading" style="border-bottom-color: var(--admin-warning); color:var(--admin-warning);"><i class="fas fa-bell"></i>{{ trans('AdminSb.urgent_actions_and_alerts') }}</h5>
-            </div>
-            @if(isset($pendingAppointmentsCount) && $pendingAppointmentsCount > 0)
-            <div class="col-lg-6 col-md-12 mb-3" data-aos="fade-up" data-aos-delay="100">
-                <div class="admin-alert-card alert-warning-custom">
-                    <i class="fas fa-hourglass-half alert-icon"></i>
-                    <div class="alert-message">
-                        <strong class="d-block mb-1">{{ trans('AdminSb.new_appointment_requests_waiting') }}</strong>
-                        {{ trans('AdminSb.there_are_appointments_that_need_review', ['count' => $pendingAppointmentsCount]) }}
-                        <a href="{{ route('admin.appointments.index') }}" class="alert-link d-block mt-2">{{ trans('AdminSb.review_all_appointment_requests') }} <i class="fas fa-arrow-left fa-xs"></i></a>
-                    </div>
-                </div>
-            </div>
-            @endif
-        </div>
-        @else
-         <div class="row mt-2" data-aos="fade-up" data-aos-delay="50">
-             <div class="col-12">
-                 <div class="alert alert-success text-center" role="alert">
-                     <i class="fas fa-check-circle me-2"></i> {{ trans('AdminSb.no_urgent_alerts') }}
-                 </div>
-             </div>
-         </div>
-        @endif
+    <div class="hms-grid hms-grid--2">
+        <x-hms.card :title="trans('ui.dash.bookings_trend')" icon="fa-chart-area">
+            <x-hms.chart type="area" :labels="$bookings['labels']" :series="[['name' => trans('ui.dash.bookings'), 'data' => $bookings['values']]]" />
+        </x-hms.card>
+        <x-hms.card :title="trans('ui.dash.status_split')" icon="fa-chart-pie">
+            <x-hms.chart type="donut" :labels="$statusChart['labels']" :series="$statusChart['values']"
+                :tones="['warning', 'primary', 'success', 'danger', 'muted']" />
+        </x-hms.card>
+    </div>
 
-        <div class="row row-deck mt-3">
-             <div class="col-lg-7 col-md-12 mb-4" data-aos="fade-right" data-aos-delay="200">
-                <div class="card h-100 shadow-sm summary-list-card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title-css mb-0"><i class="far fa-calendaroplus-alt me-2 text-primary op-8"></i>{{ trans('AdminSb.latest_pending_appointments_5') }}</h4>
-                         @if(isset($latestPendingAppointments) && $latestPendingAppointments->count() > 0)
-                            <a href="{{ route('admin.appointments.index') }}" class="btn btn-sm btn-outline-primary ripple">{{ trans('AdminSb.view_all_requests') }}</a>
-                         @endif
-                    </div>
-                    <div class="card-body pt-2 pb-2">
-                         @if(isset($latestPendingAppointments) && $latestPendingAppointments->isNotEmpty())
-                            <ul class="list-group list-group-flush">
-                                @foreach ($latestPendingAppointments as $appointment)
-                                    <li class="list-group-item">
-                                        <div class="d-flex w-100 justify-content-between align-items-center">
-                                            <div class="flex-grow-1">
-                                                <span class="item-main">{{ $appointment->patient->name ?? $appointment->name }}</span>
-                                                 <span class="text-muted mx-1 small">{{ trans('AdminSb.wants_an_appointment_with') }}</span>
-                                                 <span class="item-main text-primary-dark">{{ $appointment->doctor->name ?? '-' }}</span>
-                                                <div class="item-meta">
-                                                    <i class="far fa-clock fa-xs"></i> {{ trans('AdminSb.for_date') }} {{ $appointment->appointment }}
-                                                    <span class="mx-1">|</span>
-                                                    <i class="fas fa-tag fa-xs"></i> {{ trans('AdminSb.requested_since') }} {{ $appointment->created_at->diffForHumans() }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <div class="text-center text-muted p-4">
-                                <i class="fas fa-calendar-check fa-2x opacity-50 mb-2"></i>
-                                <p class="mb-0">{{ trans('AdminSb.no_new_appointment_requests_pending') }}</p>
+    <div class="hms-grid hms-grid--halves">
+        <x-hms.card :title="trans('ui.dash.revenue_trend')" icon="fa-chart-bar">
+            <x-hms.chart type="bar" stacked :labels="$revenue['labels']" :series="$revenue['series']" :tones="['primary', 'warning']" />
+        </x-hms.card>
+        <x-hms.card :title="trans('ui.dash.revenue_by_section')" icon="fa-hospital">
+            <x-hms.chart type="bar" :labels="$bySection['labels']" :series="[['name' => trans('ui.dash.revenue'), 'data' => $bySection['values']]]" :tones="['info']" />
+        </x-hms.card>
+    </div>
+
+    <div class="hms-grid hms-grid--3">
+        <x-hms.card :title="trans('ui.dash.pending_list')" icon="fa-hourglass-half" :href="route('admin.appointments.index')" flush>
+            @if ($pendingAppointments->isEmpty())
+                <x-hms.empty icon="fa-check-circle" :text="trans('ui.dash.no_pending')" />
+            @else
+                <ul class="hms-list">
+                    @foreach ($pendingAppointments as $appointment)
+                        <li class="hms-list__item">
+                            <x-hms.avatar :name="$appointment->name" />
+                            <div class="hms-list__main">
+                                <span class="hms-list__title">{{ $appointment->name }}</span>
+                                <span class="hms-list__meta">
+                                    {{ trans('ui.dash.with_doctor', ['name' => optional($appointment->doctor)->name ?? '—']) }}
+                                    · {{ optional($appointment->section)->name }}
+                                </span>
                             </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
+                            <div class="hms-list__side">
+                                {{ \Illuminate\Support\Carbon::parse($appointment->appointment)->translatedFormat('j M · H:i') }}
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </x-hms.card>
 
-            <div class="col-lg-5 col-md-12 mb-4" data-aos="fade-left" data-aos-delay="300">
-                 <div class="card h-100 shadow-sm summary-list-card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title-css mb-0"><i class="fas fa-users me-2 text-primary op-8"></i>{{ trans('AdminSb.latest_registered_patients_5') }}</h4>
-                          @if(isset($recentPatients) && $recentPatients->count() > 0)
-                            <a href="{{ route('admin.Patients.index') }}" class="btn btn-sm btn-outline-primary ripple">{{ trans('AdminSb.all_patients') }}</a>
-                         @endif
-                    </div>
-                    <div class="card-body pt-2 pb-2">
-                        @if(isset($recentPatients) && $recentPatients->isNotEmpty())
-                             <ul class="list-group list-group-flush">
-                                @foreach($recentPatients as $patientRec)
-                                <li class="list-group-item">
-                                    <div class="d-flex align-items-center">
-                                         <img src="{{ $patientRec->image ? asset('Dashboard/img/patients/' . $patientRec->image->filename) : asset('Dashboard/img/default_patient_avatar.png') }}" alt="{{ $patientRec->name }}" style="width:35px; height:35px; border-radius:50%; object-fit:cover; margin-left:10px; border:2px solid var(--admin-border-color);">
-                                        <div class="flex-grow-1">
-                                            <a href="{{ route('admin.Patients.show', $patientRec->id) }}" class="item-main text-decoration-none hover-underline">{{ $patientRec->name }}</a>
-                                            <div class="item-meta">
-                                                <i class="far fa-calendar-plus fa-xs"></i> {{ trans('AdminSb.joined') }}: {{ $patientRec->created_at->diffForHumans() }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <p class="text-center text-muted p-4">{{ trans('AdminSb.no_recently_registered_patients') }}</p>
-                        @endif
-                    </div>
+        <x-hms.card :title="trans('ui.dash.recent_patients')" icon="fa-user-plus" :href="route('admin.Patients.index')" flush>
+            @if ($recentPatients->isEmpty())
+                <x-hms.empty icon="fa-users" :text="trans('ui.dash.no_patients')" />
+            @else
+                <ul class="hms-list">
+                    @foreach ($recentPatients as $patient)
+                        <li class="hms-list__item">
+                            <x-hms.avatar :name="$patient->name" :src="$patient->image ? asset('Dashboard/img/patients/' . $patient->image->filename) : null" />
+                            <div class="hms-list__main">
+                                <span class="hms-list__title">{{ $patient->name }}</span>
+                                <span class="hms-list__meta">{{ trans('ui.dash.joined', ['time' => $patient->created_at->diffForHumans()]) }}</span>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </x-hms.card>
+
+        <div class="d-flex flex-column" style="gap: 20px">
+            <x-hms.card :title="trans('ui.dash.staff')" icon="fa-users-cog">
+                @php($maxStaff = max(1, collect($staff)->max('count')))
+                <div class="hms-meter">
+                    @foreach ($staff as $row)
+                        <div class="hms-tone-{{ $row['tone'] }}">
+                            <div class="hms-meter__row"><span><i class="fas {{ $row['icon'] }} me-1" style="color: var(--tone)"></i> {{ $row['label'] }}</span><strong>{{ $row['count'] }}</strong></div>
+                            <div class="hms-meter__bar"><span style="width: {{ round($row['count'] / $maxStaff * 100) }}%"></span></div>
+                        </div>
+                    @endforeach
                 </div>
-            </div>
+            </x-hms.card>
+
+            <x-hms.card :title="trans('ui.dash.quick_actions')" icon="fa-bolt">
+                <div class="hms-quick">
+                    <a href="{{ route('admin.Doctors.create') }}"><i class="fas fa-user-md"></i>{{ trans('ui.dash.add_doctor') }}</a>
+                    <a href="{{ route('admin.Patients.create') }}"><i class="fas fa-user-plus"></i>{{ trans('ui.dash.add_patient') }}</a>
+                    <a href="{{ route('admin.group_invoices') }}"><i class="fas fa-layer-group"></i>{{ trans('ui.dash.group_invoice') }}</a>
+                    <a href="{{ route('admin.Receipt.create') }}"><i class="fas fa-receipt"></i>{{ trans('ui.dash.receipt') }}</a>
+                    <a href="{{ route('admin.patient_admissions.index') }}"><i class="fas fa-procedures"></i>{{ trans('ui.dash.admissions') }}</a>
+                    <a href="{{ route('admin.Sections.index') }}"><i class="fas fa-hospital"></i>{{ trans('ui.dash.sections') }} ({{ $sectionsCount }})</a>
+                </div>
+            </x-hms.card>
         </div>
     </div>
-@endsection
-
-@section('js')
-    @parent
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    {{----}}
-    <script>
-        $(document).ready(function() {
-            AOS.init({ duration: 600, easing: 'ease-out-cubic', once: true, offset: 30 });
-
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl, { boundary: document.body, container:'body'});
-            });
-
-            @if (session('success')) notif({ msg: `<div class='d-flex align-items-center p-2'><i class='fas fa-check-circle fa-lg me-2 text-success'></i><div>{!! addslashes(session('success')) !!}</div></div>`, type: "success", position: "top-center", autohide: true, timeout: 6000 }); @endif
-            @if (session('error')) notif({ msg: `<div class='d-flex align-items-center p-2'><i class='fas fa-exclamation-triangle fa-lg me-2 text-danger'></i><div>{!! addslashes(session('error')) !!}</div></div>`, type: "error", position: "top-center", autohide: true, timeout: 8000 }); @endif
-        });
-    </script>
 @endsection

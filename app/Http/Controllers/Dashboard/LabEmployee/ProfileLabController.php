@@ -19,44 +19,8 @@ class ProfileLabController extends Controller
     use UploadTrait;
     public function dashboard()
     {
-        $employeeGuard = Auth::guard('laboratorie_employee');
-        $employeeName = $employeeGuard->user()->name ?? 'زائر';
-
-        $totalLabs = Laboratorie::count();
-        $pendingLabs = Laboratorie::where('case', 0)->count();
-        $completedLabs = Laboratorie::where('case', 1)->count();
-
-        $latestLabs = Laboratorie::with(['patient', 'doctor'])
-            ->latest()
-            ->take(5)
-            ->get();
-
-        $monthlyLabCounts = Laboratorie::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->whereYear('created_at', date('Y'))
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('count', 'month')
-            ->all();
-
-        $monthLabels = [];
-        $monthData = [];
-        // $monthNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        $monthNames = array_values(trans('ray.months'));
-
-        for ($m = 1; $m <= 12; $m++) {
-            $monthLabels[] = $monthNames[$m - 1];
-            $monthData[] = $monthlyLabCounts[$m] ?? 0;
-        }
-
-        return view('Dashboard.dashboard_LaboratorieEmployee.dashboard', compact(
-            'employeeName',
-            'totalLabs',
-            'pendingLabs',
-            'completedLabs',
-            'latestLabs',
-            'monthLabels',
-            'monthData'
-        ));
+        return view('Dashboard.dashboard_LaboratorieEmployee.dashboard',
+            \App\Services\Dashboard\DiagnosticsDashboard::build('lab', Auth::guard('laboratorie_employee')->id()));
     }
     public function showw()
     {

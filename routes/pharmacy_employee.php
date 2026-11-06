@@ -36,7 +36,7 @@ Route::group(
         //################################ dashboard pharmacy_employee ########################################
 
         Route::get('/dashboard/pharmacy_employee', function () {
-            return view('Dashboard.dashboard_PharmacyEmployee.dashboard');
+            return view('Dashboard.dashboard_PharmacyEmployee.dashboard', \App\Services\Dashboard\PharmacyDashboard::employee());
         })->middleware(['auth:pharmacy_employee'])->name('dashboard.pharmacy_employee');
         //################################ end dashboard ray_employee #####################################
 

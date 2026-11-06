@@ -44,80 +44,9 @@ class DoctorController extends Controller
 
     public function dashboard(Request $request)
     {
-        $doctor = Auth::guard('doctor')->user();
-        $doctorId = $doctor->id;
-        $doctorEmail = $doctor->email;
-
-        Log::info("Doctor Dashboard: User {$doctor->name} (ID: {$doctorId}) accessed.");
-
-        // --- 1. إحصائيات البطاقات العلوية ---
-        $totalInvoicesByDoctor = Invoice::where('doctor_id', $doctorId)->count();
-
-        $todayConfirmedAppointmentsCount = Appointment::where('doctor_id', $doctorId)
-            ->whereDate('appointment', Carbon::today())
-            ->where('type', Appointment::STATUS_CONFIRMED)
-            ->count();
-
-        // ... (باقي إحصائياتك الأخرى)
-        $prescriptionsThisMonthCount = Prescription::where('doctor_id', $doctorId)
-            ->whereMonth('created_at', Carbon::now()->month)
-            ->whereYear('created_at', Carbon::now()->year)
-            ->count();
-        $unreadMessagesFromPatientsCount = Message::where('receiver_email', $doctorEmail)
-            ->where('read', false)
-            ->count();
-        $prescriptionApprovalRequestsCount = Prescription::where('doctor_id', $doctorId)
-            ->where('status', Prescription::STATUS_REFILL_REQUESTED)
-            ->count();
-
-        // *** هنا نقوم بحساب العدد الإجمالي للمواعيد المؤكدة والقادمة ***
-        $allUpcomingConfirmedAppointmentsTotalCount = Appointment::where('doctor_id', $doctorId)
-            ->where('type', Appointment::STATUS_CONFIRMED)
-            ->where('appointment', '>=', Carbon::now())
-            ->count(); //  <--- استخدمنا count() هنا لحساب العدد
-        // *** نهاية حساب العدد ***
-
-        $hasImportantDoctorAlerts = ($prescriptionApprovalRequestsCount > 0) || ($unreadMessagesFromPatientsCount > 0);
-
-        // --- 2. قوائم العرض في الداش بورد ---
-        // قائمة جميع المواعيد المؤكدة والقادمة (للعرض في جدول إذا أردت)
-        $allUpcomingConfirmedAppointments = Appointment::where('doctor_id', $doctorId)
-            ->where('type', Appointment::STATUS_CONFIRMED)
-            ->where('appointment', '>=', Carbon::now())
-            ->with(['patient:id', 'section:id']) //  جلب الأسماء إذا كنت ستعرضها
-            ->orderBy('appointment', 'asc')
-            ->take(5) //  نأخذ أول 5 فقط لعرضها كملخص في الداش بورد
-            ->get();
-
-        // مواعيد اليوم المؤكدة
-        $todayAppointmentsList = Appointment::where('doctor_id', $doctorId)
-            ->where('type', Appointment::STATUS_CONFIRMED)
-            ->whereDate('appointment', Carbon::today())
-            ->with(['patient:id', 'section:id']) // جلب الأسماء
-            ->orderBy('appointment', 'asc')
-            ->get();
-
-        $recentPrescriptionsList = Prescription::where('doctor_id', $doctorId)
-            ->with('patient:id') // جلب اسم المريض
-            ->latest('updated_at')
-            ->take(5)
-            ->get();
-
-        return view('Dashboard.doctor.dashboard', compact(
-            'doctor',
-            'totalInvoicesByDoctor',
-            'todayConfirmedAppointmentsCount',
-            'prescriptionsThisMonthCount',
-            'unreadMessagesFromPatientsCount',
-            'prescriptionApprovalRequestsCount',
-            'hasImportantDoctorAlerts',
-            'allUpcomingConfirmedAppointments',
-            'allUpcomingConfirmedAppointmentsTotalCount', //  <--- *** تمرير العداد الجديد للـ view ***
-            'todayAppointmentsList',
-            'recentPrescriptionsList',
-            'request'
-        ));
+        return view('Dashboard.doctor.dashboard', \App\Services\Dashboard\DoctorDashboard::build(Auth::guard('doctor')->user()));
     }
+
     public function index()
     {
         return $this->Doctors->index();

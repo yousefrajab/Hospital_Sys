@@ -27,49 +27,7 @@ class PharmacyManagercontroller extends Controller
 
     public function indexx()
     {
-        // تحسين الاستعلامات لتجنب الحمل الزائد
-        $activeMedications = Medication::where('status', 1)->with(['stocks' => function ($query) {
-            $query->where('quantity_on_hand', '>', 0)
-                ->whereDate('expiry_date', '>', now());
-        }])->get();
-
-        // حساب الأدوية منخفضة المخزون
-        $lowStockMedicationsCount = $activeMedications->filter(function ($med) {
-            return $med->stocks->sum('quantity_on_hand') <= $med->minimum_stock_level;
-        })->count();
-
-        // حساب الأدوية المنتهية الصلاحية قريباً
-        $expiryWarningDays = config('pharmacy.stock_expiry_warning_days', 90);
-        $soonToExpireMedicationsCount = PharmacyStock::where('quantity_on_hand', '>', 0)
-            ->whereDate('expiry_date', '>', now())
-            ->whereDate('expiry_date', '<=', now()->addDays($expiryWarningDays))
-            ->distinct('medication_id')
-            ->count('medication_id');
-
-        // بيانات الرسم البياني
-        $inStockForChart = $activeMedications->filter(function ($med) {
-            return $med->stocks->sum('quantity_on_hand') > $med->minimum_stock_level;
-        })->count();
-
-        $outOfStockForChart = $activeMedications->filter(function ($med) {
-            return $med->stocks->sum('quantity_on_hand') == 0;
-        })->count();
-
-        // آخر 5 دفعات أدوية مع تحسين الاستعلام
-        $recentStockEntries = PharmacyStock::with('medication:id,name')
-            ->latest('received_date')
-            ->take(5)
-            ->get();
-
-        return view('Dashboard.dashboard_PharmacyManager.dashboard', compact(
-            'activeMedications',
-            'lowStockMedicationsCount',
-            'soonToExpireMedicationsCount',
-            'expiryWarningDays',
-            'inStockForChart',
-            'outOfStockForChart',
-            'recentStockEntries'
-        ));
+        return view('Dashboard.dashboard_PharmacyManager.dashboard', \App\Services\Dashboard\PharmacyDashboard::manager());
     }
 
     public function store(StorePharmacyManagerRequest $request)

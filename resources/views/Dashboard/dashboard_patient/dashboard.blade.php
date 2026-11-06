@@ -1,714 +1,124 @@
 @extends('Dashboard.layouts.master')
+@section('title', trans('ui.roles.patient'))
 
-@section('title')
-    لوحة تحكم المريض - {{ $patient->name ?? auth()->user()->name }}
-@endsection
-
-@section('css')
-    @parent {{-- Keep existing CSS from master layout --}}
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    {{-- Font Awesome is usually included in master, but ensure it's available --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link href="{{ URL::asset('Dashboard/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
-
-    <style>
-        :root {
-            --patient-primary: #0d9488;
-            /* أزرق سماوي منعش */
-            --patient-primary-rgb: 13, 148, 136;
-            --patient-primary-dark: #357ABD;
-            --patient-primary-light: #EAF2FB;
-            /* خلفية فاتحة للبطاقات مع لمسة زرقاء */
-            --patient-secondary: #50E3C2;
-            /* أخضر مائي مشرق */
-            --patient-secondary-rgb: 80, 227, 194;
-            --patient-success: #7ED321;
-            /* أخضر تفاحي */
-            --patient-success-rgb: 126, 211, 33;
-            --patient-info: #F8E71C;
-            /* أصفر ليموني (للتنبيهات الخفيفة) */
-            --patient-info-dark: #cda70c;
-            --patient-warning: #F5A623;
-            /* برتقالي */
-            --patient-warning-rgb: 245, 166, 35;
-            --patient-danger: #D0021B;
-            /* أحمر واضح */
-            --patient-text-dark: #4A4A4A;
-            /* رمادي داكن للنصوص */
-            --patient-text-light: #7F8C8D;
-            /* رمادي أفتح للنصوص الثانوية */
-            --patient-bg: #f4f7f9;
-            /* خلفية رمادية فاتحة جداً */
-            --patient-card-bg: #ffffff;
-            --patient-border-color: #e8eef3;
-            --patient-card-radius: 0.8rem;
-            /* انحناء أكبر للبطاقات */
-            --patient-card-shadow: 0 6px 22px rgba(var(--patient-primary-rgb), 0.09);
-            /* ظل أنعم وأوسع */
-            --patient-gradient-primary: linear-gradient(135deg, var(--patient-primary) 0%, #68B3F9 100%);
-            --patient-gradient-success: linear-gradient(135deg, var(--patient-success) 0%, #A6E66D 100%);
-            --patient-gradient-info: linear-gradient(135deg, #50C9C3 0%, var(--patient-secondary) 100%);
-            --patient-gradient-warning: linear-gradient(135deg, var(--patient-warning) 0%, #FAC06B 100%);
-            --patient-gradient-chat: linear-gradient(135deg, #805ad5 0%, #a46ef4 100%);
-            /* بنفسجي للرسائل */
-        }
-
-        body {
-            font-family: 'Tajawal', sans-serif;
-            /* تأكد من تحميل الخط إذا لم يكن في Master */
-            background-color: var(--patient-bg);
-            color: var(--patient-text-dark);
-        }
-
-        .main-content .container-fluid {
-            padding-left: 25px;
-            padding-right: 25px;
-        }
-
-        .breadcrumb-header {
-            margin-bottom: 2rem;
-        }
-
-        .main-content-title {
-            color: var(--patient-primary-dark);
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        .sub-text-breadcrumb {
-            color: var(--patient-text-light);
-            font-size: 1rem;
-        }
-
-        .stat-card-patient {
-            background-color: var(--patient-card-bg);
-            border-radius: var(--patient-card-radius);
-            padding: 1.75rem;
-            box-shadow: var(--patient-card-shadow);
-            display: flex;
-            align-items: center;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            border: 1px solid var(--patient-border-color);
-            position: relative;
-            overflow: hidden;
-            text-decoration: none !important;
-        }
-
-        .stat-card-patient:hover {
-            transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 10px 30px rgba(var(--patient-primary-rgb), 0.15);
-        }
-
-        .stat-card-patient .stat-icon-bg {
-            width: 65px;
-            height: 65px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: #fff;
-            margin-left: 1.25rem;
-            /* RTL */
-            flex-shrink: 0;
-        }
-
-        .stat-card-patient .stat-info h6 {
-            font-size: 0.9rem;
-            color: var(--patient-text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            margin-bottom: 0.3rem;
-        }
-
-        .stat-card-patient .stat-info .stat-number {
-            font-size: 2.25rem;
-            font-weight: 700;
-            color: var(--patient-text-dark);
-            display: block;
-            line-height: 1.2;
-        }
-
-        .stat-card-patient .stat-info .stat-number small {
-            font-size: 0.6em;
-            font-weight: 500;
-            color: var(--patient-text-light);
-        }
-
-        .stat-card-patient .stat-info .stat-link {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--patient-primary);
-            transition: color 0.2s ease;
-            display: inline-block;
-            margin-top: 0.3rem;
-        }
-
-        .stat-card-patient .stat-info .stat-link:hover {
-            color: var(--patient-primary-dark);
-        }
-
-        .stat-card-patient .stat-icon-bg.bg-primary-gradient {
-            background: var(--patient-gradient-primary);
-        }
-
-        .stat-card-patient .stat-icon-bg.bg-success-gradient {
-            background: var(--patient-gradient-success);
-        }
-
-        .stat-card-patient .stat-icon-bg.bg-info-gradient {
-            background: var(--patient-gradient-info);
-        }
-
-        .stat-card-patient .stat-icon-bg.bg-chat-gradient {
-            background: var(--patient-gradient-chat);
-        }
-
-
-        .section-heading {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--patient-primary-dark);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.7rem;
-            border-bottom: 4px solid var(--patient-primary);
-            display: inline-block;
-        }
-
-        .section-heading i {
-            margin-left: 0.6rem;
-            opacity: 0.8;
-        }
-
-        .alert-card-patient {
-            background-color: var(--patient-card-bg);
-            border-radius: var(--patient-card-radius);
-            border-left: 6px solid var(--patient-warning);
-            padding: 1.5rem;
-            box-shadow: var(--patient-card-shadow);
-            display: flex;
-            align-items: center;
-            /* Center vertically */
-            margin-bottom: 1.25rem;
-            transition: all 0.3s ease;
-        }
-
-        .alert-card-patient:hover {
-            box-shadow: 0 8px 25px rgba(var(--patient-primary-rgb), 0.12);
-            transform: translateY(-3px);
-        }
-
-        .alert-card-patient.alert-success {
-            border-left-color: var(--patient-success);
-        }
-
-        .alert-card-patient.alert-info {
-            border-left-color: var(--patient-primary);
-        }
-
-        .alert-card-patient.alert-chat {
-            border-left-color: #805ad5;
-        }
-
-        /* لون بنفسجي للرسائل */
-        .alert-card-patient .alert-icon-box {
-            font-size: 2rem;
-            margin-left: 1.25rem;
-            /* RTL */
-            padding-top: 0.1rem;
-            line-height: 1;
-            flex-shrink: 0;
-        }
-
-        .alert-card-patient .alert-icon-box .fa-comments {
-            color: #805ad5;
-        }
-
-        .alert-card-patient .alert-content .alert-title {
-            font-weight: 700;
-            font-size: 1.15rem;
-            margin-bottom: 0.35rem;
-            color: var(--patient-text-dark);
-        }
-
-        .alert-card-patient .alert-content .alert-text {
-            font-size: 0.95rem;
-            color: var(--patient-text-light);
-            margin-bottom: 0.85rem;
-            line-height: 1.6;
-        }
-
-        .alert-card-patient .alert-content .btn {
-            font-size: 0.9rem;
-            padding: 0.4rem 1rem;
-        }
-
-        .dashboard-section .card {
-            border: 1px solid var(--patient-border-color);
-            box-shadow: var(--patient-card-shadow);
-        }
-
-        .dashboard-section .card-header {
-            background-color: var(--patient-primary-light);
-            border-bottom: 1px solid var(--patient-border-color);
-            padding: 0.85rem 1.25rem;
-        }
-
-        .dashboard-section .card-title-main {
-            color: var(--patient-primary-dark);
-            font-weight: 600;
-            font-size: 1.25rem;
-        }
-
-        .dashboard-section .list-group-item {
-            border: 0;
-            padding: 1rem 0.5rem;
-            border-bottom: 1px dashed #eaedf1;
-            transition: background-color 0.2s ease;
-        }
-
-        .dashboard-section .list-group-item:last-child {
-            border-bottom: 0;
-        }
-
-        .dashboard-section .list-group-item:hover {
-            background-color: #f0f5fb;
-        }
-
-        .appointment-item .time-badge {
-            background-color: rgba(var(--patient-primary-rgb), 0.12);
-            color: var(--patient-primary-dark);
-            padding: 0.5em 0.9em;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .appointment-item .doctor-name {
-            font-weight: 600;
-            color: var(--patient-text-dark);
-            font-size: 1.05rem;
-        }
-
-        .appointment-item .section-name {
-            font-size: 0.85rem;
-            color: var(--patient-text-light);
-        }
-
-        .appointment-item .status-badge {
-            font-size: 0.8rem;
-            padding: 0.4em 0.8em;
-            border-radius: 20px;
-            font-weight: 500;
-        }
-
-        .status-badge.status-confirmed {
-            background-color: rgba(var(--patient-success-rgb), 0.15) !important;
-            color: #38761d !important;
-            border: 1px solid rgba(var(--patient-success-rgb), 0.3) !important;
-        }
-
-        .status-badge.status-pending {
-            background-color: rgba(var(--patient-warning-rgb), 0.15) !important;
-            color: #b17d00 !important;
-            border: 1px solid rgba(var(--patient-warning-rgb), 0.3) !important;
-        }
-
-        .quick-access-links .list-group-item a {
-            color: var(--patient-text-dark);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            padding: 0.8rem 0.2rem;
-            font-weight: 500;
-            font-size: 1.05rem;
-            transition: color 0.2s ease, padding-right 0.2s ease, transform 0.2s ease;
-        }
-
-        .quick-access-links .list-group-item a:hover {
-            color: var(--patient-primary);
-            padding-right: 8px;
-            transform: scale(1.02);
-        }
-
-        .quick-access-links .list-group-item i {
-            width: 25px;
-            text-align: center;
-            margin-left: 1rem;
-            color: var(--patient-primary);
-            opacity: 0.9;
-            font-size: 1.2rem;
-        }
-
-        .welcome-area .btn {
-            padding: 0.7rem 1.5rem;
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        .welcome-area .btn i {
-            margin-right: -3px;
-            margin-left: 6px;
-        }
-
-        .no-alerts-card {
-            background-color: #f0fdf4;
-            /* أخضر فاتح جداً */
-            border-left: 5px solid var(--patient-success);
-        }
-
-        .no-alerts-card i {
-            color: var(--patient-success);
-            font-size: 2rem;
-        }
-
-        .no-alerts-card p {
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: #306844;
-        }
-
-        .text-gradient-primary {
-            background: var(--patient-gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-            font-weight: 700;
-        }
-    </style>
-@endsection
-
-@section('page-header')
-    <div class="breadcrumb-header justify-content-between">
-        <div class="left-content welcome-area">
-            <div>
-                <h2 class="main-content-title tx-24 mg-b-1 mg-b-lg-1">{{ trans('patients.welcome_back') }} <span
-                        class="text-gradient-primary">{{ $patient->name ?? trans('patients.our_dear_visitor') }}</span>!</h2>
-                <p class="mg-b-0 sub-text-breadcrumb">{{ trans('patients.welcome_subheader') }}</p>
-            </div>
-        </div>
-        <div class="right-content d-flex my-auto ms-auto welcome-area">
-            <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-primary-gradient ripple shadow-sm me-2"
-                data-aos="fade-left" data-aos-delay="100">
-                <i class="fas fa-calendar-plus me-1"></i> {{ trans('patients.book_new_appointment') }}
-            </a>
-            <a href="{{ url('/home') }}" class="btn btn-outline-secondary ripple" target="_blank" data-aos="fade-left">
-                <i class="fas fa-home me-1"></i> {{ trans('patients.back_to_home') }}
-            </a>
-        </div>
-    </div>
-@endsection
+@php
+    use App\Services\Dashboard\Trend;
+    use Illuminate\Support\Carbon;
+    $greetingKey = now()->hour < 12 ? 'ui.dash.greeting_morning' : 'ui.dash.greeting_evening';
+@endphp
 
 @section('content')
-    @include('Dashboard.messages_alert')
+    <x-hms.page-header :title="trans($greetingKey, ['name' => $patient->name])" :subtitle="trans('ui.dash.patient_subtitle')">
+        <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-primary"><i class="far fa-calendar-plus me-1"></i> {{ trans('ui.dash.book_now') }}</a>
+    </x-hms.page-header>
 
-    <div class="row row-sm">
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="50">
-            <a href="{{ route('website.my.invoices') }}" class="stat-card-patient">
-                <div class="stat-icon-bg bg-primary-gradient"><i class="fas fa-file-invoice-dollar"></i></div>
-                <div class="stat-info">
-                    <h6>{{ trans('patients.my_due_invoices') }}</h6>
-                    <span class="stat-number">{{ number_format($totalDueInvoices ?? 0, 2) }} <small>{{ trans('patients.currency_sar') }}</small></span>
-                    <span class="stat-link">{{ trans('patients.view_invoices') }} <i class="fas fa-arrow-left tx-10"></i></span>
-                </div>
-            </a>
+    @if ($refillDue)
+        <div class="alert alert-warning d-flex flex-wrap align-items-center justify-content-between" style="gap: 10px">
+            <span><i class="fas fa-pills me-2"></i>{{ trans('ui.dash.refill_due', ['date' => Carbon::parse($refillDue->next_refill_due_date)->translatedFormat('l j F')]) }}</span>
+            <a href="{{ route('patient.pharmacy.index') }}" class="btn btn-sm btn-warning">{{ trans('ui.dash.request_refill') }}</a>
         </div>
+    @endif
 
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="100">
-            <a href="{{ route('website.my.account') }}" class="stat-card-patient">
-                <div class="stat-icon-bg" style="background: linear-gradient(135deg, #fd7e14 0%, #ff9a44 100%);"><i
-                        class="fas fa-receipt"></i></div>
-                <div class="stat-info">
-                    <h6>{{ trans('patients.my_total_payments') }}</h6>
-                    <span class="stat-number">{{ number_format($totalPaidByPatient ?? 0, 2) }} <small>{{ trans('patients.currency_sar') }}</small></span>
-                    <span class="stat-link">{{ trans('patients.view_account_statement') }} <i class="fas fa-arrow-left tx-10"></i></span>
+    <div class="hms-grid hms-grid--2">
+        <section class="hms-next">
+            <span class="hms-next__label"><i class="far fa-calendar-check"></i> {{ trans('ui.dash.next_appointment') }}</span>
+            @if ($next)
+                @php($when = Carbon::parse($next->appointment))
+                <div class="hms-next__body">
+                    <div class="hms-next__date">
+                        <strong>{{ $when->translatedFormat('j') }}</strong>
+                        <span>{{ $when->translatedFormat('F') }}</span>
+                    </div>
+                    <div class="hms-next__info">
+                        <h2>{{ trans('ui.dash.by_doctor', ['name' => optional($next->doctor)->name ?? '—']) }}</h2>
+                        <p>{{ optional($next->section)->name }}</p>
+                        <p><i class="far fa-clock"></i> {{ $when->translatedFormat('l · H:i') }} · {{ trans('ui.dash.in_time', ['time' => $when->diffForHumans(['parts' => 2, 'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE])]) }}</p>
+                        <x-hms.status :value="$next->type" />
+                    </div>
                 </div>
-            </a>
-        </div>
+                <a href="{{ route('website.my.appointments') }}" class="hms-next__link">{{ trans('ui.dash.my_appointments') }} <i class="fas fa-arrow-left hms-flip-ltr"></i></a>
+            @else
+                <div class="hms-next__empty">
+                    <p>{{ trans('ui.dash.no_next_appointment') }}</p>
+                    <a href="{{ route('patient.appointments.create.form') }}" class="btn btn-light">{{ trans('ui.dash.book_now') }}</a>
+                </div>
+            @endif
+        </section>
 
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="150">
-            <a href="{{ route('appointments.upcoming') }}" class="stat-card-patient">
-                <div class="stat-icon-bg bg-success-gradient"><i class="fas fa-calendar-check"></i></div>
-                <div class="stat-info">
-                    <h6>{{ trans('patients.my_upcoming_appointments') }}</h6>
-                    <span class="stat-number">{{ $upcomingAppointmentsCount ?? 0 }} <small>{{ trans('patients.appointment_unit') }}</small></span>
-                    <span class="stat-link">{{ trans('patients.manage_appointments') }} <i class="fas fa-arrow-left tx-10"></i></span>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="250">
-            <a href="{{ route('patient.pharmacy.index', ['quick_filter' => \App\Models\Prescription::STATUS_READY_FOR_PICKUP]) }}" class="stat-card-patient">
-                <div class="stat-icon-bg bg-info-gradient"><i class="fas fa-pills"></i></div>
-                <div class="stat-info">
-                    <h6>{{ trans('patients.prescriptions_ready_for_pickup') }}</h6>
-                    <span class="stat-number">{{ $readyPrescriptionsCount ?? 0 }} <small>{{ trans('patients.prescription_unit') }}</small></span>
-                    <span class="stat-link">{{ trans('patients.follow_up_pharmacy') }} <i class="fas fa-arrow-left tx-10"></i></span>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="200">
-            <a href="{{ route('chat.doctors') }}" class="stat-card-patient">
-                <div class="stat-icon-bg bg-chat-gradient"><i class="fas fa-comments"></i></div>
-                <div class="stat-info">
-                    <h6>{{ trans('patients.new_messages') }}</h6>
-                    <span class="stat-number">{{ $unreadChatMessagesCount ?? 0 }} <small>{{ trans('patients.message_unit') }}</small></span>
-                    <span class="stat-link">{{ trans('patients.view_conversations') }} <i class="fas fa-arrow-left tx-10"></i></span>
-                </div>
-            </a>
+        <div class="hms-grid hms-grid--halves" style="margin: 0">
+            <x-hms.stat :label="trans('ui.dash.upcoming_count')" :value="$kpis['upcoming']" icon="fa-calendar-alt" :href="route('website.my.appointments')" />
+            <x-hms.stat :label="trans('ui.dash.ready_prescriptions')" :value="$kpis['ready_prescriptions']" icon="fa-prescription-bottle-alt" tone="success" :href="route('patient.pharmacy.index')" />
+            <x-hms.stat :label="trans('ui.dash.balance_due')" :value="Trend::money($kpis['balance'])" icon="fa-wallet" tone="warning" :href="route('website.my.account')" />
+            <x-hms.stat :label="trans('ui.dash.results_ready')" :value="$kpis['results']" icon="fa-file-medical-alt" tone="info" :href="route('rays.patient')" />
         </div>
     </div>
 
-    <!-- Row: Important Alerts -->
-    <div class="row row-sm mt-2">
-        <div class="col-12 mb-3" data-aos="fade-up" data-aos-delay="50">
-            <h5 class="section-heading"><i class="fas fa-bell text-warning"></i>{{ trans('patients.important_alerts_and_actions') }}</h5>
-        </div>
+    <div class="hms-grid hms-grid--3">
+        <x-hms.card :title="trans('ui.dash.more_upcoming')" icon="fa-calendar-week" :href="route('website.my.appointments')" flush>
+            @if ($upcoming->isEmpty())
+                <x-hms.empty icon="fa-calendar" :text="trans('ui.dash.no_next')" />
+            @else
+                <ul class="hms-list">
+                    @foreach ($upcoming as $appointment)
+                        <li class="hms-list__item">
+                            <div class="hms-list__main">
+                                <span class="hms-list__title">{{ trans('ui.dash.by_doctor', ['name' => optional($appointment->doctor)->name ?? '—']) }}</span>
+                                <span class="hms-list__meta">{{ Carbon::parse($appointment->appointment)->translatedFormat('l j M · H:i') }}</span>
+                            </div>
+                            <x-hms.status :value="$appointment->type" />
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </x-hms.card>
 
-        @if (isset($unreadChatMessagesCount) && $unreadChatMessagesCount > 0)
-            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="alert-card-patient alert-chat">
-                    <div class="alert-icon-box"><i class="fas fa-envelope-open-text fa-fw"></i></div>
-                    <div class="alert-content">
-                        <h6 class="alert-title">{{ trans('patients.you_have_new_messages') }}</h6>
-                        <p class="alert-text mb-1">
-                            {{ trans('patients.you_have') }} <strong style="color: #805ad5;">{{ $unreadChatMessagesCount }}</strong>
-                            {{ $unreadChatMessagesCount == 1 ? trans('patients.new_message_singular') : ($unreadChatMessagesCount == 2 ? trans('patients.new_messages_dual') : trans('patients.new_messages_plural')) }}
-                            {{ trans('patients.from_our_medical_team') }}
-                        </p>
-                        <a href="{{ route('chat.doctors') }}" class="btn btn-sm btn-outline-primary shadow-sm mt-2"
-                            style="border-color: #805ad5; color: #805ad5;">
-                            <i class="fas fa-comments me-1"></i> {{ trans('patients.view_conversations_now') }}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        @endif
+        <x-hms.card :title="trans('ui.dash.my_prescriptions')" icon="fa-file-prescription" :href="route('patient.pharmacy.index')" flush>
+            @if ($prescriptions->isEmpty())
+                <x-hms.empty icon="fa-prescription" :text="trans('ui.dash.no_my_prescriptions')" />
+            @else
+                <ul class="hms-list">
+                    @foreach ($prescriptions as $prescription)
+                        <li class="hms-list__item">
+                            <div class="hms-list__main">
+                                <span class="hms-list__title">#{{ $prescription->prescription_number }}</span>
+                                <span class="hms-list__meta">{{ trans('ui.dash.by_doctor', ['name' => optional($prescription->doctor)->name ?? '—']) }} · {{ Carbon::parse($prescription->prescription_date)->translatedFormat('j M Y') }}</span>
+                            </div>
+                            <span class="hms-pill hms-tone-primary">{{ $prescription->status_display }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </x-hms.card>
 
-        @if ($upcomingChronicRefill)
-            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="150">
-                <div class="alert-card-patient alert-warning">
-                    <div class="alert-icon-box text-warning"><i class="fas fa-history fa-fw"></i></div>
-                    <div class="alert-content">
-                        <h6 class="alert-title">{{ trans('patients.renew_chronic_prescription') }}</h6>
-                        <p class="alert-text">
-                            {{ trans('patients.the_prescription') }} <a href="{{ route('patient.pharmacy.show', $upcomingChronicRefill->id) }}"
-                                class="fw-bold text-dark hover-underline">{{ $upcomingChronicRefill->prescription_number }}</a>
-                            {{ trans('patients.needs_refill') }}
-                            {{ $upcomingChronicRefill->next_refill_due_date->locale(app()->getLocale())->diffForHumans() }}.
-                        </p>
-                        @if (method_exists($upcomingChronicRefill, 'can_request_refill') && $upcomingChronicRefill->can_request_refill)
-                            <form action="{{ route('patient.pharmacy.request-refill', $upcomingChronicRefill->id) }}"
-                                method="POST" class="mt-2">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-warning text-dark shadow-sm"><i
-                                        class="fas fa-redo-alt me-1"></i> {{ trans('patients.request_refill') }}</button>
-                            </form>
-                        @else
-                            <small class="text-muted d-block mt-2">{{ trans('patients.refill_requested_or_check_pharmacy') }}</small>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        @if (isset($readyPrescriptionsCount) && $readyPrescriptionsCount > 0)
-            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="alert-card-patient alert-success">
-                    <div class="alert-icon-box text-success"><i class="fas fa-check-circle fa-fw"></i></div>
-                    <div class="alert-content">
-                        <h6 class="alert-title">{{ trans('patients.prescriptions_ready_for_pickup') }}</h6>
-                        <p class="alert-text">
-                            {{ trans('patients.you_have') }} <strong class="text-gradient-success">{{ $readyPrescriptionsCount }}</strong> {{ trans('patients.prescriptions_are_ready_for_pickup') }}
-                        </p>
-                        <a href="{{ route('patient.pharmacy.index', ['quick_filter' => \App\Models\Prescription::STATUS_READY_FOR_PICKUP]) }}"
-                            class="btn btn-sm btn-success shadow-sm mt-2"><i class="fas fa-clinic-medical me-1"></i> {{ trans('patients.view_prescriptions') }}</a>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        @if ($imminentAppointment)
-            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="250">
-                <div class="alert-card-patient alert-info">
-                    <div class="alert-icon-box text-primary"><i class="fas fa-calendar-day fa-fw"></i></div>
-                    <div class="alert-content">
-                        <h6 class="alert-title">{{ trans('patients.upcoming_appointment_reminder') }}</h6>
-                        <p class="alert-text">
-                            {{ trans('patients.your_appointment_with_dr') }} <strong>{{ $imminentAppointment->doctor->name ?? trans('patients.the_doctor') }}</strong>
-                            {{ trans('patients.is_on') }} <span
-                                class="text-danger fw-bold">{{ $imminentAppointment->appointment->isToday() ? trans('patients.today') : ($imminentAppointment->appointment->isTomorrow() ? trans('patients.tomorrow') : $imminentAppointment->appointment->translatedFormat('l')) }}</span>
-                            {{ trans('patients.at_time') }}
-                            {{ \Carbon\Carbon::parse($imminentAppointment->appointment)->translatedFormat('h:i A') }}.
-                        </p>
-                        <a href="{{ route('appointments.upcoming') }}"
-                            class="btn btn-sm btn-primary shadow-sm mt-2">
-                            <i class="fas fa-eye me-1"></i> {{ trans('patients.view_my_appointments') }}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        @if (!$hasImportantAlerts)
-            <div class="col-12" data-aos="fade-up" data-aos-delay="100">
-                <div class="card no-alerts-card shadow-sm">
-                    <div class="card-body text-center p-4 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-shield-alt fa-3x opacity-75 me-3"></i>
-                        <div>
-                            <h5 class="mb-1">{{ trans('patients.no_urgent_alerts') }}</h5>
-                            <p class="mb-0 text-muted">{{ trans('patients.health_under_control_message') }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
+        <x-hms.card :title="trans('ui.dash.my_invoices')" icon="fa-file-invoice" :href="route('website.my.invoices')" flush>
+            @if ($invoices->isEmpty())
+                <x-hms.empty icon="fa-receipt" :text="trans('ui.dash.no_invoices')" />
+            @else
+                <ul class="hms-list">
+                    @foreach ($invoices as $invoice)
+                        <li class="hms-list__item">
+                            <div class="hms-list__main">
+                                <span class="hms-list__title">
+                                    {{ $invoice->invoice_type == 2 ? (optional($invoice->Group)->name ?? trans('ui.dash.invoice_package')) : (optional($invoice->Service)->name ?? '—') }}
+                                </span>
+                                <span class="hms-list__meta">{{ Carbon::parse($invoice->invoice_date)->translatedFormat('j M Y') }} · {{ $invoice->type == 1 ? trans('ui.dash.cash') : trans('ui.dash.credit') }}</span>
+                            </div>
+                            <strong class="hms-list__side">{{ Trend::money($invoice->total_with_tax) }}</strong>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </x-hms.card>
     </div>
 
-    <!-- Row: Appointments and Quick Access -->
-    <div class="row row-sm row-deck mt-3 dashboard-section">
-        <div class="col-lg-7 col-md-12 mb-4" data-aos="fade-right" data-aos-delay="100">
-            <div class="card h-100 shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title-main mb-0"><i class="far fa-calendar-alt me-2"></i> {{ trans('patients.upcoming_appointments_latest_5') }}
-                    </h4>
-                    <a href="{{ route('appointments.upcoming') }}" class="btn btn-sm btn-outline-primary ripple">{{ trans('patients.view_all') }} <i class="fas fa-angle-double-left"></i></a>
-                </div>
-                <div class="card-body pt-2 pb-2">
-                    @if ($upcoming_appointments_list->isNotEmpty())
-                        <ul class="list-group list-group-flush appointment-list">
-                            @foreach ($upcoming_appointments_list as $appointment_item)
-                                <li class="list-group-item appointment-item">
-                                    <div class="d-flex w-100 justify-content-between align-items-center">
-                                        <div class="appointment-details flex-grow-1">
-                                            <span
-                                                class="time-badge mb-1 d-inline-block">{{ \Carbon\Carbon::parse($appointment_item->appointment)->translatedFormat('D، j M Y - g:i A') }}</span>
-                                            <div class="mt-1"><i class="fas fa-user-md text-muted me-1 op-7"></i>{{ trans('patients.dr_prefix') }}
-                                                <strong
-                                                    class="doctor-name">{{ $appointment_item->doctor->name ?? trans('doctors.unspecified') }}</strong>
-                                            </div>
-                                            <div class="section-name"><i
-                                                    class="fas fa-clinic-medical text-muted me-1 op-7"></i>{{ trans('patients.section_prefix') }}
-                                                {{ $appointment_item->section->name ?? trans('doctors.unspecified') }}</div>
-                                        </div>
-                                        <div class="text-center ms-2 appointment-actions">
-                                            <span
-                                                class="badge status-badge {{ $appointment_item->type == 'مؤكد' ? 'status-confirmed' : 'status-pending' }} mb-2">
-                                                {{ $appointment_item->type }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    @if ($appointment_item->notes)
-                                        <p class="mb-0 mt-2 text-muted small border-top pt-2" style="font-size: 0.9rem"><i
-                                                class="fas fa-info-circle me-1 text-info"></i> {{ trans('patients.your_notes_prefix') }}
-                                            {{ Str::limit($appointment_item->notes, 100) }}</p>
-                                    @endif
-                                </li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <div class="text-center text-muted p-5">
-                            <i class="fas fa-calendar-times fa-3x opacity-50 mb-3"></i>
-                            <h5 class="mb-2">{{ trans('patients.no_upcoming_appointments') }}</h5>
-                            <p class="mb-3">{{ trans('patients.you_can_book_easily') }}</p>
-                        </div>
-                    @endif
-                </div>
-            </div>
+    <x-hms.card :title="trans('ui.dash.quick_actions')" icon="fa-bolt">
+        <div class="hms-quick">
+            <a href="{{ route('patient.appointments.create.form') }}"><i class="far fa-calendar-plus"></i>{{ trans('ui.dash.book_now') }}</a>
+            <a href="{{ route('patient.pharmacy.index') }}"><i class="fas fa-pills"></i>{{ trans('ui.dash.pharmacy') }}</a>
+            <a href="{{ route('rays.patient') }}"><i class="fas fa-x-ray"></i>{{ trans('ui.dash.results') }}</a>
+            <a href="{{ route('website.my.account') }}"><i class="fas fa-wallet"></i>{{ trans('ui.dash.account_statement') }}</a>
+            <a href="{{ route('list.doctors') }}"><i class="far fa-comments"></i>{{ trans('ui.dash.contact_doctor') }}</a>
+            <a href="{{ route('profile.show') }}"><i class="far fa-user"></i>{{ trans('ui.profile') }}</a>
         </div>
-
-        <div class="col-lg-5 col-md-12 mb-4" data-aos="fade-left" data-aos-delay="200">
-            <div class="card quick-access-links h-100 shadow-sm">
-                <div class="card-header">
-                    <h4 class="card-title-main mb-0"><i class="fas fa-paperclip me-2"></i> {{ trans('patients.quick_access_to_services') }}</h4>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a href="{{ route('website.my.invoices') }}"><i
-                                    class="fas fa-file-invoice-dollar fa-fw"></i> {{ trans('patients.my_invoices') }}</a></li>
-                        <li class="list-group-item"><a href="{{ route('website.my.account') }}"><i
-                                    class="fas fa-cash-register fa-fw"></i> {{ trans('patients.my_account_statement') }}</a></li>
-                        <li class="list-group-item"><a href="{{ route('patient.pharmacy.index') }}"><i
-                                    class="fas fa-pills fa-fw"></i> {{ trans('patients.my_prescriptions_and_pharmacy') }}</a></li>
-                        <li class="list-group-item"><a href="{{ route('laboratories.patient') }}"><i
-                                    class="fas fa-microscope fa-fw"></i> {{ trans('patients.my_lab_results') }}</a></li>
-                        <li class="list-group-item"><a href="{{ route('rays.patient') }}"><i
-                                    class="fas fa-x-ray fa-fw"></i> {{ trans('patients.my_radiology_reports') }}</a></li>
-                        <li class="list-group-item"><a href="{{ route('chat.doctors') ?? '#' }}"><i
-                                    class="fas fa-comments fa-fw"></i> {{ trans('patients.my_conversations_with_doctors') }}</a></li>
-                        <li class="list-group-item"><a href="{{ route('profile.edit') }}"><i
-                                    class="fas fa-user-edit fa-fw"></i> {{ trans('patients.edit_my_profile_data') }}</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
-
-@section('js')
-    @parent
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifIt.js') }}"></script>
-    <script src="{{ URL::asset('Dashboard/plugins/notify/js/notifit-custom.js') }}"></script>
-    {{----}}
-
-    <script>
-        $(document).ready(function() {
-            AOS.init({
-                duration: 750, // مدة أطول قليلاً
-                easing: 'ease-out-cubic', // حركة ألطف
-                once: true,
-                offset: 40 // تعديل طفيف
-            });
-
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl, {
-                    boundary: document.body,
-                    container: 'body',
-                    trigger: 'hover' // إظهار الـ tooltip عند المرور فقط
-                });
-            });
-
-            // رسائل NotifIt تبقى كما هي، فهي جيدة
-            @if (session('success'))
-                notif({
-                    msg: "<div class='d-flex align-items-center p-2'><i class='fas fa-check-circle fa-lg me-2 text-success'></i><div style='font-size: 0.95rem;'>{!! addslashes(session('success')) !!}</div></div>",
-                    type: "success",
-                    position: "top-center",
-                    autohide: true,
-                    timeout: 6000
-                });
-            @endif
-            @if (session('error'))
-                notif({
-                    msg: "<div class='d-flex align-items-center p-2'><i class='fas fa-exclamation-triangle fa-lg me-2 text-danger'></i><div style='font-size: 0.95rem;'>{!! addslashes(session('error')) !!}</div></div>",
-                    type: "error",
-                    position: "top-center",
-                    autohide: true,
-                    timeout: 8000
-                });
-            @endif
-            @if (session('info'))
-                notif({
-                    msg: "<div class='d-flex align-items-center p-2'><i class='fas fa-info-circle fa-lg me-2 text-info'></i><div style='font-size: 0.95rem;'>{!! addslashes(session('info')) !!}</div></div>",
-                    type: "info",
-                    position: "top-center",
-                    autohide: true,
-                    timeout: 6000
-                });
-            @endif
-            @if (session('warning'))
-                notif({
-                    msg: "<div class='d-flex align-items-center p-2'><i class='fas fa-exclamation-circle fa-lg me-2 text-warning'></i><div style='font-size: 0.95rem;'>{!! addslashes(session('warning')) !!}</div></div>",
-                    type: "warning",
-                    position: "top-center",
-                    autohide: true,
-                    timeout: 7000
-                });
-            @endif
-        });
-    </script>
+    </x-hms.card>
 @endsection

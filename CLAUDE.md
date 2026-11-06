@@ -49,4 +49,11 @@ Bilingual ar/en (mcamara localization + astrotomic translatable). Owner plans to
 - Old pages still carry their own `<style>` blocks: `hms.css` section 11 pins their colour variables (`--admin-primary`, `--primary-color`, …)
   to the theme, and `hms.js` swaps hard-coded light colours in dark mode. Section 10 maps template utility classes (`tx-13`, `mg-b-20`, …).
   When a page is redesigned, drop its `<style>` block and use the shared components instead.
+- Role home pages: data in `app/Services/Dashboard/*Dashboard.php` (Admin, Doctor, Patient, Diagnostics for ray+lab, Pharmacy
+  employee/manager; time series via `Trend`), views use Blade components in `resources/views/components/hms/`
+  (`page-header`, `stat`, `card`, `chart` (ApexCharts in `public/vendor/hms/apexcharts`), `status`, `avatar`, `empty`).
+  Money is shown with `Trend::money()` (`HOSPITAL_CURRENCY` in `.env`, empty = no symbol).
+- Demo data for screenshots/presentations: `php artisan db:seed --class=DemoDataSeeder` on a demo database (never the real one).
+  Locally we use `hos_db_demo`; `tests/Feature/DashboardsTest.php` seeds it into `hos_db_test` to check every dashboard with data.
+- Password reset pages for all roles share `Dashboard/auth/passwords/{email,reset}.blade.php`.
 

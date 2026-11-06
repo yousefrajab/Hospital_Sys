@@ -56,7 +56,11 @@ class CurrentUser
     public function initials(): string
     {
         $parts = preg_split('/\s+/u', trim($this->name())) ?: [];
-        $letters = array_map(fn ($p) => mb_substr($p, 0, 1), array_slice(array_filter($parts), 0, 2));
+        $parts = array_values(array_filter($parts));
+        if ($parts && preg_match('/\p{Arabic}/u', mb_substr($parts[0], 0, 1))) {
+            return mb_substr($parts[0], 0, 1); // Arabic letters join: one letter reads better
+        }
+        $letters = array_map(fn ($p) => mb_substr($p, 0, 1), array_slice($parts, 0, 2));
 
         return mb_strtoupper(implode('', $letters)) ?: '?';
     }

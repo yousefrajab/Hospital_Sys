@@ -33,6 +33,7 @@
         }
         store('hms-theme', dark ? 'light' : 'dark');
         adaptLegacyColors();
+        renderCharts();
     }
 
     /*
@@ -215,6 +216,64 @@
         });
     }
 
+    /* ---------- Charts (markup from components/hms/chart.blade.php) ---------- */
+    var charts = [];
+
+    function token(name) {
+        return getComputedStyle(root).getPropertyValue('--hms-' + name).trim();
+    }
+
+    function renderCharts() {
+        charts.forEach(function (c) { c.destroy(); });
+        charts = [];
+        if (!window.ApexCharts) return;
+        var dark = root.getAttribute('data-theme') === 'dark';
+        var text = token('muted'), grid = token('border');
+
+        document.querySelectorAll('[data-hms-chart]').forEach(function (el) {
+            var cfg = JSON.parse(el.getAttribute('data-hms-chart'));
+            var round = cfg.type === 'donut' || cfg.type === 'pie';
+            var options = {
+                chart: {
+                    type: cfg.type, height: cfg.height, stacked: !!cfg.stacked, background: 'transparent',
+                    fontFamily: token('font') || 'inherit', foreColor: text,
+                    toolbar: { show: false }, zoom: { enabled: false }, animations: { speed: 400 }
+                },
+                theme: { mode: dark ? 'dark' : 'light' },
+                colors: (cfg.tones || ['primary']).map(function (t) { return token(t) || t; }),
+                series: cfg.series,
+                dataLabels: { enabled: false },
+                legend: { position: 'bottom', fontSize: '13px', markers: { offsetX: isRtl ? 4 : -4 } },
+                tooltip: { theme: dark ? 'dark' : 'light' },
+                grid: { borderColor: grid, strokeDashArray: 4, padding: { left: 8, right: 8 } }
+            };
+            if (round) {
+                options.labels = cfg.labels;
+                options.stroke = { width: 0 };
+                options.plotOptions = { pie: { donut: { size: '68%', labels: { show: true, total: { show: true, color: text, label: isRtl ? 'المجموع' : 'Total' } } } } };
+            } else {
+                options.xaxis = { categories: cfg.labels, tickAmount: cfg.labels.length > 10 ? 7 : undefined, axisBorder: { show: false }, axisTicks: { show: false }, labels: { rotate: 0, hideOverlappingLabels: true, style: { colors: text } } };
+                // Counts get whole-number ticks (no "0.5 appointments"); money keeps decimals.
+                var values = [].concat.apply([], cfg.series.map(function (s) { return s.data || []; }));
+                var counts = values.every(function (v) { return Math.round(v) === v; });
+                var max = Math.max.apply(null, values.concat([0]));
+                options.yaxis = {
+                    opposite: isRtl, min: 0, forceNiceScale: true,
+                    tickAmount: counts && max <= 5 ? Math.max(1, max) : undefined,
+                    labels: { style: { colors: text }, formatter: function (v) { return counts ? Math.round(v) : Math.round(v * 100) / 100; } }
+                };
+                options.stroke = { curve: 'monotoneCubic', width: cfg.type === 'bar' ? 0 : 3 };
+                options.plotOptions = { bar: { borderRadius: 6, borderRadiusApplication: 'end', borderRadiusWhenStacked: 'last', columnWidth: '45%' } };
+                if (cfg.type === 'area') {
+                    options.fill = { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.35, opacityTo: 0.02, stops: [0, 95] } };
+                }
+            }
+            var chart = new ApexCharts(el, options);
+            chart.render();
+            charts.push(chart);
+        });
+    }
+
     /* ---------- Live notification helper (used by Echo listeners) ---------- */
     window.hms = {
         pushNotification: function (text, time) {
@@ -244,7 +303,7 @@
     ready(function () {
         initMenu();
         // Let page scripts set up their own tables first, then fill in the defaults.
-        setTimeout(function () { initTables(); initFormWidgets(); adaptLegacyColors(); }, 0);
+        setTimeout(function () { initTables(); initFormWidgets(); adaptLegacyColors(); renderCharts(); }, 0);
         // Livewire and other scripts change the page later: re-check colours (dark mode only).
         var content = document.querySelector('.hms-content');
         if (content && window.MutationObserver) {
