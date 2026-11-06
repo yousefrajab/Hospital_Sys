@@ -1,4 +1,7 @@
 <div >
+    @if ($catchError)
+        <div class="alert alert-danger">{{ $catchError }}</div>
+    @endif
 
     @if ($InvoiceSaved)
         <div class="alert alert-info">تم حفظ البيانات بنجاح.</div>
@@ -16,7 +19,7 @@
             <div class="row">
                 <div class="col">
                     <label>اسم المريض</label>
-                    <select wire:model="patient_id" class="form-control" required>
+                    <select wire:model.live="patient_id" class="form-control" required>
                         <option value=""  >-- اختار من القائمة --</option>
                         @foreach($Patients as $Patient)
                             <option value="{{$Patient->id}}">{{$Patient->name}}</option>
@@ -27,7 +30,7 @@
 
                 <div class="col">
                     <label>اسم الدكتور</label>
-                    <select wire:model="doctor_id"  wire:change="get_section" class="form-control"  id="exampleFormControlSelect1" required>
+                    <select wire:model.live="doctor_id"  wire:change="get_section" class="form-control"  id="exampleFormControlSelect1" required>
                         <option value="" >-- اختار من القائمة --</option>
                         @foreach($Doctors as $Doctor)
                             <option value="{{$Doctor->id}}">{{$Doctor->name}}</option>
@@ -38,12 +41,12 @@
 
                 <div class="col">
                     <label>القسم</label>
-                    <input wire:model="section_id" type="text" class="form-control" readonly >
+                    <input wire:model.live="section_id" type="text" class="form-control" readonly >
                 </div>
 
                 <div class="col">
                     <label>نوع الفاتورة</label>
-                    <select wire:model="type" class="form-control" {{$updateMode == true ? 'disabled':''}}>
+                    <select wire:model.live="type" class="form-control" {{$updateMode == true ? 'disabled':''}}>
                         <option value="" >-- اختار من القائمة --</option>
                         <option value="1">نقدي</option>
                         <option value="2">اجل</option>
@@ -79,16 +82,16 @@
                                     <tr>
                                         <th scope="row">1</th>
                                         <td>
-                                            <select wire:model="Group_id" class="form-control" wire:change="get_price" id="exampleFormControlSelect1">
+                                            <select wire:model.live="Group_id" class="form-control" wire:change="get_price" id="exampleFormControlSelect1">
                                                 <option value="">-- اختار الخدمة --</option>
                                                 @foreach($Groups as $Group)
                                                     <option value="{{$Group->id}}">{{$Group->name}}</option>
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input wire:model="price" type="text" class="form-control" readonly></td>
-                                        <td><input wire:model="discount_value" type="text" class="form-control" readonly></td>
-                                        <th><input wire:model="tax_rate" type="text" class="form-control" readonly ></th>
+                                        <td><input wire:model.live="price" type="text" class="form-control" readonly></td>
+                                        <td><input wire:model.live="discount_value" type="text" class="form-control" readonly></td>
+                                        <th><input wire:model.live="tax_rate" type="text" class="form-control" readonly ></th>
                                         <td><input type="text" class="form-control" value="{{$tax_value}}" readonly  ></td>
                                         <td><input type="text" class="form-control" readonly value="{{$subtotal + $tax_value }}"></td>
                                     </tr>

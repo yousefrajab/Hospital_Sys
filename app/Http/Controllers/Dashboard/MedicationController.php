@@ -113,7 +113,7 @@ class MedicationController extends Controller
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             Log::error("MedicationController@store: Error creating medication: " . $e->getMessage(), ['trace' => substr($e->getTraceAsString(), 0, 500)]);
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء إضافة الدواء: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء إضافة الدواء: ' . error_detail($e));
         }
     }
 
@@ -175,7 +175,7 @@ class MedicationController extends Controller
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             Log::error("MedicationController@update: Error updating medication ID {$medication->id}: " . $e->getMessage(), ['trace' => substr($e->getTraceAsString(), 0, 500)]);
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء تعديل الدواء: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء تعديل الدواء: ' . error_detail($e));
         }
     }
 

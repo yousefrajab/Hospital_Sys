@@ -236,7 +236,7 @@ class PatientController extends Controller
             return response()->json(['message' => 'لا يمكن إلغاء موعد قد فات وقته.'], 422);
         }
         if (Carbon::parse($appointment->appointment)->isPast() || Carbon::parse($appointment->appointment)->diffInHours(now(), false) < $cancellationWindowHours) {
-            if (Carbon::parse($appointment->appointment)->isFuture() && Carbon::parse($appointment->appointment)->diffInHours(now()) < $cancellationWindowHours) {
+            if (Carbon::parse($appointment->appointment)->isFuture() && Carbon::parse($appointment->appointment)->diffInHours(now(), true) < $cancellationWindowHours) {
                 $errorMessage = "لا يمكن إلغاء الموعد قبل أقل من {$cancellationWindowHours} ساعة من وقته المحدد. يرجى التواصل مباشرة مع العيادة إذا لزم الأمر.";
                 Log::info("CANCEL_DENIED_TIME_PATIENT: Patient {$patient->id} for appt {$appointment->id}. Appt time: {$appointment->appointment}, Window: {$cancellationWindowHours}h.");
                 return response()->json(['message' => $errorMessage], 422);

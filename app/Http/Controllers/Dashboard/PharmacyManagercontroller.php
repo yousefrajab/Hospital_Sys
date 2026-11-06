@@ -102,7 +102,7 @@ class PharmacyManagercontroller extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             Log::error("Error storing PharmacyManager: " . $e->getMessage());
-            return redirect()->back()->withInput()->withErrors(['error' => 'حدث خطأ أثناء إضافة الموظف: ' . $e->getMessage()]);
+            return redirect()->back()->withInput()->withErrors(['error' => 'حدث خطأ أثناء إضافة الموظف: ' . error_detail($e)]);
         }
     }
 
@@ -162,7 +162,7 @@ class PharmacyManagercontroller extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             Log::error("Error updating PharmacyManager ID {$id}: " . $e->getMessage());
-            return redirect()->back()->withInput()->withErrors(['error' => 'حدث خطأ أثناء تعديل الموظف: ' . $e->getMessage()]);
+            return redirect()->back()->withInput()->withErrors(['error' => 'حدث خطأ أثناء تعديل الموظف: ' . error_detail($e)]);
         }
     }
 
@@ -186,7 +186,7 @@ class PharmacyManagercontroller extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             Log::error("Error deleting PharmacyManager ID {$id}: " . $e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'حدث خطأ أثناء حذف الموظف: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => 'حدث خطأ أثناء حذف الموظف: ' . error_detail($e)]);
         }
     }
 }

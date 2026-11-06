@@ -2,7 +2,7 @@
     <div class="container-fluid users-list-container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="mb-0"><i class="fas fa-user-friends me-2"></i>{{ trans('doctors.chat_select_patient_title') }}</h4>
-            <input type="text" wire:model.debounce.300ms="searchPatients" class="form-control form-control-sm w-25" placeholder="{{ trans('doctors.chat_search_patient_placeholder') }}">
+            <input type="text" wire:model.live.debounce.300ms="searchPatients" class="form-control form-control-sm w-25" placeholder="{{ trans('doctors.chat_search_patient_placeholder') }}">
         </div>
 
         @if($users && $users->count() > 0)

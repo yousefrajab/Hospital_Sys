@@ -93,7 +93,7 @@ class PatientSideAppointmentController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Error in getDoctorsBySection for section ID {$sectionId}: " . $e->getMessage(), ['trace' => $e->getTraceAsString(), 'sql' => $e instanceof \Illuminate\Database\QueryException ? $e->getSql() : 'N/A']);
-            return response()->json(['error' => 'حدث خطأ أثناء جلب الأطباء.', 'details' => $e->getMessage()], 500);
+            return response()->json(['error' => 'حدث خطأ أثناء جلب الأطباء.', 'details' => error_detail($e)], 500);
         }
     }
 
@@ -161,7 +161,7 @@ class PatientSideAppointmentController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Error fetching available dates for Doctor ID {$doctorId}: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return response()->json(['error' => 'حدث خطأ أثناء جلب التواريخ المتاحة.', 'details' => $e->getMessage()], 500);
+            return response()->json(['error' => 'حدث خطأ أثناء جلب التواريخ المتاحة.', 'details' => error_detail($e)], 500);
         }
     }
 
@@ -245,7 +245,7 @@ class PatientSideAppointmentController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("PatientSideAppointmentController@store: General error: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ غير متوقع أثناء محاولة حجز الموعد: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ غير متوقع أثناء محاولة حجز الموعد: ' . error_detail($e));
         }
     }
 
@@ -346,7 +346,7 @@ class PatientSideAppointmentController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Error fetching available times via AJAX for Doctor ID {$doctorId}, Date {$selectedDate}: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return response()->json(['error' => 'خطأ في جلب الأوقات المتاحة.', 'details' => $e->getMessage()], 500);
+            return response()->json(['error' => 'خطأ في جلب الأوقات المتاحة.', 'details' => error_detail($e)], 500);
         }
     }
 }

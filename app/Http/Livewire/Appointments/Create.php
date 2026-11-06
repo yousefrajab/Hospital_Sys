@@ -124,7 +124,7 @@ class Create extends Component
             //     $this->doctor = null;
             //     $this->resetAvailability();
             //     // وإعادة تعيين التقويم
-            //     $this->dispatchBrowserEvent('reset-calendar');
+            //     $this->dispatch('reset-calendar');
             // }
             // لكن غالبًا من الأفضل ترك الخيارات السابقة للمستخدم إذا كان قد اختارها بالفعل،
             // إلا إذا كان منطق العمل يتطلب إعادة التعيين الكامل.
@@ -370,7 +370,7 @@ class Create extends Component
             $this->resetFormAndAvailability(); // إعادة تعيين الفورم والتوفر
 
             // إرسال حدث لإعادة تعيين التقويم في JavaScript
-            $this->dispatchBrowserEvent('reset-calendar');
+            $this->dispatch('reset-calendar');
 
             // اختياري: إرسال بريد إلكتروني أو إشعار للمريض/الطبيب
 
@@ -393,7 +393,7 @@ class Create extends Component
 
         // إذا لم يتم العثور على الطبيب أو ليس لديه أيام عمل نشطة
         if (!$doctorModel || $doctorModel->workingDays->isEmpty()) {
-            $this->dispatchBrowserEvent('update-calendar', ['enabledDates' => []]); // إرسال قائمة فارغة
+            $this->dispatch('update-calendar', enabledDates: []); // إرسال قائمة فارغة
             return;
         }
 
@@ -438,7 +438,7 @@ class Create extends Component
         $this->available_dates = $enabledDates;
 
         // إرسال التواريخ المتاحة إلى JavaScript لتحديث التقويم
-        $this->dispatchBrowserEvent('update-calendar', ['enabledDates' => $this->available_dates]);
+        $this->dispatch('update-calendar', enabledDates: $this->available_dates);
     }
 
     // إعادة تعيين كل ما يتعلق بالتوفر
@@ -450,7 +450,7 @@ class Create extends Component
         $this->available_time_slots = [];
         $this->errorMessage = '';
         // إرسال حدث للتقويم لإعادة التعيين (اختياري، قد يكون جزءاً من update-calendar)
-        $this->dispatchBrowserEvent('update-calendar', ['enabledDates' => []]); // إرسال قائمة فارغة لتنظيف التقويم
+        $this->dispatch('update-calendar', enabledDates: []); // إرسال قائمة فارغة لتنظيف التقويم
     }
 
     // إعادة تعيين حقول الفورم الأساسية والتوفر بعد الحفظ الناجح

@@ -73,7 +73,7 @@ class Chatbox extends Component
             } else { Log::warning("[Chatbox] Broadcast message ID {$event['message']} not found."); }
         } else {
             Log::debug("[Chatbox] Ignoring broadcast for different/no conversation.");
-            $this->emitTo('chat.chatlist','refreshComponent');
+            $this->dispatch('refreshComponent')->to('chat.chatlist');
         }
     }
 
@@ -90,7 +90,7 @@ class Chatbox extends Component
             if (!$this->messages->contains('id', $newMessage->id)) {
                 $this->messages->push($newMessage);
                 Log::info("[Chatbox pushMessageToList] Message ID {$newMessage->id} pushed.");
-                $this->dispatchBrowserEvent('scroll-to-bottom');
+                $this->dispatch('scroll-to-bottom');
             } else { Log::debug("[Chatbox pushMessageToList] Message ID {$newMessage->id} already exists."); }
         } else { Log::warning("[Chatbox pushMessageToList] Message invalid or not for current conversation."); }
     }
@@ -118,7 +118,7 @@ class Chatbox extends Component
                                    ->orderBy('created_at', 'asc')->get();
         Log::info("[Chatbox] Loaded " . $this->messages->count() . " messages.");
         $this->markMessagesAsRead(); // وضع علامة مقروءة
-        $this->dispatchBrowserEvent('scroll-to-bottom'); // التمرير للأسفل
+        $this->dispatch('scroll-to-bottom'); // التمرير للأسفل
     }
 
     /**

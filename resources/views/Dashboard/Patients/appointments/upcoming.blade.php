@@ -290,7 +290,7 @@
                         $cancellationWindowHours = config('app.appointment_cancellation_window_hours', 24);
                         $isCancellable = in_array($appointment->type, [\App\Models\Appointment::STATUS_PENDING ?? 'غير مؤكد', \App\Models\Appointment::STATUS_CONFIRMED ?? 'مؤكد']) &&
                                          $appointmentDateTime->isFuture() &&
-                                         $appointmentDateTime->diffInHours(now()) >= $cancellationWindowHours;
+                                         $appointmentDateTime->diffInHours(now(), true) >= $cancellationWindowHours;
                     @endphp
                     <div class="appointment-card-wrapper animate__animated animate__fadeInUp" style="animation-delay: {{ $loop->index * 0.1 }}s;">
                         <div class="appointment-card" data-appointment-id="{{ $appointment->id }}" data-status-key="{{ $statusKey }}" data-status="{{ $appointment->type }}">

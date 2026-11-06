@@ -196,7 +196,7 @@ class SingleInvoices extends Component
 
             catch (\Exception $e) {
                 DB::rollback();
-                $this->catchError = $e->getMessage();
+                $this->catchError = error_detail($e);
             }
 
         }
@@ -291,7 +291,7 @@ class SingleInvoices extends Component
 
             catch (\Exception $e) {
                 DB::rollback();
-                return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+                return redirect()->back()->withErrors(['error' => error_detail($e)]);
             }
 
 

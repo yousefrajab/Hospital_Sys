@@ -1,3 +1,4 @@
+<div>{{-- Livewire 3: single root element --}}
 <div class="message-input-container">
     @if($selected_conversation)
     <form wire:submit.prevent="sendMessage" class="message-form">
@@ -14,7 +15,7 @@
                     class="btn btn-send"
                     type="submit"
                     title="{{ trans('doctors.chat_send_button_title') }}"
-                    :disabled="!$body"
+                    :disabled="!$wire.body"
                 >
                     <i class="fas fa-paper-plane send-icon"></i>
                 </button>
@@ -81,19 +82,14 @@
 </style>
 
 <script>
-    document.addEventListener('livewire:load', function() {
+    document.addEventListener('livewire:init', function() {
         // التركيز التلقائي على حقل الإدخال
-        Livewire.hook('message.processed', () => {
+        Livewire.hook('morph.updated', () => {
             const input = document.querySelector('.message-input');
             if (input) input.focus();
         });
 
-        // إرسال بالضغط على Enter (بدون Shift)
-        document.querySelector('.message-input')?.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                Livewire.emit('sendMessage');
-            }
-        });
+        // Enter submits the form natively (wire:submit), so no extra key handler is needed.
     });
 </script>
+</div>

@@ -33,7 +33,7 @@
 
          catch (\Exception $e) {
              DB::rollback();
-             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+             return redirect()->back()->withErrors(['error' => error_detail($e)]);
          }
      }
 
@@ -67,7 +67,7 @@
 
          catch (\Exception $e) {
              DB::rollback();
-             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+             return redirect()->back()->withErrors(['error' => error_detail($e)]);
          }
      }
 

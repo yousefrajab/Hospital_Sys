@@ -89,7 +89,7 @@ class PharmacyStockController extends Controller
                              ->with('success', 'تمت إضافة دفعة المخزون بنجاح.');
         } catch (\Exception $e) {
             Log::error("PharmacyStockController@store: Error creating stock for MedID {$medication->id}: " . $e->getMessage(), ['trace' => substr($e->getTraceAsString(),0,500)]);
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء إضافة دفعة المخزون: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء إضافة دفعة المخزون: ' . error_detail($e));
         }
     }
 

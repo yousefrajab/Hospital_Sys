@@ -14,17 +14,17 @@
             @csrf
             <div class="form-group">
                 <label>{{ trans('AdminSb.Group_Name') }}</label>
-                <input wire:model="name_group" type="text" name="name_group" class="form-control" required>
+                <input wire:model.live="name_group" type="text" name="name_group" class="form-control" required>
             </div>
 
             <div class="form-group">
                 <label>{{ trans('AdminSb.description') }}</label>
-                <textarea wire:model="notes" name="notes" class="form-control" rows="5"></textarea>
+                <textarea wire:model.live="notes" name="notes" class="form-control" rows="5"></textarea>
             </div>
 
             <div class="form-group">
                 <label for="group_doctor_id_field">{{ trans('AdminSb.package_responsible_doctor_optional') }}</label>
-                <select wire:model.defer="group_doctor_id" id="group_doctor_id_field"
+                <select wire:model="group_doctor_id" id="group_doctor_id_field"
                     class="form-control @error('group_doctor_id') is-invalid @enderror">
                     <option value="">{{ trans('AdminSb.select_doctor_for_package') }}</option>
                     @if (isset($availableDoctorsForGroup))
@@ -64,7 +64,7 @@
                                             @if ($groupItem['is_saved'])
                                                 <input type="hidden"
                                                     name="GroupsItems[{{ $index }}][service_id]"
-                                                    wire:model="GroupsItems.{{ $index }}.service_id" />
+                                                    wire:model.live="GroupsItems.{{ $index }}.service_id" />
                                                 @if ($groupItem['service_name'] && $groupItem['service_price'])
                                                     {{ $groupItem['service_name'] }}
                                                     ({{ number_format($groupItem['service_price'], 2) }})
@@ -72,7 +72,7 @@
                                             @else
                                                 <select name="GroupsItems[{{ $index }}][service_id]"
                                                     class="form-control{{ $errors->has('GroupsItems.' . $index) ? ' is-invalid' : '' }}"
-                                                    wire:model="GroupsItems.{{ $index }}.service_id">
+                                                    wire:model.live="GroupsItems.{{ $index }}.service_id">
                                                     <option value="">{{ trans('AdminSb.choose_service') }}
                                                     </option>
                                                     @foreach ($allServices as $service)
@@ -91,12 +91,12 @@
                                         <td>
                                             @if ($groupItem['is_saved'])
                                                 <input type="hidden" name="GroupsItems[{{ $index }}][quantity]"
-                                                    wire:model="GroupsItems.{{ $index }}.quantity" />
+                                                    wire:model.live="GroupsItems.{{ $index }}.quantity" />
                                                 {{ $groupItem['quantity'] }}
                                             @else
                                                 <input type="number" name="GroupsItems[{{ $index }}][quantity]"
                                                     class="form-control"
-                                                    wire:model="GroupsItems.{{ $index }}.quantity" />
+                                                    wire:model.live="GroupsItems.{{ $index }}.quantity" />
                                             @endif
                                         </td>
                                         <td>
@@ -133,14 +133,14 @@
                                 <td style="color: red">{{ trans('AdminSb.Discount_Amount') }}</td>
                                 <td width="125">
                                     <input type="number" name="discount_value" class="form-control w-75 d-inline"
-                                        wire:model="discount_value">
+                                        wire:model.live="discount_value">
                                 </td>
                             </tr>
                             <tr>
                                 <td style="color: red">{{ trans('AdminSb.Tax_Rate') }}</td>
                                 <td>
                                     <input type="number" name="taxes" class="form-control w-75 d-inline"
-                                        min="0" max="100" wire:model="taxes"> %
+                                        min="0" max="100" wire:model.live="taxes"> %
                                 </td>
                             </tr>
                             <tr>

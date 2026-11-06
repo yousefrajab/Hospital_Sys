@@ -54,7 +54,7 @@ class RayEmployeeRepository implements RayEmployeeRepositoryInterface
 
         } catch (\Exception $e) {
             DB::rollback(); // تراجع في حالة الخطأ
-            return redirect()->back()->withInput()->withErrors(['error' => 'حدث خطأ أثناء إضافة الموظف: ' . $e->getMessage()]);
+            return redirect()->back()->withInput()->withErrors(['error' => 'حدث خطأ أثناء إضافة الموظف: ' . error_detail($e)]);
         }
     }
 
@@ -113,7 +113,7 @@ class RayEmployeeRepository implements RayEmployeeRepositoryInterface
 
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withInput()->withErrors(['error' => 'حدث خطأ أثناء تعديل الموظف: ' . $e->getMessage()]);
+            return redirect()->back()->withInput()->withErrors(['error' => 'حدث خطأ أثناء تعديل الموظف: ' . error_detail($e)]);
         }
     }
 
@@ -138,7 +138,7 @@ class RayEmployeeRepository implements RayEmployeeRepositoryInterface
 
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['error' => 'حدث خطأ أثناء حذف الموظف: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => 'حدث خطأ أثناء حذف الموظف: ' . error_detail($e)]);
         }
     }
 }

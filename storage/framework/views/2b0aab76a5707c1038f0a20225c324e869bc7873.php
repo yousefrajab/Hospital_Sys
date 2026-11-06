@@ -1,1 +1,0 @@
-<?php /**PATH H:\Hospital_Sys\resources\views/errors/404.blade.php ENDPATH**/ ?>

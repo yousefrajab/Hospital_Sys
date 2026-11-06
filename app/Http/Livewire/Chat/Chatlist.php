@@ -96,12 +96,12 @@ class Chatlist extends Component
             $conversation = Conversation::with(['doctor.image', 'patient.image'])->findOrFail($conversationId);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
              Log::error("[Chatlist Load] Conversation ID {$conversationId} not found in DB.");
-             $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'المحادثة المطلوبة غير موجودة.']);
+             $this->dispatch('alert', type: 'error', message: 'المحادثة المطلوبة غير موجودة.');
              return;
         }
         if ($conversation->sender_email !== $this->auth_email && $conversation->receiver_email !== $this->auth_email) {
              Log::warning("[Chatlist Load] Unauthorized access attempt for conversation {$conversationId} by user {$this->auth_email}.");
-             $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'غير مصرح لك بالوصول لهذه المحادثة.']);
+             $this->dispatch('alert', type: 'error', message: 'غير مصرح لك بالوصول لهذه المحادثة.');
              return;
         }
         $this->selected_conversation = $conversation;
@@ -109,9 +109,9 @@ class Chatlist extends Component
 
         if ($this->receviverUser) {
             Log::info("[Chatlist Load] Selecting Conv ID: {$this->selected_conversation->id}, Receiver: {$this->receviverUser->email}");
-            $this->emitTo('chat.chatbox', 'loadConversationFromList', $this->selected_conversation->id, $this->receviverUser->id, get_class($this->receviverUser));
-            $this->emitTo('chat.send-message', 'updateConversationFromList', $this->selected_conversation->id, $this->receviverUser->id, get_class($this->receviverUser));
-            $this->dispatchBrowserEvent('conversation-selected', ['id' => $this->selected_conversation->id]);
+            $this->dispatch('loadConversationFromList', $this->selected_conversation->id, $this->receviverUser->id, get_class($this->receviverUser))->to('chat.chatbox');
+            $this->dispatch('updateConversationFromList', $this->selected_conversation->id, $this->receviverUser->id, get_class($this->receviverUser))->to('chat.send-message');
+            $this->dispatch('conversation-selected', id: $this->selected_conversation->id);
             $this->markSpecificConversationNotificationsAsRead($this->selected_conversation->id); // تعليم إشعارات هذه المحادثة كمقروءة
         } else {
             Log::error("[Chatlist Load] Could not determine receiver for conversation ID: {$conversationId}");
@@ -119,25 +119,9 @@ class Chatlist extends Component
         }
     }
 
-    public function chatUserSelected(Conversation $conversation, $receiver_id = null)
+    public function chatUserSelected(int $conversationId)
     {
-         Log::info("[Chatlist Click] User clicked on existing conversation ID: {$conversation->id}");
-        if ($conversation->sender_email !== $this->auth_email && $conversation->receiver_email !== $this->auth_email) {
-            return;
-        }
-         $this->selected_conversation = $conversation;
-         $this->receviverUser = ($this->auth_user_guard === 'patient') ? $conversation->loadMissing('doctor.image')->doctor : $conversation->loadMissing('patient.image')->patient;
-
-         if ($this->receviverUser) {
-             Log::info("[Chatlist Click] Selecting Conv ID: {$this->selected_conversation->id}, Receiver: {$this->receviverUser->email}");
-             $this->emitTo('chat.chatbox', 'loadConversationFromList', $this->selected_conversation->id, $this->receviverUser->id, get_class($this->receviverUser));
-             $this->emitTo('chat.send-message', 'updateConversationFromList', $this->selected_conversation->id, $this->receviverUser->id, get_class($this->receviverUser));
-             $this->dispatchBrowserEvent('conversation-selected', ['id' => $this->selected_conversation->id]);
-             $this->markSpecificConversationNotificationsAsRead($this->selected_conversation->id); // تعليم إشعارات هذه المحادثة كمقروءة
-         } else {
-             Log::error("[Chatlist Click] Could not determine receiver for conversation ID: {$conversation->id}");
-             $this->selected_conversation = null;
-         }
+        $this->chatUserSelectedOnLoad($conversationId);
     }
 
     public function loadConversations()

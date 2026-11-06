@@ -92,7 +92,7 @@
 </style>
 
 <script>
-    document.addEventListener('livewire:load', function() {
+    document.addEventListener('livewire:init', function() {
         // إضافة تأثير عند النقر على زر الحذف
         document.querySelectorAll('[wire\\:click^="delete"]').forEach(btn => {
             btn.addEventListener('click', function() {

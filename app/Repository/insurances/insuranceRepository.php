@@ -38,7 +38,7 @@ class insuranceRepository implements insuranceRepositoryInterface
             return redirect()->route('admin.insurance.create');
         }
         catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 

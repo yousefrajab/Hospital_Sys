@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Section;
-use App\Http\Livewire\Chat\Main;
 use Illuminate\Support\Facades\Route;
 
 
@@ -74,7 +73,7 @@ Route::group(
 
             ############################# Chat route ##########################################
             Route::get('list/doctors', Createchat::class)->name('list.doctors');
-            Route::get('chat/doctors', Main::class)->name('chat.doctors');
+            Route::view('chat/doctors', 'livewire.chat.main')->name('chat.doctors');
 
             ############################# end Chat route ######################################
 

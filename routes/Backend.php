@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Admin;
-use App\Events\MyEvent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminController;
@@ -143,7 +142,6 @@ Route::group(
             //############################# RayEmployee route ##########################################
 
             Route::resource('ray_employee', RayEmployeeController::class)->except(['create', 'show']);
-            Route::get('/ray_employee/{id}/edit', [RayEmployeeController::class, 'edit'])->name('ray_employee.edit');
 
             //############################# end RayEmployee route ######################################
 
@@ -151,7 +149,6 @@ Route::group(
 
             Route::resource('laboratorie_employee', LaboratorieEmployeeController::class)->except(['create', 'show']);
 
-            Route::get('/laboratorie_employee/{id}/edit', [LaboratorieEmployeeController::class, 'edit'])->name('laboratorie_employee.edit');
 
 
             //############################# end laboratorie_employee route ######################################
@@ -192,13 +189,11 @@ Route::group(
             Route::resource('diseases', DiseaseController::class)->names('diseases');
 
             Route::resource('pharmacy_employee', PharmacyEmployeeController::class)->except(['create', 'show']);
-            Route::get('/pharmacy_employee/{id}/edit', [PharmacyEmployeeController::class, 'edit'])->name('pharmacy_employee.edit');
 
             Route::resource('medications', MedicationController::class);
 
 
             Route::resource('pharmacy_manager', PharmacyManagercontroller::class)->except(['create', 'show']);
-            Route::get('/pharmacy_manager/{id}/edit', [PharmacyManagerController::class, 'edit'])->name('pharmacy_manager.edit');
 
             Route::post('/patient-admissions/{patient_admission}/vital-signs', [VitalSignController::class, 'store'])->name('vital_signs.store');
 

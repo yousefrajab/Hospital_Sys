@@ -107,7 +107,7 @@ class ReceiptRepository implements ReceiptRepositoryInterface
             return redirect()->route('admin.Receipt.index');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
+            return redirect()->back()->withErrors(['error' => error_detail($e)])->withInput();
         }
     }
 
@@ -193,7 +193,7 @@ class ReceiptRepository implements ReceiptRepositoryInterface
             return redirect()->route('admin.Receipt.index');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
+            return redirect()->back()->withErrors(['error' => error_detail($e)])->withInput();
         }
     }
 
@@ -211,7 +211,7 @@ class ReceiptRepository implements ReceiptRepositoryInterface
             session()->flash('delete', trans('AdminSb.receipt_deleted_successfully'));
             return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 }

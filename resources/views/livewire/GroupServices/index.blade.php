@@ -294,7 +294,7 @@
 
 
 
-    document.addEventListener('livewire:load', function() {
+    document.addEventListener('livewire:init', function() {
         // Initialize tooltips
         $('[data-toggle="tooltip"]').tooltip({
             trigger: 'hover',

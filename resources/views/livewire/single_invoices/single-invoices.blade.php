@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col">
                     <label>{{ trans('AdminSb.patient_name') }}</label>
-                    <select wire:model="patient_id" class="form-control" required>
+                    <select wire:model.live="patient_id" class="form-control" required>
                         <option value="">{{ trans('AdminSb.choose_from_list') }}</option>
                         @foreach($Patients as $Patient)
                             <option value="{{$Patient->id}}">{{$Patient->name}}</option>
@@ -32,7 +32,7 @@
 
                 <div class="col">
                     <label>{{ trans('AdminSb.doctor_name') }}</label>
-                    <select wire:model="doctor_id" wire:change="get_section" class="form-control" id="exampleFormControlSelect1" required>
+                    <select wire:model.live="doctor_id" wire:change="get_section" class="form-control" id="exampleFormControlSelect1" required>
                         <option value="">{{ trans('AdminSb.choose_from_list') }}</option>
                         @foreach($Doctors as $Doctor)
                             <option value="{{$Doctor->id}}">{{$Doctor->name}}</option>
@@ -42,12 +42,12 @@
 
                 <div class="col">
                     <label>{{ trans('AdminSb.department') }}</label>
-                    <input wire:model="section_id" type="text" class="form-control" readonly>
+                    <input wire:model.live="section_id" type="text" class="form-control" readonly>
                 </div>
 
                 <div class="col">
                     <label>{{ trans('AdminSb.invoice_type') }}</label>
-                    <select wire:model="type" class="form-control" {{$updateMode == true ? 'disabled':''}}>
+                    <select wire:model.live="type" class="form-control" {{$updateMode == true ? 'disabled':''}}>
                         <option value="">{{ trans('AdminSb.choose_from_list') }}</option>
                         <option value="1">{{ trans('AdminSb.cash') }}</option>
                         <option value="2">{{ trans('AdminSb.deferred') }}</option>
@@ -81,16 +81,16 @@
                                         <tr>
                                             <th scope="row">1</th>
                                             <td>
-                                                <select wire:model="Service_id" class="form-control" wire:change="get_price" id="exampleFormControlSelect1">
+                                                <select wire:model.live="Service_id" class="form-control" wire:change="get_price" id="exampleFormControlSelect1">
                                                     <option value="">{{ trans('AdminSb.choose_service') }}</option>
                                                     @foreach($Services as $Service)
                                                         <option value="{{$Service->id}}">{{$Service->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td><input wire:model="price" type="text" class="form-control" readonly></td>
-                                            <td><input wire:model="discount_value" type="text" class="form-control"></td>
-                                            <th><input wire:model="tax_rate" type="text" class="form-control"></th>
+                                            <td><input wire:model.live="price" type="text" class="form-control" readonly></td>
+                                            <td><input wire:model.live="discount_value" type="text" class="form-control"></td>
+                                            <th><input wire:model.live="tax_rate" type="text" class="form-control"></th>
                                             <td><input type="text" class="form-control" value="{{$tax_value}}" readonly></td>
                                             <td><input type="text" class="form-control" readonly value="{{$subtotal + $tax_value }}"></td>
                                         </tr>

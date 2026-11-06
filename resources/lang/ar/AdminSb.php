@@ -1,4 +1,4 @@
-    <?php
+<?php
 
     return array(
 
@@ -862,4 +862,5 @@
     'medical_record_entry' => 'إدخال سجل طبي',
     'patient_record' => 'سجل المريض',
     'save_changes' => 'حفظ التغييرات',
+    'error_reference' => 'رمز الخطأ: :code',
 );

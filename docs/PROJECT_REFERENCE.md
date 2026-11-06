@@ -602,7 +602,7 @@ Invoice life-cycle for the doctor (`invoices.invoice_status`): **1 = new (كشو
 ### 4.20 Chat (Livewire + Pusher) — doctor ↔ patient only
 Pages: doctor `doctor/list/patients` (`ChatWindow`: list ALL patients, start conversation), `doctor/chat/patients` (`Main`);
 patient `patient/list/doctors` (`Createchat`: list ALL doctors), `patient/chat/doctors` (`Main`). `Main` hosts `Chatlist` +
-`Chatbox` + `SendMessage` (components talk via `emitTo`).
+`Chatbox` + `SendMessage` (components talk via `dispatch(...)->to(...)`).
 - Conversations are keyed by **email**: sender = patient, receiver = doctor (both creation paths respect this; the
   `Conversation::doctor()/patient()` relations depend on it). First message is auto-generated.
 - `SendMessage::sendMessage` ⇒ `messages` row, update `last_time_message`, `pushMessage` to Chatbox, refresh Chatlist, then:
@@ -809,7 +809,7 @@ partial dispensing, profile photo, Livewire invoice in English, Livewire booking
 **Still open (design decisions / larger work, not errors):** `APP_DEBUG` must be false in production and several controllers
 still show `$e->getMessage()`; doctors can open any patient's record; refill counting (`refills_done`) is reset by the doctor's
 approval rather than consumed per dispense; mail/SMS are sent synchronously (slow when SMTP/Twilio are unreachable — the `.env`
-currently has an inactive Twilio account and SMTP credentials that fail); Laravel 8 is end-of-life; inline CSS / Valex template.
+currently has an inactive Twilio account and SMTP credentials that fail); inline CSS / Valex template.
 
 ### 7.3 Architecture / maintainability
 - 7 separate user tables + guards + observers to fake a global identity (`global_emails`, `global_identifiers`) — a single
@@ -820,13 +820,13 @@ currently has an inactive Twilio account and SMTP credentials that fail); Larave
 - Money as `double` + tax as strings; no currency handling.
 - No queues (mail/SMS/Pusher synchronous), no scheduler (lapsed appointments, expiring stock, refill reminders).
 - Front-end: 37 % of the views is copy-pasted inline CSS, Valex template + many CDNs, Windows-only paths (5.7).
-- Laravel 8 + PHP 8.2 — Laravel 8 is end-of-life (security fixes ended Jan 2023).
+- ~~Laravel 8 + PHP 8.2 — end-of-life.~~ **Done 2026-11-06:** Laravel 12 + Livewire 3 on PHP 8.2 (Laravel 13 needs PHP 8.3+).
 
 ---
 
 ## 8. Roadmap ideas toward an international product (for discussion)
 1. **Stabilise**: fix 7.1 + 7.2, make paths/translations case-correct, `APP_DEBUG=false`, add feature tests for the critical flows.
-2. **Upgrade platform**: Laravel 8 → 11/12 (stepwise), Livewire 2 → 3, Vite, PHP 8.3; move secrets to env; queues + scheduler.
+2. **Upgrade platform**: ~~Laravel 8 → 12, Livewire 2 → 3~~ (done 2026-11-06). Still to do: Vite, PHP 8.3 + Laravel 13; queues + scheduler.
 3. **Identity & permissions**: unified users table, roles & permissions, multi-branch / multi-hospital (tenant) support, audit log.
 4. **i18n / l10n**: language-neutral status enums, full translation coverage, add more locales (fr, tr, …), proper RTL/LTR
    `dir`, timezone & currency per tenant, date/number formatting.
@@ -839,3 +839,21 @@ currently has an inactive Twilio account and SMTP credentials that fail); Larave
    reminders, telemedicine (video), analytics dashboards.
 8. **Front-end**: replace the Valex template with one licensed/own design system, remove inline CSS, bundle assets locally.
 9. **Ops**: Docker, CI (tests + static analysis), backups, monitoring, staging environment.
+
+
+## 9. Platform upgrade (2026-11-06)
+
+- Laravel 8.75 → **12.x**, Livewire 2 → **3**, Sanctum 4, PHPUnit 11, `spatie/laravel-ignition` (replaces `facade/ignition`).
+  Removed: `fruitcake/laravel-cors` (core `HandleCors`), `joedixon/laravel-translation`, `laravel/breeze`, `laravel/sail`.
+- Carbon 3: `diffIn*()` is signed and returns floats; code that relied on Carbon 2's absolute default now passes `true`.
+- Livewire 3 port: config keeps `App\Http\Livewire`; `wire:model` → `.live` where it was live before, `.defer` → plain;
+  `emitTo`/`dispatchBrowserEvent` → `dispatch()`; JS hooks moved to `livewire:init`/`morph.updated`/`commit`; chat views
+  wrapped in one root; chat page is now `Route::view('…', 'livewire.chat.main')` (the old full-page `Main` component is gone).
+- Bugs found and fixed during the upgrade: group invoices were never saved (called a missing `rest()` method, then showed
+  "saved"); package doctor ignored on save; duplicate admin `*.edit` route names blocked `route:cache`; unclosed
+  `@section('css')` on ray/lab invoice lists; doctor `404` page used the Breeze layout; `/register` (Breeze, `users` table)
+  now redirects to patient sign-up; chat send button was always disabled under Alpine; lowercase `doctor\` controller folder.
+- Hardening: `SecurityHeaders` middleware (nosniff, frame, referrer, permissions; HSTS on HTTPS); `error_detail()` hides
+  exception text in production; compiled views no longer tracked in git; stray output before `<?php` removed.
+- Tests: `tests/Feature/LoginTest.php` (every role logs in, wrong password rejected) and `PageSmokeTest.php` (every page,
+  every role, no 500s), on `hos_db_test` only.

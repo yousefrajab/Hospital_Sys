@@ -3,7 +3,6 @@
 namespace App\Repository\Sections;
 
 use App\Models\Doctor;
-use App\Events\MyEvent;
 use App\Models\Section;
 use App\Models\SectionTranslation;
 use Stichoza\GoogleTranslate\GoogleTranslate;
@@ -16,7 +15,6 @@ class SectionRepository implements SectionRepositoryInterface
     public function index()
     {
         $sections = Section::paginate(10); // هذا يرجع LengthAwarePaginator
-        //   event(new MyEvent('welcome',auth()->user()->name));
         return view('Dashboard.Sections.index', compact('sections'));
     }
 

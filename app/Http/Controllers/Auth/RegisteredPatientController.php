@@ -96,7 +96,7 @@ class RegisteredPatientController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Patient (public) registration general error: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return redirect()->back()->withInput()->with('error_message', 'حدث خطأ أثناء عملية التسجيل: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error_message', 'حدث خطأ أثناء عملية التسجيل: ' . error_detail($e));
         }
     }
 }

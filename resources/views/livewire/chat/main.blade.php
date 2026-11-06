@@ -196,7 +196,7 @@
         });
 
         // الكود الخاص بـ scrollTop من ملفك الأصلي
-        document.addEventListener('livewire:load', function() {
+        document.addEventListener('livewire:init', function() {
             // لا حاجة لهذا الآن، التمرير يتم في Chatbox و SendMessage
             // Livewire.on('messageSent', () => {
             //     const chatBody = document.getElementById('ChatBody'); //  تأكد من وجود عنصر بهذا الـ ID

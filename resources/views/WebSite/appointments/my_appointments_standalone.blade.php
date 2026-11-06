@@ -205,7 +205,7 @@
                                 @php
                                     $appointmentDateTime = $appointment->appointment;
                                     $cancellationWindowHours = config('settings.appointments.patient_cancellation_window_hours', 24);
-                                    $isCancellable = $appointmentDateTime->isFuture() && ($appointmentDateTime->diffInHours(now()) >= $cancellationWindowHours) && in_array($appointment->type, [App\Models\Appointment::STATUS_PENDING, App\Models\Appointment::STATUS_CONFIRMED]);
+                                    $isCancellable = $appointmentDateTime->isFuture() && ($appointmentDateTime->diffInHours(now(), true) >= $cancellationWindowHours) && in_array($appointment->type, [App\Models\Appointment::STATUS_PENDING, App\Models\Appointment::STATUS_CONFIRMED]);
                                 @endphp
                                 <div class="appointment-card-wrapper">
                                     <div class="appointment-card" id="appointmentCard_{{ $appointment->id }}" data-appointment-id="{{ $appointment->id }}" data-status-key="{{ $appointment->type_key }}">

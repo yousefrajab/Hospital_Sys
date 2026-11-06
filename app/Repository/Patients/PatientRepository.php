@@ -164,7 +164,7 @@ class PatientRepository implements PatientRepositoryInterface
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("PatientRepository@store: General error: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء تسجيل المريض: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء تسجيل المريض: ' . error_detail($e));
         }
     }
 
@@ -385,7 +385,7 @@ class PatientRepository implements PatientRepositoryInterface
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("PatientRepository@update: General error for Patient ID {$patient->id}: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء تحديث بيانات المريض: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء تحديث بيانات المريض: ' . error_detail($e));
         }
     }
 

@@ -433,7 +433,7 @@
                     </div>
                     <div class="form-group"> <label
                             for="section">{{ trans('patients.livewire_medical_department') }}</label>
-                        <div class="select-with-icon"> <select id="section" wire:model="section" required>
+                        <div class="select-with-icon"> <select id="section" wire:model.live="section" required>
                                 <option value="">{{ trans('patients.livewire_select_department') }}</option>
                                 @foreach ($sections as $s)
                                     <option value="{{ $s->id }}">{{ $s->name }}</option>
@@ -444,7 +444,7 @@
                     </div>
                     <div class="form-group"> <label
                             for="doctor">{{ trans('patients.livewire_attending_physician') }}</label>
-                        <div class="select-with-icon"> <select id="doctor" wire:model="doctor" required
+                        <div class="select-with-icon"> <select id="doctor" wire:model.live="doctor" required
                                 {{ empty($section) ? 'disabled' : '' }}>
                                 <option value="">{{ trans('patients.livewire_select_doctor_first') }}</option>
                                 @foreach ($doctors as $d)
@@ -500,7 +500,7 @@
                         <h3>{{ trans('patients.livewire_patient_information') }}</h3>
                     </div>
                     <div class="form-group"> <label for="name">{{ trans('patients.livewire_full_name') }}</label>
-                        <div class="input-with-icon"> <input type="text" id="name" wire:model.defer="form.name"
+                        <div class="input-with-icon"> <input type="text" id="name" wire:model="form.name"
                                 placeholder="{{ trans('patients.livewire_enter_full_name') }}" required> <i
                                 class="fas fa-user"></i> </div>
                         @error('form.name')
@@ -508,7 +508,7 @@
                         @enderror
                     </div>
                     <div class="form-group"> <label for="email">{{ trans('patients.livewire_email') }}</label>
-                        <div class="input-with-icon"> <input type="email" id="email" wire:model.defer="form.email"
+                        <div class="input-with-icon"> <input type="email" id="email" wire:model="form.email"
                                 placeholder="{{ trans('patients.email_placeholder') }}" required> <i
                                 class="fas fa-envelope"></i> </div>
                         @error('form.email')
@@ -517,7 +517,7 @@
                     </div>
                     <div class="form-group"> <label
                             for="phone">{{ trans('patients.livewire_phone_number') }}</label>
-                        <div class="input-with-icon"> <input type="tel" id="Phone" wire:model.defer="form.Phone"
+                        <div class="input-with-icon"> <input type="tel" id="Phone" wire:model="form.Phone"
                                 placeholder="{{ trans('patients.phone_placeholder_sa') }}" required> <i
                                 class="fas fa-phone-alt"></i> </div>
                         @error('form.Phone')
@@ -526,7 +526,7 @@
                     </div>
                     <div class="form-group"> <label
                             for="notes">{{ trans('patients.livewire_additional_notes') }}</label>
-                        <textarea id="notes" wire:model.defer="notes"
+                        <textarea id="notes" wire:model="notes"
                             placeholder="{{ trans('patients.livewire_additional_info_placeholder') }}"></textarea> @error('notes')
                             <span class="error-validation">{{ $message }}</span>
                         @enderror
@@ -575,7 +575,7 @@
 
 {{-- 2. استيراد Alpine.js (إذا لم يكن مستورداً بشكل عام في الـ layout) --}}
 {{-- تأكد من استيراده مرة واحدة فقط --}}
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+{{-- Alpine.js ships with Livewire 3; do not load it again. --}}
 
 {{-- 3. الكود المخصص لـ Flatpickr و Livewire Hooks --}}
 <script>
@@ -620,11 +620,11 @@
             }
         });
         if (typeof Livewire !== 'undefined') {
-            Livewire.hook('element.updated', (el, component) => {
+            Livewire.hook('morph.updated', ({ el, component }) => {
                 // التأكد من أن المكون هو المكون الصحيح (اختياري لكن جيد)
                 // if (component.fingerprint.name === 'appointments.create') {
                 if (el.id === 'doctor') {
-                    const doctorId = component.get('doctor');
+                    const doctorId = component.$wire.get('doctor');
                     const dateInputEl = document.getElementById('appointment_flatpickr');
                     if (dateInputEl && flatpickrInstance) {
                         const isDisabled = !doctorId;
@@ -649,7 +649,7 @@
 
     // --- كود التمرير إلى رسائل التنبيه ---
     // --- كود التمرير إلى رسائل التنبيه وإعادة التحميل عند النجاح ---
-    document.addEventListener('livewire:load', function() {
+    document.addEventListener('livewire:init', function() {
         // منع اختيار التواريخ الماضية وعرض رسائل الخطأ
         const dateInput = document.getElementById('appointment_patient');
         const errorDiv = document.getElementById('date-error');
@@ -684,8 +684,10 @@
         }
 
         // إدارة رسائل التنبيه (النجاح/التحذير)
-        Livewire.hook('message.processed', (message, component) => {
-            if (message.response.serverMemo.data.message || message.response.serverMemo.data.message2) {
+        Livewire.hook('commit', ({ component, succeed }) => {
+            if (component.name !== 'appointments.create') return;
+            succeed(() => queueMicrotask(() => {
+            if (component.$wire.get('message') || component.$wire.get('message2')) {
                 const alertBox = document.querySelector('.appointment-alert');
 
                 // التمرير إلى الرسالة
@@ -704,7 +706,7 @@
                     alerts.forEach(alert => {
                         alert.classList.add('fade-out');
                         setTimeout(() => {
-                            Livewire.emit('dismissMessage');
+                            component.$wire.call('dismissMessage');
                             setTimeout(() => {
                                 window.location.reload();
                             }, 500);
@@ -712,6 +714,7 @@
                     });
                 }, 5000);
             }
+            }));
         });
     });
 </script>

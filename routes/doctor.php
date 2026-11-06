@@ -1,12 +1,10 @@
 <?php
 
-// use App\Models\Mainn;
-use App\Http\Livewire\Chat\Main;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Chat\ChatWindow;
 use App\Http\Livewire\Chat\Createchat;
 use App\Http\Middleware\CheckDoctorStatus;
-use App\Http\Controllers\doctor\InvoiceController;
+use App\Http\Controllers\Doctor\InvoiceController;
 use App\Http\Controllers\Dashboard\DoctorController;
 use App\Http\Controllers\Dashboard_Doctor\RayController;
 use App\Http\Controllers\Dashboard\PrescriptionController;
@@ -115,7 +113,7 @@ Route::group([
 
         ############################# Chat route ##########################################
         Route::get('list/patients', ChatWindow::class)->name('list.patients');
-        Route::get('chat/patients', Main::class)->name('chat.patients');
+        Route::view('chat/patients', 'livewire.chat.main')->name('chat.patients');
 
         ############################# end Chat route ######################################
 

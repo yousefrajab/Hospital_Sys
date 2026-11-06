@@ -81,7 +81,7 @@ class Createchat extends Component // Patient sees Doctors List
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("[Createchat] Failed to create/open conversation: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'فشل بدء المحادثة. ' . $e->getMessage()]);
+            $this->dispatch('alert', type: 'error', message: 'فشل بدء المحادثة. ' . error_detail($e));
             return;
         }
     }

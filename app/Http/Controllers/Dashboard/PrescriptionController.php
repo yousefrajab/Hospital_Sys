@@ -211,7 +211,7 @@ class PrescriptionController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("PrescriptionController@store: General error: " . $e->getMessage(), ['trace' => substr($e->getTraceAsString(), 0, 1000), 'request_data' => $request->all()]);
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء إنشاء الوصفة: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء إنشاء الوصفة: ' . error_detail($e));
         }
     }
 
@@ -479,7 +479,7 @@ class PrescriptionController extends Controller
                 $dueDate = Carbon::parse($prescription->next_refill_due_date);
                 $today = Carbon::today();
 
-                if ($dueDate->isPast() && $dueDate->diffInDays($today) > $nonCompliantGracePeriod) {
+                if ($dueDate->isPast() && $dueDate->diffInDays($today, true) > $nonCompliantGracePeriod) {
                     if (!in_array($prescription->status, [Prescription::STATUS_DISPENSED, Prescription::STATUS_CANCELLED_BY_DOCTOR, Prescription::STATUS_EXPIRED])) {
                         $prescription->compliance_status_key = 'danger';
                         $prescription->compliance_status = 'متأخر عن التجديد';
@@ -493,7 +493,7 @@ class PrescriptionController extends Controller
                     }
                 } elseif ($prescription->status === Prescription::STATUS_DISPENSED || $prescription->status === Prescription::STATUS_PARTIALLY_DISPENSED || $dueDate->isFuture()) {
                     $lastDispensed = $prescription->dispensed_at ?? $prescription->updated_at;
-                    if ($lastDispensed && Carbon::parse($lastDispensed)->diffInDays($today) < (config('your_config_file.assumed_compliance_period_days', 45))) { //  فترة افتراضية للالتزام
+                    if ($lastDispensed && Carbon::parse($lastDispensed)->diffInDays($today, true) < (config('your_config_file.assumed_compliance_period_days', 45))) { //  فترة افتراضية للالتزام
                         $prescription->compliance_status_key = 'success';
                         $prescription->compliance_status = 'ملتزم (متابعة جيدة)';
                         $prescription->compliance_badge_class = 'status-dispensed'; // Green

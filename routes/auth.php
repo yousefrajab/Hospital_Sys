@@ -6,7 +6,6 @@ use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Auth\DoctorController;
 use App\Http\Controllers\Auth\PatientController;
 use App\Http\Controllers\Auth\RayEmployeeController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\PharmacyManagerController;
 
 use App\Http\Controllers\Auth\PharmacyEmployeeController;
@@ -34,8 +33,8 @@ use App\Http\Controllers\Auth\LaboratorieEmployee\ForgotPasswordController as La
 
 
 Route::middleware('guest:web')->group(function () {
-    Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
-    Route::post('/register', [RegisteredUserController::class, 'store']);
+    // Only patients sign themselves up; staff accounts are created by the admin.
+    Route::redirect('/register', '/register/patient')->name('register');
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.user');
 

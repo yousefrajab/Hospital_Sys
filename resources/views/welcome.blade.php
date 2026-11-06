@@ -1667,7 +1667,7 @@
                         // *** إرسال الحدث إلى مكون Livewire ***
                         // 'setSelectedDoctor' هو اسم الحدث الذي يستمع له المكون
                         // نمرر sectionId أولاً ثم doctorId كما هو متوقع في ميثود PHP
-                        Livewire.emit('setSelectedDoctor', sectionId, doctorId);
+                        Livewire.dispatchTo('appointments.create', 'setSelectedDoctor', { sectionId: sectionId, doctorId: doctorId });
 
                         // تمرير الشاشة (scroll) إلى حاوية الفورم بسلاسة
                         if (appointmentFormContainer) {
@@ -1729,8 +1729,7 @@
                     if (serviceName && typeof Livewire !== 'undefined') {
                         // إرسال الحدث إلى مكون Livewire
                         // 'appointments.create' هو اسم مكون Livewire
-                        Livewire.emitTo('appointments.create', 'setServiceDetails', serviceName, sectionId,
-                            doctorId);
+                        Livewire.dispatchTo('appointments.create', 'setServiceDetails', { serviceName: serviceName, sectionId: sectionId, doctorId: doctorId });
 
                         // التمرير إلى قسم فورم الحجز
                         // افترض أن فورم الحجز موجود داخل عنصر له ID 'appointment'
@@ -1770,8 +1769,7 @@
                         // Livewire.emitTo('appointments.create', 'setServiceDetails', serviceNote, sectionId, doctorId);
 
                         // الخيار ب: إذا كان سيعتمد فقط على setSelectedDoctor (والتي قد تعبئ الملاحظات افتراضيًا إذا عدلتها)
-                        Livewire.emitTo('appointments.create', 'setSelectedDoctor', sectionId,
-                            doctorId);
+                        Livewire.dispatchTo('appointments.create', 'setSelectedDoctor', { sectionId: sectionId, doctorId: doctorId });
                     }
 
                     const appointmentFormSection = document.getElementById('appointment');
@@ -1809,14 +1807,7 @@
                         sectionId, 'Doctor:', doctorId);
 
                     if (serviceName && typeof Livewire !== 'undefined') {
-                        Livewire.emitTo(
-                            'appointments.create',
-                            'setServiceDetails',
-                            serviceName,
-                            sectionId,
-                            doctorId,
-                            serviceType // << تمرير النوع
-                        );
+                        Livewire.dispatchTo('appointments.create', 'setServiceDetails', { serviceName: serviceName, sectionId: sectionId, doctorId: doctorId, serviceType: serviceType });
 
                         const appointmentFormSection = document.getElementById('appointment');
                         if (appointmentFormSection) {
@@ -1853,8 +1844,7 @@
                         // Livewire.emitTo('appointments.create', 'setServiceDetails', serviceNote, sectionId, doctorId, 'service');
 
                         // الخيار 2: استخدام setSelectedDoctor مباشرة (كما كان)
-                        Livewire.emitTo('appointments.create', 'setSelectedDoctor', sectionId,
-                            doctorId);
+                        Livewire.dispatchTo('appointments.create', 'setSelectedDoctor', { sectionId: sectionId, doctorId: doctorId });
                     }
 
                     const appointmentFormSection = document.getElementById('appointment');

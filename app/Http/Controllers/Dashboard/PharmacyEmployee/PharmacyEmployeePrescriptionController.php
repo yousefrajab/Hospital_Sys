@@ -294,7 +294,7 @@ class PharmacyEmployeePrescriptionController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Error dispensing Prescription ID {$prescription->id}: " . $e->getMessage(), ['trace' => substr($e->getTraceAsString(), 0, 500)]);
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء عملية صرف الوصفة: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء عملية صرف الوصفة: ' . error_detail($e));
         }
     }
 

@@ -6,6 +6,7 @@
 
 
      <link href="{{URL::asset('Dashboard/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/>
+@endsection
 
  @section('page-header')
      <!-- breadcrumb -->

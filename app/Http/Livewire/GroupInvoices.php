@@ -72,9 +72,22 @@ class GroupInvoices extends Component
         $this->saveInvoice();
         if ($this->catchError) {
             DB::rollBack();
+            // Nothing was saved: drop the success flags and keep the form open with its input.
+            $this->InvoiceSaved = false;
+            $this->InvoiceUpdated = false;
+            $this->show_table = false;
         } else {
             DB::commit();
         }
+    }
+
+    /** Clear the form fields after a successful save. */
+    private function resetForm()
+    {
+        $this->reset(['patient_id', 'doctor_id', 'section_id', 'type', 'Group_id', 'group_invoice_id', 'updateMode']);
+        $this->price = 0;
+        $this->discount_value = 0;
+        $this->tax_rate = 0;
     }
 
     private function saveInvoice()
@@ -137,10 +150,10 @@ class GroupInvoices extends Component
                     $fund_accounts->save();
                     $this->InvoiceSaved = true;
                     $this->show_table = true;
-                    $this->rest();
+                    $this->resetForm();
                 }
             } catch (\Exception $e) {
-                $this->catchError = $e->getMessage();
+                $this->catchError = error_detail($e);
             }
         }
 
@@ -175,7 +188,7 @@ class GroupInvoices extends Component
                     $patient_accounts->save();
                     $this->InvoiceUpdated = true;
                     $this->show_table = true;
-                    $this->rest();
+                    $this->resetForm();
                 }
 
                 else {
@@ -205,10 +218,10 @@ class GroupInvoices extends Component
                     $patient_accounts->save();
                     $this->InvoiceSaved = true;
                     $this->show_table = true;
-                    $this->rest();
+                    $this->resetForm();
                 }
             } catch (\Exception $e) {
-                $this->catchError = $e->getMessage();
+                $this->catchError = error_detail($e);
             }
         }
     }
@@ -254,7 +267,7 @@ class GroupInvoices extends Component
                 Invoice::destroy($this->group_invoice_id);
                 session()->flash('message', trans('AdminSb.invoice_deleted_successfully'));
                 Log::info('Invoice ID: ' . $this->group_invoice_id . ' destroyed successfully.');
-                $this->dispatchBrowserEvent('close-delete-modal');
+                $this->dispatch('close-delete-modal');
                 $this->group_invoice_id = null;
 
                 return redirect()->to('admin/group_invoices');
@@ -262,7 +275,7 @@ class GroupInvoices extends Component
             } catch (\Exception $e) {
                 Log::error('Error destroying invoice ID: ' . $this->group_invoice_id . ' - ' . $e->getMessage());
                 session()->flash('error', trans('AdminSb.error_deleting_invoice'));
-                $this->dispatchBrowserEvent('close-delete-modal');
+                $this->dispatch('close-delete-modal');
                 $this->group_invoice_id = null;
             }
         } else {

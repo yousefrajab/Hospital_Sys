@@ -213,7 +213,7 @@ class PatientAdmissionController extends Controller
                 'trace' => substr($e->getTraceAsString(), 0, 1000), // زيادة طول التتبع المسجل
                 'request_data' => $request->all()
             ]);
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ غير متوقع أثناء تسجيل دخول المريض: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ غير متوقع أثناء تسجيل دخول المريض: ' . error_detail($e));
         }
     }
 
@@ -367,7 +367,7 @@ class PatientAdmissionController extends Controller
                 'trace' => substr($e->getTraceAsString(), 0, 1000),
                 'request_data' => $request->all()
             ]);
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ غير متوقع أثناء تحديث السجل: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ غير متوقع أثناء تحديث السجل: ' . error_detail($e));
         }
     }
 
@@ -400,7 +400,7 @@ class PatientAdmissionController extends Controller
                 'trace' => substr($e->getTraceAsString(), 0, 500)
             ]);
             return redirect()->route('admin.patient_admissions.index')
-                ->with('error', 'حدث خطأ أثناء حذف سجل الدخول: ' . $e->getMessage());
+                ->with('error', 'حدث خطأ أثناء حذف سجل الدخول: ' . error_detail($e));
         }
     }
 

@@ -74,7 +74,7 @@ class ChatWindow extends Component // Doctor sees Patients List
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("[ChatWindow] Failed: " . $e->getMessage());
-            $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'فشل بدء المحادثة.']);
+            $this->dispatch('alert', type: 'error', message: 'فشل بدء المحادثة.');
             return; // Stay on the current page on error
         }
     }

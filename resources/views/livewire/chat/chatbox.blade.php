@@ -1,3 +1,4 @@
+<div>{{-- Livewire 3: single root element --}}
 <div class="chat-box-container">
     @if ($selected_conversation && isset($receviverUser)) {{-- ** تأكد من وجود $receviverUser ** --}}
         <div class="chat-header">
@@ -329,12 +330,12 @@
     });
 
     // Livewire Events
-    document.addEventListener('livewire:load', function() {
+    document.addEventListener('livewire:init', function() {
         scrollToBottomMessages(false);
 
         // تحديث تلقائي عند تلقي رسائل جديدة
-        Livewire.hook('message.processed', (message, component) => {
-            if (component.fingerprint.name === 'chat-component') {
+        Livewire.hook('morph.updated', ({ el, component }) => {
+            if (component.name === 'chat-component') {
                 scrollToBottomMessages();
             }
         });
@@ -365,3 +366,4 @@
         }
     }
 </script>
+</div>

@@ -157,7 +157,7 @@ class AdminProfileController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Error updating admin profile ID {$admin->id}: " . $e->getMessage() . " TRACE: " . $e->getTraceAsString());
-            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء تحديث الملف الشخصي: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'حدث خطأ أثناء تحديث الملف الشخصي: ' . error_detail($e));
         }
     }
 }

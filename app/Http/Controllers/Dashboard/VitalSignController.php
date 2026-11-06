@@ -56,7 +56,7 @@ class VitalSignController extends Controller
             // في حالة الـ Form Request، إذا فشل التحقق، سيتم إعادة التوجيه تلقائياً مع الأخطاء إلى الـ errorBag المحدد.
             // لذا هذا الـ catch سيتعامل مع الأخطاء الأخرى غير المتعلقة بالتحقق.
             return redirect()->back()
-                ->with('error', 'حدث خطأ عام أثناء تسجيل العلامات الحيوية: ' . $e->getMessage())
+                ->with('error', 'حدث خطأ عام أثناء تسجيل العلامات الحيوية: ' . error_detail($e))
                 ->withInput();
         }
     }
@@ -106,7 +106,7 @@ class VitalSignController extends Controller
         } catch (\Exception $e) {
             Log::error("Error updating vital sign ID: {$vitalSign->id}. Error: " . $e->getMessage());
             return redirect()->back()
-                ->with('error', 'حدث خطأ أثناء تحديث القراءة: ' . $e->getMessage())
+                ->with('error', 'حدث خطأ أثناء تحديث القراءة: ' . error_detail($e))
                 ->withInput();
         }
     }
@@ -133,7 +133,7 @@ class VitalSignController extends Controller
         } catch (\Exception $e) {
             Log::error("Error deleting vital sign ID: {$vitalSign->id}. Error: " . $e->getMessage());
             return redirect()->route('admin.patient_admissions.vital_signs_sheet', $patientAdmissionId)
-                ->with('error', 'حدث خطأ أثناء حذف القراءة: ' . $e->getMessage());
+                ->with('error', 'حدث خطأ أثناء حذف القراءة: ' . error_detail($e));
         }
     }
 }

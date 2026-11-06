@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-use App\Events\MyEvent;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

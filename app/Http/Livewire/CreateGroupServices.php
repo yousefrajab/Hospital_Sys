@@ -167,6 +167,7 @@ class CreateGroupServices extends Component
             $Groups->tax_rate = $this->taxes;
             // الاجمالي + الضريبة
             $Groups->total_with_tax = $Groups->total_after_discount * (1 + (is_numeric($this->taxes) ? $this->taxes : 0) / 100);
+            $Groups->doctor_id = $this->group_doctor_id ?: null;
             $Groups->save();
             // حفظ الترجمة
             $Groups->name = $this->name_group;
@@ -203,6 +204,7 @@ class CreateGroupServices extends Component
             $Groups->tax_rate = $this->taxes;
             // الاجمالي + الضريبة
             $Groups->Total_with_tax = $Groups->Total_after_discount * (1 + (is_numeric($this->taxes) ? $this->taxes : 0) / 100);
+            $Groups->doctor_id = $this->group_doctor_id ?: null;
             $Groups->save();
 
             // حفظ الترجمة
@@ -236,6 +238,7 @@ class CreateGroupServices extends Component
 
         $this->reset('GroupsItems', 'name_group', 'notes');
         $this->name_group = $group->name;
+        $this->group_doctor_id = $group->doctor_id;
         $this->notes = $group->notes;
 
         $this->discount_value = intval($group->discount_value);

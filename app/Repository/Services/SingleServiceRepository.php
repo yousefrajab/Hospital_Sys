@@ -52,7 +52,7 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
         } catch (\Exception $e) {
             DB::rollback();
             // Log the error: Log::error($e->getMessage());
-            return redirect()->back()->withErrors(['error' => trans('messages.fail') . ': ' . $e->getMessage()])->withInput();
+            return redirect()->back()->withErrors(['error' => trans('messages.fail') . ': ' . error_detail($e)])->withInput();
         }
     }
 
@@ -101,7 +101,7 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
         } catch (\Exception $e) {
             DB::rollback();
             // Log::error($e->getMessage());
-            return redirect()->back()->withErrors(['error' => trans('messages.fail') . ': ' . $e->getMessage()])->withInput();
+            return redirect()->back()->withErrors(['error' => trans('messages.fail') . ': ' . error_detail($e)])->withInput();
         }
     }
 
@@ -117,7 +117,7 @@ class SingleServiceRepository implements \App\Interfaces\Services\SingleServiceR
             return redirect()->route('admin.Service.index');
         } catch (\Exception $e) {
             // Log::error($e->getMessage());
-            return redirect()->back()->withErrors(['error' => trans('messages.fail') . ': ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => trans('messages.fail') . ': ' . error_detail($e)]);
         }
     }
 }

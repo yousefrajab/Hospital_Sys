@@ -25,7 +25,7 @@ class RaysRepository implements RaysRepositoryInterface
             return redirect()->back();
         }
         catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 
@@ -40,7 +40,7 @@ class RaysRepository implements RaysRepositoryInterface
             return redirect()->back();
         }
         catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 
@@ -52,7 +52,7 @@ class RaysRepository implements RaysRepositoryInterface
             return redirect()->back();
         }
         catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 }

@@ -198,7 +198,7 @@ class BedController extends Controller
         } catch (\Exception $e) {
             Log::error("BedController@destroy: Error deleting Bed ID {$bed->id}: " . $e->getMessage(), ['trace' => substr($e->getTraceAsString(), 0, 500)]);
             return redirect()->route('admin.beds.index')
-                             ->with('error', 'حدث خطأ أثناء حذف السرير: ' . $e->getMessage());
+                             ->with('error', 'حدث خطأ أثناء حذف السرير: ' . error_detail($e));
         }
     }
 }

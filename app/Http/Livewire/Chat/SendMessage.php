@@ -88,8 +88,8 @@ class SendMessage extends Component
 
             $this->reset('body');
             Log::info("[SendMessage] Message ID {$this->createdMessage->id} created. Broadcasting and notifying.");
-            $this->emitTo('chat.chatbox', 'pushMessage', $this->createdMessage->id);
-            $this->emitTo('chat.chatlist', 'refreshComponent');
+            $this->dispatch('pushMessage', $this->createdMessage->id)->to('chat.chatbox');
+            $this->dispatch('refreshComponent')->to('chat.chatlist');
 
             // --- استدعاء دالة الإشعارات والأحداث ---
             $this->dispatchNotificationsAndEventsAfterSend($this->createdMessage, $this->sender, $this->receviverUser);
@@ -97,7 +97,7 @@ class SendMessage extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("[SendMessage] Failed to send message: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'فشل إرسال الرسالة.']);
+            $this->dispatch('alert', type: 'error', message: 'فشل إرسال الرسالة.');
         }
     }
 

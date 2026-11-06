@@ -219,7 +219,7 @@ class RoomController extends Controller
         } catch (\Exception $e) {
             Log::error("RoomController@destroy: Error deleting room ID {$room->id}: " . $e->getMessage(), ['trace' => substr($e->getTraceAsString(), 0, 500)]);
             return redirect()->route('admin.rooms.index')
-                ->with('error', 'حدث خطأ أثناء حذف الغرفة: ' . $e->getMessage());
+                ->with('error', 'حدث خطأ أثناء حذف الغرفة: ' . error_detail($e));
         }
     }
 }

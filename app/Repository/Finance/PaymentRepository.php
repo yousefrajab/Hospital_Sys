@@ -76,7 +76,7 @@ class PaymentRepository implements PaymentRepositoryInterface
         }
         catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 
@@ -134,7 +134,7 @@ class PaymentRepository implements PaymentRepositoryInterface
         }
         catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 
@@ -146,7 +146,7 @@ class PaymentRepository implements PaymentRepositoryInterface
             return redirect()->back();
         }
         catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 }

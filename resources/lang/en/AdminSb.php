@@ -1,4 +1,4 @@
-    <?php
+<?php
 
     return array(
 
@@ -864,4 +864,5 @@
     'medical_record_entry' => 'Medical record entry',
     'patient_record' => 'Patient record',
     'save_changes' => 'Save changes',
+    'error_reference' => 'error code: :code',
 );

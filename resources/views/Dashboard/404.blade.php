@@ -1,4 +1,4 @@
-@extends('layouts.app') {{-- أو أي layout رئيسي تستخدمه --}}
+@extends('Dashboard.layouts.master')
 
 @section('title', 'الصفحة غير موجودة')
 

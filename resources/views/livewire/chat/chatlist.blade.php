@@ -1,3 +1,4 @@
+<div>{{-- Livewire 3: single root element --}}
 {{-- resources/views/livewire/chat/chatlist.blade.php --}}
 <div>
     <div class="main-chat-list ps" id="ChatListContainer" style="position: relative; overflow-y: auto; height: calc(100% - 130px);">
@@ -102,7 +103,6 @@
     </div>
 </div>
 
-@section('css')
 <style>
     .main-chat-list { background-color: #fff; }
     .conversation-item {
@@ -151,9 +151,7 @@
     #ChatListContainer::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px;}
     #ChatListContainer::-webkit-scrollbar-thumb:hover { background: #aaa; }
 </style>
-@endsection
 
-@section('js')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const chatListContainer = document.getElementById('ChatListContainer');
@@ -188,12 +186,12 @@
         });
 
         // بعد تحديث Livewire (مثل فلترة البحث أو وصول رسالة جديدة)
-        Livewire.hook('message.processed', (message, component) => {
-            if (component.fingerprint.name === 'chat.chatlist') { // تأكد أنه مكون الـ chatlist
+        Livewire.hook('morph.updated', ({ el, component }) => {
+            if (component.name === 'chat.chatlist') { // تأكد أنه مكون الـ chatlist
                 const currentSelectedId = @this.get('selected_conversation') ? @this.get('selected_conversation').id : null;
                 applyActiveClassAndScroll(currentSelectedId);
             }
         });
     });
 </script>
-@endsection
+</div>

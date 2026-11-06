@@ -68,7 +68,7 @@ class DoctorRepository implements DoctorRepositoryInterface
             return redirect()->route('admin.Doctors.index');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 
@@ -114,7 +114,7 @@ class DoctorRepository implements DoctorRepositoryInterface
             return redirect()->route('admin.Doctors.index');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 
@@ -294,7 +294,7 @@ class DoctorRepository implements DoctorRepositoryInterface
             Log::error("--- Rolling Back Transaction for Doctor ID: {$doctorId}. Error: " . $e->getMessage() . " at Line: " . $e->getLine() . " ---");
             DB::rollback();
             // استخدام رسالة الخطأ من الاستثناء إذا كانت موجودة، وإلا رسالة عامة
-            $errorMessage = session()->has('error') ? session('error') : ('حدث خطأ غير متوقع أثناء تحديث جدول ساعات العمل: ' . $e->getMessage());
+            $errorMessage = session()->has('error') ? session('error') : ('حدث خطأ غير متوقع أثناء تحديث جدول ساعات العمل: ' . error_detail($e));
             session()->flash('error', $errorMessage);
             return false; // إرجاع false للإشارة للفشل
         }
@@ -379,7 +379,7 @@ class DoctorRepository implements DoctorRepositoryInterface
             session()->flash('update_password');
             return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 
@@ -394,7 +394,7 @@ class DoctorRepository implements DoctorRepositoryInterface
             session()->flash('update_status');
             return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => error_detail($e)]);
         }
     }
 }
